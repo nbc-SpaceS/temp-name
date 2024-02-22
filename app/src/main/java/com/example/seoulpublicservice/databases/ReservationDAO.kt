@@ -1,5 +1,6 @@
 package com.example.seoulpublicservice.databases
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
@@ -11,6 +12,7 @@ import androidx.room.Query
  *
  * 필드 : 25개 (후순위로 50개 포함)
  */
+@Dao
 interface ReservationDAO {
     @Insert
     fun insert(reservationEntity: ReservationEntity)
