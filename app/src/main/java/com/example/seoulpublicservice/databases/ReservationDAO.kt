@@ -32,4 +32,11 @@ interface ReservationDAO {
      */
     @Query("SELECT * FROM ReservationEntity WHERE :type IN (MAXCLASSNM)")
     fun getItemsWithType(type: String) : List<ReservationEntity>
+
+    /**
+     * @property getItemsWithTypeExtended 소분류명을 type에 받아 해당하는 아이템만 블러올 수 있는 함수
+     * @param type 소분류명
+     */
+    @Query("SELECT * FROM ReservationEntity WHERE :type IN (MINCLASSNM)")
+    fun getItemsWithTypeExtended(type: String) : List<ReservationEntity>
 }
