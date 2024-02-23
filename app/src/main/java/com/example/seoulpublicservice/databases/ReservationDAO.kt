@@ -1,9 +1,6 @@
 package com.example.seoulpublicservice.databases
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -15,11 +12,11 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface ReservationDAO {
-    @Insert
-    fun insert(reservationEntity: ReservationEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(reservationEntity: ReservationEntity)
 
     @Delete
-    fun delete(reservationEntity: ReservationEntity)
+    suspend fun delete(reservationEntity: ReservationEntity)
 
 
     /**
