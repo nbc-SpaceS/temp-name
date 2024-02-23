@@ -12,7 +12,7 @@ class NotificationsFragment : Fragment() {
 
     private var _binding: FragmentNotificationsBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: NotificationsViewModel by viewModels()
+    private val viewModel: NotificationsViewModel by viewModels { NotificationsViewModel.factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
