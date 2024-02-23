@@ -1,5 +1,6 @@
 package com.example.seoulpublicservice.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.seoulpublicservice.InterestCategorySelectActivity
 import com.example.seoulpublicservice.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -32,6 +34,9 @@ class HomeFragment : Fragment() {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
             textView.text = "this is hs"
+        }
+        textView.setOnClickListener {
+            startActivity(Intent(requireActivity(), InterestCategorySelectActivity::class.java))
         }
         return root
     }
