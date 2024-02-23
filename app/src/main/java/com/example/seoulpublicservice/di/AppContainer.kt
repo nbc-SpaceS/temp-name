@@ -2,24 +2,24 @@ package com.example.seoulpublicservice.di
 
 import com.example.seoulpublicservice.BuildConfig
 import com.example.seoulpublicservice.seoul.SeoulApiService
-import com.example.seoulpublicservice.seoul.SeoulPublicRepository
 import com.example.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
+import com.example.seoulpublicservice.usecase.GetAllFirst1000UseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-/** AppContainer instance used by the rest of classes to obtain dependencies */
-val myContainer: AppContainer = DefaultAppContainer()
+///** 클린아키텍쳐 하다가 정 안되면 그냥 이렇게 전역으로 놓고 쓰면 어디서든 사용 가능... */
+//val myContainer: AppContainer = DefaultAppContainer()
 
 /** Dependency Injection container */
 interface AppContainer {
-    val seoulPublicRepository: SeoulPublicRepository
+    val getAllFirst1000UseCase: GetAllFirst1000UseCase
 }
 
-
 class DefaultAppContainer : AppContainer {
+    // TODO: retrofit 관련 로직들 따로 빼야 하나
     private val baseUrl = "http://openapi.seoul.go.kr:8088"
 
     private fun createOkHttpClient(): OkHttpClient {
@@ -49,8 +49,13 @@ class DefaultAppContainer : AppContainer {
         retrofit.create(SeoulApiService::class.java)
     }
 
-    /** DI implementation for Mars photos repository */
-    override val seoulPublicRepository: SeoulPublicRepository by lazy {
-        SeoulPublicRepositoryImpl(retrofitService)
+    private val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
+
+//    override val seoulPublicRepository: SeoulPublicRepository by lazy {
+//        SeoulPublicRepositoryImpl(retrofitService)
+//    }
+
+    override val getAllFirst1000UseCase: GetAllFirst1000UseCase by lazy {
+        GetAllFirst1000UseCase(seoulPublicRepository)
     }
 }
