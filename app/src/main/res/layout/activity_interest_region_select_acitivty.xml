@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InterestCategorySelectActivity">
+
+    <ImageView
+        android:id="@+id/iv_interest_region_select_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow_back"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_interest_region_select_comment2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="관심 지역을 선택해주세요."
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:clipToOutline="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_interest_region_select_comment2">
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn1"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="강남구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn2"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="강동구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn1"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn1" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn3"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="강북구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn2"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn2" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn4"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="강서구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn3"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn3" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn5"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="관악구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn6"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cb_interest_region_select_btn1" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn6"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="광진구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn7"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn5"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn5" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn7"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="구로구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn8"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn6"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn6" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn8"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="금천구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn7"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn7" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn9"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="노원구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn10"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cb_interest_region_select_btn5" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn10"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="도봉구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn11"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn9"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn9" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn11"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="동대문구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn12"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn10"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn10" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn12"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="동작구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn11"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn11" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn13"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="마포구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn14"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cb_interest_region_select_btn9" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn14"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="서대문구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn15"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn13"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn13" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn15"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="서초구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn16"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn14"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn14" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn16"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="성동구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn15"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn15" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn17"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="성북구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn18"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cb_interest_region_select_btn13" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn18"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="송파구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn19"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn17"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn17" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn19"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="양천구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn20"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn18"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn18" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn20"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="영등포구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn19"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn19" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn21"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="용산구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn22"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cb_interest_region_select_btn17" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn22"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="은평구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn23"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn21"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn21" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn23"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="종로구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/cb_interest_region_select_btn24"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn22"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn22" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn24"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="중구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/cb_interest_region_select_btn23"
+            app:layout_constraintTop_toTopOf="@+id/cb_interest_region_select_btn23" />
+
+        <CheckBox
+            android:id="@+id/cb_interest_region_select_btn25"
+            android:layout_width="75dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/selector_custom_region_checkbox"
+            android:button="@null"
+            android:gravity="center"
+            android:text="중랑구"
+            android:textColor="@color/selector_custom_checkbox_text"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/cb_interest_region_select_btn21"
+            app:layout_constraintStart_toStartOf="@+id/cb_interest_region_select_btn21"
+            app:layout_constraintTop_toBottomOf="@+id/cb_interest_region_select_btn21" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/img_seoul"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="관심 지역은 최대 3개까지 선택이 가능합니다."
+        android:textColor="#808080"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btn_interest_region_select_okay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_interest_region_select_okay"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/selector_okay_button"
+        android:enabled="false"
+        android:text="확인"
+        android:textColor="@color/selector_okay_button_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
