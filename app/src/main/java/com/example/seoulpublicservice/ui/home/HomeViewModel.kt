@@ -1,20 +1,10 @@
 package com.example.seoulpublicservice.ui.home
 
-import androidx.lifecycle.*
-import com.example.seoulpublicservice.databases.ReservationEntity
-import com.example.seoulpublicservice.databases.ReservationRepository
-import kotlinx.coroutines.launch
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-class HomeViewModel(
-    private val reservationRepository: ReservationRepository
-) : ViewModel() {
-    val getAll: LiveData<List<ReservationEntity>> = reservationRepository.allItems.asLiveData()
-
-    fun insert(reservation: ReservationEntity) = viewModelScope.launch {
-        reservationRepository.insertItem(reservation)
-    }
-
-
+class HomeViewModel() : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
     }
