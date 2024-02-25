@@ -10,13 +10,13 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.seoulpublicservice.SeoulPublicServiceApplication
 import com.example.seoulpublicservice.seoul.Row
-import com.example.seoulpublicservice.usecase.GetAllFirst1000UseCase
+import com.example.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class NotificationsViewModel(
-    private val getAllFirst1000UseCase: GetAllFirst1000UseCase
+    private val getAll2000UseCase: GetAll2000UseCase
 ) : ViewModel() {
 
     private val _text: MutableLiveData<String> =
@@ -27,8 +27,9 @@ class NotificationsViewModel(
     private val random = Random
 
     fun setRandomOne() {
-        if (rowList.isEmpty()) viewModelScope.launch(Dispatchers.IO) {
-            rowList = getAllFirst1000UseCase()
+        // getAll2000UseCase 처리 시 1600개 정도 데이터를 변환하고 반환하는 과정이 cpu가 좀 필요할 듯 해서 Default로 줌.
+        if (rowList.isEmpty()) viewModelScope.launch(Dispatchers.Default) {
+            rowList = getAll2000UseCase()
 
             val row = rowList.firstOrNull()
             if (row == null) {
@@ -53,7 +54,7 @@ class NotificationsViewModel(
                 val application = (this[APPLICATION_KEY] as SeoulPublicServiceApplication)
                 val container = application.container
                 NotificationsViewModel(
-                    getAllFirst1000UseCase = container.getAllFirst1000UseCase
+                    getAll2000UseCase = container.getAll2000UseCase
                 )
             }
         }

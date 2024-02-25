@@ -6,7 +6,7 @@ import com.example.seoulpublicservice.pref.RowPrefRepository
 import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.seoul.SeoulPublicRepository
 
-class GetAllFirst1000UseCase(
+class GetAll2000UseCase(
     private val seoulPublicRepository: SeoulPublicRepository,
     private val prefRepository: PrefRepository,
     private val rowPrefRepository: RowPrefRepository
@@ -20,27 +20,27 @@ class GetAllFirst1000UseCase(
         val rowsSavedTime = prefRepository.load(tempKeyRowsSavedTime).toLongOrNull()
         if (rowsSavedTime == null) {
             Log.w(
-                "jj-GetAllFirst1000UseCase",
+                "jj-GetAll2000UseCase",
                 "prefRepository.load(tempKeyRowsSavedTime).toLongOrNull() == null"
             )
         } else {
             val timeDiff = System.currentTimeMillis() - rowsSavedTime
-            Log.d("jj-GetAllFirst1000UseCase", "timeDiff: $timeDiff")
+            Log.d("jj-GetAll2000UseCase", "timeDiff: $timeDiff")
             isRecent = timeDiff < 180_000L
         }
 
         if (isRecent) {
             rowList = rowPrefRepository.loadRows()
-            if (rowList.isEmpty()) getAllFirst1000()
+            if (rowList.isEmpty()) getAll2000()
         } else {
-            getAllFirst1000()
+            getAll2000()
         }
 
         return rowList
     }
 
-    private suspend fun getAllFirst1000() {
-        rowList = seoulPublicRepository.getAllFirst1000()
+    private suspend fun getAll2000() {
+        rowList = seoulPublicRepository.getAll2000()
         rowPrefRepository.saveRows(rowList)
         prefRepository.save(tempKeyRowsSavedTime, System.currentTimeMillis().toString())
     }

@@ -1,7 +1,6 @@
 package com.example.seoulpublicservice.pref
 
 import android.content.Context
-import android.util.Log
 import com.example.seoulpublicservice.seoul.Row
 import com.google.gson.Gson
 
@@ -20,18 +19,22 @@ class RowPrefRepositoryImpl(context: Context) : RowPrefRepository {
     }
 
     override fun saveRows(rowList: List<Row>) {
-        val json = gson.toJson(rowList)
-        pref.edit().putString(Key.rows, json).apply()
+        // TODO: 약 1600개 저장하다가 메모리 터짐. 한 512개씩 나눠서 분할 저장해야 할 듯. 그보다 Room으로.
+
+//        val json = gson.toJson(rowList)
+//        pref.edit().putString(Key.rows, json).apply()
     }
 
     override fun loadRows(): List<Row> {
-        val json = pref.getString(Key.rows, null) ?: return emptyList<Row>()
-            .apply { Log.w("jj-RowPrefRepositoryImpl", "loadRows got null") }
+//        val json = pref.getString(Key.rows, null) ?: return emptyList<Row>()
+//            .apply { Log.w("jj-RowPrefRepositoryImpl", "loadRows got null") }
+//
+//        val s = if (json.length <= 63) json else json.substring(0, 63)
+//        Log.d("jj-RowPrefRepositoryImpl", "loadRows json: $s")
+//
+//        return gson.fromJson(json, Array<Row>::class.java).toList()
 
-        val s = if (json.length <= 63) json else json.substring(0, 63)
-        Log.d("jj-RowPrefRepositoryImpl", "loadRows json: $s")
-
-        return gson.fromJson(json, Array<Row>::class.java).toList()
+        return emptyList()
     }
 
 }
