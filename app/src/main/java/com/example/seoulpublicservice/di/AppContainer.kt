@@ -65,7 +65,11 @@ class DefaultAppContainer(context: Context) : AppContainer {
 //    }
 
     override val getAllFirst1000UseCase: GetAllFirst1000UseCase by lazy {
-        GetAllFirst1000UseCase(seoulPublicRepository)
+        GetAllFirst1000UseCase(
+            seoulPublicRepository = seoulPublicRepository,
+            prefRepository = prefRepository,
+            rowPrefRepository = rowPrefRepository
+        )
     }
 
     override val prefRepository: PrefRepository by lazy {
