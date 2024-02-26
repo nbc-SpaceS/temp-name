@@ -78,6 +78,9 @@ dependencies {
 
     implementation("androidx.room:room-runtime:2.6.1") // Room 라이브러리
     ksp("androidx.room:room-compiler:2.6.1") // Room의 애노테이션 프로세서
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("com.naver.maps:map-sdk:3.17.0")
 

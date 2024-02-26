@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InterestCategorySelectActivity"
+            android:name=".InterestRegionSelectActivity"
             android:exported="false"/>
         <activity
             android:name=".MainActivity"
