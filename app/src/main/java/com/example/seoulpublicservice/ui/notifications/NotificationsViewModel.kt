@@ -13,8 +13,8 @@ import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databases.ReservationRepository
 import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.usecase.GetAll2000UseCase
-import com.example.seoulpublicservice.util.RoomRowMapper
 import com.example.seoulpublicservice.usecase.GetDetailSeoulUseCase
+import com.example.seoulpublicservice.util.RoomRowMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -47,13 +47,13 @@ class NotificationsViewModel(
 //            rowList = getAll2000UseCase() // 기존 코드
             /** 기존에 row타입으로 받던 API를 reservationEntity타입으로 변환해서 Room에 저장하고
              * Romm에서 꺼낸 reservationEntity타입을 row타입으로 재 변환해서 기존의 코드에 연결함 */
-            for(rowItem in getAll2000UseCase()) {
+            for (rowItem in getAll2000UseCase()) {
                 reservationList += RoomRowMapper.mappingRowToRoom(rowItem)
             }
-            Log.i("This is NotifiViewModel","reserve count : ${reservationList.count()}")
+            Log.i("This is NotifiViewModel", "reserve count : ${reservationList.count()}")
             reservationRepository.insertAll(reservationList)
             /** Room에서 꺼낸 데이터 각각을 Row타입으로 변환해 rowList에 저장하는 부분 */
-            for(reservation in reservationRepository.getAllReservations()) {
+            for (reservation in reservationRepository.getAllReservations()) {
                 rowList += RoomRowMapper.mappingRoomToRow(reservation)
             }
 
@@ -68,7 +68,12 @@ class NotificationsViewModel(
         }
         else viewModelScope.launch(Dispatchers.IO) {
             val row = rowList[random.nextInt(0, rowList.size)]
-            _text.postValue("rowList.size: ${rowList.size}\n\n${getDetailSeoulUseCase(row.svcid)}")
+            val detailRow = getDetailSeoulUseCase(row.svcid)
+            if (detailRow == null) {
+                _text.postValue("detailRow == null\n\nrowList.size: ${rowList.size}\n\n$row")
+            } else {
+                _text.postValue("rowList.size: ${rowList.size}\n\n$detailRow")
+            }
             Log.d("jj-노티뷰모델", "id: ${row.svcid}")
         }
 
