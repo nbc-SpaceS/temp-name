@@ -14,6 +14,7 @@ import com.example.seoulpublicservice.pref.RowPrefRepositoryImpl
 import com.example.seoulpublicservice.seoul.SeoulApiService
 import com.example.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.example.seoulpublicservice.usecase.GetAll2000UseCase
+import com.example.seoulpublicservice.usecase.GetDetailSeoulUseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit
 /** Dependency Injection container */
 interface AppContainer {
     val getAll2000UseCase: GetAll2000UseCase
+    val getDetailSeoulUseCase: GetDetailSeoulUseCase
     val prefRepository: PrefRepository
     val rowPrefRepository: RowPrefRepository
     val regionPrefRepository: RegionPrefRepository
@@ -76,6 +78,13 @@ class DefaultAppContainer(context: Context) : AppContainer {
             seoulPublicRepository = seoulPublicRepository,
             prefRepository = prefRepository,
             rowPrefRepository = rowPrefRepository
+        )
+    }
+
+    override val getDetailSeoulUseCase by lazy {
+        GetDetailSeoulUseCase(
+            seoulPublicRepository = seoulPublicRepository,
+            prefRepository = prefRepository
         )
     }
 
