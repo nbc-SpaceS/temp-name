@@ -42,5 +42,8 @@ class NotificationsFragment : Fragment() {
         vm.text.observe(viewLifecycleOwner) {
             binding.tvTemp1.text = it
         }
+        vm.isBtnEnabled.observe(viewLifecycleOwner) {
+            binding.btnTemp1.isEnabled = it
+        }
     }
 }

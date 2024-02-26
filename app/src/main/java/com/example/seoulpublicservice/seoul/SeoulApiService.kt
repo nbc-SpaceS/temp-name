@@ -16,4 +16,9 @@ interface SeoulApiService {
         @Path("endIndex") endIndex: Int
     ): Response<SeoulDto>
 
+    @GET("/${BuildConfig.SEOUL_KEY}/json/ListPublicReservationDetail/1/1/{svcid}/")
+    suspend fun getDetail(
+        @Path("svcid") svcid: String
+    ): Response<SeoulDetailDto>
+
 }

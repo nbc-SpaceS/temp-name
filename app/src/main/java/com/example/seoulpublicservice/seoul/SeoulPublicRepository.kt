@@ -12,6 +12,9 @@ interface SeoulPublicRepository {
 
     /** 종합으로 2천개 가져오기 */
     suspend fun getAll2000(): List<Row>
+
+    /** 서비스 id로 상세 정보 가져오기 */
+    suspend fun getDetail(svcid: String): DetailRow?
 }
 
 class SeoulPublicRepositoryImpl(
@@ -80,7 +83,39 @@ class SeoulPublicRepositoryImpl(
         return@coroutineScope deferred1.await() + deferred2.await()
     }
 
+    override suspend fun getDetail(svcid: String): DetailRow? {
+        val response = seoulApiService.getDetail(svcid)
+        val body = response.body()
+        if (body == null) {
+            Log.d(
+                "jj-SeoulPublicRepositoryImpl",
+                "getDetail body == null"
+            )
+        } else {
+            try {
+                val s =
+                    "total: ${body.listPublicReservationDetail.listTotalCount}, ${body.listPublicReservationDetail.result}\n" +
+                            body.listPublicReservationDetail.rowList.firstOrNull().toString()
+                                .trimUpTo(127)
+                Log.d(
+                    "jj-SeoulPublicRepositoryImpl",
+                    "getDetail 응답: $s"
+                )
+            } catch (e: Exception) {
+                Log.d(
+                    "jj-SeoulPublicRepositoryImpl",
+                    "getDetail e: $e\n" +
+                            "svcid: $svcid, response: $response"
+                )
+            }
+        }
+        return convertDetailResponseToItem(response)
+    }
+
     private fun convertResponseToItems(response: Response<SeoulDto>): List<Row> =
         response.body()?.tvYeyakCOllect?.rowList ?: emptyList()
+
+    private fun convertDetailResponseToItem(response: Response<SeoulDetailDto>): DetailRow? =
+        response.body()?.listPublicReservationDetail?.rowList?.firstOrNull()
 
 }
