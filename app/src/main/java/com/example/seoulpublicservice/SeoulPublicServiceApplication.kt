@@ -10,6 +10,6 @@ class SeoulPublicServiceApplication : Application() {
     val container get() = _container
     override fun onCreate() {
         super.onCreate()
-        _container = DefaultAppContainer()
+        _container = DefaultAppContainer(this)
     }
 }
