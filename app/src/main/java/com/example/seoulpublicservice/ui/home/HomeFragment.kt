@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.seoulpublicservice.InterestCategorySelectActivity
+import com.example.seoulpublicservice.InterestRegionSelectActivity
 import com.example.seoulpublicservice.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
         textView.setOnClickListener {
-            startActivity(Intent(requireActivity(), InterestCategorySelectActivity::class.java))
+            startActivity(Intent(requireActivity(), InterestRegionSelectActivity::class.java))
         }
         return root
     }
