@@ -23,16 +23,12 @@ abstract class ReservationDatabase:RoomDatabase() {
         }
 
         fun getDatabase(context: Context): ReservationDatabase {
-            return INSTANCE ?: Room.databaseBuilder(context.applicationContext, ReservationDatabase::class.java, "reservation_table")
-                    .addMigrations(MIGRATION_1_2)
-                    .build()
-
-//            if(INSTANCE == null) {
-//                INSTANCE = Room.databaseBuilder(context, ReservationDatabase::class.java, "reservation_table")
-//                    .addMigrations(MIGRATION_1_2)
-//                    .build()
-//            }
-//            return INSTANCE as ReservationDatabase
+            return INSTANCE ?: Room.databaseBuilder(
+                context.applicationContext,
+                ReservationDatabase::class.java,
+                "reservation_table"
+            ).addMigrations(MIGRATION_1_2)
+                .build()
         }
     }
 }

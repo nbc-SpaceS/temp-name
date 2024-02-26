@@ -12,31 +12,37 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface ReservationDAO {
+    /**
+     * @property insertAll ReservationEntity라는 테이블에 [ReservationEntity] 타입의 List를 모두 삽입
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(reservationEntity: ReservationEntity)
+    suspend fun insertAll(reservationEntities: List<ReservationEntity>)
 
-    @Delete
-    suspend fun delete(reservationEntity: ReservationEntity)
+    /**
+     * @property deleteAll ReservationEntity라는 테이블에서 모든 값을 지우기
+     */
+    @Query("DELETE FROM ReservationEntity")
+    suspend fun deleteAll()
 
 
     /**
      * @property getAll ReservationEntity 속성을 가지는 모든 값을 불러오기
      */
     @Query("SELECT * FROM ReservationEntity")
-    fun getAll() : Flow<List<ReservationEntity>>
+    fun getAll() : List<ReservationEntity>
 
     /**
-     * @property getItemsWithType 대분류명을 type에 받아 해당하는 아이템만 블러올 수 있는 함수
+     * @property getItemsWithBigType 대분류명을 type에 받아 해당하는 아이템만 블러올 수 있는 함수
      * @param type 대분류명
      * (체육시설 = 체육, 시설대관 = 공간, 교육 = 교육, 문화행사 = 문화, 진료 = 진료)
      */
     @Query("SELECT * FROM ReservationEntity WHERE :type IN (MAXCLASSNM)")
-    fun getItemsWithType(type: String) : Flow<List<ReservationEntity>>
+    fun getItemsWithBigType(type: String) : List<ReservationEntity>
 
     /**
-     * @property getItemsWithTypeExtended 소분류명을 type에 받아 해당하는 아이템만 블러올 수 있는 함수
+     * @property getItemsWithSmallType 소분류명을 type에 받아 해당하는 아이템만 블러올 수 있는 함수
      * @param type 소분류명
      */
     @Query("SELECT * FROM ReservationEntity WHERE :type IN (MINCLASSNM)")
-    fun getItemsWithTypeExtended(type: String) : Flow<List<ReservationEntity>>
+    fun getItemsWithSmallType(type: String) : List<ReservationEntity>
 }

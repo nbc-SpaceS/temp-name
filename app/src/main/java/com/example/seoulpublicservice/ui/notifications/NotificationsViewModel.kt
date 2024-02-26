@@ -9,14 +9,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.seoulpublicservice.SeoulPublicServiceApplication
+import com.example.seoulpublicservice.databases.ReservationEntity
+import com.example.seoulpublicservice.databases.ReservationRepository
 import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.usecase.GetAll2000UseCase
+import com.example.seoulpublicservice.util.RoomRowMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class NotificationsViewModel(
-    private val getAll2000UseCase: GetAll2000UseCase
+    private val getAll2000UseCase: GetAll2000UseCase,
+    private val reservationRepository: ReservationRepository
 ) : ViewModel() {
 
     private val _text: MutableLiveData<String> =
@@ -26,10 +30,25 @@ class NotificationsViewModel(
     private var rowList: List<Row> = emptyList()
     private val random = Random
 
+    /**
+     * @property reservationList [ReservationEntity] 타입의 List 변수
+     */
+    private var reservationList: List<ReservationEntity> = emptyList()
     fun setRandomOne() {
         // getAll2000UseCase 처리 시 1600개 정도 데이터를 변환하고 반환하는 과정이 cpu가 좀 필요할 듯 해서 Default로 줌.
         if (rowList.isEmpty()) viewModelScope.launch(Dispatchers.Default) {
-            rowList = getAll2000UseCase()
+//            rowList = getAll2000UseCase() // 기존 코드
+            /** 기존에 row타입으로 받던 API를 reservationEntity타입으로 변환해서 Room에 저장하고
+             * Romm에서 꺼낸 reservationEntity타입을 row타입으로 재 변환해서 기존의 코드에 연결함 */
+            for(rowItem in getAll2000UseCase()) {
+                reservationList += RoomRowMapper.mappingRowToRoom(rowItem)
+            }
+            Log.i("This is NotifiViewModel","reserve count : ${reservationList.count()}")
+            reservationRepository.insertAll(reservationList)
+            /** Room에서 꺼낸 데이터 각각을 Row타입으로 변환해 rowList에 저장하는 부분 */
+            for(reservation in reservationRepository.getAllReservations()) {
+                rowList += RoomRowMapper.mappingRoomToRow(reservation)
+            }
 
             val row = rowList.firstOrNull()
             if (row == null) {
@@ -54,7 +73,8 @@ class NotificationsViewModel(
                 val application = (this[APPLICATION_KEY] as SeoulPublicServiceApplication)
                 val container = application.container
                 NotificationsViewModel(
-                    getAll2000UseCase = container.getAll2000UseCase
+                    getAll2000UseCase = container.getAll2000UseCase,
+                    reservationRepository = container.reservationRepository
                 )
             }
         }
