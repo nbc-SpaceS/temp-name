@@ -1,7 +1,9 @@
 package com.example.seoulpublicservice.databases
 
-import androidx.room.*
-import kotlinx.coroutines.flow.Flow
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 /**
  * API 받아올 데이터를 담는 테이블
