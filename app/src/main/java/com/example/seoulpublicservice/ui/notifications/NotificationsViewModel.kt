@@ -56,6 +56,14 @@ class NotificationsViewModel(
             for (reservation in reservationRepository.getAllReservations()) {
                 rowList += RoomRowMapper.mappingRoomToRow(reservation)
             }
+            // 여러개의 소분류명 입,출력 테스트용
+//            val sampleList: List<String> = listOf("야구장","강당","어린이")
+//            val sampleItem: HashMap<String, String> = hashMapOf()
+//            val sampleAnswers = reservationRepository.getReservationsWithSmallTypes(sampleList)
+//            for(sampleAnswer in sampleAnswers) {
+//                sampleItem[sampleAnswer.PLACENM] = sampleAnswer.MINCLASSNM
+//            }
+//            Log.i("This is NotifiViewModel","소분류명(야구장, 강당, 어린이병원) count : ${sampleItem.count()}, list : $sampleItem")
 
             val row = rowList.firstOrNull()
             if (row == null) {
