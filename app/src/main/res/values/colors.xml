@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#DFDFDD</color>
     <color name="black_50">#60000000</color>
+    <color name="point_color">#F8496C</color>
     <color name="pay">#FFCCCC</color>
 </resources>

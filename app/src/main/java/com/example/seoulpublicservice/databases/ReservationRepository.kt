@@ -31,6 +31,13 @@ interface ReservationRepository {       // get
      * @return `List<ReservationEntity>` 타입으로 반환
      */
     suspend fun getReservationsWithSmallType(type: String): List<ReservationEntity>
+
+    /**
+     * @property getReservationsWithSmallTypes 입력된 소분류명들로 출력
+     * @param types 소분류명들
+     * @return `List<ReservationEntity>` 타입으로 반환
+     */
+    suspend fun getReservationsWithSmallTypes(types: List<String>): List<ReservationEntity>
 }
 
 class ReservationRepositoryImpl(
@@ -45,4 +52,6 @@ class ReservationRepositoryImpl(
     override suspend fun getAllReservations() = reservationDAO.getAll()
     override suspend fun getReservationsWithBigType(type: String) = reservationDAO.getItemsWithBigType(type)
     override suspend fun getReservationsWithSmallType(type: String) = reservationDAO.getItemsWithSmallType(type)
+
+    override suspend fun getReservationsWithSmallTypes(types: List<String>) = reservationDAO.getItemsWithSmallTypes(types)
 }

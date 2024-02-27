@@ -1,6 +1,5 @@
 package com.example.seoulpublicservice.util
 
-import androidx.room.PrimaryKey
 import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.seoul.Row
 

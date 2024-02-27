@@ -5,6 +5,8 @@ import com.example.seoulpublicservice.BuildConfig
 import com.example.seoulpublicservice.databases.ReservationDatabase
 import com.example.seoulpublicservice.databases.ReservationRepository
 import com.example.seoulpublicservice.databases.ReservationRepositoryImpl
+import com.example.seoulpublicservice.pref.FilterPrefRepository
+import com.example.seoulpublicservice.pref.FilterPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.PrefRepository
 import com.example.seoulpublicservice.pref.PrefRepositoryImpl
 import com.example.seoulpublicservice.pref.RegionPrefRepository
@@ -14,6 +16,7 @@ import com.example.seoulpublicservice.pref.RowPrefRepositoryImpl
 import com.example.seoulpublicservice.seoul.SeoulApiService
 import com.example.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.example.seoulpublicservice.usecase.GetAll2000UseCase
+import com.example.seoulpublicservice.usecase.GetDetailSeoulUseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,9 +31,11 @@ import java.util.concurrent.TimeUnit
 /** Dependency Injection container */
 interface AppContainer {
     val getAll2000UseCase: GetAll2000UseCase
+    val getDetailSeoulUseCase: GetDetailSeoulUseCase
     val prefRepository: PrefRepository
     val rowPrefRepository: RowPrefRepository
     val regionPrefRepository: RegionPrefRepository
+    val filterPrefRepository: FilterPrefRepository
     val reservationRepository: ReservationRepository
 }
 
@@ -79,6 +84,13 @@ class DefaultAppContainer(context: Context) : AppContainer {
         )
     }
 
+    override val getDetailSeoulUseCase by lazy {
+        GetDetailSeoulUseCase(
+            seoulPublicRepository = seoulPublicRepository,
+            prefRepository = prefRepository
+        )
+    }
+
     override val prefRepository: PrefRepository by lazy {
         PrefRepositoryImpl(context = context)
     }
@@ -90,6 +102,11 @@ class DefaultAppContainer(context: Context) : AppContainer {
     override val regionPrefRepository: RegionPrefRepository by lazy {
         RegionPrefRepositoryImpl(context = context)
     }
+
+    override val filterPrefRepository: FilterPrefRepository by lazy {
+        FilterPrefRepositoryImpl(context = context)
+    }
+
     /** Room과 관련된 Repository에 의존성 주입?? */
     private val database by lazy { ReservationDatabase.getDatabase(context) }
     override val reservationRepository by lazy {

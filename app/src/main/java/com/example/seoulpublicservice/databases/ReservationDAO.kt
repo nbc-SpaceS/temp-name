@@ -1,7 +1,9 @@
 package com.example.seoulpublicservice.databases
 
-import androidx.room.*
-import kotlinx.coroutines.flow.Flow
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 /**
  * API 받아올 데이터를 담는 테이블
@@ -45,4 +47,12 @@ interface ReservationDAO {
      */
     @Query("SELECT * FROM ReservationEntity WHERE :type IN (MINCLASSNM)")
     fun getItemsWithSmallType(type: String) : List<ReservationEntity>
+
+    /**
+     * @property getItemsWithSmallTypes 소분류명 List를 types에 받아 해당하는 아이템들을 불러오기
+     * @param types 소분류명 List
+     * @return `List<ReservationEntity>`
+     */
+    @Query("SELECT * FROM ReservationEntity WHERE MINCLASSNM in (:types)")
+    fun getItemsWithSmallTypes(types: List<String>) : List<ReservationEntity>
 }
