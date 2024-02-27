@@ -17,4 +17,14 @@
     <style name="Theme.SeoulPublicService.RemoveSplash" parent="Theme.SeoulPublicService">
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
+    <style name="DetailTransparent">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleStyle">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+
+        <item name="android:windowBackground">#FFFFFF</item>
+    </style>
 </resources>
