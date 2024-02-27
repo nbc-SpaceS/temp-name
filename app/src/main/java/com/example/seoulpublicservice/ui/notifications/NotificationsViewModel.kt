@@ -62,7 +62,7 @@ class NotificationsViewModel(
             val itemLocate: List<String> = listOf("강서구","강남구")
             val itemState: List<String> = listOf("안내중","접수중")
             val itemPay: List<String> = listOf("무료")
-            val testList = reservationRepository.getFilterItemsAND(itemSmall, itemLocate, itemState, itemPay)
+            val testList = reservationRepository.getFilterItemsOR(itemSmall, itemLocate, itemState, itemPay)
             Log.i("This is NVM","\n소분류 : $itemSmall\n지역구 : $itemLocate\n접수중 : $itemState\n가 격 : $itemPay\n목록 개수 : ${testList.size}\n목록 : $testList")
 
             val row = rowList.firstOrNull()
