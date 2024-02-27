@@ -25,6 +25,8 @@ class SplashActivity : AppCompatActivity() {
             container.idPrefRepository.save(id)
         }
 
+        container.filterPrefRepository.clearData()
+
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish()

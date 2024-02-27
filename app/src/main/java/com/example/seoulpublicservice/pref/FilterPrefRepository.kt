@@ -10,8 +10,8 @@ interface FilterPrefRepository {
     fun save(
         value: List<List<String>>
     )
-
     fun load(): List<List<String>>
+    fun clearData(): Unit
 }
 
 class FilterPrefRepositoryImpl(context: Context) : FilterPrefRepository {
@@ -123,7 +123,7 @@ class FilterPrefRepositoryImpl(context: Context) : FilterPrefRepository {
         return loadedData
     }
 
-    private fun clearData() {
+    override fun clearData() {
         pref.edit().clear().apply()
     }
 }
