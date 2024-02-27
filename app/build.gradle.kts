@@ -84,6 +84,8 @@ dependencies {
 
     implementation("com.naver.maps:map-sdk:3.17.0")
 
+    implementation ("com.squareup.picasso:picasso:2.71828")
+
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
 //    ksp("com.google.dagger:hilt-android-compiler:2.50")
