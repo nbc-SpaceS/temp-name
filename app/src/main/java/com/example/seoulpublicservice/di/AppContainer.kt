@@ -5,6 +5,8 @@ import com.example.seoulpublicservice.BuildConfig
 import com.example.seoulpublicservice.databases.ReservationDatabase
 import com.example.seoulpublicservice.databases.ReservationRepository
 import com.example.seoulpublicservice.databases.ReservationRepositoryImpl
+import com.example.seoulpublicservice.pref.FilterPrefRepository
+import com.example.seoulpublicservice.pref.FilterPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.PrefRepository
 import com.example.seoulpublicservice.pref.PrefRepositoryImpl
 import com.example.seoulpublicservice.pref.RegionPrefRepository
@@ -33,6 +35,7 @@ interface AppContainer {
     val prefRepository: PrefRepository
     val rowPrefRepository: RowPrefRepository
     val regionPrefRepository: RegionPrefRepository
+    val filterPrefRepository: FilterPrefRepository
     val reservationRepository: ReservationRepository
 }
 
@@ -99,6 +102,11 @@ class DefaultAppContainer(context: Context) : AppContainer {
     override val regionPrefRepository: RegionPrefRepository by lazy {
         RegionPrefRepositoryImpl(context = context)
     }
+
+    override val filterPrefRepository: FilterPrefRepository by lazy {
+        FilterPrefRepositoryImpl(context = context)
+    }
+
     /** Room과 관련된 Repository에 의존성 주입?? */
     private val database by lazy { ReservationDatabase.getDatabase(context) }
     override val reservationRepository by lazy {
