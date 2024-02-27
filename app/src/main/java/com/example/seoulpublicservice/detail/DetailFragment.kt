@@ -6,19 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.seoulpublicservice.R
+import com.example.seoulpublicservice.databases.ReservationEntity
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+private const val DETAIL_PARAM = "detail_param1"
 
 class DetailFragment : DialogFragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+    private var param1: ReservationEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            param1 = it.getParcelable(DETAIL_PARAM)
         }
     }
 
@@ -31,11 +29,10 @@ class DetailFragment : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: ReservationEntity) =
             DetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putParcelable(DETAIL_PARAM, param1)
                 }
             }
     }

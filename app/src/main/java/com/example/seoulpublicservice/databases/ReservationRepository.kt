@@ -38,6 +38,16 @@ interface ReservationRepository {       // get
      * @return `List<ReservationEntity>` 타입으로 반환
      */
     suspend fun getReservationsWithSmallTypes(types: List<String>): List<ReservationEntity>
+
+    /**
+     * @property getFilterItemsOR 필터를 리스트로 받아 아이템 출력하기
+     * @param typeSmall 소분류명
+     * @param typeLocation 관심 지역명
+     * @param typeServiceState 접수 가능 여부
+     * @param typePay 요금
+     * @return `List<ReservationEntity>`
+     */
+    suspend fun getFilterItemsOR(typeSmall: List<String>, typeLocation: List<String>, typeServiceState: List<String>, typePay: List<String>) : List<ReservationEntity>
 }
 
 class ReservationRepositoryImpl(
@@ -54,4 +64,21 @@ class ReservationRepositoryImpl(
     override suspend fun getReservationsWithSmallType(type: String) = reservationDAO.getItemsWithSmallType(type)
 
     override suspend fun getReservationsWithSmallTypes(types: List<String>) = reservationDAO.getItemsWithSmallTypes(types)
+
+    override suspend fun getFilterItemsOR(
+        typeSmall: List<String>,
+        typeLocation: List<String>,
+        typeServiceState: List<String>,
+        typePay: List<String>
+    ): List<ReservationEntity> {
+        val returnList: MutableList<ReservationEntity> = mutableListOf()
+        returnList += when {
+            typeSmall.isNotEmpty() -> reservationDAO.getItemsWithSmallTypes(typeSmall)
+            typeLocation.isNotEmpty() -> reservationDAO.getLocation(typeLocation)
+            typeServiceState.isNotEmpty() -> reservationDAO.getServiceState(typeServiceState)
+            typePay.isNotEmpty() -> reservationDAO.getPay(typePay)
+            else -> return returnList.toList()
+        }
+        return returnList.toList()
+    }
 }

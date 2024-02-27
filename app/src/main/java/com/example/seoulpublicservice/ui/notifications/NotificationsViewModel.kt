@@ -47,6 +47,7 @@ class NotificationsViewModel(
 //            rowList = getAll2000UseCase() // 기존 코드
             /** 기존에 row타입으로 받던 API를 reservationEntity타입으로 변환해서 Room에 저장하고
              * Romm에서 꺼낸 reservationEntity타입을 row타입으로 재 변환해서 기존의 코드에 연결함 */
+            reservationRepository.deleteAll()
             for (rowItem in getAll2000UseCase()) {
                 reservationList += RoomRowMapper.mappingRowToRoom(rowItem)
             }
@@ -56,14 +57,13 @@ class NotificationsViewModel(
             for (reservation in reservationRepository.getAllReservations()) {
                 rowList += RoomRowMapper.mappingRoomToRow(reservation)
             }
-            // 여러개의 소분류명 입,출력 테스트용
-//            val sampleList: List<String> = listOf("야구장","강당","어린이")
-//            val sampleItem: HashMap<String, String> = hashMapOf()
-//            val sampleAnswers = reservationRepository.getReservationsWithSmallTypes(sampleList)
-//            for(sampleAnswer in sampleAnswers) {
-//                sampleItem[sampleAnswer.PLACENM] = sampleAnswer.MINCLASSNM
-//            }
-//            Log.i("This is NotifiViewModel","소분류명(야구장, 강당, 어린이병원) count : ${sampleItem.count()}, list : $sampleItem")
+            // 필터 테스트 용
+            val itemSmall: List<String> = listOf("야구장","강당")
+            val itemLocate: List<String> = listOf("강서구","강남구")
+            val itemState: List<String> = listOf("안내중","접수중")
+            val itemPay: List<String> = listOf("무료")
+            val testList = reservationRepository.getFilterItemsAND(itemSmall, itemLocate, itemState, itemPay)
+            Log.i("This is NVM","\n소분류 : $itemSmall\n지역구 : $itemLocate\n접수중 : $itemState\n가 격 : $itemPay\n목록 개수 : ${testList.size}\n목록 : $testList")
 
             val row = rowList.firstOrNull()
             if (row == null) {

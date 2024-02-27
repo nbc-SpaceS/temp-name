@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.util.query
 
 /**
  * API 받아올 데이터를 담는 테이블
@@ -55,4 +56,35 @@ interface ReservationDAO {
      */
     @Query("SELECT * FROM ReservationEntity WHERE MINCLASSNM in (:types)")
     fun getItemsWithSmallTypes(types: List<String>) : List<ReservationEntity>
+
+    /**
+     * @property getLocation 지역명을 리스트로 받아 출력
+     * @param types 지역명 리스트
+     * @return `List<ReservationEntity>`
+     */
+    @Query("SELECT * FROM ReservationEntity WHERE AREANM in (:types)")
+    fun getLocation(types: List<String>) : List<ReservationEntity>
+
+    /**
+     * @property getServiceState 서비스 상태를 리스트로 받아 출력
+     * @param types 서비스 상태 리스트
+     * @return `List<ReservationEntity>`
+     */
+    @Query("SELECT * FROM ReservationEntity WHERE SVCSTATNM in (:types)")
+    fun getServiceState(types: List<String>) : List<ReservationEntity>
+
+    /**
+     * @property getPay 요금을 리스트로 받아 출력
+     * @param types 요금 리스트
+     * @return `List<ReservationEntity>`
+     */
+    @Query("SELECT * FROM ReservationEntity WHERE PAYATNM in (:types)")
+    fun getPay(types: List<String>) : List<ReservationEntity>
+
+    @Query("SELECT * FROM ReservationEntity" +
+            " WHERE ((:typeMin LIKE '%' AND MINCLASSNM IN (:typeMin)) OR (MINCLASSNM))" +
+            " AND ((:typeArea LIKE '%' AND AREANM IN (:typeArea)) OR (AREANM))" +
+            " AND ((:typeSvc LIKE '%' AND SVCSTATNM IN (:typeSvc)) OR (SVCSTATNM))" +
+            " AND ((:typePay LIKE '%' AND PAYATNM IN (:typePay)) OR (PAYATNM))")
+    fun getQueries(typeMin: List<String>, typeArea: List<String>, typeSvc: List<String>, typePay: List<String>) : List<ReservationEntity>
 }
