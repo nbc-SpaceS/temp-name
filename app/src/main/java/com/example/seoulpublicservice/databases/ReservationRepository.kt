@@ -48,6 +48,8 @@ interface ReservationRepository {       // get
      * @return `List<ReservationEntity>`
      */
     suspend fun getFilterItemsOR(typeSmall: List<String>, typeLocation: List<String>, typeServiceState: List<String>, typePay: List<String>) : List<ReservationEntity>
+
+    suspend fun getQueries(typeMin: List<String>, typeArea: List<String>, typeSvc: List<String>, typePay: List<String>) : List<ReservationEntity>
 }
 
 class ReservationRepositoryImpl(
@@ -66,14 +68,14 @@ class ReservationRepositoryImpl(
     override suspend fun getReservationsWithSmallTypes(types: List<String>) = reservationDAO.getItemsWithSmallTypes(types)
 
     override suspend fun getFilterItemsOR(
-        typeSmall: List<String>,
+        typeSubCategory: List<String>,
         typeLocation: List<String>,
         typeServiceState: List<String>,
         typePay: List<String>
     ): List<ReservationEntity> {
         val returnList: MutableList<ReservationEntity> = mutableListOf()
         returnList += when {
-            typeSmall.isNotEmpty() -> reservationDAO.getItemsWithSmallTypes(typeSmall)
+            typeSubCategory.isNotEmpty() -> reservationDAO.getItemsWithSmallTypes(typeSubCategory)
             typeLocation.isNotEmpty() -> reservationDAO.getLocation(typeLocation)
             typeServiceState.isNotEmpty() -> reservationDAO.getServiceState(typeServiceState)
             typePay.isNotEmpty() -> reservationDAO.getPay(typePay)
@@ -81,4 +83,11 @@ class ReservationRepositoryImpl(
         }
         return returnList.toList()
     }
+
+    override suspend fun getQueries(
+        typeMin: List<String>,
+        typeArea: List<String>,
+        typeSvc: List<String>,
+        typePay: List<String>
+    ) = reservationDAO.getQueries(typeMin, typeArea, typeSvc, typePay)
 }

@@ -82,9 +82,9 @@ interface ReservationDAO {
     fun getPay(types: List<String>) : List<ReservationEntity>
 
     @Query("SELECT * FROM ReservationEntity" +
-            " WHERE ((:typeMin LIKE '%' AND MINCLASSNM IN (:typeMin)) OR (MINCLASSNM))" +
-            " AND ((:typeArea LIKE '%' AND AREANM IN (:typeArea)) OR (AREANM))" +
-            " AND ((:typeSvc LIKE '%' AND SVCSTATNM IN (:typeSvc)) OR (SVCSTATNM))" +
-            " AND ((:typePay LIKE '%' AND PAYATNM IN (:typePay)) OR (PAYATNM))")
+            " WHERE MINCLASSNM in (:typeMin)" +
+            " AND AREANM in (:typeArea)" +
+            " AND SVCSTATNM in (:typeSvc)" +
+            " AND PAYATNM in (:typePay)")
     fun getQueries(typeMin: List<String>, typeArea: List<String>, typeSvc: List<String>, typePay: List<String>) : List<ReservationEntity>
 }
