@@ -7,9 +7,9 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_map"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:title="@string/title_map" />
 
     <item
         android:id="@+id/navigation_recommendation"
@@ -17,8 +17,8 @@
         android:title="@string/title_recommendation" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_my_page"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
+        android:title="MyPage" />
 
 </menu>
