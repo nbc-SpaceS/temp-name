@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         /** 액티비티에서 의존성 주입 */
-        val container = DefaultAppContainer(this)
+        val container = (application as SeoulPublicServiceApplication).container
         if (container.idPrefRepository.load() == "") {
             val id = UUID.randomUUID().toString()
             container.idPrefRepository.save(id)
