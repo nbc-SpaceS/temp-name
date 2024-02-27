@@ -1,6 +1,7 @@
 package com.example.seoulpublicservice.ui.map
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var naverMap : NaverMap
     private lateinit var locationSource: FusedLocationSource
 
-    private val viewModel: MapViewModel by viewModels()
+    private val viewModel: MapViewModel by viewModels { MapViewModel.factory}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +36,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-        val root = inflater.inflate(R.layout.fragment_map, container, false) as ViewGroup
 
         mapView = binding.root.findViewById(R.id.mv_naver) as MapView
         mapView.onCreate(savedInstanceState)
@@ -47,9 +47,36 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViewModel()
+        viewModel.load()
+
         binding.tvMapFilterBtn.setOnClickListener {
-            val dialog = FilterFragment.newInstance()
+            val dialog = FilterFragment.newInstance(
+                onClickButton = {
+                    viewModel.load()
+                }
+            )
             dialog.show(requireActivity().supportFragmentManager, "FilterFragment")
+        }
+    }
+
+    private fun initViewModel() = with(viewModel) {
+        loadedFilterOptions.observe(viewLifecycleOwner) {
+            // Room 데이터 얻어오기
+        }
+
+        hasFilter.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.tvMapFilterBtn.setTextColor(requireContext().getColor(R.color.point_color))
+            } else {
+                binding.tvMapFilterBtn.setTextColor(requireContext().getColor(R.color.black))
+            }
+        }
+
+        filteringData.observe(viewLifecycleOwner) {
+            it.forEach { entity ->
+                Log.d("dkj", "${entity}")
+            }
         }
     }
 
