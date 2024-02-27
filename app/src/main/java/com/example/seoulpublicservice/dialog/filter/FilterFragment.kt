@@ -2,7 +2,6 @@ package com.example.seoulpublicservice.dialog.filter
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +12,14 @@ import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.databinding.FragmentFilterBinding
 import com.google.android.material.chip.Chip
 
-class FilterFragment : DialogFragment() {
+class FilterFragment(
+    private val onClickButton: () -> Unit
+) : DialogFragment() {
 
     companion object {
-        fun newInstance() = FilterFragment()
+        fun newInstance(onClickButton: () -> Unit) = FilterFragment(
+            onClickButton = onClickButton
+        )
     }
 
     private var _binding: FragmentFilterBinding? = null
@@ -188,7 +191,7 @@ class FilterFragment : DialogFragment() {
 
         btnFilterApply.setOnClickListener {
             viewModel.save()
-//            Log.d("dkj", "${selectedOptions.subList(0, 5).flatten()}, ${selectedOptions[5]}, ${selectedOptions[6]}, ${selectedOptions[7]}")
+            onClickButton.invoke()
             dismiss()
         }
 
@@ -218,10 +221,10 @@ class FilterFragment : DialogFragment() {
     private fun initViewModel() = with(viewModel) {
         loadedFilterOptions.observe(viewLifecycleOwner) { filter ->
             filter.forEachIndexed { index, options ->
+                viewModel.clearTemporary(index)
                 options.forEach { option ->
                     val loadedChip = chipGroupList[index].findViewById(filterOptions[index].first { it.second == option}.first) as Chip
                     loadedChip.isChecked = true
-                    viewModel.saveTemporary(index, option)
                 }
             }
         }
