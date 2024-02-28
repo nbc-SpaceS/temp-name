@@ -52,7 +52,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_filter_title1"
@@ -66,713 +66,801 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_filter_title1_header1"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_filter_title1_header1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="체육시설"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1">
 
-            <ImageView
-                android:id="@+id/iv_filter_title1_header1_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_more"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header1" />
+                <TextView
+                    android:id="@+id/tv_filter_title1_header1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:text="체육시설"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/divider_filter_title1_header1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header1" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cg_filter_title1_header1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                app:chipSpacingHorizontal="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header1">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                <ImageView
+                    android:id="@+id/iv_filter_title1_header1_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="축구장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header1" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_filter_title1_header1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header1" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="테니스장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header1">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_3"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="탁구장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_filter_title1_header1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
+                        android:animateLayoutChanges="true"
+                        android:visibility="gone"
+                        app:chipSpacingHorizontal="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_4"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="골프장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_1"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="축구장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_5"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="야구장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_2"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="테니스장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_6"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="배구장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_3"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="탁구장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_7"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="족구장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_4"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="골프장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_8"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="풋살장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_5"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="야구장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_9"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="배드민턴장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_6"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="배구장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_10"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="다목적경기장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_7"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="족구장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_11"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="체육관"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_8"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="풋살장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_1_12"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="농구장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-            </com.google.android.material.chip.ChipGroup>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_9"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="배드민턴장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <TextView
-                android:id="@+id/tv_filter_title1_header2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="교육"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cg_filter_title1_header1" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_10"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="다목적경기장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <ImageView
-                android:id="@+id/iv_filter_title1_header2_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_more"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header2" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_11"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="체육관"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/divider_filter_title1_header2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header2" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_1_12"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="농구장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cg_filter_title1_header2"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_filter_title1_header2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                app:chipSpacingHorizontal="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header2">
+                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title1_header1">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                <TextView
+                    android:id="@+id/tv_filter_title1_header2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:text="교육"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_filter_title1_header2_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="교양/어학"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header2" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_filter_title1_header2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header2" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="정보통신"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header2">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_3"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="역사"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_filter_title1_header2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
+                        android:animateLayoutChanges="true"
+                        android:visibility="gone"
+                        app:chipSpacingHorizontal="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_4"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="자연과학"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_1"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="교양/어학"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_5"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="도시농업"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_2"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="정보통신"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_6"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="청년정보"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_3"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="역사"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_7"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="스포츠"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_4"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="자연과학"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_8"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="미술제작"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_5"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="도시농업"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_9"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="공예/취미"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_6"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="청년정보"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_10"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="전문/자격증"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_7"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="스포츠"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_2_11"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="기타"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-            </com.google.android.material.chip.ChipGroup>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_8"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="미술제작"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <TextView
-                android:id="@+id/tv_filter_title1_header3"
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_9"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="공예/취미"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_10"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="전문/자격증"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_2_11"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="기타"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_filter_title1_header3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="문화행사"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cg_filter_title1_header2" />
+                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title1_header2">
 
-            <ImageView
-                android:id="@+id/iv_filter_title1_header3_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_more"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header3" />
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/divider_filter_title1_header3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header3" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cg_filter_title1_header3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                app:chipSpacingHorizontal="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header3">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_3_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_filter_title1_header3"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="전시/관람"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_3_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="교육체험"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_3_3"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
                     android:text="문화행사"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_3_4"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                <ImageView
+                    android:id="@+id/iv_filter_title1_header3_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="산림여가"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header3" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_3_5"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_filter_title1_header3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header3" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="공원탐방"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header3">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_3_6"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="서울형키즈카페"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_filter_title1_header3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
+                        android:animateLayoutChanges="true"
+                        android:visibility="gone"
+                        app:chipSpacingHorizontal="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_3_7"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="농장체험"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-            </com.google.android.material.chip.ChipGroup>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_3_1"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="전시/관람"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <TextView
-                android:id="@+id/tv_filter_title1_header4"
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_3_2"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="교육체험"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_3_3"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="문화행사"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_3_4"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="산림여가"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_3_5"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="공원탐방"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_3_6"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="서울형키즈카페"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_3_7"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="농장체험"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_filter_title1_header4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="시설대관"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cg_filter_title1_header3" />
+                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title1_header3">
 
-            <ImageView
-                android:id="@+id/iv_filter_title1_header4_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_more"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header4" />
+                <TextView
+                    android:id="@+id/tv_filter_title1_header4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:text="시설대관"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/divider_filter_title1_header4"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header4" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cg_filter_title1_header4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                app:chipSpacingHorizontal="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header4">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                <ImageView
+                    android:id="@+id/iv_filter_title1_header4_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="다목적실"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header4" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_filter_title1_header4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header4" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="공연장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header4">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_3"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="강당"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_filter_title1_header4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        app:chipSpacingHorizontal="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_4"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="주민공유공간"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_1"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="다목적실"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_5"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="캠핑장"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_2"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="공연장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_6"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="청년공간"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_3"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="강당"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_7"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="녹화장소"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_4"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="주민공유공간"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_8"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="회의실"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_5"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="캠핑장"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_9"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="강의실"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_6"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="청년공간"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_4_10"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="민원/기타"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-            </com.google.android.material.chip.ChipGroup>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_7"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="녹화장소"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <TextView
-                android:id="@+id/tv_filter_title1_header5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="진료"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cg_filter_title1_header4" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_8"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="회의실"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <ImageView
-                android:id="@+id/iv_filter_title1_header5_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_more"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header5"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header5" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_9"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="강의실"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/divider_filter_title1_header5"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header5" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_4_10"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="민원/기타"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cg_filter_title1_header5"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_filter_title1_header5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                app:chipSpacingHorizontal="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header5">
+                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title1_header4">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_5_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                <TextView
+                    android:id="@+id/tv_filter_title1_header5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:text="진료"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_filter_title1_header5_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="병원"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title1_header5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_filter_title1_header5" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_5_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="어린이병원"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_filter_title1_header5"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_filter_title1_header5" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_1_5_3"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="장애인버스"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-            </com.google.android.material.chip.ChipGroup>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider_filter_title1_header5">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_filter_title1_header5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        app:chipSpacingHorizontal="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_5_1"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="병원"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_5_2"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="어린이병원"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_1_5_3"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="장애인버스"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_filter_title2"
@@ -785,329 +873,346 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cg_filter_title1_header5" />
+                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title1_header5" />
 
-            <TextView
-                android:id="@+id/tv_filter_title2_header1"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_filter_title2_header1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:text="서울시"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title2" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title2">
 
-            <ImageView
-                android:id="@+id/iv_filter_title2_header1_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_more"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title2_header1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_filter_title2_header1" />
+                <TextView
+                    android:id="@+id/tv_filter_title2_header1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:text="서울시"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/divider_filter_title2_header1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title2_header1" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/cg_filter_title2_header1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                app:chipSpacingHorizontal="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider_filter_title2_header1">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_1"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                <ImageView
+                    android:id="@+id/iv_filter_title2_header1_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="강남구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title2_header1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_filter_title2_header1" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_2"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="강동구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider_filter_title2_header1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_filter_title2_header1" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_3"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="강북구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/divider_filter_title2_header1">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_4"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="강서구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cg_filter_title2_header1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        app:chipSpacingHorizontal="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_5"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="관악구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_1"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="강남구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_6"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="광진구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_2"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="강동구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_7"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="구로구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_3"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="강북구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_8"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="금천구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_4"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="강서구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_9"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="노원구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_5"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="관악구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_10"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="도봉구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_6"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="광진구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_11"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="동대문구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_7"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="구로구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_12"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="동작구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_8"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="금천구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_13"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="마포구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_9"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="노원구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_14"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="서대문구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_10"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="도봉구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_15"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="서초구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_11"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="동대문구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_16"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="성동구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_12"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="동작구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_17"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="성북구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_13"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="마포구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_18"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="송파구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_14"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="서대문구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_19"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="양천구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_15"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="서초구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_20"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="영등포구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_16"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="성동구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_21"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="용산구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_17"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="성북구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_22"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="은평구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_18"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="송파구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_23"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="종로구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_19"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="양천구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_24"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="중구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_20"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="영등포구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_2_1_25"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="중랑구"
-                    android:textColor="@color/selector_chip_button_text"
-                    android:textSize="14sp"
-                    app:chipBackgroundColor="@color/selector_chip_button"
-                    app:chipMinHeight="36dp" />
-            </com.google.android.material.chip.ChipGroup>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_21"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="용산구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_22"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="은평구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_23"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="종로구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_24"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="중구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_2_1_25"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="중랑구"
+                            android:textColor="@color/selector_chip_button_text"
+                            android:textSize="14sp"
+                            app:chipBackgroundColor="@color/selector_chip_button"
+                            app:chipMinHeight="36dp" />
+                    </com.google.android.material.chip.ChipGroup>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_filter_title3"
@@ -1120,7 +1225,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cg_filter_title2_header1" />
+                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title2_header1" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/cg_filter_title3_header1"
