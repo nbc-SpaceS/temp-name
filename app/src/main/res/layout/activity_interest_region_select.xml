@@ -10,9 +10,9 @@
         android:id="@+id/iv_interest_region_select_back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_back"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +44,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn1"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
@@ -61,7 +61,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn2"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -77,7 +77,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn3"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -93,7 +93,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn4"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -109,7 +109,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn5"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
@@ -126,7 +126,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn6"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -142,7 +142,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn7"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -158,7 +158,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn8"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -174,7 +174,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn9"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
@@ -191,7 +191,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn10"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -207,7 +207,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn11"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -223,7 +223,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn12"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -239,7 +239,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn13"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
@@ -256,7 +256,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn14"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -272,7 +272,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn15"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -288,7 +288,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn16"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -304,7 +304,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn17"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
@@ -321,7 +321,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn18"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -337,7 +337,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn19"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -353,7 +353,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn20"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -369,7 +369,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn21"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
@@ -386,7 +386,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn22"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -402,7 +402,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn23"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -418,7 +418,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn24"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:background="@drawable/selector_custom_region_checkbox"
             android:button="@null"
             android:gravity="center"
@@ -434,7 +434,7 @@
         <CheckBox
             android:id="@+id/cb_interest_region_select_btn25"
             android:layout_width="75dp"
-            android:layout_height="32dp"
+            android:layout_height="35dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/selector_custom_region_checkbox"
@@ -451,10 +451,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:src="@drawable/img_seoul"
         app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
@@ -475,9 +476,9 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_interest_region_select_okay"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="15dp"
+        android:layout_height="45dp"
         android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/selector_okay_button"
         android:enabled="false"
         android:text="확인"

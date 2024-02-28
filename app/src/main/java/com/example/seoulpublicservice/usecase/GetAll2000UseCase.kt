@@ -15,29 +15,31 @@ class GetAll2000UseCase(
     private var rowList: List<Row> = emptyList()
     private val tempKeyRowsSavedTime = "tempKeyRowsSavedTime"
 
-    suspend operator fun invoke(): List<Row> {
-        var isRecent = false
-        val rowsSavedTime = prefRepository.load(tempKeyRowsSavedTime).toLongOrNull()
-        if (rowsSavedTime == null) {
-            Log.w(
-                "jj-GetAll2000UseCase",
-                "prefRepository.load(tempKeyRowsSavedTime).toLongOrNull() == null"
-            )
-        } else {
-            val timeDiff = System.currentTimeMillis() - rowsSavedTime
-            Log.d("jj-GetAll2000UseCase", "timeDiff: $timeDiff")
-            isRecent = timeDiff < 180_000L
-        }
+//    suspend operator fun invoke(): List<Row> {
+//        var isRecent = false
+//        val rowsSavedTime = prefRepository.load(tempKeyRowsSavedTime).toLongOrNull()
+//        if (rowsSavedTime == null) {
+//            Log.w(
+//                "jj-GetAll2000UseCase",
+//                "prefRepository.load(tempKeyRowsSavedTime).toLongOrNull() == null"
+//            )
+//        } else {
+//            val timeDiff = System.currentTimeMillis() - rowsSavedTime
+//            Log.d("jj-GetAll2000UseCase", "timeDiff: $timeDiff")
+//            isRecent = timeDiff < 180_000L
+//        }
+//
+//        if (isRecent) {
+//            rowList = rowPrefRepository.loadRows()
+//            if (rowList.isEmpty()) getAll2000()
+//        } else {
+//            getAll2000()
+//        }
+//
+//        return rowList
+//    }
 
-        if (isRecent) {
-            rowList = rowPrefRepository.loadRows()
-            if (rowList.isEmpty()) getAll2000()
-        } else {
-            getAll2000()
-        }
-
-        return rowList
-    }
+    suspend operator fun invoke(): List<Row> = emptyList()
 
     private suspend fun getAll2000() {
         rowList = seoulPublicRepository.getAll2000()

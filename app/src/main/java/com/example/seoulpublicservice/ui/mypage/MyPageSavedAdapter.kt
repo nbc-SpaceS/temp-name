@@ -24,6 +24,10 @@ class MyPageSavedAdapter(
     inner class VH(private val b: CategoryItemBinding) :
         RecyclerView.ViewHolder(b.root) {
 
+        init {
+            b.root.setOnClickListener {}
+        }
+
         fun onBind(item: Row) {
             if (item.imgurl.isBlank()) b.ivSmallVideoImage.load(R.drawable.place_holder_1)
             else b.ivSmallVideoImage.load(item.imgurl)
