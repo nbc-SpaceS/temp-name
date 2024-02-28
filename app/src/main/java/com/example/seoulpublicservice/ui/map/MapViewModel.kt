@@ -10,14 +10,17 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.seoulpublicservice.SeoulPublicServiceApplication
 import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databases.ReservationRepository
+import com.example.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.example.seoulpublicservice.pref.FilterPrefRepository
+import com.example.seoulpublicservice.util.RoomRowMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MapViewModel(
     private val filterPrefRepository: FilterPrefRepository,
-    private val reservationRepository: ReservationRepository
+    private val reservationRepository: ReservationRepository,
+    private val dbMemoryRepository: DbMemoryRepository,
 ) : ViewModel() {
 
     private val _loadedFilterOptions: MutableLiveData<List<List<String>>> = MutableLiveData()
@@ -38,7 +41,15 @@ class MapViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                _filteringData.postValue(reservationRepository.getReservationsWithSmallTypes(loadedData[0]))
+                //_filteringData.postValue(reservationRepository.getReservationsWithSmallTypes(loadedData[0]))
+
+                _filteringData.postValue(
+                    RoomRowMapper.mappingRowToRoom(
+                        dbMemoryRepository.getFiltered(
+                            loadedData[0]
+                        )
+                    )
+                )
             }
         }
     }
@@ -51,7 +62,8 @@ class MapViewModel(
                 val container = application.container
                 MapViewModel(
                     filterPrefRepository = container.filterPrefRepository,
-                    reservationRepository = container.reservationRepository
+                    reservationRepository = container.reservationRepository,
+                    dbMemoryRepository = container.dbMemoryRepository
                 )
             }
         }
