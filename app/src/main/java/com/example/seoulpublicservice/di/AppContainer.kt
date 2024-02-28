@@ -16,6 +16,7 @@ import com.example.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.RowPrefRepository
 import com.example.seoulpublicservice.pref.RowPrefRepositoryImpl
 import com.example.seoulpublicservice.seoul.SeoulApiService
+import com.example.seoulpublicservice.seoul.SeoulPublicRepository
 import com.example.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.example.seoulpublicservice.usecase.GetAll2000UseCase
 import com.example.seoulpublicservice.usecase.GetDetailSeoulUseCase
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit
 
 /** Dependency Injection container */
 interface AppContainer {
+    val seoulPublicRepository: SeoulPublicRepository
     val getAll2000UseCase: GetAll2000UseCase
     val getDetailSeoulUseCase: GetDetailSeoulUseCase
     val prefRepository: PrefRepository
@@ -73,7 +75,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
         retrofit.create(SeoulApiService::class.java)
     }
 
-    private val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
+    override val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
 
 //    override val seoulPublicRepository: SeoulPublicRepository by lazy {
 //        SeoulPublicRepositoryImpl(retrofitService)
