@@ -1,15 +1,14 @@
 package com.example.seoulpublicservice.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.adapter.ItemAdapter
 import com.example.seoulpublicservice.data.Item
-import com.example.seoulpublicservice.databinding.FragmentFacilityBinding
 import com.example.seoulpublicservice.databinding.FragmentFacilityRentBinding
 
 class FacilityRentFragment : Fragment() {

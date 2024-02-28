@@ -1,6 +1,7 @@
 package com.example.seoulpublicservice.ui.home
 
 import android.content.Intent
+import androidx.navigation.fragment.findNavController
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.seoulpublicservice.InterestRegionSelectActivity
+import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.databinding.FragmentHomeBinding
+import com.example.seoulpublicservice.ui.notifications.NotificationsFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
@@ -29,7 +32,14 @@ class HomeFragment : Fragment() {
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
 
+        // 지역 선택 화면으로 이동
         binding.tvSelectArea.setOnClickListener {
+            val intent = Intent(context, InterestRegionSelectActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 공지사항 화면으로 이동
+        binding.ivNotification.setOnClickListener {
 
         }
 
