@@ -37,7 +37,9 @@ class MyPageAdapter(
 
         val viewType: Type
 
-        data object Profile : MultiView {
+        data class Profile(
+            val onEditButtonClick: () -> Unit
+        ) : MultiView {
             override val viewType: Type = Type.PROFILE
         }
 
@@ -69,6 +71,13 @@ class MyPageAdapter(
 
     inner class ProfileHolder(private val b: MyPageItemProfileBinding) :
         CommonViewHolder(b.root) {
+
+        init {
+            b.clProfileEdit.setOnClickListener {
+                (getItem(bindingAdapterPosition) as MultiView.Profile).onEditButtonClick()
+            }
+        }
+
         override fun onBind(item: MultiView) {
         }
     }
@@ -92,9 +101,9 @@ class MyPageAdapter(
 
     inner class ReviewedHolder(private val b: MyPageItemReviewedBinding) :
         CommonViewHolder(b.root) {
+
         init {
-            b.root.setOnClickListener {
-            }
+            b.root.setOnClickListener {}
         }
 
         override fun onBind(item: MultiView) {
@@ -103,8 +112,8 @@ class MyPageAdapter(
             else b.ivReviewedThumbnail.load(row.imgurl)
             b.tvReviewedArea.text = row.areanm
             b.tvReviewedTitle.text = row.svcnm
-            b.tvReviewedReviewContent.text = "댓글 단 내용은 이런 식으로~"
-            b.tvReviewedDate.text = "12-34-56"
+            b.tvReviewedReviewContent.text = row.dtlcont.take(31)  // 일단 내용이나 띄워둠
+            b.tvReviewedDate.text = row.rcptenddt  // 일단 예약마감 일자나 띄워둠
         }
     }
 
