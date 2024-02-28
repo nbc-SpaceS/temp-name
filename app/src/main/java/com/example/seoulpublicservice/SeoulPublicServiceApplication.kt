@@ -24,7 +24,7 @@ class SeoulPublicServiceApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        _container = DefaultAppContainer(this)
+        _container = DefaultAppContainer(this) { rowList }
 
         CoroutineScope(Dispatchers.Default).launch { updateRowList() }
     }

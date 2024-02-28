@@ -25,10 +25,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val binding get() = _binding!!
 
     private lateinit var mapView: MapView
-    private lateinit var naverMap : NaverMap
+    private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
 
-    private val viewModel: MapViewModel by viewModels { MapViewModel.factory}
+    private val viewModel: MapViewModel by viewModels { MapViewModel.factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,7 +75,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         filteringData.observe(viewLifecycleOwner) {
             it.forEach { entity ->
-                Log.d("dkj", "${entity}")
+                Log.d("dkj", "${entity.MINCLASSNM}/$entity".take(255))
             }
         }
     }
