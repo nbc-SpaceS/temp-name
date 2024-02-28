@@ -5,6 +5,8 @@ import com.example.seoulpublicservice.BuildConfig
 import com.example.seoulpublicservice.databases.ReservationDatabase
 import com.example.seoulpublicservice.databases.ReservationRepository
 import com.example.seoulpublicservice.databases.ReservationRepositoryImpl
+import com.example.seoulpublicservice.db_by_memory.DbMemoryRepository
+import com.example.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.example.seoulpublicservice.pref.FilterPrefRepository
 import com.example.seoulpublicservice.pref.FilterPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.IdPrefRepository
@@ -15,6 +17,7 @@ import com.example.seoulpublicservice.pref.RegionPrefRepository
 import com.example.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.RowPrefRepository
 import com.example.seoulpublicservice.pref.RowPrefRepositoryImpl
+import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.seoul.SeoulApiService
 import com.example.seoulpublicservice.seoul.SeoulPublicRepository
 import com.example.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
@@ -42,9 +45,10 @@ interface AppContainer {
     val filterPrefRepository: FilterPrefRepository
     val idPrefRepository: IdPrefRepository
     val reservationRepository: ReservationRepository
+    val dbMemoryRepository: DbMemoryRepository
 }
 
-class DefaultAppContainer(context: Context) : AppContainer {
+class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
     // TODO: retrofit 관련 로직들 따로 빼야 하나
     private val baseUrl = "http://openapi.seoul.go.kr:8088"
 
@@ -120,6 +124,10 @@ class DefaultAppContainer(context: Context) : AppContainer {
     private val database by lazy { ReservationDatabase.getDatabase(context) }
     override val reservationRepository by lazy {
         ReservationRepositoryImpl(database.getReservation())
+    }
+
+    override val dbMemoryRepository: DbMemoryRepository by lazy {
+        DbMemoryRepositoryImpl(getAppRowList)
     }
 
 }
