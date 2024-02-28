@@ -29,7 +29,7 @@ interface ReservationDAO {
 
 
     /**
-     * @property getAll ReservationEntity 속성을 가지는 모든 값을 불러오기
+     * @property getAll ReservationEntity 속성을 가지는 모든 값을 공백이 들어오는 부분 불러오기
      */
     @Query("SELECT * FROM ReservationEntity")
     fun getAll() : List<ReservationEntity>
@@ -87,4 +87,17 @@ interface ReservationDAO {
             " AND SVCSTATNM in (:typeSvc)" +
             " AND PAYATNM in (:typePay)")
     fun getQueries(typeMin: List<String>, typeArea: List<String>, typeSvc: List<String>, typePay: List<String>) : List<ReservationEntity>
+
+//    @Query("SELECT * FROM ReservationEntity WHERE (AREANM OR DTLCONT OR IMGURL OR RCPTBGNDT OR RCPTENDDT OR REVSTDDAYNM OR SVCOPNBGNDT OR SVCOPNENDDT) IS NOT ''")
+@Query("SELECT * FROM ReservationEntity " +
+        "WHERE AREANM IS NOT NULL AND AREANM != '' " +
+        "AND DTLCONT IS NOT NULL AND DTLCONT != '' " +
+        "AND IMGURL IS NOT NULL AND IMGURL != '' " +
+        "AND RCPTBGNDT IS NOT NULL AND RCPTBGNDT != '' " +
+        "AND RCPTENDDT IS NOT NULL AND RCPTENDDT != '' " +
+        "AND REVSTDDAYNM IS NOT NULL AND REVSTDDAYNM != '' " +
+        "AND SVCOPNBGNDT IS NOT NULL AND SVCOPNBGNDT != '' " +
+        "AND SVCOPNENDDT IS NOT NULL AND SVCOPNENDDT != '' " +
+        "AND SVCID NOT LIKE 'XML%'")
+    fun getNOTBlank() : List<ReservationEntity>
 }

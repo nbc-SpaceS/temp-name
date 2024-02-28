@@ -44,26 +44,22 @@ class NotificationsViewModel(
         _isBtnEnabled.value = false
         // getAll2000UseCase 처리 시 1600개 정도 데이터를 변환하고 반환하는 과정이 cpu가 좀 필요할 듯 해서 Default로 줌.
         val job = if (rowList.isEmpty()) viewModelScope.launch(Dispatchers.Default) {
-//            rowList = getAll2000UseCase() // 기존 코드
-            /** 기존에 row타입으로 받던 API를 reservationEntity타입으로 변환해서 Room에 저장하고
-             * Romm에서 꺼낸 reservationEntity타입을 row타입으로 재 변환해서 기존의 코드에 연결함 */
-            reservationRepository.deleteAll()
+
             for (rowItem in getAll2000UseCase()) {
                 reservationList += RoomRowMapper.mappingRowToRoom(rowItem)
             }
             Log.i("This is NotifiViewModel", "reserve count : ${reservationList.count()}")
             reservationRepository.insertAll(reservationList)
-            /** Room에서 꺼낸 데이터 각각을 Row타입으로 변환해 rowList에 저장하는 부분 */
-            for (reservation in reservationRepository.getAllReservations()) {
+            for (reservation in reservationRepository.getAll()) {
                 rowList += RoomRowMapper.mappingRoomToRow(reservation)
             }
             // 필터 테스트 용
-            val itemSmall: List<String> = listOf("야구장")
-            val itemLocate: List<String> = listOf()
-            val itemState: List<String> = listOf()
-            val itemPay: List<String> = listOf()
-            val testList = reservationRepository.getQueries(itemSmall, itemLocate, itemState, itemPay)
-            Log.i("This is NVM","\n소분류 : $itemSmall\n지역구 : $itemLocate\n접수중 : $itemState\n가 격 : $itemPay\n목록 개수 : ${testList.size}")
+//            val itemSmall: List<String> = listOf("야구장","강당")
+//            val itemLocate: List<String> = listOf("강남구")
+//            val itemState: List<String> = listOf("접수중")
+//            val itemPay: List<String> = listOf("무료")
+//            val testList = reservationRepository.getFilterItemsOR(itemSmall, itemLocate, itemState, itemPay)
+//            Log.i("This is NVM","\n소분류 : $itemSmall\n지역구 : $itemLocate\n접수중 : $itemState\n가 격 : $itemPay\n목록 개수 : ${testList.size}")
 
             val row = rowList.firstOrNull()
             if (row == null) {
