@@ -5,8 +5,8 @@ import android.util.Log
 import com.google.gson.Gson
 
 interface SavedPrefRepository {
-    fun saveServices(svcidList: List<String>)
-    fun loadServices(): List<String>
+    fun saveSvcidList(svcidList: List<String>)
+    fun loadSvcidList(): List<String>
 }
 
 class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
@@ -14,17 +14,17 @@ class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
     private val pref = context.getSharedPreferences("SavedPrefRepository", Context.MODE_PRIVATE)
     private val gson = Gson()
 
-    private val keySavedServiceIdList = "keySavedServiceIdList"
+    private val keySvcidList = "keySvcidList"
 
-    override fun saveServices(svcidList: List<String>) {
+    override fun saveSvcidList(svcidList: List<String>) {
         val json = gson.toJson(svcidList)
-        pref.edit().putString(keySavedServiceIdList, json).apply()
+        pref.edit().putString(keySvcidList, json).apply()
     }
 
-    override fun loadServices(): List<String> {
-        val json = pref.getString(keySavedServiceIdList, null) ?: return emptyList<String>()
-            .apply { Log.w("jj-SavedPrefRepositoryImpl", "loadServices got null") }
-        Log.d("jj-SavedPrefRepositoryImpl", "loadServices json: ${json.take(255)}")
+    override fun loadSvcidList(): List<String> {
+        val json = pref.getString(keySvcidList, null) ?: return emptyList<String>()
+            .apply { Log.w("jj-SavedPrefRepositoryImpl", "loadSvcidList got null") }
+        Log.d("jj-SavedPrefRepositoryImpl", "loadSvcidList json: ${json.take(255)}")
         return gson.fromJson(json, Array<String>::class.java).toList()
     }
 
