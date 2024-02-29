@@ -19,32 +19,10 @@ class MyPageFragment : Fragment() {
 
     private var _binding: FragmentMyPageBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MyPageViewModel by viewModels()
+    private val viewModel: MyPageViewModel by viewModels { MyPageViewModel.factory }
 
     private val myPageSavedAdapter by lazy {
         MyPageSavedAdapter()
-            .apply {
-                val rows = (requireActivity().application as SeoulPublicServiceApplication).rowList
-                if (rows.isEmpty()) {
-                    var a = 0
-                    submitList(
-                        listOf(
-                            Row.new(svcnm = "첫 번째 제목~~", areanm = "가가구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "두 번째 제목~~", areanm = "나나구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "세 번째 제목~~", areanm = "다다구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "첫 번째 제목~~", areanm = "가가구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "두 번째 제목~~", areanm = "나나구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "세 번째 제목~~", areanm = "다다구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "첫 번째 제목~~", areanm = "가가구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "두 번째 제목~~", areanm = "나나구", svcstatnm = "접수${++a}"),
-                            Row.new(svcnm = "세 번째 제목~~", areanm = "다다구", svcstatnm = "접수${++a}"),
-                        )
-                    )
-                } else {
-                    val random = Random
-                    submitList(List(9) { rows[random.nextInt(rows.size)] })
-                }
-            }
     }
 
     private val fixedItems: List<MyPageAdapter.MultiView> by lazy {
@@ -59,7 +37,9 @@ class MyPageFragment : Fragment() {
     }
 
     private val myPageAdapter by lazy {
-        MyPageAdapter().apply {
+        MyPageAdapter(
+            onClearClick = { viewModel.clearSavedList() }
+        ).apply {
             val rows = (requireActivity().application as SeoulPublicServiceApplication).rowList
             if (rows.isEmpty()) {
                 var a = 0
@@ -117,7 +97,16 @@ class MyPageFragment : Fragment() {
         b.rvMyPage.adapter = myPageAdapter
     }
 
-    private fun initViewModel() {
+    private fun initViewModel() = viewModel.let { vm ->
+        vm.savedList.observe(viewLifecycleOwner) {
+            myPageSavedAdapter.submitList(it)
+        }
+    }
+
+    override fun onResume() {
+        viewModel.loadSavedList()
+
+        super.onResume()
     }
 
 }
