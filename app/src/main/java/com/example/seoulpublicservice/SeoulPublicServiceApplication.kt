@@ -49,7 +49,7 @@ class SeoulPublicServiceApplication : Application() {
             if (isOld) {
                 getAndUpdateAll2000()
             } else {
-                val reservationEntities = container.reservationRepository.getAllReservations()
+                val reservationEntities = container.reservationRepository.getAll()
                 _rowList = RoomRowMapper.mappingRoomToRow(reservationEntities)
                 if (_rowList.isEmpty()) getAndUpdateAll2000()
             }
