@@ -91,7 +91,7 @@
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        android:background="@drawable/background_radius_10dp_f8496c"
+        android:background="@drawable/background_radius_10dp_ff6685"
         android:text="확인"
         android:textColor="#FFFFFF"
         android:textSize="16sp"

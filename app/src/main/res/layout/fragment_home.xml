@@ -6,30 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/tv_select_area"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="지역선택"
-        android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/tv_select_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지역선택"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner_select_area"
+            style="@style/SpinnerStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:padding="4dp"
         android:background="@drawable/background_radius_10dp_dfdfdd"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_select_area"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/layout_area"
         app:layout_constraintEnd_toStartOf="@+id/iv_notification"
-        app:layout_constraintStart_toEndOf="@+id/tv_select_area"
-        app:layout_constraintTop_toTopOf="@+id/tv_select_area">
+        app:layout_constraintStart_toEndOf="@+id/layout_area"
+        app:layout_constraintTop_toTopOf="@+id/layout_area">
 
         <ImageView
             android:id="@+id/iv_search"
@@ -55,7 +75,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_search"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_search"
-            app:layout_constraintTop_toTopOf="@+id/iv_search" />
+            app:layout_constraintTop_toTopOf="@+id/iv_search"
+            app:layout_constraintVertical_bias="1.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
@@ -78,7 +99,7 @@
         android:textSize="16sp"
         android:text="찾으시는 공공서비스가 있나요?"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_select_area" />
+        app:layout_constraintTop_toBottomOf="@+id/layout_area" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
@@ -92,8 +113,10 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/tab_layout"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
