@@ -31,14 +31,16 @@ class FilterPrefRepositoryImpl(context: Context) : FilterPrefRepository {
         val title1Header4Data = gsonBuilder.create().toJson(value[3])
         val title1Header5Data = gsonBuilder.create().toJson(value[4])
         val title2Header1Data = gsonBuilder.create().toJson(value[5])
-        val title3Header1Data = gsonBuilder.create().toJson(value[6])
-        val title4Header1Data = gsonBuilder.create().toJson(value[7])
+        val title2Header2Data = gsonBuilder.create().toJson(value[6])
+        val title3Header1Data = gsonBuilder.create().toJson(value[7])
+        val title4Header1Data = gsonBuilder.create().toJson(value[8])
         editor.putString("체육시설", title1Header1Data)
         editor.putString("교육", title1Header2Data)
         editor.putString("문화행사", title1Header3Data)
         editor.putString("시설대관", title1Header4Data)
         editor.putString("진료", title1Header5Data)
         editor.putString("관심지역", title2Header1Data)
+        editor.putString("관심지역(서울제외지역)", title2Header2Data)
         editor.putString("접수가능여부", title3Header1Data)
         editor.putString("요금", title4Header1Data)
         editor.apply()
@@ -51,6 +53,7 @@ class FilterPrefRepositoryImpl(context: Context) : FilterPrefRepository {
         val title1Header4Data = pref.getString("시설대관", "")
         val title1Header5Data = pref.getString("진료", "")
         val title2Header1Data = pref.getString("관심지역", "")
+        val title2Header2Data = pref.getString("관심지역(서울제외지역)", "")
         val title3Header1Data = pref.getString("접수가능여부", "")
         val title4Header1Data = pref.getString("요금", "")
 
@@ -99,6 +102,14 @@ class FilterPrefRepositoryImpl(context: Context) : FilterPrefRepository {
         if (title2Header1Data != "") {
             val gsonBuilder = GsonBuilder()
             val list = gsonBuilder.create().fromJson(title2Header1Data, List::class.java)
+            loadedData.add(list as List<String>)
+        } else {
+            loadedData.add(listOf())
+        }
+
+        if (title2Header2Data != "") {
+            val gsonBuilder = GsonBuilder()
+            val list = gsonBuilder.create().fromJson(title2Header2Data, List::class.java)
             loadedData.add(list as List<String>)
         } else {
             loadedData.add(listOf())

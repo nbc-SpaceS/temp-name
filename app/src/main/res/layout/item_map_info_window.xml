@@ -15,7 +15,7 @@
         android:layout_height="90dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="20dp"
         android:scaleType="centerCrop"
         android:src="@drawable/place_holder_1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,8 +29,8 @@
         android:layout_marginStart="8dp"
         android:text="송파구"
         android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/iv_map_info_picture"
-        app:layout_constraintStart_toEndOf="@+id/iv_map_info_picture" />
+        app:layout_constraintStart_toEndOf="@+id/iv_map_info_picture"
+        app:layout_constraintTop_toTopOf="@+id/iv_map_info_picture" />
 
     <TextView
         android:id="@+id/tv_map_info_service"
@@ -78,7 +78,7 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_map_info_region"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_map_info_pay"
         app:layout_constraintEnd_toEndOf="@+id/btn_map_info_reservation"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,7 +94,7 @@
         android:textColor="@color/black"
         android:textSize="12sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_map_info_region"
+        app:layout_constraintBottom_toTopOf="@+id/tv_map_info_region"
         app:layout_constraintEnd_toStartOf="@+id/tv_map_info_availablility" />
 
     <androidx.appcompat.widget.AppCompatButton

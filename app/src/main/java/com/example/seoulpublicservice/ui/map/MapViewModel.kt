@@ -30,6 +30,9 @@ class MapViewModel(
 
     private val hash: HashMap<Pair<String, String>, List<Row>> = hashMapOf()
 
+    private var _filterCount: Int = 0
+    val filterCount: Int get() = _filterCount
+
     private var _hasFilter: MutableLiveData<Boolean> = MutableLiveData()
     val hasFilter: LiveData<Boolean> get() = _hasFilter
 
@@ -60,17 +63,28 @@ class MapViewModel(
         readyData = false
         val loadedData = filterPrefRepository.load()
 
+        _filterCount = loadedData.count { it.isNotEmpty() }
         _hasFilter.value = loadedData.any { it.isNotEmpty() }
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
 
+//                var item = RoomRowMapper.mappingRoomToRow(
+//                    reservationRepository.getFilter(
+//                        loadedData.subList(0, 5).flatten(),
+//                        loadedData.subList(5, 7).flatten(),
+//                        loadedData[7],
+//                        loadedData[8],
+//                    )
+//                )
+
                 val item = dbMemoryRepository.getFiltered(
                     loadedData.subList(0, 5).flatten(),
-                    loadedData[5],
-                    loadedData[6],
-                    loadedData[7]
+                    loadedData.subList(5, 7).flatten(),
+                    loadedData[7],
+                    loadedData[8],
                 )
+
                 hash.clear()
                 for (i in item) {
                     if (hash.containsKey(Pair(i.y, i.x))) {
