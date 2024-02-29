@@ -1,7 +1,6 @@
 package com.example.seoulpublicservice.seoul
 
 import android.util.Log
-import com.example.seoulpublicservice.util.trimUpTo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import retrofit2.Response
@@ -32,7 +31,7 @@ class SeoulPublicRepositoryImpl(
         } else {
             val s =
                 "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                        body.tvYeyakCOllect.rowList.firstOrNull().toString().trimUpTo(127)
+                        body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
             Log.d(
                 "jj-SeoulPublicRepositoryImpl",
                 "getAll1000 응답: $s"
@@ -48,15 +47,15 @@ class SeoulPublicRepositoryImpl(
             if (body == null) {
                 Log.d(
                     "jj-SeoulPublicRepositoryImpl",
-                    "getAll2000 천 천개 body == null"
+                    "getAll2000 1~1000 body == null"
                 )
             } else {
                 val s =
                     "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                            body.tvYeyakCOllect.rowList.firstOrNull().toString().trimUpTo(127)
+                            body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
                 Log.d(
                     "jj-SeoulPublicRepositoryImpl",
-                    "getAll2000 천 천개 응답: $s"
+                    "getAll2000 1~1000 응답: $s"
                 )
             }
             convertResponseToItems(response)
@@ -67,15 +66,15 @@ class SeoulPublicRepositoryImpl(
             if (body == null) {
                 Log.d(
                     "jj-SeoulPublicRepositoryImpl",
-                    "getAllFirst2000 1001~2000 body == null"
+                    "getAll2000 1001~2000 body == null"
                 )
             } else {
                 val s =
                     "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                            body.tvYeyakCOllect.rowList.firstOrNull().toString().trimUpTo(127)
+                            body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
                 Log.d(
                     "jj-SeoulPublicRepositoryImpl",
-                    "getAllFirst2000 1001~2000 응답: $s"
+                    "getAll2000 1001~2000 응답: $s"
                 )
             }
             convertResponseToItems(response)
@@ -96,7 +95,7 @@ class SeoulPublicRepositoryImpl(
                 val s =
                     "total: ${body.listPublicReservationDetail.listTotalCount}, ${body.listPublicReservationDetail.result}\n" +
                             body.listPublicReservationDetail.rowList.firstOrNull().toString()
-                                .trimUpTo(127)
+                                .take(127)
                 Log.d(
                     "jj-SeoulPublicRepositoryImpl",
                     "getDetail 응답: $s"

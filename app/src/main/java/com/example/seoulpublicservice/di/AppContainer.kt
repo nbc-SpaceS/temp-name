@@ -5,15 +5,23 @@ import com.example.seoulpublicservice.BuildConfig
 import com.example.seoulpublicservice.databases.ReservationDatabase
 import com.example.seoulpublicservice.databases.ReservationRepository
 import com.example.seoulpublicservice.databases.ReservationRepositoryImpl
+import com.example.seoulpublicservice.db_by_memory.DbMemoryRepository
+import com.example.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.example.seoulpublicservice.pref.FilterPrefRepository
 import com.example.seoulpublicservice.pref.FilterPrefRepositoryImpl
+import com.example.seoulpublicservice.pref.IdPrefRepository
+import com.example.seoulpublicservice.pref.IdPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.PrefRepository
 import com.example.seoulpublicservice.pref.PrefRepositoryImpl
 import com.example.seoulpublicservice.pref.RegionPrefRepository
 import com.example.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.RowPrefRepository
 import com.example.seoulpublicservice.pref.RowPrefRepositoryImpl
+import com.example.seoulpublicservice.pref.SavedPrefRepository
+import com.example.seoulpublicservice.pref.SavedPrefRepositoryImpl
+import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.seoul.SeoulApiService
+import com.example.seoulpublicservice.seoul.SeoulPublicRepository
 import com.example.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.example.seoulpublicservice.usecase.GetAll2000UseCase
 import com.example.seoulpublicservice.usecase.GetDetailSeoulUseCase
@@ -30,16 +38,20 @@ import java.util.concurrent.TimeUnit
 
 /** Dependency Injection container */
 interface AppContainer {
+    val seoulPublicRepository: SeoulPublicRepository
     val getAll2000UseCase: GetAll2000UseCase
     val getDetailSeoulUseCase: GetDetailSeoulUseCase
     val prefRepository: PrefRepository
     val rowPrefRepository: RowPrefRepository
     val regionPrefRepository: RegionPrefRepository
     val filterPrefRepository: FilterPrefRepository
+    val idPrefRepository: IdPrefRepository
     val reservationRepository: ReservationRepository
+    val dbMemoryRepository: DbMemoryRepository
+    val savedPrefRepository: SavedPrefRepository
 }
 
-class DefaultAppContainer(context: Context) : AppContainer {
+class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
     // TODO: retrofit 관련 로직들 따로 빼야 하나
     private val baseUrl = "http://openapi.seoul.go.kr:8088"
 
@@ -70,7 +82,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
         retrofit.create(SeoulApiService::class.java)
     }
 
-    private val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
+    override val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
 
 //    override val seoulPublicRepository: SeoulPublicRepository by lazy {
 //        SeoulPublicRepositoryImpl(retrofitService)
@@ -107,10 +119,22 @@ class DefaultAppContainer(context: Context) : AppContainer {
         FilterPrefRepositoryImpl(context = context)
     }
 
+    override val idPrefRepository: IdPrefRepository by lazy {
+        IdPrefRepositoryImpl(context = context)
+    }
+
     /** Room과 관련된 Repository에 의존성 주입?? */
     private val database by lazy { ReservationDatabase.getDatabase(context) }
     override val reservationRepository by lazy {
         ReservationRepositoryImpl(database.getReservation())
+    }
+
+    override val dbMemoryRepository: DbMemoryRepository by lazy {
+        DbMemoryRepositoryImpl(getAppRowList)
+    }
+
+    override val savedPrefRepository: SavedPrefRepository by lazy {
+        SavedPrefRepositoryImpl(context)
     }
 
 }
