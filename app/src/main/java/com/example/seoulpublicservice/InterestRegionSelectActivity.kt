@@ -78,6 +78,7 @@ class InterestRegionSelectActivity : AppCompatActivity() {
 
         btnInterestRegionSelectOkay.setOnClickListener {
             viewModel.saveRegion()
+            setResult(RESULT_OK)
             finish()
         }
 
