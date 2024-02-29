@@ -15,6 +15,7 @@ import com.example.seoulpublicservice.databinding.MyPageItemSavedBinding
 import com.example.seoulpublicservice.seoul.Row
 
 class MyPageAdapter(
+    private val onClearClick: () -> Unit
 ) : ListAdapter<MyPageAdapter.MultiView, MyPageAdapter.CommonViewHolder>(
     object : DiffUtil.ItemCallback<MultiView>() {
         override fun areItemsTheSame(oldItem: MultiView, newItem: MultiView): Boolean =
@@ -84,6 +85,11 @@ class MyPageAdapter(
 
     inner class SavedHolder(private val b: MyPageItemSavedBinding) :
         CommonViewHolder(b.root) {
+
+        init {
+            b.tvSavedClear.setOnClickListener { onClearClick() }
+        }
+
         private lateinit var adapter: MyPageSavedAdapter
 
         override fun onBind(item: MultiView) {
