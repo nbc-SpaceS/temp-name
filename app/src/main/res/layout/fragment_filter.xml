@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="1. 서비스 종류"
+                android:text="서비스 종류"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -868,7 +868,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
-                android:text="2. 관심 지역"
+                android:text="관심 지역"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -1214,18 +1214,93 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_filter_title2_header2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_filter_title2_header1">
+
+            <TextView
+                android:id="@+id/tv_filter_title2_header2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="12dp"
+                android:text="이외지역"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_filter_title2_header2_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_more"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_filter_title2_header2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_filter_title2_header2" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider_filter_title2_header2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_filter_title2_header2" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider_filter_title2_header2">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cg_filter_title2_header2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    app:chipSpacingHorizontal="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_2_2_1"
+                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="서울제외지역"
+                        android:textColor="@color/selector_chip_button_text"
+                        android:textSize="14sp"
+                        app:chipBackgroundColor="@color/selector_chip_button"
+                        app:chipMinHeight="36dp" />
+                </com.google.android.material.chip.ChipGroup>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/tv_filter_title3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
-                android:text="3. 접수 가능 여부"
+                android:text="접수 가능 여부"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title2_header1" />
+                app:layout_constraintTop_toBottomOf="@+id/cl_filter_title2_header2" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/cg_filter_title3_header1"
@@ -1268,7 +1343,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
-                android:text="4. 요금"
+                android:text="요금"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -1326,7 +1401,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_filter_apply"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="45dp"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="15dp"
         android:background="@drawable/selector_okay_button"
