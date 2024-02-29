@@ -11,8 +11,9 @@ import com.example.seoulpublicservice.databinding.CategoryItemBinding
 import com.example.seoulpublicservice.seoul.Row
 
 class MyPageSavedAdapter(
-) : ListAdapter<Row, MyPageSavedAdapter.VH>(
-    object : DiffUtil.ItemCallback<Row>() {
+) : ListAdapter<Row?, MyPageSavedAdapter.VH>(
+    object : DiffUtil.ItemCallback<Row?>() {
+        // TODO: null로 하려니까 변경 시 애니메이션이 이상해진다. 따로 데이터 클래스 만들어서 써야할듯. 서비스아이디랑 같이.
         override fun areItemsTheSame(oldItem: Row, newItem: Row): Boolean =
             oldItem.svcid == newItem.svcid
 
@@ -24,11 +25,23 @@ class MyPageSavedAdapter(
     inner class VH(private val b: CategoryItemBinding) :
         RecyclerView.ViewHolder(b.root) {
 
-        fun onBind(item: Row) {
-            if (item.imgurl.isBlank()) b.ivSmallVideoImage.load(R.drawable.place_holder_1)
-            else b.ivSmallVideoImage.load(item.imgurl)
-            b.tvRegion.text = item.areanm
-            b.tvRegister.text = item.svcstatnm
+        init {
+            b.root.setOnClickListener {}
+        }
+
+        fun onBind(item: Row?) {
+            if (item == null) {
+                // TODO: 레이아웃에서 '삭제된 서비스입니다' 띄우는거 겹쳐놓고 gone으로 놨다가 띄워야 할 듯.
+
+                b.ivSmallVideoImage.load(R.drawable.place_holder_1)
+                b.tvRegion.text = null
+                b.tvRegister.text = null
+            } else {
+                if (item.imgurl.isBlank()) b.ivSmallVideoImage.load(R.drawable.place_holder_1)
+                else b.ivSmallVideoImage.load(item.imgurl)
+                b.tvRegion.text = item.areanm
+                b.tvRegister.text = item.svcstatnm
+            }
         }
     }
 

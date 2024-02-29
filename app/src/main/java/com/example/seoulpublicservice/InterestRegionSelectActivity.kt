@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.example.seoulpublicservice.databinding.ActivityInterestRegionSelectAcitivtyBinding
+import com.example.seoulpublicservice.databinding.ActivityInterestRegionSelectBinding
+
 
 class InterestRegionSelectActivity : AppCompatActivity() {
 
-    private val binding: ActivityInterestRegionSelectAcitivtyBinding by lazy {
-        ActivityInterestRegionSelectAcitivtyBinding.inflate(layoutInflater)
+    private val binding: ActivityInterestRegionSelectBinding by lazy {
+        ActivityInterestRegionSelectBinding.inflate(layoutInflater)
     }
 
     private val viewModel: InterestRegionSelectViewModel by viewModels { InterestRegionSelectViewModel.factory }

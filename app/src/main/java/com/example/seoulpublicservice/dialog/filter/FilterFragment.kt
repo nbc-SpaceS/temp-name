@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -110,6 +112,9 @@ class FilterFragment(
                 R.id.chip_2_1_25 to "중랑구",
             ),
             listOf(
+                R.id.chip_2_2_1 to "서울제외지역"
+            ),
+            listOf(
                 R.id.chip_3_1_1 to "접수중",
                 R.id.chip_3_1_2 to "안내중",
             ),
@@ -129,6 +134,7 @@ class FilterFragment(
             binding.tvFilterTitle1Header4,
             binding.tvFilterTitle1Header5,
             binding.tvFilterTitle2Header1,
+            binding.tvFilterTitle2Header2
         )
     }
 
@@ -140,6 +146,7 @@ class FilterFragment(
             binding.cgFilterTitle1Header4,
             binding.cgFilterTitle1Header5,
             binding.cgFilterTitle2Header1,
+            binding.cgFilterTitle2Header2,
             binding.cgFilterTitle3Header1,
             binding.cgFilterTitle4Header1
         )
@@ -153,6 +160,7 @@ class FilterFragment(
             binding.ivFilterTitle1Header4Btn,
             binding.ivFilterTitle1Header5Btn,
             binding.ivFilterTitle2Header1Btn,
+            binding.ivFilterTitle2Header2Btn
         )
     }
 
@@ -199,10 +207,22 @@ class FilterFragment(
             header.setOnClickListener {
                 if (chipGroupList[index].isVisible) {
                     moreButtonList[index].setImageResource(R.drawable.ic_more)
+                    val slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up)
+                    slideUp.setAnimationListener(object : Animation.AnimationListener {
+                        override fun onAnimationStart(p0: Animation?) = Unit
+                        override fun onAnimationRepeat(p0: Animation?) = Unit
+                        override fun onAnimationEnd(p0: Animation?) {
+                            chipGroupList[index].visibility = View.GONE
+                        }
+                    })
+                    chipGroupList[index].startAnimation(slideUp)
+//                    chipGroupList[index].visibility = View.GONE
                 } else {
                     moreButtonList[index].setImageResource(R.drawable.ic_less)
+                    val slideDown = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down)
+                    chipGroupList[index].startAnimation(slideDown)
+                    chipGroupList[index].visibility = View.VISIBLE
                 }
-                chipGroupList[index].isVisible = !chipGroupList[index].isVisible
             }
         }
 

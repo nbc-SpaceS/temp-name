@@ -13,7 +13,8 @@
         android:layout_marginHorizontal="25dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/background_radius_10dp_dfdfdd"
-        android:drawableStart="@drawable/ic_example"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="5dp"
         android:drawableTint="@color/black"
         android:hint="검색어를 입력하세요."
         android:paddingStart="8dp"
@@ -45,4 +46,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_map_filter_btn" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_map_detail_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/background_radius_10dp"
+        android:clipToOutline="true"
+        android:elevation="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.seoulpublicservice.SeoulPublicServiceApplication
 import com.example.seoulpublicservice.databinding.FragmentMyPageBinding
 import com.example.seoulpublicservice.seoul.Row
+import kotlin.random.Random
 
 class MyPageFragment : Fragment() {
 
@@ -17,44 +19,59 @@ class MyPageFragment : Fragment() {
 
     private var _binding: FragmentMyPageBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MyPageViewModel by viewModels()
+    private val viewModel: MyPageViewModel by viewModels { MyPageViewModel.factory }
 
-    private val myPageSavedAdapter = MyPageSavedAdapter().apply {
-        var a = 0
-        submitList(
-            listOf(
-                Row.new(svcnm = "첫 번째 제목~~", areanm = "가가구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "두 번째 제목~~", areanm = "나나구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "세 번째 제목~~", areanm = "다다구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "첫 번째 제목~~", areanm = "가가구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "두 번째 제목~~", areanm = "나나구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "세 번째 제목~~", areanm = "다다구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "첫 번째 제목~~", areanm = "가가구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "두 번째 제목~~", areanm = "나나구", svcstatnm = "접수${++a}"),
-                Row.new(svcnm = "세 번째 제목~~", areanm = "다다구", svcstatnm = "접수${++a}"),
-            )
+    private val myPageSavedAdapter by lazy {
+        MyPageSavedAdapter()
+    }
+
+    private val fixedItems: List<MyPageAdapter.MultiView> by lazy {
+        listOf(
+            MyPageAdapter.MultiView.Profile {
+                EditProfileDialog.newInstance()
+                    .show(requireActivity().supportFragmentManager, "EditProfileDialog")
+            },
+            MyPageAdapter.MultiView.Saved(myPageSavedAdapter),
+            MyPageAdapter.MultiView.ReviewedHeader
         )
     }
-    private val myPageAdapter = MyPageAdapter().apply {
-        var a = 0
-        submitList(
-            listOf(
-                MyPageAdapter.MultiView.Profile,
-                MyPageAdapter.MultiView.Saved(myPageSavedAdapter),
-                MyPageAdapter.MultiView.ReviewedHeader
-            )
-                    + listOf(
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
-                MyPageAdapter.MultiView.Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
-            )
-        )
+
+    private val myPageAdapter by lazy {
+        MyPageAdapter(
+            onClearClick = { viewModel.clearSavedList() }
+        ).apply {
+            val rows = (requireActivity().application as SeoulPublicServiceApplication).rowList
+            if (rows.isEmpty()) {
+                var a = 0
+                submitList(
+                    fixedItems + listOf(
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
+                        MyPageAdapter.MultiView
+                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
+                    )
+                )
+            } else {
+                val random = Random
+                submitList(fixedItems + List(9) {
+                    MyPageAdapter.MultiView.Reviewed(rows[random.nextInt(rows.size)])
+                })
+            }
+        }
     }
 
     override fun onCreateView(
@@ -80,7 +97,16 @@ class MyPageFragment : Fragment() {
         b.rvMyPage.adapter = myPageAdapter
     }
 
-    private fun initViewModel() {
+    private fun initViewModel() = viewModel.let { vm ->
+        vm.savedList.observe(viewLifecycleOwner) {
+            myPageSavedAdapter.submitList(it)
+        }
+    }
+
+    override fun onResume() {
+        viewModel.loadSavedList()
+
+        super.onResume()
     }
 
 }

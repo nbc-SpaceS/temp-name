@@ -40,6 +40,9 @@ object RoomRowMapper {
         )
     }
 
+    fun mappingRoomToRow(reservationEntities: Collection<ReservationEntity>): List<Row> =
+        reservationEntities.map { mappingRoomToRow(it) }
+
     /**
      * @property mappingRowToRoom API값을 받는 [Row] 타입을 Room에서 사용하는 [ReservationEntity] 타입으로 변환
      * @param row API값을 받는 [Row] 타입
@@ -73,4 +76,7 @@ object RoomRowMapper {
             Y = row.y
         )
     }
+
+    fun mappingRowToRoom(rows: Collection<Row>): List<ReservationEntity> =
+        rows.map { mappingRowToRoom(it) }
 }
