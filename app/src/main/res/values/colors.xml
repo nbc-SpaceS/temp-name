@@ -9,5 +9,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#DFDFDD</color>
     <color name="black_50">#60000000</color>
+
     <color name="point_color">#F8496C</color>
+    <color name="unCLicked_button_solid">#E4E4E4</color>
+    <color name="unClicked_button_stroke">#5B5B5B</color>
+    <color name="unable_button_solid">#DFDFDF</color>
+    <color name="unable_button_text">#8E8E8E</color>
+    <color name="cancel_button_solid">#828282</color>
+    <color name="search_editText_solid">#DFDFDD</color>
 </resources>
