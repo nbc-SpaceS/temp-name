@@ -64,6 +64,13 @@ interface ReservationRepository {       // get
      * @return `List<ReservationEntity>`
      */
     suspend fun getFilter(typeSubCategory: List<String>, typeLocation: List<String>, typeServiceState: List<String>, typePay: List<String>) : List<ReservationEntity>
+
+    /**
+     * @property getService 서비스 ID를 이용해 서비스를 가져오기
+     * @param serviceID 서비스 ID
+     * @return `ReservationEntity`
+     */
+    fun getService(serviceID: String) : ReservationEntity
 }
 
 class ReservationRepositoryImpl(
@@ -122,4 +129,6 @@ class ReservationRepositoryImpl(
         val query = SimpleSQLiteQuery(queryStr)
         return reservationDAO.putQueries(query)
     }
+
+    override fun getService(serviceID: String) = reservationDAO.getService(serviceID)
 }

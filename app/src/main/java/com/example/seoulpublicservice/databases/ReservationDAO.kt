@@ -80,4 +80,7 @@ interface ReservationDAO {
 
     @RawQuery
     suspend fun putQueries(query: SupportSQLiteQuery): List<ReservationEntity>
+
+    @Query("SELECT * FROM ReservationEntity WHERE SVCID IS (:svcID)")
+    fun getService(svcID: String) : ReservationEntity
 }
