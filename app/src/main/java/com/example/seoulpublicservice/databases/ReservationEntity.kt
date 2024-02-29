@@ -1,7 +1,9 @@
 package com.example.seoulpublicservice.databases
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 /**
  * @property ReservationEntity 테이블 명
@@ -31,6 +33,7 @@ import androidx.room.PrimaryKey
  * @param Y 장소의 Y 좌표
  */
 @Entity
+@Parcelize
 data class ReservationEntity(
     val AREANM: String,
     val DTLCONT: String,
@@ -56,4 +59,4 @@ data class ReservationEntity(
     val V_MIN: String,
     val X: String,
     val Y: String
-)
+) : Parcelable

@@ -1,9 +1,8 @@
 package com.example.seoulpublicservice.databases
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import androidx.room.util.query
+import androidx.sqlite.db.SupportSQLiteQuery
 
 /**
  * API 받아올 데이터를 담는 테이블
@@ -28,7 +27,7 @@ interface ReservationDAO {
 
 
     /**
-     * @property getAll ReservationEntity 속성을 가지는 모든 값을 불러오기
+     * @property getAll ReservationEntity 속성을 가지는 모든 값을 공백이 들어오는 부분 불러오기
      */
     @Query("SELECT * FROM ReservationEntity")
     fun getAll() : List<ReservationEntity>
@@ -55,4 +54,33 @@ interface ReservationDAO {
      */
     @Query("SELECT * FROM ReservationEntity WHERE MINCLASSNM in (:types)")
     fun getItemsWithSmallTypes(types: List<String>) : List<ReservationEntity>
+
+
+    @Query("SELECT * FROM ReservationEntity " +
+        "WHERE AREANM IS NOT NULL AND AREANM != '' " +
+        "AND DTLCONT IS NOT NULL AND DTLCONT != '' " +
+        "AND IMGURL IS NOT NULL AND IMGURL != '' " +
+        "AND RCPTBGNDT IS NOT NULL AND RCPTBGNDT != '' " +
+        "AND RCPTENDDT IS NOT NULL AND RCPTENDDT != '' " +
+        "AND REVSTDDAYNM IS NOT NULL AND REVSTDDAYNM != '' " +
+        "AND SVCOPNBGNDT IS NOT NULL AND SVCOPNBGNDT != '' " +
+        "AND SVCOPNENDDT IS NOT NULL AND SVCOPNENDDT != '' " +
+        "AND SVCID NOT LIKE 'XML%'")
+    fun getNOTBlank() : List<ReservationEntity>
+
+
+    @Query("SELECT DISTINCT MINCLASSNM FROM ReservationEntity")
+    fun getSubList() : List<String>
+    @Query("SELECT DISTINCT AREANM FROM ReservationEntity")
+    fun getLocList() : List<String>
+    @Query("SELECT DISTINCT SVCSTATNM FROM ReservationEntity")
+    fun getSvcList() : List<String>
+    @Query("SELECT DISTINCT PAYATNM FROM ReservationEntity")
+    fun getPayList() : List<String>
+
+    @RawQuery
+    suspend fun putQueries(query: SupportSQLiteQuery): List<ReservationEntity>
+
+    @Query("SELECT * FROM ReservationEntity WHERE SVCID IS (:svcID)")
+    fun getService(svcID: String) : ReservationEntity
 }
