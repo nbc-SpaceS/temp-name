@@ -7,7 +7,7 @@
     </item>
     <item
         android:right="8dp"
-        android:gravity="center_vertical|right"
+        android:gravity="center_vertical|end"
         android:drawable="@drawable/ic_dropdown"
         android:width="14dp"
         android:height="7dp">

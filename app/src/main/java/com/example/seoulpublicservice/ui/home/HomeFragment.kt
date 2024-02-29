@@ -110,49 +110,6 @@ class HomeFragment : Fragment() {
         }.attach()
 
         itemAdapter.notifyDataSetChanged()
-
-        val selectedRegions = regionPrefRepository.load().toMutableList()
-        if (selectedRegions.isNotEmpty()) {
-
-            // 스피너에 관심지역 설정 항목 추가
-            selectedRegions.add("관심지역 재설정")
-            fragmentContext?.let {
-                val adapter = ArrayAdapter(it, android.R.layout.simple_spinner_dropdown_item, selectedRegions)
-                binding.spinnerSelectArea.adapter = adapter
-//                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
-            }
-
-
-            // 스피너를 보여주고 텍스트뷰를 숨김
-            binding.spinnerSelectArea.visibility = View.VISIBLE
-            binding.tvSelectArea.visibility = View.GONE
-
-            binding.spinnerSelectArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    // view 매개변수가 null이면 메소드의 실행을 중단
-                    if (view == null) {
-                        return
-                    }
-
-                    val selectedItem = parent.getItemAtPosition(position).toString()
-
-                    // "관심지역 재설정" 항목을 선택하면 관심지역 설정 페이지로 이동
-                    if (selectedItem == "관심지역 재설정") {
-                        val intent = Intent(context, InterestRegionSelectActivity::class.java)
-                        startActivity(intent)
-
-                        binding.spinnerSelectArea.visibility = View.GONE
-                        binding.tvSelectArea.visibility = View.VISIBLE
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // 아무 항목도 선택되지 않았을 때의 동작
-                    return
-                }
-            }
-        }
     }
 
     override fun onResume() {
@@ -165,15 +122,32 @@ class HomeFragment : Fragment() {
             fragmentContext?.let {
                 val adapter = ArrayAdapter(it, android.R.layout.simple_spinner_dropdown_item, selectedRegions)
                 binding.spinnerSelectArea.adapter = adapter
-//                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
+                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
             }
 
             // 스피너를 보여주고 텍스트뷰를 숨김
             binding.spinnerSelectArea.visibility = View.VISIBLE
-            binding.tvSelectArea.visibility = View.GONE
+            binding.tvSelectArea.visibility = View.INVISIBLE
+
+            // 스피너의 onItemSelectedListener를 설정
+            binding.spinnerSelectArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    val selectedItem = parent.getItemAtPosition(position).toString()
+
+                    // "관심지역 재설정" 항목을 선택하면 관심지역 설정 페이지로 이동
+                    if (selectedItem == "관심지역 재설정") {
+                        val intent = Intent(context, InterestRegionSelectActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    return
+                }
+            }
         } else {
             // 스피너를 숨기고 텍스트뷰를 보여줌
-            binding.spinnerSelectArea.visibility = View.GONE
+            binding.spinnerSelectArea.visibility = View.INVISIBLE
             binding.tvSelectArea.visibility = View.VISIBLE
         }
     }
