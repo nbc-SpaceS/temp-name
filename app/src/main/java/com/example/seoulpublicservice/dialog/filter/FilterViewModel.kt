@@ -21,6 +21,7 @@ class FilterViewModel(
         mutableListOf<String>(), // 서비스 종류의 '시설대관'
         mutableListOf<String>(), // 서비스 종류의 '진료'
         mutableListOf<String>(), // 관심 지역의 '서울시'
+        mutableListOf<String>(), // 관심 지역의 '이외지역'
         mutableListOf<String>(), // '접수 가능 여부'
         mutableListOf<String>()  // '요금'
     )
