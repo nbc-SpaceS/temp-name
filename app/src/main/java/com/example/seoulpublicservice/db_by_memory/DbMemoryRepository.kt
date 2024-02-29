@@ -82,11 +82,20 @@ fun List<Row>.getFiltered(
     svcstatnm: List<String>?,
     payatnm: List<String>?
 ): List<Row> {
-    return getHaveLocation().filter {
-        (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
-                (areanm.isNullOrEmpty() || it.areanm in areanm || (areanm.contains("시외") && it.isNotInSeoul())) &&
-                (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
-                (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
+    return if (areanm?.any { it == "시외" || it == "서울제외지역" } == true) {
+        getHaveLocation().filter {
+            (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
+                    (areanm.isEmpty() || it.areanm in areanm || it.isNotInSeoul()) &&
+                    (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
+                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
+        }
+    } else {
+        getHaveLocation().filter {
+            (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
+                    (areanm.isNullOrEmpty() || it.areanm in areanm) &&
+                    (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
+                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
+        }
     }
 }
 
