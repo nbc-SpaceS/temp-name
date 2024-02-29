@@ -1,10 +1,10 @@
 package com.example.seoulpublicservice.ui.notifications
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.seoulpublicservice.databinding.FragmentNotificationsBinding
@@ -37,10 +37,11 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun initView() = binding.let { b ->
-        b.btnTemp1.setOnClickListener { viewModel.setRandomOne() }
-        b.tvTemp1.setOnClickListener {
+        b.btnTemp1.setOnClickListener {
             val dialog = DetailFragment.newInstance("S240104091254073361")
-            dialog.show(requireActivity().supportFragmentManager, "Detail")
+            dialog.show(parentFragmentManager, "DetailFragment")
+            Log.i("This is NotifiFragment","DF Activate? : $dialog")
+            viewModel.setRandomOne()
         }
     }
 
