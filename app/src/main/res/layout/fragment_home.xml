@@ -7,37 +7,53 @@
     tools:context=".ui.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_area"
+        android:id="@+id/cl_home_set_region"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_select_area"
+            android:id="@+id/tv_home_current_region"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="지역선택"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_select_area"
-            style="@style/SpinnerStyle"
+        <ImageView
+            android:id="@+id/iv_home_more_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:src="@drawable/ic_more"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_home_current_region"
+            app:layout_constraintTop_toTopOf="@+id/tv_home_current_region" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_select_area"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="지역선택"-->
+        <!--            android:textSize="16sp"-->
+        <!--            android:textStyle="bold"-->
+        <!--            android:visibility="invisible"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
+        <!--        <androidx.appcompat.widget.AppCompatSpinner-->
+        <!--            android:id="@+id/spinner_select_area"-->
+        <!--            style="@style/SpinnerStyle"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_search"
@@ -46,10 +62,10 @@
         android:layout_marginEnd="16dp"
         android:background="@drawable/background_radius_10dp_dfdfdd"
         android:padding="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/layout_area"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_home_set_region"
         app:layout_constraintEnd_toStartOf="@+id/iv_notification"
-        app:layout_constraintStart_toEndOf="@+id/layout_area"
-        app:layout_constraintTop_toTopOf="@+id/layout_area">
+        app:layout_constraintStart_toEndOf="@+id/cl_home_set_region"
+        app:layout_constraintTop_toTopOf="@+id/cl_home_set_region">
 
         <ImageView
             android:id="@+id/iv_search"
@@ -95,19 +111,20 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="48dp"
-        android:textStyle="bold"
-        android:textSize="16sp"
         android:text="찾으시는 공공서비스가 있나요?"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_area" />
+        app:layout_constraintTop_toBottomOf="@+id/cl_home_set_region" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/tv_service_list"
-        app:tabMode="fixed"
-        app:tabGravity="fill" />
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
@@ -118,5 +135,79 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
 
+    <View
+        android:id="@+id/view_control_spinner"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_home_region_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/background_white_with_stroke"
+        android:paddingVertical="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="16dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/cl_home_set_region"
+        app:layout_constraintTop_toBottomOf="@+id/cl_home_set_region">
+
+        <TextView
+            android:id="@+id/tv_home_select_region1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="송파구"
+            android:textColor="@color/point_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_home_select_region2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            android:text="강남구"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_home_select_region1"
+            app:layout_constraintTop_toBottomOf="@+id/tv_home_select_region1" />
+
+        <TextView
+            android:id="@+id/tv_home_select_region3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            android:text="강북구"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_home_select_region2"
+            app:layout_constraintTop_toBottomOf="@+id/tv_home_select_region2" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_home_reSelect_region_btn"
+            app:layout_constraintEnd_toEndOf="@+id/tv_home_reSelect_region_btn"
+            app:layout_constraintStart_toStartOf="@+id/tv_home_reSelect_region_btn"
+            app:layout_constraintTop_toBottomOf="@+id/tv_home_select_region3" />
+
+        <TextView
+            android:id="@+id/tv_home_reSelect_region_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="관심지역 재설정"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_home_select_region3"
+            app:layout_constraintTop_toBottomOf="@+id/tv_home_select_region3" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
