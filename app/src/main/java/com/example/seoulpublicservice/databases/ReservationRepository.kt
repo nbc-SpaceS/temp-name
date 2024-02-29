@@ -120,7 +120,6 @@ class ReservationRepositoryImpl(
         val queryStr = "SELECT * FROM ReservationEntity WHERE (MINCLASSNM IN ('$subStr')) AND (AREANM IN ('$locStr')) AND (SVCSTATNM IN ('$svcStr')) AND (PAYATNM IN ('$payStr'))"
         Log.i("This is ReservationRepository","Query문 : $queryStr\n")
         val query = SimpleSQLiteQuery(queryStr)
-        Log.i("This is ReservationRepository","Query : $query\n")
         return reservationDAO.putQueries(query)
     }
 }
