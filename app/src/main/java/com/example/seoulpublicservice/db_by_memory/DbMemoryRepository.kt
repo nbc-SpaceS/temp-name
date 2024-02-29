@@ -11,9 +11,11 @@ interface DbMemoryRepository {
     ): List<Row>
 
     fun getHaveLocation(): List<Row>
+    fun findBySvcid(svcid: String): Row?
 }
 
 class DbMemoryRepositoryImpl(private val getAppRowList: () -> List<Row>) : DbMemoryRepository {
+
     override fun getFiltered(
         minclassnm: List<String>?,
         areanm: List<String>?,
@@ -30,4 +32,7 @@ class DbMemoryRepositoryImpl(private val getAppRowList: () -> List<Row>) : DbMem
 
     override fun getHaveLocation() =
         getAppRowList().filter { it.x.isBlank().not() && it.y.isBlank().not() }
+
+    override fun findBySvcid(svcid: String) = getAppRowList().find { it.svcid == svcid }
+
 }
