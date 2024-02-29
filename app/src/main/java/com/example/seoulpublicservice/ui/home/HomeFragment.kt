@@ -2,24 +2,23 @@ package com.example.seoulpublicservice.ui.home
 
 import android.content.Context
 import android.content.Intent
-import androidx.navigation.fragment.findNavController
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.seoulpublicservice.InterestRegionSelectActivity
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.SeoulPublicServiceApplication
-import com.example.seoulpublicservice.adapter.SpinnerAdapter
+import com.example.seoulpublicservice.adapter.ItemAdapter
+import com.example.seoulpublicservice.data.Item
+import com.example.seoulpublicservice.data.ItemRepository
 import com.example.seoulpublicservice.databinding.FragmentHomeBinding
 import com.example.seoulpublicservice.pref.RegionPrefRepository
-import com.example.seoulpublicservice.ui.notifications.NotificationsFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
@@ -30,6 +29,11 @@ class HomeFragment : Fragment() {
         (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository
     }
     private var fragmentContext: Context? = null
+    private val items: List<Item> by lazy {
+        val categories = listOf("Facility", "Education", "CultureEvent", "FacilityRent", "Medical")
+        categories.flatMap { ItemRepository.getItems(it) }
+    }
+    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,6 +63,27 @@ class HomeFragment : Fragment() {
 
         }
 
+        binding.ivSearch.setOnClickListener {
+            val query = binding.etSearch.text.toString()
+            val tabIndex = items.indexOfFirst { it.name.contains(query, ignoreCase = true) }
+            if (tabIndex != -1) {
+                binding.viewPager.currentItem = tabIndex
+            }
+        }
+
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val query = binding.etSearch.text.toString()
+                val tabIndex = items.indexOfFirst { it.name.contains(query, ignoreCase = true) }
+                if (tabIndex != -1) {
+                    binding.viewPager.currentItem = tabIndex
+                }
+                true
+            } else {
+                false
+            }
+        }
+
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 5
 
@@ -83,6 +108,51 @@ class HomeFragment : Fragment() {
                 4 -> tab.text = "진료"
             }
         }.attach()
+
+        itemAdapter.notifyDataSetChanged()
+
+        val selectedRegions = regionPrefRepository.load().toMutableList()
+        if (selectedRegions.isNotEmpty()) {
+
+            // 스피너에 관심지역 설정 항목 추가
+            selectedRegions.add("관심지역 재설정")
+            fragmentContext?.let {
+                val adapter = ArrayAdapter(it, android.R.layout.simple_spinner_dropdown_item, selectedRegions)
+                binding.spinnerSelectArea.adapter = adapter
+//                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
+            }
+
+
+            // 스피너를 보여주고 텍스트뷰를 숨김
+            binding.spinnerSelectArea.visibility = View.VISIBLE
+            binding.tvSelectArea.visibility = View.GONE
+
+            binding.spinnerSelectArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    // view 매개변수가 null이면 메소드의 실행을 중단
+                    if (view == null) {
+                        return
+                    }
+
+                    val selectedItem = parent.getItemAtPosition(position).toString()
+
+                    // "관심지역 재설정" 항목을 선택하면 관심지역 설정 페이지로 이동
+                    if (selectedItem == "관심지역 재설정") {
+                        val intent = Intent(context, InterestRegionSelectActivity::class.java)
+                        startActivity(intent)
+
+                        binding.spinnerSelectArea.visibility = View.GONE
+                        binding.tvSelectArea.visibility = View.VISIBLE
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // 아무 항목도 선택되지 않았을 때의 동작
+                    return
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -90,40 +160,21 @@ class HomeFragment : Fragment() {
 
         val selectedRegions = regionPrefRepository.load().toMutableList()
         if (selectedRegions.isNotEmpty()) {
-
             // 스피너에 관심지역 설정 항목 추가
-            selectedRegions.add("관심지역 설정")
-//            fragmentContext?.let {
-//                val adapter = SpinnerAdapter(it, R.layout.item_spinner, selectedRegions)
-//                binding.spinnerSelectArea.adapter = adapter
-//                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
-//            }
+            selectedRegions.add("관심지역 재설정")
             fragmentContext?.let {
                 val adapter = ArrayAdapter(it, android.R.layout.simple_spinner_dropdown_item, selectedRegions)
                 binding.spinnerSelectArea.adapter = adapter
-                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
+//                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
             }
 
-
-            // Show the Spinner and hide the TextView
+            // 스피너를 보여주고 텍스트뷰를 숨김
             binding.spinnerSelectArea.visibility = View.VISIBLE
             binding.tvSelectArea.visibility = View.GONE
-
-            binding.spinnerSelectArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                    val selectedItem = parent.getItemAtPosition(position).toString()
-
-                    // "관심지역 설정" 항목을 선택하면 관심지역 설정 페이지로 이동
-                    if (selectedItem == "관심지역 설정") {
-                        val intent = Intent(context, InterestRegionSelectActivity::class.java)
-                        startActivity(intent)
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // 아무 항목도 선택되지 않았을 때의 동작
-                }
-            }
+        } else {
+            // 스피너를 숨기고 텍스트뷰를 보여줌
+            binding.spinnerSelectArea.visibility = View.GONE
+            binding.tvSelectArea.visibility = View.VISIBLE
         }
     }
 

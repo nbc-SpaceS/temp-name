@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.adapter.ItemAdapter
 import com.example.seoulpublicservice.data.Item
+import com.example.seoulpublicservice.data.ItemRepository
 import com.example.seoulpublicservice.databinding.FragmentFacilityRentBinding
 
 class FacilityRentFragment : Fragment() {
@@ -24,7 +25,7 @@ class FacilityRentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val items = listOf(
+        val facilityRentItems = listOf(
             Item(R.drawable.ic_door, "다목적실"),
             Item(R.drawable.ic_concert, "공연장"),
             Item(R.drawable.ic_auditorium, "강당"),
@@ -36,6 +37,9 @@ class FacilityRentFragment : Fragment() {
             Item(R.drawable.ic_lecture, "강의실"),
             Item(R.drawable.ic_etc, "민원/기타"),
         )
+        ItemRepository.setItems("FacilityRent", facilityRentItems)
+
+        val items = ItemRepository.getItems("FacilityRent")
 
         val adapter = ItemAdapter(items)
         binding.rvFacilityRent.adapter = adapter

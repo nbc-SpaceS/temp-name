@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.adapter.ItemAdapter
 import com.example.seoulpublicservice.data.Item
+import com.example.seoulpublicservice.data.ItemRepository
 import com.example.seoulpublicservice.databinding.FragmentCultureEventBinding
 
 class CultureEventFragment : Fragment() {
@@ -24,7 +25,7 @@ class CultureEventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val items = listOf(
+        val cultureEventItems = listOf(
             Item(R.drawable.ic_exhibition, "전시/관람"),
             Item(R.drawable.ic_experience, "교육체험"),
             Item(R.drawable.ic_event, "문화행사"),
@@ -33,6 +34,9 @@ class CultureEventFragment : Fragment() {
             Item(R.drawable.ic_kids, "서울형키즈카페"),
             Item(R.drawable.ic_farm, "농장체험"),
         )
+        ItemRepository.setItems("CultureEvent", cultureEventItems)
+
+        val items = ItemRepository.getItems("CultureEvent")
 
         val adapter = ItemAdapter(items)
         binding.rvCultureEvent.adapter = adapter

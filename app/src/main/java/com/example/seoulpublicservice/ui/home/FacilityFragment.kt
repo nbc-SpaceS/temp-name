@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.adapter.ItemAdapter
 import com.example.seoulpublicservice.data.Item
+import com.example.seoulpublicservice.data.ItemRepository
 import com.example.seoulpublicservice.databinding.FragmentFacilityBinding
 
 class FacilityFragment : Fragment() {
@@ -24,7 +25,7 @@ class FacilityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val items = listOf(
+        val facilityItems = listOf(
             Item(R.drawable.ic_soccer, "축구장"),
             Item(R.drawable.ic_tennis, "테니스장"),
             Item(R.drawable.ic_pingpong, "탁구장"),
@@ -38,7 +39,9 @@ class FacilityFragment : Fragment() {
             Item(R.drawable.ic_gym, "체육관"),
             Item(R.drawable.ic_basketball, "농구장"),
         )
+        ItemRepository.setItems("Facility", facilityItems)
 
+        val items = ItemRepository.getItems("Facility")
         val adapter = ItemAdapter(items)
         binding.rvFacility.adapter = adapter
         binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
