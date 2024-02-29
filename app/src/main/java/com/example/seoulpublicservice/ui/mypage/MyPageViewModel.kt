@@ -22,7 +22,7 @@ class MyPageViewModel(
     val savedList: LiveData<List<Row?>> get() = _savedList
 
     fun loadSavedList() {
-        val ids = savedPrefRepository.loadSvcidList()
+        val ids = savedPrefRepository.getSvcidList()
         var detailRows: List<Row?>
         _savedList.value = ids.map { dbMemoryRepository.findBySvcid(it) }
     }
