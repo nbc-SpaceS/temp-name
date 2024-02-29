@@ -72,7 +72,16 @@ class RecommendationFragment : Fragment() {
     }
 
     private fun initViewModel() {
+        // ReservationRepository 생성
         val reservationRepository = ReservationRepositoryImpl(reservationDAO)
+
+        // convertToSealedMulti() 호출하여 SealedMulti 리스트 가져오기
+//        val sealedMultiList = convertToSealedMulti(reservationRepository)
+
+        // sealedMultiList를 사용하여 작업 수행
+
+
+        // RecommendationViewModelFactory를 사용하여 ViewModel 초기화
         viewModel = ViewModelProvider(
             this,
             RecommendationViewModelFactory(
@@ -83,7 +92,10 @@ class RecommendationFragment : Fragment() {
             )
         ).get(RecommendationViewModel::class.java)
 
+        // fetchData() 호출하여 데이터 가져오기
         viewModel.fetchData()
+
+        // LiveData를 관찰하여 UI 업데이트
         viewModel.regionServices.observe(viewLifecycleOwner) { regionServices ->
             recommendationAdapter.setItems(regionServices)
         }

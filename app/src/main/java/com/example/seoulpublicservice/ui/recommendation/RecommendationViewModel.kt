@@ -74,6 +74,7 @@ class RecommendationViewModel(
             _nextWeekServices.postValue(nextWeekServices)
         }
     }
+
     private fun convertToSealedMulti(rows: List<Row>): List<SealedMulti> {
         return rows.map { row ->
             SealedMulti.Recommendation(
@@ -95,7 +96,8 @@ class RecommendationViewModel(
 
         return withContext(Dispatchers.IO) {
             // 모든 예약 정보를 가져옴
-            val allReservations = reservationRepository.getAllReservations()
+            val allReservations =
+                reservationRepository.getReservationsWithSmallType(getRandomDistrict())
 
             // 예약 시작 일자가 현재 날짜 이후이고 7일 이내인 데이터 필터링하여 SealedMulti로 변환
             allReservations.filter { reservation ->
@@ -112,5 +114,13 @@ class RecommendationViewModel(
                 )
             }
         }
+    }
+
+    private fun getRandomDistrict(): String {
+        val allDistricts = listOf(
+            "송파구", "강남구", "강동구", "관악구", "구로구", // 추가할 지역구 계속해서 여기에 추가
+            // ...
+        )
+        return allDistricts.random()
     }
 }

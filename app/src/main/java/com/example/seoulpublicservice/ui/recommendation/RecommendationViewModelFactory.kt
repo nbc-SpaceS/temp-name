@@ -17,7 +17,12 @@ class RecommendationViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RecommendationViewModel::class.java)) {
-            return RecommendationViewModel(reservationRepository, recommendPrefRepository, reservationDAO, getAll2000UseCase) as T
+            return RecommendationViewModel(
+                reservationRepository,
+                recommendPrefRepository,
+                reservationDAO,
+                getAll2000UseCase
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
