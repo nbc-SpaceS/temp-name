@@ -13,9 +13,9 @@ sealed interface SealedMulti {
         val payType: String,
         val areaName: String,
         val placeName: String,
-        val isReservationAvailable: Boolean,
+        val isReservationAvailable: String,
         val imageUrl: String,
-        val recommendationAdapter: RecommendationAdapter
+        val serviceList: String
     ) : SealedMulti {
         override val viewType: Type = Type.RECOMMENDATION
     }

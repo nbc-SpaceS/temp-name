@@ -14,9 +14,8 @@ import com.example.seoulpublicservice.databases.ReservationDatabase
 import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databases.ReservationRepositoryImpl
 import com.example.seoulpublicservice.databinding.FragmentRecommendationBinding
-import com.example.seoulpublicservice.pref.PrefRepository
+import com.example.seoulpublicservice.pref.RecommendPrefRepository
 import com.example.seoulpublicservice.pref.RowPrefRepositoryImpl
-import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.seoul.SeoulApiService
 import com.example.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.example.seoulpublicservice.usecase.GetAll2000UseCase
@@ -31,7 +30,7 @@ class RecommendationFragment : Fragment() {
     private lateinit var recommendationAdapter: RecommendationAdapter
     private lateinit var reservationDAO: ReservationDAO
     private lateinit var getAll2000UseCase: GetAll2000UseCase
-    private lateinit var prefRepositoryImpl: PrefRepositoryImpl
+    private lateinit var recommendPrefRepository: RecommendPrefRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,10 +39,22 @@ class RecommendationFragment : Fragment() {
     ): View? {
         _binding = FragmentRecommendationBinding.inflate(inflater, container, false)
 
-        val reservationDAO = ReservationDatabase.getDatabase(requireContext()).getReservation()
-        val reservationRepository = ReservationRepositoryImpl(reservationDAO)
-        val viewModelFactory = RecommendationViewModelFactory(reservationRepository, reservationDAO, getAll2000UseCase)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(RecommendationViewModel::class.java)
+        reservationDAO = ReservationDatabase.getDatabase(requireContext()).getReservation()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://openapi.seoul.go.kr:8088")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val seoulApiService = retrofit.create(SeoulApiService::class.java)
+
+        val seoulPublicRepository = SeoulPublicRepositoryImpl(seoulApiService)
+        recommendPrefRepository = RecommendPrefRepository(requireContext())
+
+        val rowPrefRepository = RowPrefRepositoryImpl(requireContext())
+        getAll2000UseCase =
+            GetAll2000UseCase(seoulPublicRepository, recommendPrefRepository, rowPrefRepository)
+
 
         return binding.root
     }
@@ -53,24 +64,6 @@ class RecommendationFragment : Fragment() {
         initView()
         initViewModel()
         initRecyclerView()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("6a415a5368646c6431356f75506e71") // 서버의 베이스 URL을 여기에 입력해야 합니다.
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val seoulApiService = retrofit.create(SeoulApiService::class.java)
-
-        val seoulPublicRepository = SeoulPublicRepositoryImpl(seoulApiService)
-        val sharedPrefRepository = PrefRepositoryImpl(requireContext())
-        val rowPrefRepository = RowPrefRepositoryImpl(requireContext())
-        getAll2000UseCase = GetAll2000UseCase(seoulPublicRepository, sharedPrefRepository, rowPrefRepository)
-
-        binding.reFirst.adapter = recommendationAdapter
-        binding.reRecommend.adapter = recommendationAdapter
-        binding.reRecommend2.adapter = recommendationAdapter
-        binding.reRecommend3.adapter = recommendationAdapter
-
     }
 
     private fun initView() = binding.let { b ->
@@ -79,6 +72,17 @@ class RecommendationFragment : Fragment() {
     }
 
     private fun initViewModel() {
+        val reservationRepository = ReservationRepositoryImpl(reservationDAO)
+        viewModel = ViewModelProvider(
+            this,
+            RecommendationViewModelFactory(
+                reservationRepository,
+                recommendPrefRepository,
+                reservationDAO,
+                getAll2000UseCase
+            )
+        ).get(RecommendationViewModel::class.java)
+
         viewModel.fetchData()
         viewModel.regionServices.observe(viewLifecycleOwner) { regionServices ->
             recommendationAdapter.setItems(regionServices)
@@ -93,6 +97,8 @@ class RecommendationFragment : Fragment() {
 
     private fun initRecyclerView() {
         recommendationAdapter = RecommendationAdapter()
+
+        // RecyclerView 설정
         binding.reFirst.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.reFirst.adapter = recommendationAdapter
@@ -109,13 +115,11 @@ class RecommendationFragment : Fragment() {
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         binding.reRecommend3.adapter = recommendationAdapter
 
-        val items: List<ReservationEntity> = mutableListOf() // 아이템 목록을 가져와야 합니다.
+        // RecyclerView에 아이템 목록 설정
+        val items: List<SealedMulti> = mutableListOf() // 아이템 목록
         recommendationAdapter.setItems(items)
         Log.d("RecommendationFragment", "RecyclerView initialized")
     }
-
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

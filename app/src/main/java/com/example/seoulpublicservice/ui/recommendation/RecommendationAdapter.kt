@@ -31,12 +31,39 @@ class RecommendationAdapter : RecyclerView.Adapter<RecommendationAdapter.ViewHol
         return items.size
     }
 
-    fun setItems(newItems: List<ReservationEntity>) {
-        items = newItems
+    fun setItems(newItems: List<SealedMulti>) {
+        val mappedItems = newItems.filterIsInstance<SealedMulti.Recommendation>().map { recommendation ->
+            ReservationEntity(
+                GUBUN = recommendation.serviceList,
+                PLACENM = recommendation.placeName,
+                PAYATNM = recommendation.payType,
+                SVCSTATNM = recommendation.isReservationAvailable,
+                AREANM = recommendation.areaName,
+                IMGURL = recommendation.imageUrl,
+                MAXCLASSNM = "",
+                MINCLASSNM = "",
+                RCPTBGNDT = "",
+                RCPTENDDT = "",
+                REVSTDDAY = "",
+                REVSTDDAYNM = "",
+                SVCID = "",
+                SVCNM = "",
+                SVCOPNBGNDT = "",
+                SVCOPNENDDT = "",
+                SVCURL = "",
+                TELNO = "",
+                USETGTINFO = "",
+                V_MAX = "",
+                V_MIN = "",
+                X = "",
+                Y = "",
+                DTLCONT = ""
+            )
+        }
+        items = mappedItems
         notifyDataSetChanged()
         Log.d("RecommendationAdapter", "Item count: ${items.size}")
     }
-
     inner class ViewHolder(private val binding: CategoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
