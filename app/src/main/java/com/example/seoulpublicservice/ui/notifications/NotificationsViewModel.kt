@@ -44,26 +44,15 @@ class NotificationsViewModel(
         _isBtnEnabled.value = false
         // getAll2000UseCase 처리 시 1600개 정도 데이터를 변환하고 반환하는 과정이 cpu가 좀 필요할 듯 해서 Default로 줌.
         val job = if (rowList.isEmpty()) viewModelScope.launch(Dispatchers.Default) {
-//            rowList = getAll2000UseCase() // 기존 코드
-            /** 기존에 row타입으로 받던 API를 reservationEntity타입으로 변환해서 Room에 저장하고
-             * Romm에서 꺼낸 reservationEntity타입을 row타입으로 재 변환해서 기존의 코드에 연결함 */
+
             for (rowItem in getAll2000UseCase()) {
                 reservationList += RoomRowMapper.mappingRowToRoom(rowItem)
             }
             Log.i("This is NotifiViewModel", "reserve count : ${reservationList.count()}")
             reservationRepository.insertAll(reservationList)
-            /** Room에서 꺼낸 데이터 각각을 Row타입으로 변환해 rowList에 저장하는 부분 */
-            for (reservation in reservationRepository.getAllReservations()) {
+            for (reservation in reservationRepository.getAll()) {
                 rowList += RoomRowMapper.mappingRoomToRow(reservation)
             }
-            // 여러개의 소분류명 입,출력 테스트용
-//            val sampleList: List<String> = listOf("야구장","강당","어린이")
-//            val sampleItem: HashMap<String, String> = hashMapOf()
-//            val sampleAnswers = reservationRepository.getReservationsWithSmallTypes(sampleList)
-//            for(sampleAnswer in sampleAnswers) {
-//                sampleItem[sampleAnswer.PLACENM] = sampleAnswer.MINCLASSNM
-//            }
-//            Log.i("This is NotifiViewModel","소분류명(야구장, 강당, 어린이병원) count : ${sampleItem.count()}, list : $sampleItem")
 
             val row = rowList.firstOrNull()
             if (row == null) {
