@@ -112,6 +112,9 @@ class FilterFragment(
                 R.id.chip_2_1_25 to "중랑구",
             ),
             listOf(
+                R.id.chip_2_2_1 to "서울제외지역"
+            ),
+            listOf(
                 R.id.chip_3_1_1 to "접수중",
                 R.id.chip_3_1_2 to "안내중",
             ),
@@ -131,6 +134,7 @@ class FilterFragment(
             binding.tvFilterTitle1Header4,
             binding.tvFilterTitle1Header5,
             binding.tvFilterTitle2Header1,
+            binding.tvFilterTitle2Header2
         )
     }
 
@@ -142,6 +146,7 @@ class FilterFragment(
             binding.cgFilterTitle1Header4,
             binding.cgFilterTitle1Header5,
             binding.cgFilterTitle2Header1,
+            binding.cgFilterTitle2Header2,
             binding.cgFilterTitle3Header1,
             binding.cgFilterTitle4Header1
         )
@@ -155,6 +160,7 @@ class FilterFragment(
             binding.ivFilterTitle1Header4Btn,
             binding.ivFilterTitle1Header5Btn,
             binding.ivFilterTitle2Header1Btn,
+            binding.ivFilterTitle2Header2Btn
         )
     }
 
