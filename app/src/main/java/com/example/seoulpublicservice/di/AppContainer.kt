@@ -17,6 +17,8 @@ import com.example.seoulpublicservice.pref.RegionPrefRepository
 import com.example.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.example.seoulpublicservice.pref.RowPrefRepository
 import com.example.seoulpublicservice.pref.RowPrefRepositoryImpl
+import com.example.seoulpublicservice.pref.SavedPrefRepository
+import com.example.seoulpublicservice.pref.SavedPrefRepositoryImpl
 import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.seoul.SeoulApiService
 import com.example.seoulpublicservice.seoul.SeoulPublicRepository
@@ -46,6 +48,7 @@ interface AppContainer {
     val idPrefRepository: IdPrefRepository
     val reservationRepository: ReservationRepository
     val dbMemoryRepository: DbMemoryRepository
+    val savedPrefRepository: SavedPrefRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -128,6 +131,10 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val dbMemoryRepository: DbMemoryRepository by lazy {
         DbMemoryRepositoryImpl(getAppRowList)
+    }
+
+    override val savedPrefRepository: SavedPrefRepository by lazy {
+        SavedPrefRepositoryImpl(context)
     }
 
 }
