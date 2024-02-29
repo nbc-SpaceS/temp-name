@@ -8,6 +8,8 @@ interface SavedPrefRepository {
     fun saveSvcidList(svcidList: List<String>)
     fun loadSvcidList(): List<String>
     fun saveSvcid(svcid: String)
+    fun clear()
+    fun remove(svcid: String)
 }
 
 class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
@@ -17,9 +19,10 @@ class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
 
     private val keySvcidList = "keySvcidList"
 
-    override fun saveSvcidList(svcidList: List<String>) {
-        val json = gson.toJson(svcidList)
+    private fun save(list: List<String>) {
+        val json = gson.toJson(list)
         pref.edit().putString(keySvcidList, json).apply()
+        Log.d("jj-SavedPrefRepositoryImpl", "save json: ${json.take(255)}")
     }
 
     override fun loadSvcidList(): List<String> {
@@ -29,10 +32,12 @@ class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
         return gson.fromJson(json, Array<String>::class.java).toList()
     }
 
-    override fun saveSvcid(svcid: String) {
-        val list = loadSvcidList()
-        val json = gson.toJson(list + svcid)
-        pref.edit().putString(keySvcidList, json).apply()
-    }
+    override fun saveSvcidList(svcidList: List<String>) = save(loadSvcidList() + svcidList)
+
+    override fun saveSvcid(svcid: String) = save(loadSvcidList() + svcid)
+
+    override fun clear() = pref.edit().clear().apply()
+
+    override fun remove(svcid: String) = save(loadSvcidList() - svcid)
 
 }
