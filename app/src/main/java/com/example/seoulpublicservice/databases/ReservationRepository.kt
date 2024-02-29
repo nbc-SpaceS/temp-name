@@ -1,5 +1,8 @@
 package com.example.seoulpublicservice.databases
 
+import android.util.Log
+import androidx.sqlite.db.SimpleSQLiteQuery
+
 interface ReservationRepository {       // get
     /**
      * @property insertAll DB에 API로 받아온 데이터 리스트로 전부 삽입
@@ -14,9 +17,22 @@ interface ReservationRepository {       // get
 
     /**
      * @property getAll 모든 아이템을 List로 출력
-     * @return `List<ReservationEntity>` 타입으로 반환
+     * @return 빈 칸이 없는 `List<ReservationEntity>` 타입으로 반환
      */
     suspend fun getAll(): List<ReservationEntity>
+
+    /**
+     * @property getAll 모든 아이템을 List로 출력
+     * @return `List<ReservationEntity>` 타입으로 반환
+     */
+    suspend fun getAllBefore() : List<ReservationEntity>
+
+    /**
+     * @property getAll 모든 아이템을 List로 출력
+     * @return 빈 칸을 제외한 `List<ReservationEntity>` 타입으로 반환
+     * 왠지 DB에서 제대로 출력이 안되는 느낌이 듬
+     */
+    suspend fun getAllNOTBlanks() : List<ReservationEntity>
 
     /**
      * @property getReservationsWithBigType 입력된 대분류명으로 출력
@@ -40,16 +56,14 @@ interface ReservationRepository {       // get
     suspend fun getReservationsWithSmallTypes(types: List<String>): List<ReservationEntity>
 
     /**
-     * @property getFilterItemsOR 필터를 리스트로 받아 아이템 출력하기
+     * @property getFilter 필터를 리스트로 받아 아이템 출력하기
      * @param typeSubCategory 소분류명
      * @param typeLocation 관심 지역명
      * @param typeServiceState 접수 가능 여부
      * @param typePay 요금
      * @return `List<ReservationEntity>`
      */
-    suspend fun getFilterItemsOR(typeSubCategory: List<String>, typeLocation: List<String>, typeServiceState: List<String>, typePay: List<String>) : List<ReservationEntity>
-
-    suspend fun getQueries(typeMin: List<String>, typeArea: List<String>, typeSvc: List<String>, typePay: List<String>) : List<ReservationEntity>
+    suspend fun getFilter(typeSubCategory: List<String>, typeLocation: List<String>, typeServiceState: List<String>, typePay: List<String>) : List<ReservationEntity>
 }
 
 class ReservationRepositoryImpl(
@@ -67,73 +81,46 @@ class ReservationRepositoryImpl(
         insertAll(redesignedList)
         return reservationDAO.getAll()
     }
-
+    override suspend fun getAllBefore() = reservationDAO.getAll()
+    override suspend fun getAllNOTBlanks(): List<ReservationEntity> = reservationDAO.getNOTBlank()
     override suspend fun getReservationsWithBigType(type: String) = reservationDAO.getItemsWithBigType(type)
     override suspend fun getReservationsWithSmallType(type: String) = reservationDAO.getItemsWithSmallType(type)
-
     override suspend fun getReservationsWithSmallTypes(types: List<String>) = reservationDAO.getItemsWithSmallTypes(types)
 
-//    override suspend fun getFilterItemsOR(
-//        typeSubCategory: List<String>,
-//        typeLocation: List<String>,
-//        typeServiceState: List<String>,
-//        typePay: List<String>
-//    ): List<ReservationEntity> {
-//        val returnList: MutableList<ReservationEntity> = mutableListOf()
-//        returnList += when {
-//            typeSubCategory.isNotEmpty() -> reservationDAO.getItemsWithSmallTypes(typeSubCategory)
-//            typeLocation.isNotEmpty() -> reservationDAO.getLocation(typeLocation)
-//            typeServiceState.isNotEmpty() -> reservationDAO.getServiceState(typeServiceState)
-//            typePay.isNotEmpty() -> reservationDAO.getPay(typePay)
-//            else -> return returnList.toList()
-//        }
-//        return returnList.toList()
-//    }
-
-    override suspend fun getFilterItemsOR(
+    override suspend fun getFilter(
         typeSubCategory: List<String>,
         typeLocation: List<String>,
         typeServiceState: List<String>,
         typePay: List<String>
     ): List<ReservationEntity> {
-        val returnList: MutableList<ReservationEntity> = mutableListOf()
-        for(reservation in reservationDAO.getAll()) {
-            if (typeSubCategory.isNotEmpty() && typeLocation.isNotEmpty() && typeServiceState.isNotEmpty() && typePay.isNotEmpty()) {
-                if (checkMatch(reservation, typeSubCategory) &&
-                    checkMatch(reservation, typeLocation) &&
-                    checkMatch(reservation, typeServiceState) &&
-                    checkMatch(reservation, typePay)
-                ) {
-                    returnList.add(reservation)
-                }
-            }
+        var subStr = ""
+        var locStr = ""
+        var svcStr = ""
+        var payStr = ""
+        when {
+            typeSubCategory.size >= 2 -> subStr = typeSubCategory.joinToString("','")
+            typeSubCategory.size == 1 && typeSubCategory.first().isNotEmpty() -> subStr = typeSubCategory.joinToString("")
+            typeSubCategory.size == 1 && typeSubCategory.first().isEmpty() -> subStr = reservationDAO.getSubList().joinToString("','")
         }
-        return returnList
-
-//        testList.take(10).forEach {
-//            val areanm = if (itemSmall.isNotEmpty() && it.MINCLASSNM in itemSmall) it.MINCLASSNM else "테스트"
-//            val locate = if (itemLocate.isNotEmpty() && it.AREANM in itemLocate) it.AREANM else "테스트"
-//            val state = if (itemState.isNotEmpty() && it.SVCSTATNM in itemState) it.SVCSTATNM else "테스트"
-//            val pay = if (itemPay.isNotEmpty() && it.PAYATNM in itemPay) it.PAYATNM else "테스트"
-//        }
-    }
-
-    private fun checkMatch(reservation: ReservationEntity, list: List<String>): Boolean {
-        for(item in list) {
-            if(item == reservation.MINCLASSNM ||
-                item == reservation.AREANM ||
-                item == reservation.SVCSTATNM ||
-                item == reservation.PAYATNM) {
-                return true
-            }
+        when {
+            typeLocation.size >= 2 -> locStr = typeLocation.joinToString("','")
+            typeLocation.size == 1 && typeLocation.first().isNotEmpty() -> locStr = typeLocation.joinToString("")
+            typeLocation.size == 1 && typeLocation.first().isEmpty() -> locStr = reservationDAO.getLocList().joinToString("','")
         }
-        return false
+        when {
+            typeServiceState.size >= 2 -> svcStr = typeServiceState.joinToString("','")
+            typeServiceState.size == 1 && typeServiceState.first().isNotEmpty() -> svcStr = typeServiceState.joinToString("")
+            typeServiceState.size == 1 && typeServiceState.first().isEmpty() -> svcStr = reservationDAO.getSvcList().joinToString("','")
+        }
+        when {
+            typePay.size >= 2 -> payStr = typePay.joinToString("','")
+            typePay.size == 1 && typePay.first().isNotEmpty() -> payStr = typePay.joinToString("")
+            typePay.size == 1 && typePay.first().isEmpty() -> payStr = reservationDAO.getPayList().joinToString("','")
+        }
+        val queryStr = "SELECT * FROM ReservationEntity WHERE (MINCLASSNM IN ('$subStr')) AND (AREANM IN ('$locStr')) AND (SVCSTATNM IN ('$svcStr')) AND (PAYATNM IN ('$payStr'))"
+        Log.i("This is ReservationRepository","Query문 : $queryStr\n")
+        val query = SimpleSQLiteQuery(queryStr)
+        Log.i("This is ReservationRepository","Query : $query\n")
+        return reservationDAO.putQueries(query)
     }
-
-    override suspend fun getQueries(
-        typeMin: List<String>,
-        typeArea: List<String>,
-        typeSvc: List<String>,
-        typePay: List<String>
-    ) = reservationDAO.getQueries(typeMin, typeArea, typeSvc, typePay)
 }

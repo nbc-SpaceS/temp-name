@@ -1,10 +1,8 @@
 package com.example.seoulpublicservice.databases
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import androidx.room.util.query
+import androidx.sqlite.db.SupportSQLiteQuery
 
 /**
  * API 받아올 데이터를 담는 테이블
@@ -81,15 +79,8 @@ interface ReservationDAO {
     @Query("SELECT * FROM ReservationEntity WHERE PAYATNM in (:types)")
     fun getPay(types: List<String>) : List<ReservationEntity>
 
-    @Query("SELECT * FROM ReservationEntity" +
-            " WHERE MINCLASSNM in (:typeMin)" +
-            " AND AREANM in (:typeArea)" +
-            " AND SVCSTATNM in (:typeSvc)" +
-            " AND PAYATNM in (:typePay)")
-    fun getQueries(typeMin: List<String>, typeArea: List<String>, typeSvc: List<String>, typePay: List<String>) : List<ReservationEntity>
 
-//    @Query("SELECT * FROM ReservationEntity WHERE (AREANM OR DTLCONT OR IMGURL OR RCPTBGNDT OR RCPTENDDT OR REVSTDDAYNM OR SVCOPNBGNDT OR SVCOPNENDDT) IS NOT ''")
-@Query("SELECT * FROM ReservationEntity " +
+    @Query("SELECT * FROM ReservationEntity " +
         "WHERE AREANM IS NOT NULL AND AREANM != '' " +
         "AND DTLCONT IS NOT NULL AND DTLCONT != '' " +
         "AND IMGURL IS NOT NULL AND IMGURL != '' " +
@@ -100,4 +91,21 @@ interface ReservationDAO {
         "AND SVCOPNENDDT IS NOT NULL AND SVCOPNENDDT != '' " +
         "AND SVCID NOT LIKE 'XML%'")
     fun getNOTBlank() : List<ReservationEntity>
+
+
+    @Query("SELECT * FROM ReservationEntity WHERE MINCLASSNM in (:typeMin) OR AREANM in (:typeArea) OR SVCSTATNM in (:typeSvc) OR PAYATNM in (:typePay)")
+    fun getItemsOR(typeMin: List<String>, typeArea: List<String>, typeSvc: List<String>, typePay: List<String>) : List<ReservationEntity>
+
+
+    @Query("SELECT DISTINCT MINCLASSNM FROM ReservationEntity")
+    fun getSubList() : List<String>
+    @Query("SELECT DISTINCT AREANM FROM ReservationEntity")
+    fun getLocList() : List<String>
+    @Query("SELECT DISTINCT SVCSTATNM FROM ReservationEntity")
+    fun getSvcList() : List<String>
+    @Query("SELECT DISTINCT PAYATNM FROM ReservationEntity")
+    fun getPayList() : List<String>
+
+    @RawQuery
+    suspend fun putQueries(query: SupportSQLiteQuery): List<ReservationEntity>
 }
