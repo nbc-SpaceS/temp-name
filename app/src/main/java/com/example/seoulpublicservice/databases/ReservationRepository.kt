@@ -107,22 +107,22 @@ class ReservationRepositoryImpl(
         when {
             typeSubCategory.size >= 2 -> subStr = typeSubCategory.joinToString("','")
             typeSubCategory.size == 1 && typeSubCategory.first().isNotEmpty() -> subStr = typeSubCategory.joinToString("")
-            typeSubCategory.size == 1 && typeSubCategory.first().isEmpty() -> subStr = reservationDAO.getSubList().joinToString("','")
+            typeSubCategory.isEmpty() || typeSubCategory.size == 1 && typeSubCategory.first().isEmpty() -> subStr = reservationDAO.getSubList().joinToString("','")
         }
         when {
             typeLocation.size >= 2 -> locStr = typeLocation.joinToString("','")
             typeLocation.size == 1 && typeLocation.first().isNotEmpty() -> locStr = typeLocation.joinToString("")
-            typeLocation.size == 1 && typeLocation.first().isEmpty() -> locStr = reservationDAO.getLocList().joinToString("','")
+            typeLocation.isEmpty() || typeLocation.size == 1 && typeLocation.first().isEmpty() -> locStr = reservationDAO.getLocList().joinToString("','")
         }
         when {
             typeServiceState.size >= 2 -> svcStr = typeServiceState.joinToString("','")
             typeServiceState.size == 1 && typeServiceState.first().isNotEmpty() -> svcStr = typeServiceState.joinToString("")
-            typeServiceState.size == 1 && typeServiceState.first().isEmpty() -> svcStr = reservationDAO.getSvcList().joinToString("','")
+            typeServiceState.isEmpty() || typeServiceState.size == 1 && typeServiceState.first().isEmpty() -> svcStr = reservationDAO.getSvcList().joinToString("','")
         }
         when {
             typePay.size >= 2 -> payStr = typePay.joinToString("','")
             typePay.size == 1 && typePay.first().isNotEmpty() -> payStr = typePay.joinToString("")
-            typePay.size == 1 && typePay.first().isEmpty() -> payStr = reservationDAO.getPayList().joinToString("','")
+            typePay.isEmpty() || typePay.size == 1 && typePay.first().isEmpty() -> payStr = reservationDAO.getPayList().joinToString("','")
         }
         val queryStr = "SELECT * FROM ReservationEntity WHERE (MINCLASSNM IN ('$subStr')) AND (AREANM IN ('$locStr')) AND (SVCSTATNM IN ('$svcStr')) AND (PAYATNM IN ('$payStr'))"
         Log.i("This is ReservationRepository","Query문 : $queryStr\n")
