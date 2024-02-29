@@ -1,16 +1,16 @@
 package com.example.seoulpublicservice.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.adapter.ItemAdapter
 import com.example.seoulpublicservice.data.Item
+import com.example.seoulpublicservice.data.ItemRepository
 import com.example.seoulpublicservice.databinding.FragmentEducationBinding
-import com.example.seoulpublicservice.databinding.FragmentFacilityBinding
 
 class EducationFragment : Fragment() {
     private var _binding: FragmentEducationBinding? = null
@@ -25,7 +25,7 @@ class EducationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val items = listOf(
+        val educationItems = listOf(
             Item(R.drawable.ic_book, "교양/어학"),
             Item(R.drawable.ic_information, "정보통신"),
             Item(R.drawable.ic_history, "역사"),
@@ -38,6 +38,9 @@ class EducationFragment : Fragment() {
             Item(R.drawable.ic_certification, "전문/자격증"),
             Item(R.drawable.ic_etc, "기타"),
         )
+        ItemRepository.setItems("Education", educationItems)
+
+        val items = ItemRepository.getItems("Education")
 
         val adapter = ItemAdapter(items)
         binding.rvEducation.adapter = adapter
