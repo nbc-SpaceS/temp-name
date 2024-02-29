@@ -1,5 +1,6 @@
 package com.example.seoulpublicservice.db_by_memory
 
+import android.util.Log
 import com.example.seoulpublicservice.seoul.Row
 
 private val areasInSeoul = listOf(
@@ -82,17 +83,24 @@ fun List<Row>.getFiltered(
     svcstatnm: List<String>?,
     payatnm: List<String>?
 ): List<Row> {
+//    Log.d(
+//        "jj-DbMemoryRepositoryImpl",
+//        "$minclassnm\n" +
+//                "$areanm\n" +
+//                "$svcstatnm\n" +
+//                "$payatnm"
+//    )
     return if (areanm?.any { it == "시외" || it == "서울제외지역" } == true) {
         getHaveLocation().filter {
             (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
-                    (areanm.isEmpty() || it.areanm in areanm || it.isNotInSeoul()) &&
+                    (areanm.isEmpty() || it.areanm.isNotBlank() && (it.areanm in areanm || it.isNotInSeoul())) &&
                     (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
                     (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
         }
     } else {
         getHaveLocation().filter {
             (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
-                    (areanm.isNullOrEmpty() || it.areanm in areanm) &&
+                    (areanm.isNullOrEmpty() || it.areanm.isNotBlank() && it.areanm in areanm) &&
                     (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
                     (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
         }
