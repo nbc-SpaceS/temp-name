@@ -65,27 +65,26 @@ class DbMemoryRepositoryImpl(private val getAppRowList: () -> List<Row>) : DbMem
 /* 다른 곳들에서도 사용 가능한 확장함수 */
 fun Row.isInSeoul() = this.areanm in areasInSeoul
 fun Row.isNotInSeoul() = this.areanm !in areasInSeoul
-
 fun List<Row>.getInSeoul() = this.filter { it.isInSeoul() }
-//fun List<Row?>.getInSeoul() = this.filter { it?.isInSeoul() ?: false } as List<Row>
-
 fun List<Row>.getNotInSeoul() = this.filter { it.isNotInSeoul() }
-//fun List<Row?>.getNotInSeoul() = this.filter { it?.isNotInSeoul() ?: false } as List<Row>
-
 fun List<Row>.getHaveLocation() = this.filter { it.x.isBlank().not() && it.y.isBlank().not() }
-//fun List<Row?>.getHaveLocation() =
-//    this.filter { it != null && it.x.isBlank().not() && it.y.isBlank().not() } as List<Row>
-
 fun List<Row>.getFiltered(
     minclassnm: List<String>?,
     areanm: List<String>?,
     svcstatnm: List<String>?,
     payatnm: List<String>?
 ): List<Row> {
+//    Log.d(
+//        "jj-DbMemoryRepositoryImpl",
+//        "$minclassnm\n" +
+//                "$areanm\n" +
+//                "$svcstatnm\n" +
+//                "$payatnm"
+//    )
     return if (areanm?.any { it == "시외" || it == "서울제외지역" } == true) {
         getHaveLocation().filter {
             (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
-                    (areanm.isEmpty() || it.areanm in areanm || it.isNotInSeoul()) &&
+                    (areanm.isEmpty() || it.areanm.isNotBlank() && (it.areanm in areanm || it.isNotInSeoul())) &&
                     (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
                     (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
         }
@@ -98,10 +97,3 @@ fun List<Row>.getFiltered(
         }
     }
 }
-
-//fun List<Row?>.getFiltered(
-//    minclassnm: List<String>?,
-//    areanm: List<String>?,
-//    svcstatnm: List<String>?,
-//    payatnm: List<String>?
-//) = this.filterNotNull().getFiltered(minclassnm, areanm, svcstatnm, payatnm)
