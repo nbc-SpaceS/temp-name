@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.seoulpublicservice.R
@@ -32,7 +33,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     private var _binding: FragmentDetailBinding? = null
     val binding get() = _binding!!
-    private val viewModel: DetailViewModel by viewModels()
+    private val viewModel: DetailViewModel by viewModels { DetailViewModel.factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +78,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
     }
 
-    private fun viewModelInit() {
+    private fun viewModelInit() = viewModel.let {
         viewModel.getData(param1!!)
         viewModel.serviceData.observe(viewLifecycleOwner) {
             bind(it, requireContext())

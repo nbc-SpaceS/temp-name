@@ -1,10 +1,15 @@
 package com.example.seoulpublicservice.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.seoulpublicservice.SeoulPublicServiceApplication
 import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databases.ReservationRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailViewModel(
     private val reservationRepository: ReservationRepository
@@ -12,11 +17,19 @@ class DetailViewModel(
     private val _serviceData = MutableLiveData<ReservationEntity>()
     val serviceData: LiveData<ReservationEntity> get() = _serviceData
 
+    // 닫기 이벤트
     private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
     fun getData(svcID: String) {
-        _serviceData.value = reservationRepository.getService(svcID)
+        val job = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                _serviceData.postValue(reservationRepository.getService(svcID))
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            job.join()
+        }
     }
 
 
@@ -30,5 +43,17 @@ class DetailViewModel(
 
     fun close(event: Boolean) { // Dismiss
         _closeEvent.value = event
+    }
+
+    companion object {
+        val factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as SeoulPublicServiceApplication)
+                val container = application.container
+                DetailViewModel(
+                    reservationRepository = container.reservationRepository
+                )
+            }
+        }
     }
 }

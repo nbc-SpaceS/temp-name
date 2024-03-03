@@ -38,9 +38,6 @@ class NotificationsFragment : Fragment() {
 
     private fun initView() = binding.let { b ->
         b.btnTemp1.setOnClickListener {
-            val dialog = DetailFragment.newInstance("S240104091254073361")
-            dialog.show(parentFragmentManager, "DetailFragment")
-            Log.i("This is NotifiFragment","DF Activate? : $dialog")
             viewModel.setRandomOne()
         }
     }
