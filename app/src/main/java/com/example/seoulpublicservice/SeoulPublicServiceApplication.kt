@@ -2,6 +2,8 @@ package com.example.seoulpublicservice
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.seoulpublicservice.di.AppContainer
 import com.example.seoulpublicservice.di.DefaultAppContainer
 import com.example.seoulpublicservice.seoul.Row
@@ -21,6 +23,9 @@ class SeoulPublicServiceApplication : Application() {
 
     private var _rowList: List<Row> = emptyList()
     val rowList: List<Row> get() = _rowList
+
+    private val _initialLoadingFinished: MutableLiveData<Boolean> = MutableLiveData(false)
+    val initialLoadingFinished: LiveData<Boolean> get() = _initialLoadingFinished
 
     override fun onCreate() {
         super.onCreate()
@@ -54,6 +59,8 @@ class SeoulPublicServiceApplication : Application() {
                 if (_rowList.isEmpty()) getAndUpdateAll2000()
             }
         }
+
+        _initialLoadingFinished.postValue(true)
     }
 
     private suspend fun getAndUpdateAll2000() {
