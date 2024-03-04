@@ -38,9 +38,9 @@ class MyPageSavedAdapter(
                 b.tvAreaName.text = null
                 b.tvIsReservationAvailable.text = null
             } else {
-                b.ivSmallVideoImage.loadWithHolder(item.imgurl)
-                b.tvRegion.text = item.areanm
-                b.tvRegister.text = item.svcstatnm
+                b.ivSmallImage.loadWithHolder(item.imgurl)
+                b.tvAreaName.text = item.areanm
+                b.tvIsReservationAvailable.text = item.svcstatnm
             }
         }
     }
