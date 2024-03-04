@@ -5,7 +5,7 @@ import com.wannabeinseoul.seoulpublicservice.seoul.Row
 
 object RoomRowMapper {
     /**
-     * @property mappingRoomToRow Room에서 사용하는 [ReservationEntity] 타입을 API에서 사용하는 [ROW] 타입으로 변환
+     * @property mappingRoomToRow Room에서 사용하는 [ReservationEntity] 타입을 API에서 사용하는 [Row] 타입으로 변환
      * @param reservationEntity Room에서 사용하는 [ReservationEntity]타입
      * @return API값을 받아오는 [Row]타입
      */
@@ -40,6 +40,11 @@ object RoomRowMapper {
         )
     }
 
+    /**
+     * @property mappingRoomToRow [ReservationEntity] 타입의 List를 [Row] 타입의 List로 변환
+     * @param reservationEntities [ReservationEntity]타입의 List
+     * @return [Row]타입의 List
+     */
     fun mappingRoomToRow(reservationEntities: Collection<ReservationEntity>): List<Row> =
         reservationEntities.map { mappingRoomToRow(it) }
 
@@ -68,8 +73,8 @@ object RoomRowMapper {
             SVCOPNENDDT = row.svcopnenddt,
             SVCSTATNM = row.svcstatnm,
             SVCURL = row.svcurl,
-            TELNO = row.svcurl,
-            USETGTINFO = row.svcurl,
+            TELNO = row.telno,
+            USETGTINFO = row.usetgtinfo,
             V_MAX = row.vMax,
             V_MIN = row.vMin,
             X = row.x,
@@ -77,6 +82,11 @@ object RoomRowMapper {
         )
     }
 
+    /**
+     * @property mappingRowToRoom [Row] 타입의 List를 [ReservationEntity] 타입의 List로 변환
+     * @param rows [Row]타입의 List
+     * @return [ReservationEntity]타입의 List
+     */
     fun mappingRowToRoom(rows: Collection<Row>): List<ReservationEntity> =
         rows.map { mappingRowToRoom(it) }
 }
