@@ -12,6 +12,7 @@ import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.databinding.ItemMapInfoWindowBinding
 import com.example.seoulpublicservice.pref.SavedPrefRepository
 import com.example.seoulpublicservice.seoul.Row
+import com.example.seoulpublicservice.util.loadWithHolder
 
 class MapDetailInfoAdapter(
     private val saveService: (String) -> Unit,
@@ -89,7 +90,7 @@ class MapDetailInfoAdapter(
             } else {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
             }
-            ivMapInfoPicture.load(item.imgurl)
+            ivMapInfoPicture.loadWithHolder(item.imgurl)
             tvMapInfoRegion.text = item.areanm
             tvMapInfoService.text =
                 HtmlCompat.fromHtml(item.svcnm, HtmlCompat.FROM_HTML_MODE_LEGACY)
