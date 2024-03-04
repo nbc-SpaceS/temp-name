@@ -21,24 +21,16 @@ class DetailViewModel(
     private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
+//    fun getData(svcID: String) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _serviceData.postValue(reservationRepository.getService(svcID))
+//        }
+//    }
     fun getData(svcID: String) {
-        val job = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                _serviceData.postValue(reservationRepository.getService(svcID))
-            }
-        }
         viewModelScope.launch(Dispatchers.IO) {
-            job.join()
+            val data = reservationRepository.getService(svcID)
+            _serviceData.postValue(data)
         }
-    }
-
-
-    fun activeButtons() {   // 더보기 버튼 / 전화,예약,즐겨찾기,공유 버튼 등 버튼의 관리
-
-    }
-
-    fun mapSetting() {      // 네이버 지도에 마커찍기, 지도 레이아웃의 중심점 지정하기 등
-
     }
 
     fun close(event: Boolean) { // Dismiss

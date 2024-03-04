@@ -49,7 +49,7 @@ class RecommendationFragment : Fragment() {
         binding.btnTemp.setOnClickListener{
             val dialog = DetailFragment.newInstance("S240104091254073361")
             dialog.show(requireActivity().supportFragmentManager, "DetailFragment")
-            Log.i("This is NotifiFragment","DF Activate? : $dialog")
+            Log.i("This is RecommendationFragment","DF Activate? : $dialog")
             viewModel.setRandomOne()
         }
         viewModel.text.observe(viewLifecycleOwner) {
