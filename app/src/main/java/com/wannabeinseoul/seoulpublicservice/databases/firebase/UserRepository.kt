@@ -3,7 +3,6 @@ package com.wannabeinseoul.seoulpublicservice.databases.firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import retrofit2.http.Url
 
 interface UserRepository {
     fun addUser(user: UserEntity)

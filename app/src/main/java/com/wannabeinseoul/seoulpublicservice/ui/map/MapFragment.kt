@@ -27,7 +27,6 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
