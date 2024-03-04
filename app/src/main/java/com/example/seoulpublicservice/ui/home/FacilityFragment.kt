@@ -7,14 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seoulpublicservice.R
+import com.example.seoulpublicservice.SeoulPublicServiceApplication
 import com.example.seoulpublicservice.adapter.ItemAdapter
 import com.example.seoulpublicservice.data.Item
 import com.example.seoulpublicservice.data.ItemRepository
 import com.example.seoulpublicservice.databinding.FragmentFacilityBinding
+import com.example.seoulpublicservice.pref.RegionPrefRepositoryImpl
 
 class FacilityFragment : Fragment() {
     private var _binding: FragmentFacilityBinding? = null
     private val binding get() = _binding!!
+
+    private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -42,7 +46,8 @@ class FacilityFragment : Fragment() {
         ItemRepository.setItems("Facility", facilityItems)
 
         val items = ItemRepository.getItems("Facility")
-        val adapter = ItemAdapter(items)
+        val selectedRegion = regionPrefRepository.load().firstOrNull() ?: ""
+        val adapter = ItemAdapter(items, selectedRegion)
         binding.rvFacility.adapter = adapter
         binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
     }

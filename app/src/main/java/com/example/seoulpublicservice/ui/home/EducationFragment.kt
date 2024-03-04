@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.seoulpublicservice.R
+import com.example.seoulpublicservice.SeoulPublicServiceApplication
 import com.example.seoulpublicservice.adapter.ItemAdapter
 import com.example.seoulpublicservice.data.Item
 import com.example.seoulpublicservice.data.ItemRepository
@@ -15,6 +16,8 @@ import com.example.seoulpublicservice.databinding.FragmentEducationBinding
 class EducationFragment : Fragment() {
     private var _binding: FragmentEducationBinding? = null
     private val binding get() = _binding!!
+
+    private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -41,8 +44,8 @@ class EducationFragment : Fragment() {
         ItemRepository.setItems("Education", educationItems)
 
         val items = ItemRepository.getItems("Education")
-
-        val adapter = ItemAdapter(items)
+        val selectedRegion = regionPrefRepository.load().firstOrNull() ?: ""
+        val adapter = ItemAdapter(items, selectedRegion)
         binding.rvEducation.adapter = adapter
         binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
     }

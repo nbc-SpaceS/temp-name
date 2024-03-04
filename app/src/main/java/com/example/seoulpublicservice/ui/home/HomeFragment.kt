@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +21,7 @@ import com.example.seoulpublicservice.data.Item
 import com.example.seoulpublicservice.data.ItemRepository
 import com.example.seoulpublicservice.databinding.FragmentHomeBinding
 import com.example.seoulpublicservice.pref.RegionPrefRepository
+import com.example.seoulpublicservice.pref.SearchPrefRepository
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HomeFragment : Fragment() {
@@ -30,10 +29,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val regionPrefRepository: RegionPrefRepository by lazy {
-        (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository
-    }
-
+    private val regionPrefRepository: RegionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
+    private val searchPrefRepository: SearchPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.searchPrefRepository }
     private var fragmentContext: Context? = null
 
     private val items: List<Item> by lazy {
@@ -41,7 +38,7 @@ class HomeFragment : Fragment() {
         categories.flatMap { ItemRepository.getItems(it) }
     }
 
-    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items) }
+    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items, settingRegions()) }
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -102,6 +99,7 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion1.text.toString()))
         }
 
         binding.tvHomeSelectRegion2.setOnClickListener {
@@ -109,6 +107,7 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion2.text.toString()))
         }
 
         binding.tvHomeSelectRegion3.setOnClickListener {
@@ -116,6 +115,7 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion3.text.toString()))
         }
 
         binding.viewControlSpinner.setOnClickListener {
@@ -130,25 +130,17 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivSearch.setOnClickListener {
-            val query = binding.etSearch.text.toString()
-            val tabIndex = items.indexOfFirst { it.name.contains(query, ignoreCase = true) }
-            if (tabIndex != -1) {
-                binding.viewPager.currentItem = tabIndex
-            }
+
         }
 
-        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val query = binding.etSearch.text.toString()
-                val tabIndex = items.indexOfFirst { it.name.contains(query, ignoreCase = true) }
-                if (tabIndex != -1) {
-                    binding.viewPager.currentItem = tabIndex
-                }
-                true
-            } else {
-                false
-            }
+        binding.etSearch.setOnClickListener {
+
         }
+
+        binding.etSearch.setOnFocusChangeListener { _, _ ->
+
+        }
+
 
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 5
@@ -218,10 +210,10 @@ class HomeFragment : Fragment() {
 //        }
     }
 
-    fun settingRegions() {
+    private fun settingRegions(): String {
         val selectedRegions = regionPrefRepository.load().toMutableList()
 
-        if (selectedRegions.isNotEmpty()) {
+        return if (selectedRegions.isNotEmpty()) {
             binding.tvHomeCurrentRegion.text = selectedRegions[0]
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
             when (selectedRegions.size) {
@@ -249,11 +241,13 @@ class HomeFragment : Fragment() {
                     binding.tvHomeSelectRegion3.isVisible = true
                 }
             }
+            selectedRegions[0]
         } else {
             binding.tvHomeCurrentRegion.text = "지역선택"
             binding.tvHomeSelectRegion1.isVisible = false
             binding.tvHomeSelectRegion2.isVisible = false
             binding.tvHomeSelectRegion3.isVisible = false
+            "지역선택"
         }
     }
 

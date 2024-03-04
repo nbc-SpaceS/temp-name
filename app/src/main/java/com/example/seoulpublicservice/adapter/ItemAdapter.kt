@@ -10,7 +10,7 @@ import com.example.seoulpublicservice.category.CategoryActivity
 import com.example.seoulpublicservice.data.Item
 import com.example.seoulpublicservice.databinding.ItemHomeBinding
 
-class ItemAdapter(private var items: List<Item>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+class ItemAdapter(private var items: List<Item>, private val selectedRegion: String) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemViewHolder(binding)
@@ -29,9 +29,10 @@ class ItemAdapter(private var items: List<Item>) : RecyclerView.Adapter<ItemAdap
             holder.icon.setBackgroundResource(R.drawable.background_radius_10dp_e95a77)
 
 
-            // 선택된 항목의 데이터를 가지고 카테고리 페이지로 이동
+            // 선택된 항목의 데이터와 지역을 가지고 카테고리 페이지로 이동
             val intent = Intent(it.context, CategoryActivity::class.java).apply {
                 putExtra("category", item.name)
+                putExtra("region", selectedRegion)
             }
             it.context.startActivity(intent)
 
