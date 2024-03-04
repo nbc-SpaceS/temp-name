@@ -13,6 +13,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationDAO
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
+import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
@@ -68,6 +69,10 @@ class RecommendationFragment : Fragment() {
     private fun initView() = binding.let { b ->
         b.reArea.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        b.imageView3.setOnClickListener {               // 추천페이지의 알림버튼으로 상세 페이지 띄우기 테스트
+            val dialog = DetailFragment.newInstance("S240104091254073361")
+            dialog.show(requireActivity().supportFragmentManager, "Detail")
+        }
     }
 
     private fun initViewModel() {

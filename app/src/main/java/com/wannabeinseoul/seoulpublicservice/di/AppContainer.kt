@@ -1,7 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.di
 
 import android.content.Context
-import com.wannabeinseoul.seoulpublicservice.BuildConfig
+import com.getkeepsafe.relinker.BuildConfig
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl

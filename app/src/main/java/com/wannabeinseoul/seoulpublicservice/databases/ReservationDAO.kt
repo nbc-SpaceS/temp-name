@@ -82,4 +82,17 @@ interface ReservationDAO {
 
     @Query("SELECT * FROM ReservationEntity WHERE SVCID IS (:svcID)")
     fun getService(svcID: String) : ReservationEntity
+
+    @Query("SELECT * FROM ReservationEntity " +
+            "WHERE AREANM IS NOT NULL AND AREANM != '' " +
+            "AND DTLCONT IS NOT NULL AND DTLCONT != '' " +
+            "AND IMGURL IS NOT NULL AND IMGURL != '' " +
+            "AND RCPTBGNDT IS NOT NULL AND RCPTBGNDT != '' " +
+            "AND RCPTENDDT IS NOT NULL AND RCPTENDDT != '' " +
+            "AND REVSTDDAYNM IS NOT NULL AND REVSTDDAYNM != '' " +
+            "AND SVCOPNBGNDT IS NOT NULL AND SVCOPNBGNDT != '' " +
+            "AND SVCOPNENDDT IS NOT NULL AND SVCOPNENDDT != '' " +
+            "AND (X IS NOT NULL OR X != '') AND (Y IS NOT NULL OR Y != '') " +
+            "AND SVCID NOT LIKE 'XML%'")
+    fun getNOTBlankInMaps() : List<ReservationEntity>
 }
