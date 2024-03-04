@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "127469490407",
+    "firebase_url": "https://seoulpublicservice-fd970-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "seoulpublicservice-fd970",
+    "storage_bucket": "seoulpublicservice-fd970.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127469490407:android:b85db5ba15c83cd411d242",
+        "android_client_info": {
+          "package_name": "com.wannabeinseoul.seoulpublicservice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9pnvGf8SBX54iBn3eOQ28vs2yA0gZAAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
