@@ -31,6 +31,11 @@
         <item name="android:overlapAnchor">false</item>
     </style>
 
+    <style name="tab_text" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="RoundImage" parent="" >
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

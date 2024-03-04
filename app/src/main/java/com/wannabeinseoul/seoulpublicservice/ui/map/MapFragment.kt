@@ -14,7 +14,6 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -27,6 +26,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -75,7 +75,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMapBinding.inflate(inflater, container, false)
+        _binding = com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding.inflate(inflater, container, false)
 
         mapView = binding.root.findViewById(R.id.mv_naver) as MapView
         mapView.onCreate(savedInstanceState)
