@@ -66,7 +66,7 @@ class RecommendationFragment : Fragment() {
     }
 
     private fun initView() = binding.let { b ->
-        b.reRecommend.layoutManager =
+        b.reArea.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
     }
 
@@ -114,17 +114,17 @@ class RecommendationFragment : Fragment() {
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.reScroll.adapter = recommendationAdapter
 
-        binding.reRecommend.layoutManager =
+        binding.reArea.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-        binding.reRecommend.adapter = recommendationAdapter
+        binding.reArea.adapter = recommendationAdapter
 
-        binding.reRecommend2.layoutManager =
+        binding.reDisabled.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-        binding.reRecommend2.adapter = recommendationAdapter
+        binding.reDisabled.adapter = recommendationAdapter
 
-        binding.reRecommend3.layoutManager =
+        binding.reNextWeek.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-        binding.reRecommend3.adapter = recommendationAdapter
+        binding.reNextWeek.adapter = recommendationAdapter
 
         // RecyclerView에 아이템 목록 설정
         val items: List<SealedMulti> = mutableListOf() // 아이템 목록
