@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -192,9 +193,12 @@ class FilterFragment(
         }
 
         tvFilterResetBtn.setOnClickListener {
-            chipGroupList.forEach {
-                it.clearCheck()
+            chipGroupList.forEachIndexed { index, chipGroup ->
+                viewModel.clearTemporary(index)
+                chipGroup.clearCheck()
             }
+            Toast.makeText(requireContext(), "필터가 초기화되었습니다.", Toast.LENGTH_SHORT).show()
+            tvFilterResetBtn.isEnabled = false
         }
 
         btnFilterApply.setOnClickListener {
@@ -233,6 +237,7 @@ class FilterFragment(
                 for (id in checkedIds) {
                     val selectedOption = filterOptions[index].first { it.first == id }.second
                     viewModel.saveTemporary(index, selectedOption)
+                    viewModel.checkTemporary()
                 }
             }
         }
@@ -247,6 +252,10 @@ class FilterFragment(
                     loadedChip.isChecked = true
                 }
             }
+        }
+
+        enableReset.observe(viewLifecycleOwner) {
+            binding.tvFilterResetBtn.isEnabled = it
         }
     }
 }
