@@ -8,10 +8,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.location.Location
 import android.net.Uri
+import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +24,7 @@ import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databinding.FragmentDetailBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -33,6 +34,7 @@ import com.naver.maps.map.util.MarkerIcons
 import kotlin.math.sqrt
 
 private const val DETAIL_PARAM = "detail_param1"
+private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
 class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이동 시 ScrollView 잠금 해야됌
     private lateinit var mapView: MapView
@@ -47,9 +49,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     private lateinit var commentAdapter: DetailCommentAdapter  // 후기 ListAdapter 선언
 
     private lateinit var latLng: LatLng
+    private lateinit var locationSource: FusedLocationSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         arguments?.let {
             param1 = it.getString(DETAIL_PARAM)
         }
@@ -67,6 +71,20 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         mapView = binding.root.findViewById(R.id.mv_detail_maps) as MapView
         mapView.getMapAsync(this)
         return binding.root
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if(!locationSource.isActivated) {
+                naverMap.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {   // 여기가 메인
@@ -92,8 +110,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun viewModelInit() = viewModel.let { vm ->
         vm.getData(param1!!)
-        vm.serviceData.observe(viewLifecycleOwner) {
-            bind(it)
+        vm.serviceData.observe(viewLifecycleOwner) { it ->
+            it?.let {
+                data -> bind(data)
+            }
         }
     }
 
@@ -133,9 +153,16 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         naverMap = nMap
         naverMap. maxZoom = 15.0
         naverMap. minZoom = 5.0
-
+        naverMap.locationSource = locationSource
+        viewModel.serviceData.value?.let {
+            bind(it)
+        }
+        val myLocation = locationSource.lastLocation
+        val itemLocation = LatLng(latLng.latitude, latLng.longitude)
+        val distance = myLocation?.let { distance(itemLocation, it) } ?: 0.0
+        binding.tvDetailDistanceFromHere.text = "현위치로부터 ${String.format("%.1f", distance)}km"
         val marker = Marker()
-        marker.position = LatLng(latLng.latitude, latLng.longitude)
+        marker.position = itemLocation
         marker.map = naverMap
         markerStyle(marker)
         naverMap.cameraPosition = CameraPosition(
@@ -210,6 +237,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     // 현재 위치에서부터 아이템까지의 거리
 //        val distance = sqrt((locationX - myX) * (locationX - myX) + (locationY - myY) * (locationY - myY))
+    private fun distance(loc: LatLng, mine: Location): Double {
+        return sqrt((loc.latitude - mine.latitude) * (loc.latitude - mine.latitude) + (loc.longitude - mine.longitude) * (loc.latitude - mine.longitude))
+    }
     companion object {
         @JvmStatic
         fun newInstance(serviceID: String) =

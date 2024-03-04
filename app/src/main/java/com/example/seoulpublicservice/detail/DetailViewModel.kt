@@ -7,9 +7,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.seoulpublicservice.SeoulPublicServiceApplication
 import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databases.ReservationRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class DetailViewModel(
     private val reservationRepository: ReservationRepository
@@ -21,15 +19,14 @@ class DetailViewModel(
     private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
-//    fun getData(svcID: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _serviceData.postValue(reservationRepository.getService(svcID))
-//        }
-//    }
     fun getData(svcID: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val data = reservationRepository.getService(svcID)
-            _serviceData.postValue(data)
+        viewModelScope.launch{
+            val result = viewModelScope.async(Dispatchers.IO) {
+                reservationRepository.getService(svcID)
+            }.await()
+            result.let {
+                _serviceData.value = result
+            }
         }
     }
 
