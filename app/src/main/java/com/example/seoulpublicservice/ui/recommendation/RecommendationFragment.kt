@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seoulpublicservice.databases.ReservationDAO
 import com.example.seoulpublicservice.databases.ReservationDatabase
-import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databases.ReservationRepositoryImpl
 import com.example.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.example.seoulpublicservice.pref.RecommendPrefRepository
@@ -111,9 +110,9 @@ class RecommendationFragment : Fragment() {
         recommendationAdapter = RecommendationAdapter()
 
         // RecyclerView 설정
-        binding.reFirst.layoutManager =
+        binding.reScroll.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        binding.reFirst.adapter = recommendationAdapter
+        binding.reScroll.adapter = recommendationAdapter
 
         binding.reRecommend.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)

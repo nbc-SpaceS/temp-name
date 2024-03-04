@@ -7,15 +7,13 @@
         tools:context=".ui.recommendation.RecommendationFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_first"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        app:layout_constraintTop_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="parent"
+        android:id="@+id/re_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rc_search_bar"
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="25dp"
@@ -115,8 +113,8 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_recommend"
-        android:layout_width="match_parent"
+        android:id="@+id/re_area"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:orientation="horizontal"
@@ -139,7 +137,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/re_recommend" />
+        app:layout_constraintTop_toBottomOf="@+id/re_area" />
 
     <TextView
         android:id="@+id/tv_title2"
@@ -157,8 +155,8 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_recommend2"
-        android:layout_width="match_parent"
+        android:id="@+id/re_disabled"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:orientation="horizontal"
@@ -179,12 +177,12 @@
         android:textSize="14dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/re_recommend2" />
+        app:layout_constraintTop_toBottomOf="@+id/re_disabled" />
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_recommend3"
-        android:layout_width="match_parent"
+        android:id="@+id/re_nextWeek"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:orientation="horizontal"

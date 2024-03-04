@@ -85,7 +85,6 @@ dependencies {
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation("com.google.android.gms:play-services-location:21.1.0")
 
-    implementation ("com.squareup.picasso:picasso:2.71828")
 
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
