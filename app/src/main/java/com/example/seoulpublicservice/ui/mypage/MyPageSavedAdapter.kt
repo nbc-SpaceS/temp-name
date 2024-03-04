@@ -9,6 +9,7 @@ import coil.load
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.databinding.CategoryItemBinding
 import com.example.seoulpublicservice.seoul.Row
+import com.example.seoulpublicservice.util.loadWithHolder
 
 class MyPageSavedAdapter(
 ) : ListAdapter<Row?, MyPageSavedAdapter.VH>(
@@ -37,10 +38,9 @@ class MyPageSavedAdapter(
                 b.tvAreaName.text = null
                 b.tvIsReservationAvailable.text = null
             } else {
-                if (item.imgurl.isBlank()) b.ivSmallImage.load(R.drawable.place_holder_1)
-                else b.ivSmallImage.load(item.imgurl)
-                b.tvAreaName.text = item.areanm
-                b.tvIsReservationAvailable.text = item.svcstatnm
+                b.ivSmallVideoImage.loadWithHolder(item.imgurl)
+                b.tvRegion.text = item.areanm
+                b.tvRegister.text = item.svcstatnm
             }
         }
     }
