@@ -23,6 +23,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_map_selected_option"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginEnd="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_map_filter_btn"
+        app:layout_constraintStart_toStartOf="@+id/et_map_search"
+        app:layout_constraintTop_toTopOf="@+id/tv_map_filter_btn"
+        app:layout_constraintEnd_toStartOf="@+id/tv_map_filter_btn"/>
+
     <TextView
         android:id="@+id/tv_map_filter_btn"
         android:layout_width="wrap_content"

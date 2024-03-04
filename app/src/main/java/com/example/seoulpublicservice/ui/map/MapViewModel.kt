@@ -13,6 +13,7 @@ import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.databases.ReservationRepository
 import com.example.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.example.seoulpublicservice.pref.FilterPrefRepository
+import com.example.seoulpublicservice.pref.SavedPrefRepository
 import com.example.seoulpublicservice.seoul.Row
 import com.example.seoulpublicservice.util.RoomRowMapper
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ import kotlinx.coroutines.withContext
 class MapViewModel(
     private val filterPrefRepository: FilterPrefRepository,
     private val reservationRepository: ReservationRepository,
+    private val savedPrefRepository: SavedPrefRepository,
     private val dbMemoryRepository: DbMemoryRepository,
 ) : ViewModel() {
 
@@ -115,6 +117,14 @@ class MapViewModel(
         }
     }
 
+    fun saveService(id: String) {
+        if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(id)) {
+            savedPrefRepository.remove(id)
+        } else {
+            savedPrefRepository.addSvcid(id)
+        }
+    }
+
     fun moveReservationPage(url: String) {
         _moveToUrl.value = url
     }
@@ -158,6 +168,7 @@ class MapViewModel(
                 MapViewModel(
                     filterPrefRepository = container.filterPrefRepository,
                     reservationRepository = container.reservationRepository,
+                    savedPrefRepository = container.savedPrefRepository,
                     dbMemoryRepository = container.dbMemoryRepository
                 )
             }
