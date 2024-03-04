@@ -85,6 +85,7 @@ dependencies {
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation("com.google.android.gms:play-services-location:21.1.0")
 
+
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
 //    ksp("com.google.dagger:hilt-android-compiler:2.50")

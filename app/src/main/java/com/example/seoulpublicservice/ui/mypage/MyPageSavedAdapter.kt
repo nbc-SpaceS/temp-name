@@ -34,9 +34,9 @@ class MyPageSavedAdapter(
             if (item == null) {
                 // TODO: 레이아웃에서 '삭제된 서비스입니다' 띄우는거 겹쳐놓고 gone으로 놨다가 띄워야 할 듯.
 
-                b.ivSmallVideoImage.load(R.drawable.place_holder_1)
-                b.tvRegion.text = null
-                b.tvRegister.text = null
+                b.ivSmallImage.load(R.drawable.place_holder_1)
+                b.tvAreaName.text = null
+                b.tvIsReservationAvailable.text = null
             } else {
                 b.ivSmallVideoImage.loadWithHolder(item.imgurl)
                 b.tvRegion.text = item.areanm

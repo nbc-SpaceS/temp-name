@@ -1,6 +1,7 @@
 package com.example.seoulpublicservice.usecase
 
 import android.util.Log
+import com.example.seoulpublicservice.databases.ReservationEntity
 import com.example.seoulpublicservice.pref.PrefRepository
 import com.example.seoulpublicservice.pref.RowPrefRepository
 import com.example.seoulpublicservice.seoul.Row

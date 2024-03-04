@@ -1,4 +1,4 @@
-package com.example.seoulpublicservice.category
+package com.example.seoulpublicservice.ui.category
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
