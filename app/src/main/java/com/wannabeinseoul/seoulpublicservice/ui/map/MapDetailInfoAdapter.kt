@@ -7,14 +7,18 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemMapInfoWindowBinding
+import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MapDetailInfoAdapter(
+    private val saveService: (String) -> Unit,
     private val moveReservationPage: (String) -> Unit,
     private val shareUrl: (String) -> Unit,
-    private val moveDetailPage: (String) -> Unit
+    private val moveDetailPage: (String) -> Unit,
+    private val savedPrefRepository: SavedPrefRepository
 ) : ListAdapter<Row, MapDetailInfoAdapter.InfoViewHolder>(object : DiffUtil.ItemCallback<Row>() {
     override fun areItemsTheSame(oldItem: Row, newItem: Row): Boolean {
         return oldItem.svcid == newItem.svcid
@@ -47,9 +51,11 @@ class MapDetailInfoAdapter(
                         parent,
                         false
                     ),
+                    saveService = saveService,
                     moveReservationPage = moveReservationPage,
                     shareUrl = shareUrl,
-                    moveDetailPage = moveDetailPage
+                    moveDetailPage = moveDetailPage,
+                    savedPrefRepository = savedPrefRepository
                 )
             }
 
@@ -71,12 +77,19 @@ class MapDetailInfoAdapter(
 
     class DetailInfoViewHolder(
         private val binding: ItemMapInfoWindowBinding,
+        private val saveService: (String) -> Unit,
         private val moveReservationPage: (String) -> Unit,
         private val shareUrl: (String) -> Unit,
-        private val moveDetailPage: (String) -> Unit
+        private val moveDetailPage: (String) -> Unit,
+        private val savedPrefRepository: SavedPrefRepository
     ) : InfoViewHolder(binding.root) {
         override fun onBind(item: Row) = with(binding) {
-            ivMapInfoPicture.load(item.imgurl)
+            if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(item.svcid)) {
+                ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
+            } else {
+                ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
+            }
+            ivMapInfoPicture.loadWithHolder(item.imgurl)
             tvMapInfoRegion.text = item.areanm
             tvMapInfoService.text =
                 HtmlCompat.fromHtml(item.svcnm, HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -103,6 +116,15 @@ class MapDetailInfoAdapter(
 
                 else -> {
                     false
+                }
+            }
+
+            binding.ivMapInfoSaveServiceBtn.setOnClickListener {
+                saveService(item.svcid)
+                if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(item.svcid)) {
+                    ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
+                } else {
+                    ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
                 }
             }
 

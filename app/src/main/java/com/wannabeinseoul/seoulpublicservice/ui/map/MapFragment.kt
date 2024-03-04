@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
 import com.naver.maps.geometry.LatLng
@@ -35,10 +36,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
 
+    private val app by lazy {
+        requireActivity().application as SeoulPublicServiceApplication
+    }
+    private val container by lazy {
+        app.container
+    }
+
     private val activeMarkers: MutableList<Marker> = mutableListOf()
+
+    private val rvAdapter: MapOptionAdapter by lazy {
+        MapOptionAdapter()
+    }
 
     private val adapter: MapDetailInfoAdapter by lazy {
         MapDetailInfoAdapter(
+            saveService = { id ->
+                viewModel.saveService(id)
+            },
             moveReservationPage = { url ->
                 viewModel.moveReservationPage(url)
             },
@@ -47,7 +62,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             },
             moveDetailPage = { id ->
                 viewModel.moveDetailPage(id)
-            }
+            },
+            savedPrefRepository = container.savedPrefRepository
         )
     }
 
@@ -81,10 +97,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.vpMapDetailInfo.registerOnPageChangeCallback(object : OnPageChangeCallback() {})
         binding.vpMapDetailInfo.offscreenPageLimit = 1
 
+        binding.rvMapSelectedOption.adapter = rvAdapter
+        rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
+
         binding.tvMapFilterBtn.setOnClickListener {
             val dialog = FilterFragment.newInstance(
                 onClickButton = {
                     viewModel.loadSavedOptions()
+                    rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
                 }
             )
             dialog.show(requireActivity().supportFragmentManager, "FilterFragment")

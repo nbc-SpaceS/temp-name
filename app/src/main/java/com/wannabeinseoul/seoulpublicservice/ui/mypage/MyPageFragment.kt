@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.mypage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -98,15 +99,18 @@ class MyPageFragment : Fragment() {
     }
 
     private fun initViewModel() = viewModel.let { vm ->
+        (requireActivity().application as SeoulPublicServiceApplication).container
+            .savedPrefRepository.savedSvcidListLiveData.observe(viewLifecycleOwner) {
+                Log.d(
+                    "jj-마이페이지 프래그먼트",
+                    "옵저버:savedPrefRepository.savedSvcidListLiveData ${it.toString().take(255)}"
+                )
+                vm.loadSavedList(it)
+            }
         vm.savedList.observe(viewLifecycleOwner) {
+            Log.d("jj-마이페이지 프래그먼트", "옵저버:savedList ${it.toString().take(255)}")
             myPageSavedAdapter.submitList(it)
         }
-    }
-
-    override fun onResume() {
-        viewModel.loadSavedList()
-
-        super.onResume()
     }
 
 }

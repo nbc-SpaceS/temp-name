@@ -28,6 +28,9 @@ class FilterViewModel(
     private val _loadedFilterOptions: MutableLiveData<List<List<String>>> = MutableLiveData()
     val loadedFilterOptions: LiveData<List<List<String>>> get() = _loadedFilterOptions
 
+    private val _enableReset: MutableLiveData<Boolean> = MutableLiveData()
+    val enableReset: LiveData<Boolean> get() = _enableReset
+
     fun clearTemporary(index: Int) {
         selectedOptions[index].clear()
     }
@@ -36,12 +39,17 @@ class FilterViewModel(
         selectedOptions[index].add(selectedOption)
     }
 
+    fun checkTemporary() {
+        _enableReset.value = selectedOptions.any { it.isNotEmpty() }
+    }
+
     fun save() {
         filterPrefRepository.save(selectedOptions)
     }
 
     fun load() {
         _loadedFilterOptions.value = filterPrefRepository.load()
+        _enableReset.value = loadedFilterOptions.value.orEmpty().any { it.isNotEmpty() }
     }
 
     companion object {

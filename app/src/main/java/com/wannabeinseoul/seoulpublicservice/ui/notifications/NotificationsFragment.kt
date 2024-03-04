@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentNotificationsBinding
+import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
 
 class NotificationsFragment : Fragment() {
 
@@ -35,8 +36,10 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun initView() = binding.let { b ->
-        b.btnTemp1.setOnClickListener {
-            viewModel.setRandomOne()
+        b.btnTemp1.setOnClickListener { viewModel.setRandomOne() }
+        b.tvTemp1.setOnClickListener {
+            val dialog = DetailFragment.newInstance("S240104091254073361")
+            dialog.show(requireActivity().supportFragmentManager, "Detail")
         }
     }
 

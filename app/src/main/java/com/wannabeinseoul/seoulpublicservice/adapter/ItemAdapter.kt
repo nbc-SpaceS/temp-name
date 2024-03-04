@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.R
-import com.wannabeinseoul.seoulpublicservice.category.CategoryActivity
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemHomeBinding
+import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryActivity
 
 class ItemAdapter(private var items: List<Item>) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {

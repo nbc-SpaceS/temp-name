@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.category
+package com.wannabeinseoul.seoulpublicservice.ui.category
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

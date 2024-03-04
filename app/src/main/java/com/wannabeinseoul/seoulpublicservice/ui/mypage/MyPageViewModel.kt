@@ -23,13 +23,15 @@ class MyPageViewModel(
 
     fun loadSavedList() {
         val ids = savedPrefRepository.getSvcidList()
-        var detailRows: List<Row?>
         _savedList.value = ids.map { dbMemoryRepository.findBySvcid(it) }
+    }
+
+    fun loadSavedList(svcidList: List<String>) {
+        _savedList.value = svcidList.map { dbMemoryRepository.findBySvcid(it) }
     }
 
     fun clearSavedList() {
         savedPrefRepository.clear()
-        _savedList.value = emptyList()
     }
 
     companion object {

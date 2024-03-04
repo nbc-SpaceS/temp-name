@@ -18,10 +18,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
@@ -29,7 +27,9 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
+import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 import kotlin.math.sqrt
 
 private const val DETAIL_PARAM = "detail_param1"
@@ -72,19 +72,19 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         return binding.root
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            if(!locationSource.isActivated) {
-                naverMap.locationTrackingMode = LocationTrackingMode.None
-            }
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+//            if(!locationSource.isActivated) {
+//                naverMap.locationTrackingMode = LocationTrackingMode.None
+//            }
+//            return
+//        }
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {   // 여기가 메인
         super.onViewCreated(view, savedInstanceState)
@@ -118,7 +118,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun bind(data : ReservationEntity) {
         latLng = LatLng(data.Y.toDouble(), data.X.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
-        binding.ivDetailImg.load(data.IMGURL)   // load with holder?
+//        binding.ivDetailImg.load(data.IMGURL)   // load with holder?
+        binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
             it.tvDetailTypeSmall.text = data.MINCLASSNM
             it.tvDetailName.text = data.SVCNM
