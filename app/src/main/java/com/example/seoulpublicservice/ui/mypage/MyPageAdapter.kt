@@ -6,13 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.databinding.MyPageItemProfileBinding
 import com.example.seoulpublicservice.databinding.MyPageItemReviewedBinding
 import com.example.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
 import com.example.seoulpublicservice.databinding.MyPageItemSavedBinding
 import com.example.seoulpublicservice.seoul.Row
+import com.example.seoulpublicservice.util.loadWithHolder
 
 class MyPageAdapter(
     private val onClearClick: () -> Unit
@@ -114,8 +113,7 @@ class MyPageAdapter(
 
         override fun onBind(item: MultiView) {
             val row = (item as MultiView.Reviewed).row
-            if (row.imgurl.isBlank()) b.ivReviewedThumbnail.load(R.drawable.place_holder_1)
-            else b.ivReviewedThumbnail.load(row.imgurl)
+            b.ivReviewedThumbnail.loadWithHolder(row.imgurl)
             b.tvReviewedArea.text = row.areanm
             b.tvReviewedTitle.text = row.svcnm
             b.tvReviewedReviewContent.text = row.dtlcont.take(31)  // 일단 내용이나 띄워둠
