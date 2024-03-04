@@ -12,11 +12,11 @@ val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
-    namespace = "com.example.seoulpublicservice"
+    namespace = "com.wannabeinseoul.seoulpublicservice"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.seoulpublicservice"
+        applicationId = "com.wannabeinseoul.seoulpublicservice"
         minSdk = 31
         targetSdk = 34
         versionCode = 1
@@ -82,9 +82,13 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
+    // 지도 페이지 관련 라이브러리
     implementation("com.naver.maps:map-sdk:3.17.0")
     implementation("com.google.android.gms:play-services-location:21.1.0")
 
+
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation("com.google.firebase:firebase-database-ktx")
 
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
