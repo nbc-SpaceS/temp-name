@@ -38,7 +38,6 @@ class SeoulPublicServiceApplication : Application() {
         _container = DefaultAppContainer(this) { rowList }
 
         CoroutineScope(Dispatchers.Default).launch {
-            Looper.prepare()
             updateRowList()
             _initialLoadingFinished.postValue(true)
         }
@@ -52,6 +51,7 @@ class SeoulPublicServiceApplication : Application() {
             (cap.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                     cap.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)).not()
         ) {
+            Looper.prepare()
             Toast.makeText(
                 this,
                 "네트워크 연결이 불가능하므로 저장된 데이터로 표시됩니다.",
@@ -100,6 +100,7 @@ class SeoulPublicServiceApplication : Application() {
             }
         } catch (e: Throwable) {
             Log.e("jj-앱클래스", "데이터 통신 에러: $e")
+            Looper.prepare()
             Toast.makeText(
                 this,
                 "데이터를 받아오는 과정에서 문제가 발생했습니다. 저장된 데이터로 표시됩니다.",
