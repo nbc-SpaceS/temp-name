@@ -100,6 +100,9 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            binding.clHomeRegionList.isVisible = false
+            binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
+            binding.viewControlSpinner.isVisible = false
         }
 
         binding.tvHomeSelectRegion2.setOnClickListener {
@@ -107,6 +110,9 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            binding.clHomeRegionList.isVisible = false
+            binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
+            binding.viewControlSpinner.isVisible = false
         }
 
         binding.tvHomeSelectRegion3.setOnClickListener {
@@ -114,6 +120,9 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            binding.clHomeRegionList.isVisible = false
+            binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
+            binding.viewControlSpinner.isVisible = false
         }
 
         binding.viewControlSpinner.setOnClickListener {
