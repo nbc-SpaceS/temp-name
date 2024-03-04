@@ -9,6 +9,7 @@ import coil.load
 import com.example.seoulpublicservice.R
 import com.example.seoulpublicservice.databinding.CategoryItemBinding
 import com.example.seoulpublicservice.seoul.Row
+import com.example.seoulpublicservice.util.loadWithHolder
 
 class MyPageSavedAdapter(
 ) : ListAdapter<Row?, MyPageSavedAdapter.VH>(
@@ -37,8 +38,7 @@ class MyPageSavedAdapter(
                 b.tvRegion.text = null
                 b.tvRegister.text = null
             } else {
-                if (item.imgurl.isBlank()) b.ivSmallVideoImage.load(R.drawable.place_holder_1)
-                else b.ivSmallVideoImage.load(item.imgurl)
+                b.ivSmallVideoImage.loadWithHolder(item.imgurl)
                 b.tvRegion.text = item.areanm
                 b.tvRegister.text = item.svcstatnm
             }
