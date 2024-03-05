@@ -12,6 +12,7 @@ import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MyPageSavedAdapter(
+    private val onSavedClick: (svcid: String) -> Unit,
 ) : ListAdapter<Row?, MyPageSavedAdapter.VH>(
     object : DiffUtil.ItemCallback<Row?>() {
         // TODO: null로 하려니까 변경 시 애니메이션이 이상해진다. 따로 데이터 클래스 만들어서 써야할듯. 서비스아이디랑 같이.
@@ -45,6 +46,8 @@ class MyPageSavedAdapter(
                 b.tvPayType.text = item.payatnm
                 b.tvAreaName.text = item.areanm
                 b.tvIsReservationAvailable.text = item.svcstatnm
+
+                b.root.setOnClickListener { onSavedClick(item.svcid) }
             }
         }
     }
