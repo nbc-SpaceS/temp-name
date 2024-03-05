@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/iv_comment_profile"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:adjustViewBounds="true"
@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_comment_user"
         app:shapeAppearanceOverlay="@style/RoundImage"
-        app:srcCompat="@drawable/img_sample" />
+        app:srcCompat="@drawable/ic_profile_image" />
 
     <TextView
         android:id="@+id/tv_comment_user"
@@ -29,7 +29,7 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_comment_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@+id/iv_comment_profile"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -46,6 +46,6 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@+id/iv_comment_profile"
         app:layout_constraintTop_toBottomOf="@+id/tv_comment_user" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import coil.load
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -29,6 +33,7 @@ import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
+import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewFragment
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -144,6 +149,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
         }
         it.btnDetailReservation.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.serviceData.value?.SVCURL)))
+        }
+        it.tvDetailTitleReview.setOnClickListener {
+            val bottomSheet = ReviewFragment.newInstance(param1!!)
+            bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
         showMore(textOpen)
     }
