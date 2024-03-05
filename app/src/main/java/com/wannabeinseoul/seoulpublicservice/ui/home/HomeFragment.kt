@@ -3,7 +3,6 @@ package com.wannabeinseoul.seoulpublicservice.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,17 +13,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectActivity
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.adapter.ItemAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
+import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.google.android.material.tabs.TabLayoutMediator
-import com.wannabeinseoul.seoulpublicservice.R
-import com.wannabeinseoul.seoulpublicservice.adapter.SearchHistoryAdapter
-import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
@@ -156,7 +153,6 @@ class HomeFragment : Fragment() {
                 false
             }
         }
-
 
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 5

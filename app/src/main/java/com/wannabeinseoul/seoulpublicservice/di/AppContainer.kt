@@ -7,6 +7,10 @@ import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
@@ -52,6 +56,8 @@ interface AppContainer {
     val dbMemoryRepository: DbMemoryRepository
     val savedPrefRepository: SavedPrefRepository
     val searchPrefRepository: SearchPrefRepository
+    val reviewRepository: ReviewRepository
+    val userRepository: UserRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -143,4 +149,11 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         SearchPrefRepositoryImpl(context)
     }
 
+    override val reviewRepository: ReviewRepository by lazy {
+        ReviewRepositoryImpl()
+    }
+
+    override val userRepository: UserRepository by lazy {
+        UserRepositoryImpl()
+    }
 }
