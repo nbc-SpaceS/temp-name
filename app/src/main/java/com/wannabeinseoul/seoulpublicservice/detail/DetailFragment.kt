@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
@@ -54,6 +55,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var myLocation:LatLng
+
+    private var textOpen = false    // 텍스트 뷰가 펼쳐져 있는지(false = 접힌 상태, true = 펼친 상태)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -135,12 +138,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun viewInit() = binding.let {
         it.btnDetailBack.setOnClickListener { viewModel.close(true) }
+        it.tvDetailShowMore.setOnClickListener { viewModel.textOpened(!textOpen) }
         it.btnDetailCall.setOnClickListener {
             startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${viewModel.serviceData.value?.TELNO}")))
         }
         it.btnDetailReservation.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.serviceData.value?.SVCURL)))
         }
+        showMore(textOpen)
     }
 
     private fun viewModelInit() = viewModel.let { vm ->
@@ -149,6 +154,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             it?.let {
                 data -> bind(data)
             }
+        }
+        vm.textState.observe(viewLifecycleOwner) {
+            showMore(it)
         }
     }
 
@@ -162,16 +170,33 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             it.tvDetailLocation.text = "${data.AREANM} - ${data.PLACENM}"
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailInfo.text = detailInfo(data)
-            it.tvDetailDescription.text = data.DTLCONT
+            it.tvDetailDescription.text = Html.fromHtml(data.DTLCONT, Html.FROM_HTML_MODE_LEGACY)
         }
+    }
+
+    private fun showMore(state : Boolean) {     // 현재 에러 발생중
+        val text = binding.tvDetailDescription
+        val more = binding.tvDetailShowMore
+        val layoutParams = text.layoutParams
+//        more.let {
+//            when(state) {
+//                true -> {   // 펼쳐진 상태일 때
+//                    text.maxLines = -1
+//                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+//                    more.text = "접기..."
+//                }
+//                false -> {  // 접혀있는 상태일 때
+//                    text.maxLines = 6
+//                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+//                    more.text = "더보기..."
+//                }
+//            }
+//            text.layoutParams = layoutParams
+//        }
     }
 
     private fun buttonDesign(data: ReservationEntity) {
         var button = binding.btnDetailReservation
-        /**
-         * 접수중 => 예약하기, 안내중 => 예약안내 // 버튼 활성화(빨간색, 텍스트 흰색)
-         * 접수종료, 예약일시중지, 예약마감 // 버튼 비활성화(연한회색, 텍스트 진한 회색)
-         */
         when(data.SVCSTATNM) {
             "접수중" -> {
                 button.text = "예약하기"
@@ -222,13 +247,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             minZoom = 11.0
             locationSource = locationSource
             locationTrackingMode = LocationTrackingMode.NoFollow
-            cameraPosition = CameraPosition(latLng, 16.0)
+            cameraPosition = CameraPosition(latLng, 14.0)
             uiSettings.apply {
                 isLogoClickEnabled = false
                 isScaleBarEnabled = false
                 isCompassEnabled = false
-                isZoomControlEnabled = true
+                isZoomControlEnabled = false
                 isScrollGesturesEnabled = false
+                isScaleBarEnabled = false
                 setLogoMargin(0,0,0,0)
             }
             viewModel.serviceData.value?.let { bind(it) }

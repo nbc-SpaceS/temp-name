@@ -27,6 +27,9 @@ class DetailViewModel(
     private val _callbackEvent = MutableLiveData<Boolean>()
     val callbackEvent:LiveData<Boolean> get() = _callbackEvent
 
+    private val _textState = MutableLiveData<Boolean>()
+    val textState: LiveData<Boolean> get() = _textState
+
     fun getData(svcID: String) {
         viewModelScope.launch{
             val result = viewModelScope.async(Dispatchers.IO) {
@@ -44,6 +47,10 @@ class DetailViewModel(
 
     fun callbackEvent(event: Boolean) {
         _callbackEvent.value = event
+    }
+
+    fun textOpened(event: Boolean) {
+        _textState.value = event
     }
 
     companion object {
