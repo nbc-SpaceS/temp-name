@@ -14,7 +14,8 @@ import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MyPageAdapter(
-    private val onClearClick: () -> Unit
+    private val onClearClick: () -> Unit,
+    private val onReviewedClick: (svcid: String) -> Unit,
 ) : ListAdapter<MyPageAdapter.MultiView, MyPageAdapter.CommonViewHolder>(
     object : DiffUtil.ItemCallback<MultiView>() {
         override fun areItemsTheSame(oldItem: MultiView, newItem: MultiView): Boolean =
@@ -89,12 +90,12 @@ class MyPageAdapter(
             b.tvSavedClear.setOnClickListener { onClearClick() }
         }
 
-        private lateinit var adapter: MyPageSavedAdapter
+        private var isAdapterNotBound = true
 
         override fun onBind(item: MultiView) {
-            if (this::adapter.isInitialized.not()) {
+            if (isAdapterNotBound) {
                 b.rvSaved.adapter = (item as MultiView.Saved).myPageSavedAdapter
-                adapter = item.myPageSavedAdapter
+                isAdapterNotBound = false
             }
         }
     }
@@ -107,10 +108,6 @@ class MyPageAdapter(
     inner class ReviewedHolder(private val b: MyPageItemReviewedBinding) :
         CommonViewHolder(b.root) {
 
-        init {
-            b.root.setOnClickListener {}
-        }
-
         override fun onBind(item: MultiView) {
             val row = (item as MultiView.Reviewed).row
             b.ivReviewedThumbnail.loadWithHolder(row.imgurl)
@@ -118,6 +115,8 @@ class MyPageAdapter(
             b.tvReviewedTitle.text = row.svcnm
             b.tvReviewedReviewContent.text = row.dtlcont.take(31)  // 일단 내용이나 띄워둠
             b.tvReviewedDate.text = row.rcptenddt  // 일단 예약마감 일자나 띄워둠
+
+            b.root.setOnClickListener { onReviewedClick(row.svcid) }
         }
     }
 
