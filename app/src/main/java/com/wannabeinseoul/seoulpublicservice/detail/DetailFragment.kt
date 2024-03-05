@@ -57,6 +57,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        myLocation = LatLng(0.0, 0.0)
         arguments?.let {
             param1 = it.getString(DETAIL_PARAM)
         }
