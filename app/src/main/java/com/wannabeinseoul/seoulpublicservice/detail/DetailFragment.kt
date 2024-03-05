@@ -19,8 +19,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -55,7 +53,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     private lateinit var locationSource: FusedLocationSource
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
     private lateinit var myLocation:LatLng
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +83,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         requestLocationPermission() // 권한 요청
         fetchCallback() // 콜백을 받으려면 필요함
-        updateLocation()
         viewInit()
         viewModelInit()
         connectToCommentList(requireContext())
@@ -126,18 +122,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                         }
                     }
                 }
-        }
-    }
-    private fun updateLocation() {
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.let {
-                    for(location in it.locations) {
-                        myLocation = LatLng(location.latitude, location.longitude)
-                    }
-                    viewModel.callbackEvent(true)
-                }
-            }
+            viewModel.callbackEvent(true)
         }
     }
 

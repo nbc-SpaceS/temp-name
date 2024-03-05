@@ -44,7 +44,6 @@ class DetailViewModel(
 
     fun callbackEvent(event: Boolean) {
         _callbackEvent.value = event
-        if(event) _callbackEvent.value = false
     }
 
     companion object {
