@@ -10,9 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewEntity
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
@@ -24,9 +22,7 @@ class MapViewModel(
     private val filterPrefRepository: FilterPrefRepository,
     private val reservationRepository: ReservationRepository,
     private val savedPrefRepository: SavedPrefRepository,
-    private val dbMemoryRepository: DbMemoryRepository,
-    private val reviewRepository: ReviewRepository,
-    private val userRepository: UserRepository
+    private val dbMemoryRepository: DbMemoryRepository
 ) : ViewModel() {
 
     private var readyMap: Boolean = false
@@ -67,30 +63,6 @@ class MapViewModel(
 
     private var _user: MutableLiveData<UserEntity> = MutableLiveData()
     val user: LiveData<UserEntity> get() = _user
-
-    fun setReview(item: ReviewEntity) {
-        reviewRepository.addReview(item)
-    }
-
-    fun getReview(id: String) {
-        reviewRepository.getServiceReviews(id) {
-            _reviews.postValue(it)
-        }
-    }
-
-    fun addUser(user: UserEntity) {
-        userRepository.addUser(user)
-    }
-
-    fun getUser(id: String) {
-        userRepository.getUser(id) {
-            _user.postValue(it)
-        }
-    }
-
-    fun addUserReview(id: String, svcId: String) {
-        userRepository.addUserReview(id, svcId)
-    }
 
     fun loadSavedOptions() {
         _canStart.value = false
@@ -199,9 +171,7 @@ class MapViewModel(
                     filterPrefRepository = container.filterPrefRepository,
                     reservationRepository = container.reservationRepository,
                     savedPrefRepository = container.savedPrefRepository,
-                    dbMemoryRepository = container.dbMemoryRepository,
-                    reviewRepository = container.reviewRepository,
-                    userRepository = container.userRepository
+                    dbMemoryRepository = container.dbMemoryRepository
                 )
             }
         }
