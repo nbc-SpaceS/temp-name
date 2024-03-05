@@ -170,6 +170,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     }
 
     private fun bind(data : ReservationEntity) {
+        // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+//        val x = data.X.toDoubleOrNull()
+//        val y = data.Y.toDoubleOrNull()
+//        if (x != null && y != null) latLng = LatLng(y, x)
+//        else {
+//            TODO("좌표 정보 없을 때 지도 안터지게 처리 (지도 위치에 아이콘이랑 같이 '좌표 정보가 없습니다' 식으로?)")
+//        }
+
         val x = data.X.toDoubleOrNull()
         val y = data.Y.toDoubleOrNull()
         latLng = if(x != null && y != null) {
