@@ -8,21 +8,25 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.location.Location
 import android.net.Uri
+import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ScrollView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
@@ -38,6 +42,7 @@ private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
 class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이동 시 ScrollView 잠금 해야됌
     private lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
+    private lateinit var scrollView: ScrollView
 
     private var param1: String? = null
 
@@ -52,7 +57,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         arguments?.let {
             param1 = it.getString(DETAIL_PARAM)
         }
@@ -69,6 +73,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         mapView = binding.root.findViewById(R.id.mv_detail_maps) as MapView
         mapView.getMapAsync(this)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        scrollView = binding.scrollView2
         return binding.root
     }
 
@@ -151,31 +157,51 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     override fun onMapReady(nMap: NaverMap) {
         naverMap = nMap
-        naverMap. maxZoom = 15.0
-        naverMap. minZoom = 5.0
-        naverMap.locationSource = locationSource
+        naverMap.apply{
+            maxZoom = 15.0
+            minZoom = 5.0
+            locationSource = locationSource
+            locationTrackingMode = LocationTrackingMode.NoFollow
+            cameraPosition = CameraPosition(
+                latLng,
+                10.0
+            )
+            uiSettings.apply {
+                isLogoClickEnabled = false
+                isScaleBarEnabled = false
+                isCompassEnabled = false
+                isZoomControlEnabled = false
+                setLogoMargin(0,0,0,0)
+            }
+            addOnLocationChangeListener { location ->
+                val cameraUpdate = CameraUpdate.scrollAndZoomTo(
+                    LatLng(
+                        location.latitude,
+                        location.longitude
+                    ),
+                    15.0
+                ).animate(CameraAnimation.Easing, 600)
+                moveCamera(cameraUpdate)
+            }
+        }
+
         viewModel.serviceData.value?.let { it ->
             bind(it)
         }
+
         val myLocation = locationSource.lastLocation
         val itemLocation = LatLng(latLng.latitude, latLng.longitude)
         val distance = myLocation?.let { distance(itemLocation, it) } ?: 0.0
-        binding.tvDetailDistanceFromHere.text = "현위치로부터 ${String.format("%.1f", distance)}km"
+        binding.tvDetailDistanceFromHere.text = "현위치로부터 ${String.format("%.1f", distance)}km"   // 제대로 뜨는지는 잘 몰루겟슴
         val marker = Marker()
         marker.position = itemLocation
         marker.map = naverMap
         markerStyle(marker)
-        naverMap.cameraPosition = CameraPosition(
-            latLng,
-            10.0,
-            0.0,
-            180.0
-        )
     }
 
     private fun markerStyle(marker: Marker) {       // 지도 마커 스타일
         marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = Color.RED
+        marker.iconTintColor = requireContext().getColor(R.color.point_color)
         marker.width = 80
         marker.height = 100
     }
