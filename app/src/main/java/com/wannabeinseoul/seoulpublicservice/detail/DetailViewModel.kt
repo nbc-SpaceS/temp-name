@@ -38,7 +38,7 @@ class DetailViewModel(
         }
     }
 
-    fun close(event: Boolean) { // Dismiss
+    fun close(event: Boolean) {
         _closeEvent.value = event
     }
 

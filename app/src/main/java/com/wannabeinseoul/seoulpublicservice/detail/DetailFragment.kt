@@ -154,6 +154,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun bind(data : ReservationEntity) {
         latLng = LatLng(data.Y.toDouble(), data.X.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+        buttonDesign(data)
         binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
             it.tvDetailTypeSmall.text = data.MINCLASSNM
@@ -162,6 +163,36 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailInfo.text = detailInfo(data)
             it.tvDetailDescription.text = data.DTLCONT
+        }
+    }
+
+    private fun buttonDesign(data: ReservationEntity) {
+        var button = binding.btnDetailReservation
+        /**
+         * 접수중 => 예약하기, 안내중 => 예약안내 // 버튼 활성화(빨간색, 텍스트 흰색)
+         * 접수종료, 예약일시중지, 예약마감 // 버튼 비활성화(연한회색, 텍스트 진한 회색)
+         */
+        when(data.SVCSTATNM) {
+            "접수중" -> {
+                button.text = "예약하기"
+                button.isEnabled = true
+            }
+            "안내중" -> {
+                button.text = "예약안내"
+                button.isEnabled = true
+            }
+            "접수종료" -> {
+                button.text = "접수종료"
+                button.isEnabled = false
+            }
+            "예약일시중지" -> {
+                button.text = "예약일시중지"
+                button.isEnabled = false
+            }
+            "예약마감" -> {
+                button.text = "예약마감"
+                button.isEnabled = false
+            }
         }
     }
 
@@ -206,7 +237,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 val distance = distance(itemLocation, myLocation)
                 binding.tvDetailDistanceFromHere.text =
                     if(distance/1000 < 1) "현위치로부터 ${String.format("%.0f", distance)}m"
-                    else "현위치로부터 ${String.format("%.1f", distance)}km"
+                    else "현위치로부터 ${String.format("%.1f", distance/1000)}km"
             }
             val marker = Marker()
             marker.position = itemLocation
