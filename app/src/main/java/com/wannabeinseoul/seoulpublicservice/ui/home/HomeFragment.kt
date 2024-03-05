@@ -3,9 +3,11 @@ package com.wannabeinseoul.seoulpublicservice.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +23,7 @@ import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -132,12 +135,26 @@ class HomeFragment : Fragment() {
 
         }
 
-        binding.etSearch.setOnClickListener {
-
+        binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val recentSearches = searchPrefRepository.load()
+                val adapter = SearchHistoryAdapter(recentSearches)
+                binding.rvSearchHistory.adapter = adapter
+                binding.rvSearchHistory.visibility = View.VISIBLE
+            } else {
+                binding.rvSearchHistory.visibility = View.GONE
+            }
         }
 
-        binding.etSearch.setOnFocusChangeListener { _, _ ->
-
+        binding.etSearch.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val searchText = v.text.toString()
+                searchPrefRepository.save(searchText)
+                Log.d("HomeFragment", "Saved search text: $searchText")
+                true
+            } else {
+                false
+            }
         }
 
 
@@ -209,7 +226,7 @@ class HomeFragment : Fragment() {
 //        }
     }
 
-    private fun settingRegions(): String {
+    fun settingRegions(): String {
         val selectedRegions = regionPrefRepository.load().toMutableList()
 
         return if (selectedRegions.isNotEmpty()) {

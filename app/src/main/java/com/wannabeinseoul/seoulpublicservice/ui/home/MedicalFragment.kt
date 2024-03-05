@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,9 +36,17 @@ class MedicalFragment : Fragment() {
         ItemRepository.setItems("Medical", medicalItems)
 
         val items = ItemRepository.getItems("Medical")
-        val selectedRegion = regionPrefRepository.load().firstOrNull() ?: ""
-        val adapter = ItemAdapter(items, selectedRegion)
-        binding.rvMedical.adapter = adapter
-        binding.rvMedical.layoutManager = GridLayoutManager(requireContext(), 4)
+//        val homeFragment = parentFragment as HomeFragment
+//        val selectedRegion = homeFragment.settingRegions()
+//        Log.d("MedicalFragment", "Loaded selected region: $selectedRegion")
+//        val adapter = ItemAdapter(items, selectedRegion)
+//        binding.rvMedical.adapter = adapter
+//        binding.rvMedical.layoutManager = GridLayoutManager(requireContext(), 4)
+        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
+            Log.d("MedicalFragment", "Loaded selected region: $selectedRegion")
+            val adapter = ItemAdapter(items, selectedRegion)
+            binding.rvMedical.adapter = adapter
+            binding.rvMedical.layoutManager = GridLayoutManager(requireContext(), 4)
+        }
     }
 }
