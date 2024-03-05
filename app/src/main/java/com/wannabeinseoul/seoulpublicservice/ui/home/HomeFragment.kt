@@ -132,12 +132,16 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivSearch.setOnClickListener {
-
+            val searchText = binding.etSearch.text.toString()
+            performSearch(searchText)
         }
 
         binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
+            Log.d("search", "여기 오나 확인")
             if (hasFocus) {
                 val recentSearches = searchPrefRepository.load()
+                // 로그로 검색어 목록 확인
+                Log.d("Search", "Loaded all search queries: $recentSearches")
                 val adapter = SearchHistoryAdapter(recentSearches)
                 binding.rvSearchHistory.adapter = adapter
                 binding.rvSearchHistory.visibility = View.VISIBLE
@@ -149,12 +153,16 @@ class HomeFragment : Fragment() {
         binding.etSearch.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val searchText = v.text.toString()
-                searchPrefRepository.save(searchText)
-                Log.d("HomeFragment", "Saved search text: $searchText")
+                performSearch(searchText)
                 true
             } else {
                 false
             }
+        }
+
+        binding.ivSearch.setOnClickListener {
+            val searchText = binding.etSearch.text.toString()
+            performSearch(searchText)
         }
 
         viewPager.adapter = object : FragmentStateAdapter(this) {
@@ -184,6 +192,8 @@ class HomeFragment : Fragment() {
 
         itemAdapter.notifyDataSetChanged()
     }
+
+
 
     override fun onResume() {
         super.onResume()
@@ -275,4 +285,20 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    // 검색어를 저장하고 검색 결과를 보여주는 함수, DB에서 검색기능 구현되면 검색결과를 가져오도록 수정해야함
+    private fun searchItems(query: String): List<Item> {
+        return items.filter { it.name.contains(query, ignoreCase = true) }
+    }
+
+    private fun performSearch(query: String) {
+        searchPrefRepository.save(query)
+        Log.d("Search", "Saved search query: $query") // 로그 찍기
+        val searchedItems = searchItems(query)
+        val adapter = SearchHistoryAdapter(searchedItems.map { it.name })
+        binding.rvSearchHistory.adapter = adapter
+        binding.rvSearchHistory.visibility = View.VISIBLE
+    }
+
+
 }
