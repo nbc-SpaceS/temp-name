@@ -161,7 +161,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     }
 
     private fun bind(data : ReservationEntity) {
-        latLng = LatLng(data.Y.toDouble(), data.X.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+        val x = data.X.toDoubleOrNull()
+        val y = data.Y.toDoubleOrNull()
+        latLng = if(x != null && y != null) {
+            LatLng(y.toDouble(), x.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+        } else {
+            LatLng(0.0, 0.0)
+        }
         buttonDesign(data)
         binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
@@ -262,8 +268,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             viewModel.callbackEvent.value.let {
                 val distance = distance(itemLocation, myLocation)
                 binding.tvDetailDistanceFromHere.text =
-                    if(distance/1000 < 1) "현위치로부터 ${String.format("%.0f", distance)}m"
-                    else "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+                    when {
+                        distance/1000 < 1 && distance <= 100000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
+                        distance/1000 >= 1 && distance <= 100000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+                        else -> "현위치로부터 ?km"
+                    }
             }
             val marker = Marker()
             marker.position = itemLocation
