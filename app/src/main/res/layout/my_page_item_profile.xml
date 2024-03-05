@@ -33,11 +33,12 @@
         android:clipToOutline="true"
         android:elevation="8dp"
         android:scaleType="centerCrop"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@id/v_profile_card_background"
         app:layout_constraintEnd_toEndOf="@id/v_profile_card_background"
         app:layout_constraintStart_toStartOf="@id/v_profile_card_background"
         app:layout_constraintTop_toTopOf="@id/v_profile_card_background"
-        app:srcCompat="@drawable/place_holder_1" />
+        app:srcCompat="@drawable/ic_profile_image" />
 
     <TextView
         android:id="@+id/tv_profile_nickname"
