@@ -2,10 +2,10 @@ package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,7 +70,7 @@ class RecommendationFragment : Fragment() {
         b.reArea.layoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         b.imageView3.setOnClickListener {               // 추천페이지의 알림버튼으로 상세 페이지 띄우기 테스트
-            val dialog = DetailFragment.newInstance("S240104091254073361")
+            val dialog = DetailFragment.newInstance("S240220132613632840")
             dialog.show(requireActivity().supportFragmentManager, "Detail")
         }
     }

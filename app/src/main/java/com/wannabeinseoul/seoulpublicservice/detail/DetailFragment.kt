@@ -1,12 +1,12 @@
 package com.wannabeinseoul.seoulpublicservice.detail
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
+import android.content.pm.PackageManager
 import android.graphics.Typeface
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -14,15 +14,14 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
@@ -30,10 +29,13 @@ import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 private const val DETAIL_PARAM = "detail_param1"
-private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+private const val LOCATION_PERMISSION_REQUEST_CODE = 5000
 
 class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이동 시 ScrollView 잠금 해야됌
     private lateinit var mapView: MapView
@@ -50,9 +52,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     private lateinit var latLng: LatLng
     private lateinit var locationSource: FusedLocationSource
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var myLocation:LatLng
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        myLocation = LatLng(0.0, 0.0)
         arguments?.let {
             param1 = it.getString(DETAIL_PARAM)
         }
@@ -69,31 +74,62 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         mapView = binding.root.findViewById(R.id.mv_detail_maps) as MapView
         mapView.getMapAsync(this)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         return binding.root
     }
-
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray
-//    ) {
-//        if(locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-//            if(!locationSource.isActivated) {
-//                naverMap.locationTrackingMode = LocationTrackingMode.None
-//            }
-//            return
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {   // 여기가 메인
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        requestLocationPermission() // 권한 요청
+        fetchCallback() // 콜백을 받으려면 필요함
         viewInit()
         viewModelInit()
         connectToCommentList(requireContext())
         viewModel.closeEvent.observe(viewLifecycleOwner) { close ->
             if(close) dismiss()
+        }
+    }
+
+    private fun requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    private fun getCurrentLocation(callback: (LatLng) -> Unit) {
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location ->
+                    if (location != null) {
+                        val latitude = location.latitude
+                        val longitude = location.longitude
+                        if (latitude != 0.0 && longitude != 0.0) {
+                            val currentLocation = LatLng(latitude, longitude)
+                            callback(currentLocation)
+                        }
+                    }
+                }
+            viewModel.callbackEvent(true)
+        }
+    }
+
+    private fun fetchCallback() {
+        getCurrentLocation {
+            myLocation = it
         }
     }
 
@@ -118,7 +154,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun bind(data : ReservationEntity) {
         latLng = LatLng(data.Y.toDouble(), data.X.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
-//        binding.ivDetailImg.load(data.IMGURL)   // load with holder?
+        buttonDesign(data)
         binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
             it.tvDetailTypeSmall.text = data.MINCLASSNM
@@ -127,6 +163,36 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailInfo.text = detailInfo(data)
             it.tvDetailDescription.text = data.DTLCONT
+        }
+    }
+
+    private fun buttonDesign(data: ReservationEntity) {
+        var button = binding.btnDetailReservation
+        /**
+         * 접수중 => 예약하기, 안내중 => 예약안내 // 버튼 활성화(빨간색, 텍스트 흰색)
+         * 접수종료, 예약일시중지, 예약마감 // 버튼 비활성화(연한회색, 텍스트 진한 회색)
+         */
+        when(data.SVCSTATNM) {
+            "접수중" -> {
+                button.text = "예약하기"
+                button.isEnabled = true
+            }
+            "안내중" -> {
+                button.text = "예약안내"
+                button.isEnabled = true
+            }
+            "접수종료" -> {
+                button.text = "접수종료"
+                button.isEnabled = false
+            }
+            "예약일시중지" -> {
+                button.text = "예약일시중지"
+                button.isEnabled = false
+            }
+            "예약마감" -> {
+                button.text = "예약마감"
+                button.isEnabled = false
+            }
         }
     }
 
@@ -151,31 +217,38 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     override fun onMapReady(nMap: NaverMap) {
         naverMap = nMap
-        naverMap. maxZoom = 15.0
-        naverMap. minZoom = 5.0
-        naverMap.locationSource = locationSource
-        viewModel.serviceData.value?.let { it ->
-            bind(it)
+        naverMap.apply{
+            maxZoom = 19.0
+            minZoom = 11.0
+            locationSource = locationSource
+            locationTrackingMode = LocationTrackingMode.NoFollow
+            cameraPosition = CameraPosition(latLng, 16.0)
+            uiSettings.apply {
+                isLogoClickEnabled = false
+                isScaleBarEnabled = false
+                isCompassEnabled = false
+                isZoomControlEnabled = true
+                isScrollGesturesEnabled = false
+                setLogoMargin(0,0,0,0)
+            }
+            viewModel.serviceData.value?.let { bind(it) }
+            val itemLocation = LatLng(latLng.latitude, latLng.longitude)
+            viewModel.callbackEvent.value.let {
+                val distance = distance(itemLocation, myLocation)
+                binding.tvDetailDistanceFromHere.text =
+                    if(distance/1000 < 1) "현위치로부터 ${String.format("%.0f", distance)}m"
+                    else "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+            }
+            val marker = Marker()
+            marker.position = itemLocation
+            marker.map = naverMap
+            markerStyle(marker)
         }
-        val myLocation = locationSource.lastLocation
-        val itemLocation = LatLng(latLng.latitude, latLng.longitude)
-        val distance = myLocation?.let { distance(itemLocation, it) } ?: 0.0
-        binding.tvDetailDistanceFromHere.text = "현위치로부터 ${String.format("%.1f", distance)}km"
-        val marker = Marker()
-        marker.position = itemLocation
-        marker.map = naverMap
-        markerStyle(marker)
-        naverMap.cameraPosition = CameraPosition(
-            latLng,
-            10.0,
-            0.0,
-            180.0
-        )
     }
 
-    private fun markerStyle(marker: Marker) {       // 지도 마커 스타일
+    private fun markerStyle(marker: Marker) {
         marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = Color.RED
+        marker.iconTintColor = requireContext().getColor(R.color.point_color)
         marker.width = 80
         marker.height = 100
     }
@@ -235,10 +308,17 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         commentAdapter.submitList(sample)
     }
 
-    // 현재 위치에서부터 아이템까지의 거리
-//        val distance = sqrt((locationX - myX) * (locationX - myX) + (locationY - myY) * (locationY - myY))
-    private fun distance(loc: LatLng, mine: Location): Double {
-        return sqrt((loc.latitude - mine.latitude) * (loc.latitude - mine.latitude) + (loc.longitude - mine.longitude) * (loc.latitude - mine.longitude))
+    // 두 지점 간의 직선 거리를 계산하는 함수
+    private fun distance(point1: LatLng, point2: LatLng): Double {
+        val R = 6371 // 지구의 반지름 (단위: km)
+
+        val latDistance = Math.toRadians(point2.latitude - point1.latitude)
+        val lonDistance = Math.toRadians(point2.longitude - point1.longitude)
+        val a = sin(latDistance / 2) * sin(latDistance / 2) +
+                (cos(Math.toRadians(point1.latitude)) * cos(Math.toRadians(point2.latitude)) *
+                        sin(lonDistance / 2) * sin(lonDistance / 2))
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return R * c * 1000 // 단위를 미터로 변환
     }
     companion object {
         @JvmStatic
