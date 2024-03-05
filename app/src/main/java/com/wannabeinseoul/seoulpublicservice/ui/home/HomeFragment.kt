@@ -3,6 +3,7 @@ package com.wannabeinseoul.seoulpublicservice.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,8 @@ import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.google.android.material.tabs.TabLayoutMediator
+import com.wannabeinseoul.seoulpublicservice.adapter.SearchHistoryAdapter
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 
 class HomeFragment : Fragment() {
 
