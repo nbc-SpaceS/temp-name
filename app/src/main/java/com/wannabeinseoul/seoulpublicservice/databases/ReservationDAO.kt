@@ -95,4 +95,7 @@ interface ReservationDAO {
             "AND (X IS NOT NULL OR X != '') AND (Y IS NOT NULL OR Y != '') " +
             "AND SVCID NOT LIKE 'XML%'")
     fun getNOTBlankInMaps() : List<ReservationEntity>
+
+    @RawQuery
+    suspend fun putSearchText(query: SupportSQLiteQuery): List<ReservationEntity>
 }
