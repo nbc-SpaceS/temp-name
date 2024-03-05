@@ -3,11 +3,9 @@ package com.wannabeinseoul.seoulpublicservice.ui.map
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,6 +25,7 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
+import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -89,11 +88,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        viewModel.setReview(ReviewEntity("139328", "dkdfdsdfjv", "12365423165"))
-//        viewModel.getReview("139328")
-//        viewModel.addUser(UserEntity(container.idPrefRepository.load(), "abcd", "https://yeyak.seoul.go.kr/web/common/file/FileDown.do?file_id=1708587459850DATOW92X2UBMKCTKJU85WVIEL", emptyList()))
-//        viewModel.getUser(container.idPrefRepository.load())
-//        viewModel.addUserReview(container.idPrefRepository.load(), "S240207091219943358")
         initView()
         initViewModel()
     }
@@ -120,16 +114,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun initViewModel() = with(viewModel) {
         initMap()
         loadSavedOptions()
-
-        user.observe(viewLifecycleOwner) {
-            Log.d("${it.userId}", "유저ID : ${it.userId} / 유저이름 : ${it.userName} / 유저이미지 : ${it.userImage} / 리뷰작성서비스ID : ${it.reviewServiceId}")
-        }
-
-        reviews.observe(viewLifecycleOwner) {
-            for (i in it) {
-                Log.d("${i.svcId}", "유저이름 : ${i.userId} / 리뷰내용 : ${i.content}")
-            }
-        }
 
         hasFilter.observe(viewLifecycleOwner) {
             if (it) {
@@ -171,7 +155,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         detailInfoId.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "${it}의 상세페이지로 이동", Toast.LENGTH_SHORT).show()
+            val dialog = DetailFragment.newInstance(it)
+            dialog.show(requireActivity().supportFragmentManager, "Detail")
         }
 
         canStart.observe(viewLifecycleOwner) { start ->
