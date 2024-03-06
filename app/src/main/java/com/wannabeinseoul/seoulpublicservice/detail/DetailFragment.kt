@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,6 +67,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             param1 = it.getString(DETAIL_PARAM)
         }
         viewModel.getData(param1!!)
+        viewModel.savedID(param1!!)
         requestLocationPermission()
     }
 
@@ -86,6 +86,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        favorite(viewModel.savedID.value!!)
         fetchCallback()
         connectToCommentList(requireContext())
     }
@@ -110,7 +111,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            fusedLocationClient.lastLocation    // 이새끼가 비동기적으로 실행됨
+            fusedLocationClient.lastLocation
                 .addOnSuccessListener { location ->
                     if (location != null) {
                         val latitude = location.latitude
@@ -128,7 +129,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         getCurrentLocation {
             myLocation = it
             viewModel.myLocationCallbackEvent(true)
-            Log.i("This is DetailFragment","fetchCallback : $myLocation")
 
             viewModelInit()
             viewInit()
@@ -143,7 +143,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             showMore(textOpen)
         }
         it.ivDetailFavorite.setOnClickListener {
-
+            viewModel.changeFavorite(param1!!)
         }
         it.btnDetailCall.setOnClickListener { startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${viewModel.serviceData.value?.TELNO}"))) }
         it.btnDetailReservation.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.serviceData.value?.SVCURL))) }
@@ -154,7 +154,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             i.putExtra(Intent.EXTRA_TEXT, url)
             startActivity(Intent.createChooser(i, "링크 공유"))
         }
-
         it.tvDetailReviewMoveBtn.setOnClickListener {
             val bottomSheet = ReviewFragment(param1!!) {
                 viewModel.setReviews(param1!!)
@@ -182,6 +181,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
+        }
+        vm.favoriteChanged.observe(viewLifecycleOwner) {
+            favorite(it)
         }
     }
 
@@ -319,9 +321,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun favorite() {
-//        binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_color)
-//        binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_empty)
+    private fun favorite(state: Boolean) {
+        when(state) {
+            true -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_color)
+            false -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_empty)
+        }
     }
 
     // 후기 어댑터 연결(임시)
@@ -347,17 +351,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             val endIndex = startIndex + word.length
             ssb.setSpan(StyleSpan(Typeface.BOLD), startIndex, endIndex, 0)
         }
-        /*
-        for (word in list) {
-            var startIndex = text.indexOf(word)
-            while (startIndex != -1) {
-                val endIndex = startIndex + word.length
-                ssb.setSpan(StyleSpan(Typeface.BOLD), startIndex, endIndex, 0)
-                startIndex = text.indexOf(word, endIndex)
-            }
-        }
-
-         */
         return ssb
     }
 
