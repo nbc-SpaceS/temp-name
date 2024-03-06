@@ -84,7 +84,7 @@ class MapDetailInfoAdapter(
         private val savedPrefRepository: SavedPrefRepository
     ) : InfoViewHolder(binding.root) {
         override fun onBind(item: Row) = with(binding) {
-            if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(item.svcid)) {
+            if (savedPrefRepository.contains(item.svcid)) {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
             } else {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
@@ -120,7 +120,7 @@ class MapDetailInfoAdapter(
 
             binding.ivMapInfoSaveServiceBtn.setOnClickListener {
                 saveService(item.svcid)
-                if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(item.svcid)) {
+                if (savedPrefRepository.contains(item.svcid)) {
                     ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
                 } else {
                     ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
