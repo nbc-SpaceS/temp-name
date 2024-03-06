@@ -9,7 +9,7 @@
     <item android:state_checked="false">
         <shape android:shape="rectangle">
             <corners android:radius="12dp"/>
-            <solid android:color="@color/unCLicked_button_solid"/>
+            <solid android:color="@color/unClicked_button_solid"/>
             <stroke android:color="@color/unClicked_button_stroke" android:width="0.5dp"/>
         </shape>
     </item>
