@@ -37,8 +37,11 @@ class DetailViewModel(
     private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
-    private val _callbackEvent = MutableLiveData<Boolean>()
-    val callbackEvent:LiveData<Boolean> get() = _callbackEvent
+    private val _myLocationCallback = MutableLiveData<Boolean>()
+    val myLocationCallback:LiveData<Boolean> get() = _myLocationCallback
+
+    private val _textState = MutableLiveData<Boolean>()
+    val textState: LiveData<Boolean> get() = _textState
 
     private val _reviewUiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
     val reviewUiState: LiveData<List<ReviewItem>> get() = _reviewUiState
@@ -58,8 +61,12 @@ class DetailViewModel(
         _closeEvent.value = event
     }
 
-    fun callbackEvent(event: Boolean) {
-        _callbackEvent.value = event
+    fun myLocationCallbackEvent(event: Boolean) {
+        _myLocationCallback.value = event
+    }
+
+    fun textOpened(event: Boolean) {
+        _textState.value = event
     }
 
     fun setReviews(svcId: String) {
