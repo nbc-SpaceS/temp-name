@@ -41,6 +41,7 @@ class NotificationsViewModel(
      */
     private var reservationList: List<ReservationEntity> = emptyList()
     fun setRandomOne() {
+        Log.i("This is NotifiViewModel","setRandomOne() Start!")
         _isBtnEnabled.value = false
         // getAll2000UseCase 처리 시 1600개 정도 데이터를 변환하고 반환하는 과정이 cpu가 좀 필요할 듯 해서 Default로 줌.
         val job = if (rowList.isEmpty()) viewModelScope.launch(Dispatchers.Default) {
@@ -53,6 +54,13 @@ class NotificationsViewModel(
             for (reservation in reservationRepository.getAll()) {
                 rowList += RoomRowMapper.mappingRoomToRow(reservation)
             }
+            // 필터 테스트 용
+            val itemSmall: List<String> = listOf("어린이병원")
+            val itemLocate: List<String> = listOf("서초구")
+            val itemState: List<String> = listOf("")
+            val itemPay: List<String> = listOf("")
+            val testList = reservationRepository.getFilter(itemSmall, itemLocate, itemState, itemPay)
+            Log.i("This is NVM","\n소분류 : $itemSmall\n지역구 : $itemLocate\n접수중 : $itemState\n가 격 : $itemPay\n목록 개수 : ${testList.size}")
 
             val row = rowList.firstOrNull()
             if (row == null) {

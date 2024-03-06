@@ -6,14 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -26,6 +27,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
+import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -74,7 +77,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMapBinding.inflate(inflater, container, false)
+        _binding = com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding.inflate(
+            inflater,
+            container,
+            false
+        )
 
         mapView = binding.root.findViewById(R.id.mv_naver) as MapView
         mapView.onCreate(savedInstanceState)
@@ -93,6 +100,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initView() {
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        Glide.with(this).asGif().load(R.drawable.img_loading_spinner).diskCacheStrategy(
+            DiskCacheStrategy.RESOURCE
+        ).into(binding.ivMapLoadingSpinner)
+
         binding.vpMapDetailInfo.adapter = adapter
         binding.vpMapDetailInfo.registerOnPageChangeCallback(object : OnPageChangeCallback() {})
         binding.vpMapDetailInfo.offscreenPageLimit = 1
@@ -155,7 +167,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         detailInfoId.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "${it}의 상세페이지로 이동", Toast.LENGTH_SHORT).show()
+            val dialog = DetailFragment.newInstance(it)
+            dialog.show(requireActivity().supportFragmentManager, "Detail")
         }
 
         canStart.observe(viewLifecycleOwner) { start ->
@@ -179,12 +192,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             marker.iconTintColor = requireContext().getColor(R.color.point_color)
                             marker.zIndex = 0
                         }
-                        marker.iconTintColor = requireContext().getColor(R.color.purple_500)
+                        marker.iconTintColor =
+                            requireContext().getColor(R.color.clicked_marker_solid)
                         marker.zIndex = 10
                         viewModel.updateInfo(it.value)
+                        moveCamera(it.key.first.toDouble(), it.key.second.toDouble())
                         true
                     }
-
                 }
             }
         }
@@ -217,18 +231,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         naverMap.addOnLocationChangeListener { location ->
             if (!isFirst) {
-                val cameraUpdate = CameraUpdate.scrollAndZoomTo(
-                    LatLng(
-                        location.latitude,
-                        location.longitude
-                    ),
-                    15.0
-                ).animate(CameraAnimation.Easing, 600)
-
-                naverMap.moveCamera(cameraUpdate)
+                moveCamera(location.latitude, location.longitude)
+                binding.viewMapLoad.isVisible = false
+                binding.ivMapLoadingSpinner.isVisible = false
+                requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 isFirst = true
             }
         }
+    }
+
+    private fun moveCamera(y: Double, x: Double) {
+        val cameraUpdate = CameraUpdate.scrollAndZoomTo(
+            LatLng(
+                y,
+                x
+            ),
+            15.0
+        ).animate(CameraAnimation.Easing, 600)
+
+        naverMap.moveCamera(cameraUpdate)
     }
 
     override fun onStart() {

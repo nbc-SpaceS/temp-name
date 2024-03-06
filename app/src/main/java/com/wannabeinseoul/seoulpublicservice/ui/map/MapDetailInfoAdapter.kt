@@ -84,7 +84,7 @@ class MapDetailInfoAdapter(
         private val savedPrefRepository: SavedPrefRepository
     ) : InfoViewHolder(binding.root) {
         override fun onBind(item: Row) = with(binding) {
-            if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(item.svcid)) {
+            if (savedPrefRepository.contains(item.svcid)) {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
             } else {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
@@ -94,7 +94,6 @@ class MapDetailInfoAdapter(
             tvMapInfoService.text =
                 HtmlCompat.fromHtml(item.svcnm, HtmlCompat.FROM_HTML_MODE_LEGACY)
             tvMapInfoPay.text = item.payatnm
-            tvMapInfoAvailablility.text = item.svcstatnm
             btnMapInfoReservation.text = when (item.svcstatnm) {
                 "안내중" -> {
                     "예약안내"
@@ -121,7 +120,7 @@ class MapDetailInfoAdapter(
 
             binding.ivMapInfoSaveServiceBtn.setOnClickListener {
                 saveService(item.svcid)
-                if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(item.svcid)) {
+                if (savedPrefRepository.contains(item.svcid)) {
                     ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
                 } else {
                     ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)

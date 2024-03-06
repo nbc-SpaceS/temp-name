@@ -26,6 +26,6 @@
     <fragment
         android:id="@+id/navigation_my_page"
         android:name="com.wannabeinseoul.seoulpublicservice.ui.mypage.MyPageFragment"
-        android:label="MyPage"
+        android:label="@string/title_mypage"
         tools:layout="@layout/fragment_my_page" />
 </navigation>

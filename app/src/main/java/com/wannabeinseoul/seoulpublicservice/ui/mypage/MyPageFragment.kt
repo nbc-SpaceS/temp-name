@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMyPageBinding
+import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import kotlin.random.Random
 
@@ -22,8 +23,13 @@ class MyPageFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MyPageViewModel by viewModels { MyPageViewModel.factory }
 
+    private val showDetailFragment = { svcid: String ->
+        DetailFragment.newInstance(svcid)
+            .show(requireActivity().supportFragmentManager, "Detail")
+    }
+
     private val myPageSavedAdapter by lazy {
-        MyPageSavedAdapter()
+        MyPageSavedAdapter { svcid -> showDetailFragment(svcid) }
     }
 
     private val fixedItems: List<MyPageAdapter.MultiView> by lazy {
@@ -39,7 +45,8 @@ class MyPageFragment : Fragment() {
 
     private val myPageAdapter by lazy {
         MyPageAdapter(
-            onClearClick = { viewModel.clearSavedList() }
+            onClearClick = { viewModel.clearSavedList() },
+            onReviewedClick = showDetailFragment,
         ).apply {
             val rows = (requireActivity().application as SeoulPublicServiceApplication).rowList
             if (rows.isEmpty()) {

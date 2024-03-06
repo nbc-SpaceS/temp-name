@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
 import java.util.UUID
 
@@ -40,6 +41,15 @@ class SplashActivity : AppCompatActivity() {
         if (container.idPrefRepository.load() == "") {
             val id = UUID.randomUUID().toString()
             container.idPrefRepository.save(id)
+            container.userRepository.addUser(
+                id,
+                UserEntity(
+                    userName = "익명-${id.substring(0..5)}",
+                    userProfileImage = "",
+                    userColor = "#" + (1..6).map { id.replace("-", "").random() }.joinToString(""),
+                    reviewIdList = emptyList()
+                )
+            )
         }
 
         container.filterPrefRepository.clearData()

@@ -9,19 +9,20 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewEntity
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MapViewModel(
     private val filterPrefRepository: FilterPrefRepository,
     private val reservationRepository: ReservationRepository,
     private val savedPrefRepository: SavedPrefRepository,
-    private val dbMemoryRepository: DbMemoryRepository,
+    private val dbMemoryRepository: DbMemoryRepository
 ) : ViewModel() {
 
     private var readyMap: Boolean = false
@@ -57,6 +58,12 @@ class MapViewModel(
     private var _detailInfoId: MutableLiveData<String> = MutableLiveData()
     val detailInfoId: LiveData<String> get() = _detailInfoId
 
+    private var _reviews: MutableLiveData<List<ReviewEntity>> = MutableLiveData()
+    val reviews: LiveData<List<ReviewEntity>> get() = _reviews
+
+    private var _user: MutableLiveData<UserEntity> = MutableLiveData()
+    val user: LiveData<UserEntity> get() = _user
+
     fun loadSavedOptions() {
         _canStart.value = false
         readyData = false
@@ -65,8 +72,7 @@ class MapViewModel(
         _filterCount = loadedData.count { it.isNotEmpty() }
         _hasFilter.value = loadedData.any { it.isNotEmpty() }
 
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
 
 //                var item = RoomRowMapper.mappingRoomToRow(
 //                    reservationRepository.getFilter(
@@ -77,29 +83,28 @@ class MapViewModel(
 //                    )
 //                )
 
-                val item = dbMemoryRepository.getFiltered(
-                    loadedData.subList(0, 5).flatten(),
-                    loadedData.subList(5, 7).flatten(),
-                    loadedData[7],
-                    loadedData[8],
-                )
+            val item = dbMemoryRepository.getFiltered(
+                loadedData.subList(0, 5).flatten(),
+                loadedData.subList(5, 7).flatten(),
+                loadedData[7],
+                loadedData[8],
+            )
 
-                hash.clear()
-                for (i in item) {
-                    if (hash.containsKey(Pair(i.y, i.x))) {
-                        hash[Pair(i.y, i.x)] = hash[Pair(i.y, i.x)].orEmpty().toMutableList() + i
-                    } else {
-                        hash[Pair(i.y, i.x)] = listOf(i)
-                    }
+            hash.clear()
+            for (i in item) {
+                if (hash.containsKey(Pair(i.y, i.x))) {
+                    hash[Pair(i.y, i.x)] = hash[Pair(i.y, i.x)].orEmpty().toMutableList() + i
+                } else {
+                    hash[Pair(i.y, i.x)] = listOf(i)
                 }
-
-                _filteringData.postValue(
-                    hash
-                )
-
-                readyData = true
-                checkCanDraw()
             }
+
+            _filteringData.postValue(
+                hash
+            )
+
+            readyData = true
+            checkCanDraw()
         }
     }
 
@@ -115,7 +120,7 @@ class MapViewModel(
     }
 
     fun saveService(id: String) {
-        if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(id)) {
+        if (savedPrefRepository.contains(id)) {
             savedPrefRepository.remove(id)
         } else {
             savedPrefRepository.addSvcid(id)
