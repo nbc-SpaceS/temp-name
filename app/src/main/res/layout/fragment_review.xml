@@ -48,6 +48,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_review_title" />
 
+    <TextView
+        android:id="@+id/tv_review_empty_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="작성된 후기가 없습니다."
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_title" />
+
     <EditText
         android:id="@+id/et_review_input_field"
         android:layout_width="0dp"

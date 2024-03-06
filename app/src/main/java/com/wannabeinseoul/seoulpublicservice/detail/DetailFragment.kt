@@ -21,9 +21,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import coil.load
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -58,7 +55,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     private lateinit var locationSource: FusedLocationSource
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var myLocation:LatLng
+    private lateinit var myLocation: LatLng
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +90,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         viewModelInit()
         connectToCommentList(requireContext())
         viewModel.closeEvent.observe(viewLifecycleOwner) { close ->
-            if(close) dismiss()
+            if (close) dismiss()
         }
     }
 
@@ -141,13 +138,26 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     private fun viewInit() = binding.let {
         it.btnDetailBack.setOnClickListener { viewModel.close(true) }
         it.btnDetailCall.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${viewModel.serviceData.value?.TELNO}")))
+            startActivity(
+                Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.parse("tel:${viewModel.serviceData.value?.TELNO}")
+                )
+            )
         }
         it.btnDetailReservation.setOnClickListener {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.serviceData.value?.SVCURL)))
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(viewModel.serviceData.value?.SVCURL)
+                )
+            )
         }
-        it.tvDetailTitleReview.setOnClickListener {
-            val bottomSheet = ReviewFragment.newInstance(param1!!)
+
+        it.tvDetailReviewMoveBtn.setOnClickListener {
+            val bottomSheet = ReviewFragment(param1!!) {
+                viewModel.setReviews(param1!!)
+            }
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
     }
@@ -156,8 +166,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         vm.getData(param1!!)
         vm.setReviews(param1!!)
         vm.serviceData.observe(viewLifecycleOwner) { it ->
-            it?.let {
-                data -> bind(data)
+            it?.let { data ->
+                bind(data)
             }
         }
 
@@ -166,7 +176,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun bind(data : ReservationEntity) {
+    private fun bind(data: ReservationEntity) {
         // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
         val x = data.X.toDoubleOrNull()
         val y = data.Y.toDoubleOrNull()
@@ -193,23 +203,27 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
          * 접수중 => 예약하기, 안내중 => 예약안내 // 버튼 활성화(빨간색, 텍스트 흰색)
          * 접수종료, 예약일시중지, 예약마감 // 버튼 비활성화(연한회색, 텍스트 진한 회색)
          */
-        when(data.SVCSTATNM) {
+        when (data.SVCSTATNM) {
             "접수중" -> {
                 button.text = "예약하기"
                 button.isEnabled = true
             }
+
             "안내중" -> {
                 button.text = "예약안내"
                 button.isEnabled = true
             }
+
             "접수종료" -> {
                 button.text = "접수종료"
                 button.isEnabled = false
             }
+
             "예약일시중지" -> {
                 button.text = "예약일시중지"
                 button.isEnabled = false
             }
+
             "예약마감" -> {
                 button.text = "예약마감"
                 button.isEnabled = false
@@ -218,7 +232,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     }
 
     private fun detailInfo(str: ReservationEntity): SpannableStringBuilder {
-        val list = listOf("서비스 대상","서비스 일자","예약 가능 일자","시설 사용 시간","취소 가능 기준")
+        val list = listOf("서비스 대상", "서비스 일자", "예약 가능 일자", "시설 사용 시간", "취소 가능 기준")
         var text = "${list[0]} : ${str.USETGTINFO}\n" +
                 "${list[1]} : ${simpleDateFormatting(str.SVCOPNBGNDT)} ~ ${simpleDateFormatting(str.SVCOPNENDDT)}\n" +
                 "${list[2]} : ${simpleDateFormatting(str.RCPTBGNDT)} ~ ${simpleDateFormatting(str.RCPTENDDT)}\n" +
@@ -238,7 +252,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     override fun onMapReady(nMap: NaverMap) {
         naverMap = nMap
-        naverMap.apply{
+        naverMap.apply {
             maxZoom = 19.0
             minZoom = 11.0
             locationSource = locationSource
@@ -250,15 +264,15 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 isCompassEnabled = false
                 isZoomControlEnabled = true
                 isScrollGesturesEnabled = false
-                setLogoMargin(0,0,0,0)
+                setLogoMargin(0, 0, 0, 0)
             }
             viewModel.serviceData.value?.let { bind(it) }
             val itemLocation = LatLng(latLng.latitude, latLng.longitude)
             viewModel.callbackEvent.value.let {
                 val distance = distance(itemLocation, myLocation)
                 binding.tvDetailDistanceFromHere.text =
-                    if(distance/1000 < 1) "현위치로부터 ${String.format("%.0f", distance)}m"
-                    else "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+                    if (distance / 1000 < 1) "현위치로부터 ${String.format("%.0f", distance)}m"
+                    else "현위치로부터 ${String.format("%.1f", distance / 1000)}km"
             }
             val marker = Marker()
             marker.position = itemLocation
@@ -339,6 +353,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return R * c * 1000 // 단위를 미터로 변환
     }
+
     companion object {
         @JvmStatic
         fun newInstance(serviceID: String) =

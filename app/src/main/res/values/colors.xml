@@ -20,4 +20,5 @@
     <color name="cancel_button_solid">#828282</color>
     <color name="search_editText_solid">#DFDFDD</color>
     <color name="clicked_marker_solid">#FFAC1C</color>
+    <color name="enable_move_text_color">#25B1FF</color>
 </resources>
