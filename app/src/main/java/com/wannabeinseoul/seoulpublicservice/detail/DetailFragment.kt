@@ -154,15 +154,27 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun viewModelInit() = viewModel.let { vm ->
         vm.getData(param1!!)
+        vm.setReviews(param1!!)
         vm.serviceData.observe(viewLifecycleOwner) { it ->
             it?.let {
                 data -> bind(data)
             }
         }
+
+        vm.reviewUiState.observe(viewLifecycleOwner) {
+            commentAdapter.submitList(it)
+        }
     }
 
     private fun bind(data : ReservationEntity) {
-        latLng = LatLng(data.Y.toDouble(), data.X.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+        // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+        val x = data.X.toDoubleOrNull()
+        val y = data.Y.toDoubleOrNull()
+        if (x != null && y != null) latLng = LatLng(y, x)
+        else {
+            TODO("좌표 정보 없을 때 지도 안터지게 처리 (지도 위치에 아이콘이랑 같이 '좌표 정보가 없습니다' 식으로?)")
+        }
+
         buttonDesign(data)
         binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
@@ -308,13 +320,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     }
 
     private fun connectToCommentList(context: Context) {        // 후기 어댑터 연결
-        val sample = DetailCommentSample().dataList
         commentAdapter = DetailCommentAdapter()
         binding.rvDetailReview.apply {
             adapter = commentAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
-        commentAdapter.submitList(sample)
     }
 
     // 두 지점 간의 직선 거리를 계산하는 함수

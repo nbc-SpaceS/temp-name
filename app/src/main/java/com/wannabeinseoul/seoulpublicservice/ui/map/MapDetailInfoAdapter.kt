@@ -94,7 +94,6 @@ class MapDetailInfoAdapter(
             tvMapInfoService.text =
                 HtmlCompat.fromHtml(item.svcnm, HtmlCompat.FROM_HTML_MODE_LEGACY)
             tvMapInfoPay.text = item.payatnm
-            tvMapInfoAvailablility.text = item.svcstatnm
             btnMapInfoReservation.text = when (item.svcstatnm) {
                 "안내중" -> {
                     "예약안내"

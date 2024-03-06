@@ -1,28 +1,31 @@
 package com.wannabeinseoul.seoulpublicservice.detail
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
+import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewItem
 
-class DetailCommentAdapter:ListAdapter<DetailCommentType, DetailCommentAdapter.Holder>(object : DiffUtil.ItemCallback<DetailCommentType>() {
-    override fun areItemsTheSame(oldItem: DetailCommentType, newItem: DetailCommentType): Boolean {
+class DetailCommentAdapter:ListAdapter<ReviewItem, DetailCommentAdapter.Holder>(object : DiffUtil.ItemCallback<ReviewItem>() {
+    override fun areItemsTheSame(oldItem: ReviewItem, newItem: ReviewItem): Boolean {
         return oldItem == newItem
     }
 
     override fun areContentsTheSame(
-        oldItem: DetailCommentType,
-        newItem: DetailCommentType
+        oldItem: ReviewItem,
+        newItem: ReviewItem
     ): Boolean {
         return oldItem == newItem
     }
 }) {
     inner class Holder(val binding: ItemDetailCommentBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(detailCommentType: DetailCommentType) {
-            binding.tvCommentUser.text = detailCommentType.name
-            binding.tvCommentText.text = detailCommentType.text
+        fun bind(detailCommentType: ReviewItem) {
+            binding.tvCommentUser.text = detailCommentType.userName
+            binding.tvCommentText.text = detailCommentType.content
+            binding.ivCommentProfile.drawable.setTint(Color.parseColor(detailCommentType.userColor))
         }
     }
 
