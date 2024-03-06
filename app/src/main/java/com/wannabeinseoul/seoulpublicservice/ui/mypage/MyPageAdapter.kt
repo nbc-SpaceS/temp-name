@@ -10,7 +10,6 @@ import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemProfileBindin
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemSavedBinding
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MyPageAdapter(
@@ -55,7 +54,7 @@ class MyPageAdapter(
         }
 
         data class Reviewed(
-            val row: Row
+            val reviewedData: ReviewedData
         ) : MultiView {
             override val viewType: Type = Type.REVIEWED
         }
@@ -109,12 +108,13 @@ class MyPageAdapter(
         CommonViewHolder(b.root) {
 
         override fun onBind(item: MultiView) {
-            val row = (item as MultiView.Reviewed).row
+            val reviewedData = (item as MultiView.Reviewed).reviewedData
+            val row = item.reviewedData.row
             b.ivReviewedThumbnail.loadWithHolder(row.imgurl)
             b.tvReviewedArea.text = row.areanm
             b.tvReviewedTitle.text = row.svcnm
-            b.tvReviewedReviewContent.text = row.dtlcont.take(31)  // 일단 내용이나 띄워둠
-            b.tvReviewedDate.text = row.rcptenddt  // 일단 예약마감 일자나 띄워둠
+            b.tvReviewedReviewContent.text = reviewedData.content
+            b.tvReviewedDate.text = reviewedData.uploadTime
 
             b.root.setOnClickListener { onReviewedClick(row.svcid) }
         }
