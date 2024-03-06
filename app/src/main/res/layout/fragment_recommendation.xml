@@ -97,99 +97,80 @@
         app:layout_constraintStart_toEndOf="@+id/rc_search_bar"
         app:layout_constraintTop_toTopOf="@+id/rc_search_bar" />
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="17dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="104dp"
-        android:gravity="center"
-        android:text="송파구에서 누릴 수 있는 공공서비스 전체"
-        android:textColor="@color/black"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_title2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="17dp"-->
+<!--        android:layout_marginStart="15dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text="장애인들을 대상으로 하는 공공서비스"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="14dp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/rc_search_bar" />-->
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_area"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        tools:listitem="@layout/category_item" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/re_disabled"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_title2"-->
+<!--        tools:listitem="@layout/category_item" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_title3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="17dp"-->
+<!--        android:layout_marginStart="15dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        android:gravity="center"-->
+<!--        android:text="다음주부터 사용가능한 공공서비스"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="14dp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/re_disabled" />-->
 
 
-    <TextView
-        android:id="@+id/text_recommend"
-        android:layout_width="375dp"
-        android:layout_height="66dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="9dp"
-        android:background="@drawable/edittext_background"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/re_area" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/re_nextWeek"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_title3"-->
+<!--        tools:listitem="@layout/category_item" />-->
 
-    <TextView
-        android:id="@+id/tv_title2"
-        android:layout_width="wrap_content"
-        android:layout_height="17dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="28dp"
-        android:gravity="center"
-        android:text="장애인들을 대상으로 하는 공공서비스"
-        android:textColor="@color/black"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_recommend" />
+<!--    <TextView-->
+<!--        android:id="@+id/tvSharedText"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="15dp"-->
+<!--        android:layout_marginTop="28dp"-->
+<!--        android:text="SharedText"-->
+<!--        android:textSize="15sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/re_nextWeek" />-->
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_disabled"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title2"
-        tools:listitem="@layout/category_item" />
-
-    <TextView
-        android:id="@+id/tv_title3"
-        android:layout_width="wrap_content"
-        android:layout_height="17dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="28dp"
-        android:gravity="center"
-        android:text="다음주부터 사용가능한 공공서비스"
-        android:textColor="@color/black"
-        android:textSize="14dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/re_disabled" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_nextWeek"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title3"
-        tools:listitem="@layout/category_item" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/re_area"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tvSharedText"-->
+<!--        tools:listitem="@layout/category_item" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

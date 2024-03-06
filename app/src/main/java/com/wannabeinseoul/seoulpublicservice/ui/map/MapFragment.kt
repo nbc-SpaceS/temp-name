@@ -6,13 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
@@ -77,7 +74,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding.inflate(
+        _binding = FragmentMapBinding.inflate(
             inflater,
             container,
             false
@@ -100,11 +97,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initView() {
-        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        Glide.with(this).asGif().load(R.drawable.img_loading_spinner).diskCacheStrategy(
-            DiskCacheStrategy.RESOURCE
-        ).into(binding.ivMapLoadingSpinner)
-
         binding.vpMapDetailInfo.adapter = adapter
         binding.vpMapDetailInfo.registerOnPageChangeCallback(object : OnPageChangeCallback() {})
         binding.vpMapDetailInfo.offscreenPageLimit = 1
@@ -120,6 +112,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 }
             )
             dialog.show(requireActivity().supportFragmentManager, "FilterFragment")
+        }
+
+        binding.fabMapCurrentLocation.setOnClickListener {
+            moveCamera(locationSource.lastLocation?.latitude, locationSource.lastLocation?.longitude)
         }
     }
 
@@ -141,6 +137,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         visibleInfoWindow.observe(viewLifecycleOwner) {
             binding.vpMapDetailInfo.isVisible = it
             binding.clMapInfoCount.isVisible = it
+            binding.fabMapCurrentLocation.isVisible = !it
         }
 
         updateData.observe(viewLifecycleOwner) { list ->
@@ -205,7 +202,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(map: NaverMap) {
-        var isFirst = false
 
         naverMap = map
         naverMap.maxZoom = 18.0
@@ -229,22 +225,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isZoomControlEnabled = false
         naverMap.uiSettings.setLogoMargin(0, 0, 0, 0)
 
+        if (app.lastLocation == null) {
+            moveCamera(locationSource.lastLocation?.latitude, locationSource.lastLocation?.longitude)
+        }
+
         naverMap.addOnLocationChangeListener { location ->
-            if (!isFirst) {
-                moveCamera(location.latitude, location.longitude)
-                binding.viewMapLoad.isVisible = false
-                binding.ivMapLoadingSpinner.isVisible = false
-                requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                isFirst = true
-            }
+            app.lastLocation = location
         }
     }
 
-    private fun moveCamera(y: Double, x: Double) {
+    private fun moveCamera(y: Double?, x: Double?) {
         val cameraUpdate = CameraUpdate.scrollAndZoomTo(
             LatLng(
-                y,
-                x
+                y ?: app.lastLocation?.latitude ?: 37.5666,
+                x ?: app.lastLocation?.longitude ?: 126.9782
             ),
             15.0
         ).animate(CameraAnimation.Easing, 600)
