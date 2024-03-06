@@ -158,7 +158,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map ì´ë
             if(it) myLocCall = true
         }
         vm.serviceData.observe(viewLifecycleOwner) { data ->
-            if(myLocCall)
             checkLatLng(data)
             bind(data)
             distanceCheck()
