@@ -343,6 +343,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 "${list[4]} : ${str.REVSTDDAYNM} ${str.REVSTDDAY}일 전"
         val ssb = SpannableStringBuilder(text)
         for (word in list) {
+            val startIndex = text.indexOf(word)
+            val endIndex = startIndex + word.length
+            ssb.setSpan(StyleSpan(Typeface.BOLD), startIndex, endIndex, 0)
+        }
+        /*
+        for (word in list) {
             var startIndex = text.indexOf(word)
             while (startIndex != -1) {
                 val endIndex = startIndex + word.length
@@ -350,6 +356,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 startIndex = text.indexOf(word, endIndex)
             }
         }
+
+         */
         return ssb
     }
 
