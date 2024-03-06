@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -338,6 +339,10 @@ class HomeFragment : Fragment() {
 
         // 검색 결과를 표시하는 RecyclerView를 보이게 함
         binding.rvSearchResults.visibility = View.VISIBLE
+
+        // 키보드 숨기기
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
 
         // 검색 결과를 SearchHistoryAdapter애 전달하여 RecyclerView에 표시
 //        val adapter = SearchHistoryAdapter(searchResults.map { it.SVCNM })
