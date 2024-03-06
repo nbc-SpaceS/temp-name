@@ -13,6 +13,7 @@ interface SavedPrefRepository {
     fun addSvcidList(svcidList: List<String>)
     fun addSvcid(svcid: String)
     fun remove(svcid: String)
+    fun contains(svcid: String): Boolean
     val savedSvcidListLiveData: LiveData<List<String>>
 }
 
@@ -63,5 +64,7 @@ class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
     override fun addSvcid(svcid: String) = setSvcidList(getSvcidList() + svcid)
 
     override fun remove(svcid: String) = setSvcidList(getSvcidList() - svcid)
+
+    override fun contains(svcid: String) = getSvcidList().contains(svcid)
 
 }

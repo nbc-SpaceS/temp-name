@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.CategoryItemBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
@@ -24,7 +25,7 @@ class MyPageSavedAdapter(
     }
 ) {
 
-    inner class VH(private val b: CategoryItemBinding) :
+    inner class VH(private val b: RecommendationItemBinding) :
         RecyclerView.ViewHolder(b.root) {
 
         init {
@@ -35,17 +36,17 @@ class MyPageSavedAdapter(
             if (item == null) {
                 // TODO: 레이아웃에서 '삭제된 서비스입니다' 띄우는거 겹쳐놓고 gone으로 놨다가 띄워야 할 듯.
 
-                b.ivSmallImage.load(R.drawable.place_holder_1)
-                b.tvPlaceName.text = null
-                b.tvPayType.text = null
-                b.tvAreaName.text = null
-                b.tvIsReservationAvailable.text = null
+                b.ivRcSmallImage.load(R.drawable.place_holder_1)
+                b.tvRcPlaceName.text = null
+                b.tvRcPayType.text = null
+                b.tvRcAreaName.text = null
+                b.tvRcIsReservationAvailable.text = null
             } else {
-                b.ivSmallImage.loadWithHolder(item.imgurl)
-                b.tvPlaceName.text = item.svcnm
-                b.tvPayType.text = item.payatnm
-                b.tvAreaName.text = item.areanm
-                b.tvIsReservationAvailable.text = item.svcstatnm
+                b.ivRcSmallImage.loadWithHolder(item.imgurl)
+                b.tvRcPlaceName.text = item.svcnm
+                b.tvRcPayType.text = item.payatnm
+                b.tvRcAreaName.text = item.areanm
+                b.tvRcIsReservationAvailable.text = item.svcstatnm
 
                 b.root.setOnClickListener { onSavedClick(item.svcid) }
             }
@@ -54,7 +55,7 @@ class MyPageSavedAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return VH(
-            CategoryItemBinding
+            RecommendationItemBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }

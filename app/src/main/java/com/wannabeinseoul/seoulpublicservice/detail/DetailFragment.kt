@@ -158,14 +158,18 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         vm.serviceData.observe(viewLifecycleOwner) { data ->
             checkLatLng(data)
             bind(data)
-            if(itemLocation.isValid && myLocation.isValid) distanceCheck()
+            if (itemLocation.isValid && myLocation.isValid) distanceCheck()
         }
+        vm.setReviews(param1!!)
         vm.textState.observe(viewLifecycleOwner) {
             textOpen = it
             showMore(it)
         }
         vm.closeEvent.observe(viewLifecycleOwner) { close ->
             if(close) dismiss()
+        }
+        vm.reviewUiState.observe(viewLifecycleOwner) {
+            commentAdapter.submitList(it)
         }
     }
 
@@ -313,7 +317,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             adapter = commentAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
-        commentAdapter.submitList(sample)
     }
 
     private fun detailInfo(str: ReservationEntity): SpannableStringBuilder {
@@ -345,7 +348,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 (cos(Math.toRadians(point1.latitude)) * cos(Math.toRadians(point2.latitude)) *
                         sin(lonDistance / 2) * sin(lonDistance / 2))
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        Log.i("This is DetailFragment","fun distance : ${R * c}km")
         return R * c * 1000 // 단위를 미터로 변환
     }
 

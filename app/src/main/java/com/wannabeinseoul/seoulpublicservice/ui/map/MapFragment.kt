@@ -74,7 +74,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding.inflate(inflater, container, false)
+        _binding = FragmentMapBinding.inflate(
+            inflater,
+            container,
+            false
+        )
 
         mapView = binding.root.findViewById(R.id.mv_naver) as MapView
         mapView.onCreate(savedInstanceState)
@@ -109,6 +113,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             )
             dialog.show(requireActivity().supportFragmentManager, "FilterFragment")
         }
+
+        binding.fabMapCurrentLocation.setOnClickListener {
+            moveCamera(locationSource.lastLocation?.latitude, locationSource.lastLocation?.longitude)
+        }
     }
 
     private fun initViewModel() = with(viewModel) {
@@ -129,6 +137,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         visibleInfoWindow.observe(viewLifecycleOwner) {
             binding.vpMapDetailInfo.isVisible = it
             binding.clMapInfoCount.isVisible = it
+            binding.fabMapCurrentLocation.isVisible = !it
         }
 
         updateData.observe(viewLifecycleOwner) { list ->
@@ -180,19 +189,19 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             marker.iconTintColor = requireContext().getColor(R.color.point_color)
                             marker.zIndex = 0
                         }
-                        marker.iconTintColor = requireContext().getColor(R.color.purple_500)
+                        marker.iconTintColor =
+                            requireContext().getColor(R.color.clicked_marker_solid)
                         marker.zIndex = 10
                         viewModel.updateInfo(it.value)
+                        moveCamera(it.key.first.toDouble(), it.key.second.toDouble())
                         true
                     }
-
                 }
             }
         }
     }
 
     override fun onMapReady(map: NaverMap) {
-        var isFirst = false
 
         naverMap = map
         naverMap.maxZoom = 18.0
@@ -216,20 +225,25 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isZoomControlEnabled = false
         naverMap.uiSettings.setLogoMargin(0, 0, 0, 0)
 
-        naverMap.addOnLocationChangeListener { location ->
-            if (!isFirst) {
-                val cameraUpdate = CameraUpdate.scrollAndZoomTo(
-                    LatLng(
-                        location.latitude,
-                        location.longitude
-                    ),
-                    15.0
-                ).animate(CameraAnimation.Easing, 600)
-
-                naverMap.moveCamera(cameraUpdate)
-                isFirst = true
-            }
+        if (app.lastLocation == null) {
+            moveCamera(locationSource.lastLocation?.latitude, locationSource.lastLocation?.longitude)
         }
+
+        naverMap.addOnLocationChangeListener { location ->
+            app.lastLocation = location
+        }
+    }
+
+    private fun moveCamera(y: Double?, x: Double?) {
+        val cameraUpdate = CameraUpdate.scrollAndZoomTo(
+            LatLng(
+                y ?: app.lastLocation?.latitude ?: 37.5666,
+                x ?: app.lastLocation?.longitude ?: 126.9782
+            ),
+            15.0
+        ).animate(CameraAnimation.Easing, 600)
+
+        naverMap.moveCamera(cameraUpdate)
     }
 
     override fun onStart() {
