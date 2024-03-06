@@ -325,16 +325,30 @@ class HomeFragment : Fragment() {
         // searchText 메소드를 호출하여 검색 결과를 가져옴
         val searchResults = reservationRepository.searchText(query)
 
+        // 검색 결과를 HomeSearchAdapter에 전달하여 RecyclerView에 표시
+        val adapter = HomeSearchAdapter(searchResults)
+        binding.rvSearchResults.adapter = adapter
+        binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
+
+
+        // tv_service_list, tab_layout, view_pager를 숨김
+        binding.tvServiceList.visibility = View.GONE
+        binding.tabLayout.visibility = View.GONE
+        binding.viewPager.visibility = View.GONE
+
+        // 검색 결과를 표시하는 RecyclerView를 보이게 함
+        binding.rvSearchResults.visibility = View.VISIBLE
+
         // 검색 결과를 SearchHistoryAdapter애 전달하여 RecyclerView에 표시
-        val adapter = SearchHistoryAdapter(searchResults.map { it.SVCNM })
+//        val adapter = SearchHistoryAdapter(searchResults.map { it.SVCNM })
         /*binding.rvSearchHistory.adapter = adapter*/
-        recyclerView.adapter = adapter
+//        recyclerView.adapter = adapter
 
         // rv_search_history RecyclerView를 보이게 설정
         /*binding.rvSearchHistory.visibility = View.VISIBLE*/
 
         // PopupWindow 표시
-        popupWindow.showAsDropDown(binding.etSearch)
+//        popupWindow.showAsDropDown(binding.etSearch)
 
     }
 }

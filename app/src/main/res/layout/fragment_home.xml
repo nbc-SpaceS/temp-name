@@ -35,9 +35,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_home_current_region" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     <ImageView
         android:id="@+id/iv_notification"
@@ -162,7 +161,19 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_home_select_region3" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="28dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_home_set_region" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_search"
@@ -204,29 +215,17 @@
             app:layout_constraintTop_toTopOf="@+id/iv_search"
             app:layout_constraintVertical_bias="1.0" />
 
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search_history"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:elevation="10dp"
             android:background="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
+            android:elevation="10dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_search" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search_results"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="28dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/view_pager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_home_set_region" />
 </androidx.constraintlayout.widget.ConstraintLayout>
