@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,9 +21,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import coil.load
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -143,7 +139,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun viewInit() = binding.let {
         it.btnDetailBack.setOnClickListener { viewModel.close(true) }
-        it.tvDetailShowMore.setOnClickListener { viewModel.textOpened(!textOpen) }
+        it.tvDetailShowMore.setOnClickListener {
+            viewModel.textOpened(!textOpen)
+            showMore(textOpen)
+        }
         it.btnDetailCall.setOnClickListener {
             startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${viewModel.serviceData.value?.TELNO}")))
         }
@@ -154,7 +153,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             val bottomSheet = ReviewFragment.newInstance(param1!!)
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
-        showMore(textOpen)
     }
 
     private fun viewModelInit() = viewModel.let { vm ->
@@ -165,26 +163,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             }
         }
         vm.textState.observe(viewLifecycleOwner) {
+            textOpen = it
             showMore(it)
         }
     }
 
     private fun bind(data : ReservationEntity) {
-        // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
-//        val x = data.X.toDoubleOrNull()
-//        val y = data.Y.toDoubleOrNull()
-//        if (x != null && y != null) latLng = LatLng(y, x)
-//        else {
-//            TODO("좌표 정보 없을 때 지도 안터지게 처리 (지도 위치에 아이콘이랑 같이 '좌표 정보가 없습니다' 식으로?)")
-//        }
-
-        val x = data.X.toDoubleOrNull()
-        val y = data.Y.toDoubleOrNull()
-        latLng = if(x != null && y != null) {
-            LatLng(y.toDouble(), x.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
-        } else {
-            LatLng(0.0, 0.0)
-        }
+        checkLatLng(data)
         buttonDesign(data)
         binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
@@ -197,25 +182,25 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun showMore(state : Boolean) {     // 현재 에러 발생중
+    private fun showMore(state : Boolean) {
         val text = binding.tvDetailDescription
         val more = binding.tvDetailShowMore
         val layoutParams = text.layoutParams
-//        more.let {
-//            when(state) {
-//                true -> {   // 펼쳐진 상태일 때
-//                    text.maxLines = -1
-//                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-//                    more.text = "접기..."
-//                }
-//                false -> {  // 접혀있는 상태일 때
-//                    text.maxLines = 6
-//                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-//                    more.text = "더보기..."
-//                }
-//            }
-//            text.layoutParams = layoutParams
-//        }
+        more.let {
+            when(state) {
+                true -> {   // 펼쳐진 상태일 때
+                    text.maxLines = Int.MAX_VALUE
+                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    more.text = "접기..."
+                }
+                false -> {  // 접혀있는 상태일 때
+                    text.maxLines = 6
+                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                    more.text = "더보기..."
+                }
+            }
+            text.layoutParams = layoutParams
+        }
     }
 
     private fun buttonDesign(data: ReservationEntity) {
@@ -280,7 +265,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 isScaleBarEnabled = false
                 setLogoMargin(0,0,0,0)
             }
-            viewModel.serviceData.value?.let { bind(it) }
+            viewModel.serviceData.value?.let {
+                bind(it)
+                checkLatLng(it)
+            }
             val itemLocation = LatLng(latLng.latitude, latLng.longitude)
             viewModel.callbackEvent.value.let {
                 val distance = distance(itemLocation, myLocation)
@@ -303,6 +291,17 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         marker.iconTintColor = requireContext().getColor(R.color.point_color)
         marker.width = 80
         marker.height = 100
+    }
+
+    private fun checkLatLng(data: ReservationEntity): LatLng {
+        val x = data.X.toDoubleOrNull()
+        val y = data.Y.toDoubleOrNull()
+        latLng = if(x != null && y != null) {
+            LatLng(y.toDouble(), x.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+        } else {
+            LatLng(100.0, 100.0)
+        }
+        return latLng
     }
 
     override fun onDismiss(dialog: DialogInterface) {
