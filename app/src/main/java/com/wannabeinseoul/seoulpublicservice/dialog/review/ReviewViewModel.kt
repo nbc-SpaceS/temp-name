@@ -28,6 +28,9 @@ class ReviewViewModel(
     private val _uiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
     val uiState: LiveData<List<ReviewItem>> get() = _uiState
 
+    private val _reviewCredentials: MutableLiveData<Boolean> = MutableLiveData()
+    val reviewCredentials: LiveData<Boolean> get() = _reviewCredentials
+
     fun uploadReview(svcId: String, review: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val id = idPrefRepository.load()
@@ -45,6 +48,7 @@ class ReviewViewModel(
                 )
             )
 
+            _reviewCredentials.postValue(false)
             setReviews(svcId)
         }
     }
@@ -54,6 +58,24 @@ class ReviewViewModel(
             val data = serviceRepository.getServiceReviews(svcId)
 
             _uiState.postValue(data)
+        }
+    }
+
+    fun reviseReview(svcId: String, review: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = idPrefRepository.load()
+
+            reviewRepository.reviseReview(id, svcId, review)
+
+            setReviews(svcId)
+        }
+    }
+
+    fun checkWritableUser(svcId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = idPrefRepository.load()
+
+            _reviewCredentials.postValue(reviewRepository.checkCredentials(id, svcId))
         }
     }
 

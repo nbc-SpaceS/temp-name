@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
 
-class ReviewAdapter : ListAdapter<ReviewItem, ReviewAdapter.ReviewViewHolder>(object :
+class ReviewAdapter(
+    private val complaintUser: (String) -> Unit
+) : ListAdapter<ReviewItem, ReviewAdapter.ReviewViewHolder>(object :
     DiffUtil.ItemCallback<ReviewItem>() {
     override fun areItemsTheSame(oldItem: ReviewItem, newItem: ReviewItem): Boolean {
         return oldItem.userId == newItem.userId
@@ -19,12 +21,19 @@ class ReviewAdapter : ListAdapter<ReviewItem, ReviewAdapter.ReviewViewHolder>(ob
     }
 }) {
 
-    class ReviewViewHolder(private val binding: ItemDetailCommentBinding) :
+    class ReviewViewHolder(
+        private val binding: ItemDetailCommentBinding,
+        private val complaintUser: (String) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ReviewItem) = with(binding) {
             tvCommentText.text = item.content
             tvCommentUser.text = item.userName
             ivCommentProfile.drawable.setTint(Color.parseColor(item.userColor))
+            clItemDetailComment.setOnLongClickListener {
+                complaintUser(item.userName)
+                true
+            }
         }
     }
 
@@ -34,7 +43,8 @@ class ReviewAdapter : ListAdapter<ReviewItem, ReviewAdapter.ReviewViewHolder>(ob
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            complaintUser = complaintUser
         )
     }
 
