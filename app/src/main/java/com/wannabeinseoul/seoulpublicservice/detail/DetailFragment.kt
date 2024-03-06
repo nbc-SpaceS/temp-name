@@ -154,10 +154,15 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private fun viewModelInit() = viewModel.let { vm ->
         vm.getData(param1!!)
+        vm.setReviews(param1!!)
         vm.serviceData.observe(viewLifecycleOwner) { it ->
             it?.let {
                 data -> bind(data)
             }
+        }
+
+        vm.reviewUiState.observe(viewLifecycleOwner) {
+            commentAdapter.submitList(it)
         }
     }
 
@@ -315,13 +320,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     }
 
     private fun connectToCommentList(context: Context) {        // 후기 어댑터 연결
-        val sample = DetailCommentSample().dataList
         commentAdapter = DetailCommentAdapter()
         binding.rvDetailReview.apply {
             adapter = commentAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
-        commentAdapter.submitList(sample)
     }
 
     // 두 지점 간의 직선 거리를 계산하는 함수

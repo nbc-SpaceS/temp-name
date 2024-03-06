@@ -16,6 +16,10 @@ interface UserRepository {
     suspend fun getUser(
         id: String
     ) : UserEntity?
+
+    suspend fun getReview(
+        id: String
+    ) : List<ReviewEntity>
 }
 
 class UserRepositoryImpl: UserRepository {
@@ -43,5 +47,24 @@ class UserRepositoryImpl: UserRepository {
         }
 
         return targetUser
+    }
+
+    override suspend fun getReview(id: String): List<ReviewEntity> {
+        val user = getUser(id)
+
+        val reviewsSnapshot = FBRef.reviewRef.get().await()
+
+        val targetReviewList: MutableList<ReviewEntity> = mutableListOf()
+        user?.reviewIdList?.forEach { reviewId ->
+            for (snapshot in reviewsSnapshot.children) {
+                if (snapshot.key == reviewId) {
+                    val review = snapshot.getValue(ReviewEntity::class.java)
+                    if (review != null) targetReviewList.add(review)
+                    break
+                }
+            }
+        }
+
+        return targetReviewList
     }
 }
