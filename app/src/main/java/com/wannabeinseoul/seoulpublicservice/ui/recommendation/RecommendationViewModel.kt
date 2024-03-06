@@ -37,68 +37,6 @@ class RecommendationViewModel(
         }
     }
 
-
-//    private fun convertRowsToRecommendations(rows: List<Row>): List<RecommendationAdapter.MultiView> {
-//        val recommendations = mutableListOf<RecommendationAdapter.MultiView>()
-//
-//
-//    for (row in rows)
-//    {
-//        val recommendation = when (row.gubun) {
-//            "NextWeek" -> {
-//                RecommendationAdapter.MultiView.NextWeekRecommendation(
-//                    SealedMulti.Recommendation(
-//                        imageUrl = row.imgurl,
-//                        isReservationAvailable = isReservationAvailableAbsence(row),
-//                        placeName = row.placenm,
-//                        payType = row.payatnm,
-//                        areaName = row.areanm
-//                    )
-//                )
-//            }
-//
-//            "Disabled" -> {
-//                RecommendationAdapter.MultiView.DisabledRecommendation(
-//                    SealedMulti.Recommendation(
-//                        imageUrl = row.imgurl,
-//                        isReservationAvailable = isReservationAvailableAbsence(row),
-//                        placeName = row.placenm,
-//                        payType = row.payatnm,
-//                        areaName = row.areanm
-//                    )
-//                )
-//            }
-//
-//            "Teenager" -> {
-//                RecommendationAdapter.MultiView.TeenagerRecommendation(
-//                    SealedMulti.Recommendation(
-//                        imageUrl = row.imgurl,
-//                        isReservationAvailable = isReservationAvailableAbsence(row),
-//                        placeName = row.placenm,
-//                        payType = row.payatnm,
-//                        areaName = row.areanm
-//                    )
-//                )
-//            }
-//
-//            "Area" -> {
-//                RecommendationAdapter.MultiView.AreaRecommendation(
-//                    SealedMulti.Recommendation(
-//                        imageUrl = row.imgurl,
-//                        isReservationAvailable = isReservationAvailableAbsence(row),
-//                        placeName = row.placenm,
-//                        payType = row.payatnm,
-//                        areaName = row.areanm
-//                    )
-//                )
-//            }
-//
-//            else -> throw IllegalArgumentException("Unsupported recommendation type: ${row.gubun}")
-//        }
-//        recommendations.add(recommendation)
-//    }
-//    return recommendations
-
     companion object {
         val factory = viewModelFactory {
             initializer {
@@ -111,6 +49,7 @@ class RecommendationViewModel(
             }
         }
     }
+
     private fun isReservationAvailableAbsence(row: Row): Boolean {
         val currentTimeMillis = System.currentTimeMillis()
         val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
@@ -120,56 +59,6 @@ class RecommendationViewModel(
     }
 }
 
-
-//    private val reservationRepository: ReservationRepository,
-//    private val recommendPrefRepository: RecommendPrefRepository,
-//    private val reservationDAO: ReservationDAO,
-//    private val getAll2000UseCase: GetAll2000UseCase
-//) : ViewModel() {
-//    private val _regionServices: MutableLiveData<List<SealedMulti>> = MutableLiveData()
-//    val regionServices: LiveData<List<SealedMulti>>
-//        get() = _regionServices
-//
-//    private val _teenagerServices: MutableLiveData<List<SealedMulti>> = MutableLiveData()
-//    val teenagerServices: LiveData<List<SealedMulti>>
-//        get() = _teenagerServices
-//
-//    private val _disabilityServices: MutableLiveData<List<SealedMulti>> = MutableLiveData()
-//    val disabilityServices: LiveData<List<SealedMulti>>
-//        get() = _disabilityServices
-//
-//    private val _nextWeekServices: MutableLiveData<List<SealedMulti>> = MutableLiveData()
-//    val nextWeekServices: LiveData<List<SealedMulti>>
-//        get() = _nextWeekServices
-//
-//    fun fetchData() {
-//        viewModelScope.launch {
-//            // 예약 서비스 가져오기
-//            val regionReservations = withContext(Dispatchers.Default) {
-//                reservationRepository.getReservationsWithBigType("구")
-//            }
-//            val disabilityReservations = withContext(Dispatchers.Default) {
-//                reservationRepository.getReservationsWithSmallType("장애인 서비스")
-//            }
-//            val regionRows = recommendPrefRepository.convertToRow(regionReservations)
-//            // 예약 서비스를 SealedMulti로 변환
-//            val regionServices = convertToSealedMulti(regionReservations)
-//            val disabilityServices = convertToSealedMulti(disabilityReservations)
-//
-//            // 다음 주에 이용 가능한 서비스 가져오기
-//            val nextWeekServices = withContext(Dispatchers.Default) {
-//                val reservations: List<ReservationEntity> = // 적절한 예약 데이터를 가져옴
-//                    convertToSealedMulti(reservations)
-//            }
-//
-//            // LiveData에 저장
-//            _regionServices.postValue(regionServices)
-//            _disabilityServices.postValue(disabilityServices)
-//            _nextWeekServices.postValue(nextWeekServices)
-//        }
-//    }
-//
-//
 //    private suspend fun convertToSealedMulti(reservations: List<ReservationEntity>): List<SealedMulti> {
 //        // 현재 시간을 가져옴
 //        val currentTimeMillis = System.currentTimeMillis()
@@ -192,14 +81,4 @@ class RecommendationViewModel(
 //                )
 //            }
 //        }
-//    }
-//
-//
-//
-//    private fun getRandomDistrict(): String {
-//        val allDistricts = listOf(
-//            "송파구", "강남구", "강동구", "관악구", "구로구", // 추가할 지역구 계속해서 여기에 추가
-//            // ...
-//        )
-//        return allDistricts.random()
 //    }
