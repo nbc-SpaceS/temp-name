@@ -66,7 +66,7 @@
                 android:id="@+id/tv_detail_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/background_white_with_rounded_stroke"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
@@ -74,9 +74,9 @@
                 android:textColor="@color/black_gray"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_detail_distance_from_here"
-                app:layout_constraintStart_toEndOf="@+id/tv_detail_distance_from_here"
-                app:layout_constraintTop_toTopOf="@+id/tv_detail_distance_from_here" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_detail_type_small"
+                app:layout_constraintStart_toEndOf="@+id/tv_detail_type_small"
+                app:layout_constraintTop_toTopOf="@+id/tv_detail_type_small" />
 
             <TextView
                 android:id="@+id/tv_detail_type_small"
@@ -192,6 +192,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
+                android:background="@drawable/background_white_with_stroke"
                 android:elevation="15dp"
                 android:paddingStart="16dp"
                 android:paddingTop="8dp"

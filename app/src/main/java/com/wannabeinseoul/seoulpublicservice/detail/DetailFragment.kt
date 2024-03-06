@@ -32,6 +32,8 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
 import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewFragment
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -287,8 +289,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         mapView.onLowMemory()
     }
 
-    private fun simpleDateFormatting(date: String): String {    // 날짜 변환 해야됌
-        return date
+    private fun dateFormat(date: String): String {
+        val datePattern = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+        val dateTime = LocalDateTime.parse(date, formatter)
+        return datePattern.format(dateTime)
     }
 
     private fun showMore(state : Boolean) {
@@ -330,8 +335,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     private fun detailInfo(str: ReservationEntity): SpannableStringBuilder {
         val list = listOf("서비스 대상","서비스 일자","예약 가능 일자","시설 사용 시간","취소 가능 기준")
         var text = "${list[0]} : ${str.USETGTINFO}\n" +
-                "${list[1]} : ${simpleDateFormatting(str.SVCOPNBGNDT)} ~ ${simpleDateFormatting(str.SVCOPNENDDT)}\n" +
-                "${list[2]} : ${simpleDateFormatting(str.RCPTBGNDT)} ~ ${simpleDateFormatting(str.RCPTENDDT)}\n" +
+                "${list[1]} : ${dateFormat(str.SVCOPNBGNDT)} ~ ${dateFormat(str.SVCOPNENDDT)}\n" +
+                "${list[2]} : ${dateFormat(str.RCPTBGNDT)} ~ ${dateFormat(str.RCPTENDDT)}\n" +
                 "${list[3]} : ${str.V_MIN} ~ ${str.V_MAX}\n" +
                 "${list[4]} : ${str.REVSTDDAYNM} ${str.REVSTDDAY}일 전"
         val ssb = SpannableStringBuilder(text)
