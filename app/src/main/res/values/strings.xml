@@ -4,6 +4,7 @@
     <string name="title_map">지도 페이지</string>
     <string name="title_recommendation">추천 페이지</string>
     <string name="title_mypage">마이 페이지</string>
+    <string name="complaint_description">%s님을 신고하시겠습니까?</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
