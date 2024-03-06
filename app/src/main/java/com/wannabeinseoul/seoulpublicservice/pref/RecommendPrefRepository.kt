@@ -2,10 +2,7 @@ package com.wannabeinseoul.seoulpublicservice.pref
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.google.android.gms.common.api.ApiException
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
-import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendMultiView
+
 interface RecommendPrefRepository {
     fun save(value: List<String>)
     fun load(): List<String>
