@@ -2,92 +2,101 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="180dp"
-    android:layout_height="180dp"
     android:id="@+id/iv_smallVideoItems"
-    android:layout_marginStart="15dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
 
 
     <ImageView
-        android:id="@+id/iv_smallImage"
-        android:layout_width="180dp"
-        android:layout_height="120dp"
+        android:id="@+id/iv_ctImage"
+        android:layout_width="143dp"
+        android:layout_height="95dp"
+        android:background="@drawable/background_radius_10dp_828282"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_isReservationAvailable"
-        android:layout_width="50dp"
-        android:layout_height="18dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/register"
-        android:gravity="center"
-        android:text="예약가능"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tv_ctBox"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_smallImage" />
+        app:layout_constraintStart_toEndOf="@+id/iv_ctImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-    <TextView
-        android:id="@+id/tv_placeName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="5dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:gravity="center"
-        android:text="잠실제3축구장"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_smallImage" />
 
-    <TextView
-        android:id="@+id/tv_payType"
-        android:layout_width="51dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/pay"
-        android:gravity="center_horizontal"
-        android:text="유료"
-        android:textColor="@color/white"
-        android:textSize="11sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_placeName" />
+        <TextView
+            android:id="@+id/tv_ctPlaceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="12dp"
+            android:gravity="start"
+            android:maxLines="3"
+            android:text="여기는 장소 이름이 들어갈겁니다만, 실험용이기때문에 아주 길거에요~~~~~~~~~~~~~~~"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_ctBox"
+            app:layout_constraintTop_toTopOf="@+id/tv_ctBox" />
 
-    <TextView
-        android:id="@+id/tv_areaName"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="1dp"
-        android:gravity="center"
-        android:text="송파구"
-        android:textColor="#777777"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_payType" />
+        <TextView
+            android:id="@+id/tv_ctNotFree"
+            android:layout_width="58dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/background_white_with_rounded_stroke"
+            android:gravity="center"
+            android:text="유료"
+            android:textColor="@color/black_gray"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_ctReservationEnd"
+            app:layout_constraintStart_toEndOf="@+id/tv_ctReservationEnd"
+            app:layout_constraintTop_toTopOf="@+id/tv_ctReservationEnd" />
 
-    <TextView
-        android:id="@+id/tv_review"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="1dp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:text="후기 12개"
-        android:textColor="#777777"
-        android:textSize="11sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_payType" />
+        <TextView
+            android:id="@+id/tv_ctReservationEnd"
+            android:layout_width="58dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/background_white_with_rounded_stroke"
+            android:gravity="center"
+            android:text="예약 종료"
+            android:textColor="#777777"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_ctBox" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_isReservationAvailable"-->
+        <!--            android:layout_width="50dp"-->
+        <!--            android:layout_height="18dp"-->
+        <!--            android:background="@drawable/background_white_with_f8496c_stroke"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="예약가능"-->
+        <!--            android:textColor="#F8496C"-->
+        <!--            android:textSize="12sp" />-->
+
+
+        <!--    <TextView-->
+        <!--        android:id="@+id/tv_ctFree"-->
+        <!--        android:layout_width="58dp"-->
+        <!--        android:layout_height="20dp"-->
+        <!--        android:layout_marginStart="5dp"-->
+        <!--        android:background="@drawable/background_pointcolor_with_rounded"-->
+        <!--        android:gravity="center"-->
+        <!--        android:text="무료"-->
+        <!--        android:textColor="#FFFFFF"-->
+        <!--        android:textSize="12sp"-->
+        <!--        android:textStyle="bold" />-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
