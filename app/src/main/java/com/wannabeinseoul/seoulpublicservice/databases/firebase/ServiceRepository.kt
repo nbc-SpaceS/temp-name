@@ -18,6 +18,10 @@ interface ServiceRepository {
     suspend fun getServiceReviews(
         svcId: String
     ) : List<ReviewItem>
+
+    suspend fun getServiceReviewsCount(
+        svcId: String
+    ) : Int
 }
 
 class ServiceRepositoryImpl: ServiceRepository {
@@ -85,6 +89,12 @@ class ServiceRepositoryImpl: ServiceRepository {
         }
 
         return resultList
+    }
+
+    override suspend fun getServiceReviewsCount(svcId: String): Int {
+        val service = getService(svcId)
+
+        return service?.reviewIdList?.size ?: 0
     }
 
     private suspend fun checkService(svcId: String): Boolean {
