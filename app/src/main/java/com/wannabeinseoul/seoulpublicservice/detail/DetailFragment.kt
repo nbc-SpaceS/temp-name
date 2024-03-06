@@ -57,7 +57,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var myLocation:LatLng  // 내 위치
+    private lateinit var myLocation: LatLng  // 내 위치
     private lateinit var itemLocation: LatLng // 아이템 위치
 
     private var myLocCall = false
@@ -118,7 +118,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                         if (latitude != 0.0 && longitude != 0.0 && !latitude.toString().contains("37.42") && !longitude.toString().contains("-122.08")) {
                             val currentLocation = LatLng(latitude, longitude)
                             callback(currentLocation)
-                            Log.i("This is DetailFragment","getCurrentLocation -> \nlat : ${currentLocation.latitude}\nlong : ${currentLocation.longitude}")
                         }
                     }
                 }
@@ -155,8 +154,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             i.putExtra(Intent.EXTRA_TEXT, url)
             startActivity(Intent.createChooser(i, "링크 공유"))
         }
-        it.tvDetailTitleReview.setOnClickListener {
-            val bottomSheet = ReviewFragment.newInstance(param1!!)
+
+        it.tvDetailReviewMoveBtn.setOnClickListener {
+            val bottomSheet = ReviewFragment(param1!!) {
+                viewModel.setReviews(param1!!)
+            }
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
     }
@@ -219,7 +221,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     override fun onMapReady(nMap: NaverMap) {
         naverMap = nMap
-        naverMap.apply{
+        naverMap.apply {
             maxZoom = 19.0
             minZoom = 11.0
             locationSource = locationSource
@@ -232,7 +234,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 isZoomControlEnabled = false
                 isScrollGesturesEnabled = false
                 isScaleBarEnabled = false
-                setLogoMargin(0,0,0,0)
+                setLogoMargin(0, 0, 0, 0)
             }
             markerStyle()
         }
@@ -363,6 +365,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return R * c * 1000 // 단위를 미터로 변환
     }
+
 
     private fun buttonDesign(data: ReservationEntity) {
         val button = binding.btnDetailReservation
