@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,24 +10,23 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewItem
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class DetailViewModel(
     private val reservationRepository: ReservationRepository,
     private val idPrefRepository: IdPrefRepository,
     private val reviewRepository: ReviewRepository,
     private val userRepository: UserRepository,
-    private val serviceRepository: ServiceRepository
+    private val serviceRepository: ServiceRepository,
+    private val savedPrefRepository: SavedPrefRepository
 ) : ViewModel() {
     private val _serviceData = MutableLiveData<ReservationEntity>()
     val serviceData: LiveData<ReservationEntity> get() = _serviceData
@@ -37,11 +35,20 @@ class DetailViewModel(
     private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
-    private val _callbackEvent = MutableLiveData<Boolean>()
-    val callbackEvent:LiveData<Boolean> get() = _callbackEvent
+    private val _myLocationCallback = MutableLiveData<Boolean>()
+    val myLocationCallback:LiveData<Boolean> get() = _myLocationCallback
+
+    private val _textState = MutableLiveData<Boolean>()
+    val textState: LiveData<Boolean> get() = _textState
 
     private val _reviewUiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
     val reviewUiState: LiveData<List<ReviewItem>> get() = _reviewUiState
+
+    private val _savedID: MutableLiveData<Boolean> = MutableLiveData()
+    val savedID: LiveData<Boolean> get() = _savedID
+
+    private val _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
+    val favoriteChanged: LiveData<Boolean> get() = _favoriteChanged
 
     fun getData(svcID: String) {
         viewModelScope.launch{
@@ -58,8 +65,26 @@ class DetailViewModel(
         _closeEvent.value = event
     }
 
-    fun callbackEvent(event: Boolean) {
-        _callbackEvent.value = event
+    fun myLocationCallbackEvent(event: Boolean) {
+        _myLocationCallback.value = event
+    }
+
+    fun textOpened(event: Boolean) {
+        _textState.value = event
+    }
+
+    fun savedID(id: String) {
+        _savedID.value = savedPrefRepository.contains(id)
+    }
+
+    fun changeFavorite(id: String) {
+        if(savedPrefRepository.contains(id)) {
+            savedPrefRepository.remove(id)
+            _favoriteChanged.value = false
+        } else {
+            savedPrefRepository.addSvcid(id)
+            _favoriteChanged.value = true
+        }
     }
 
     fun setReviews(svcId: String) {
@@ -80,7 +105,8 @@ class DetailViewModel(
                     idPrefRepository = container.idPrefRepository,
                     reviewRepository = container.reviewRepository,
                     userRepository = container.userRepository,
-                    serviceRepository = container.serviceRepository
+                    serviceRepository = container.serviceRepository,
+                    savedPrefRepository = container.savedPrefRepository
                 )
             }
         }

@@ -1,7 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.di
 
 import android.content.Context
-import com.getkeepsafe.relinker.BuildConfig
+import com.wannabeinseoul.seoulpublicservice.BuildConfig
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
@@ -57,6 +59,7 @@ interface AppContainer {
     val reservationRepository: ReservationRepository
     val dbMemoryRepository: DbMemoryRepository
     val savedPrefRepository: SavedPrefRepository
+    val searchPrefRepository: SearchPrefRepository
     val reviewRepository: ReviewRepository
     val userRepository: UserRepository
     val serviceRepository: ServiceRepository
@@ -149,6 +152,9 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val savedPrefRepository: SavedPrefRepository by lazy {
         SavedPrefRepositoryImpl(context)
+    }
+    override val searchPrefRepository: SearchPrefRepository by lazy {
+        SearchPrefRepositoryImpl(context)
     }
 
     override val reviewRepository: ReviewRepository by lazy {
