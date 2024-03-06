@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,9 +18,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentReviewBinding
 
-private const val REVIEW_PARAM = "review_param"
-
-class ReviewFragment : BottomSheetDialogFragment() {
+class ReviewFragment(
+    private val svcId: String,
+    private val callback: () -> Unit
+) : BottomSheetDialogFragment() {
 
     private var _binding: FragmentReviewBinding? = null
     private val binding get() = _binding!!
@@ -27,19 +29,19 @@ class ReviewFragment : BottomSheetDialogFragment() {
     private val viewModel: ReviewViewModel by viewModels { ReviewViewModel.factory }
 
     private val adapter: ReviewAdapter by lazy {
-        ReviewAdapter()
+        ReviewAdapter(
+            complaintUser = {
+                Toast.makeText(requireContext(), "${it}에 대한 신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
-    private var svcId: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = com.wannabeinseoul.seoulpublicservice.databinding.FragmentReviewBinding.inflate(inflater, container, false)
-        arguments?.let {
-            svcId = it.getString(REVIEW_PARAM).toString()
-        }
+        _binding = FragmentReviewBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -72,16 +74,60 @@ class ReviewFragment : BottomSheetDialogFragment() {
 
             false
         }
+
+        dialog?.setOnDismissListener {
+            callback()
+        }
     }
 
     private fun initViewModel() = with(viewModel) {
         setReviews(svcId)
+        checkWritableUser(svcId)
 
         uiState.observe(viewLifecycleOwner) {
             adapter.submitList(it.toList())
             binding.tvReviewCount.text = it.size.toString()
             if (it.isNotEmpty()) {
                 binding.tvReviewCount.isVisible = true
+                binding.tvReviewEmptyDescription.isVisible = false
+            } else {
+                binding.tvReviewEmptyDescription.isVisible = true
+            }
+        }
+
+        reviewCredentials.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.etReviewInputField.hint = "후기를 입력해주세요."
+                binding.ivReviewSendBtn.setImageResource(R.drawable.ic_send)
+                binding.ivReviewSendBtn.setOnClickListener {
+                    viewModel.uploadReview(svcId, binding.etReviewInputField.text.toString())
+                    setInitialState()
+                }
+
+                binding.etReviewInputField.setOnEditorActionListener { _, action, _ ->
+                    if (action == EditorInfo.IME_ACTION_SEARCH) {
+                        viewModel.uploadReview(svcId, binding.etReviewInputField.text.toString())
+                        setInitialState()
+                    }
+
+                    false
+                }
+            } else {
+                binding.etReviewInputField.hint = "작성한 후기 수정만 가능합니다."
+                binding.ivReviewSendBtn.setImageResource(R.drawable.ic_revise)
+                binding.ivReviewSendBtn.setOnClickListener {
+                    viewModel.reviseReview(svcId, binding.etReviewInputField.text.toString())
+                    setInitialState()
+                }
+
+                binding.etReviewInputField.setOnEditorActionListener { _, action, _ ->
+                    if (action == EditorInfo.IME_ACTION_SEARCH) {
+                        viewModel.reviseReview(svcId, binding.etReviewInputField.text.toString())
+                        setInitialState()
+                    }
+
+                    false
+                }
             }
         }
     }
@@ -98,13 +144,13 @@ class ReviewFragment : BottomSheetDialogFragment() {
         )
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(serviceID: String) =
-            ReviewFragment().apply {
-                arguments = Bundle().apply {
-                    putString(REVIEW_PARAM, serviceID)
-                }
-            }
-    }
+//    companion object {
+//        @JvmStatic
+//        fun newInstance(serviceID: String) =
+//            ReviewFragment().apply {
+//                arguments = Bundle().apply {
+//                    putString(REVIEW_PARAM, serviceID)
+//                }
+//            }
+//    }
 }
