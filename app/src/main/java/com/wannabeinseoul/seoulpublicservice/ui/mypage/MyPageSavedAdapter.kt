@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.CategoryItemBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
@@ -23,7 +24,7 @@ class MyPageSavedAdapter(
     }
 ) {
 
-    inner class VH(private val b: CategoryItemBinding) :
+    inner class VH(private val b: RecommendationItemBinding) :
         RecyclerView.ViewHolder(b.root) {
 
         init {
@@ -34,20 +35,20 @@ class MyPageSavedAdapter(
             if (item == null) {
                 // TODO: 레이아웃에서 '삭제된 서비스입니다' 띄우는거 겹쳐놓고 gone으로 놨다가 띄워야 할 듯.
 
-                b.ivSmallImage.load(R.drawable.place_holder_1)
-                b.tvAreaName.text = null
-                b.tvIsReservationAvailable.text = null
+                b.ivRcSmallImage.load(R.drawable.place_holder_1)
+                b.tvRcAreaName.text = null
+                b.tvRcIsReservationAvailable.text = null
             } else {
-                b.ivSmallImage.loadWithHolder(item.imgurl)
-                b.tvAreaName.text = item.areanm
-                b.tvIsReservationAvailable.text = item.svcstatnm
+                b.ivRcSmallImage.loadWithHolder(item.imgurl)
+                b.tvRcAreaName.text = item.areanm
+                b.tvRcIsReservationAvailable.text = item.svcstatnm
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         return VH(
-            CategoryItemBinding
+            RecommendationItemBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }

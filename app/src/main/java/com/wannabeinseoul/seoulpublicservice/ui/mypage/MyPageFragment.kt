@@ -112,5 +112,4 @@ class MyPageFragment : Fragment() {
             myPageSavedAdapter.submitList(it)
         }
     }
-
 }
