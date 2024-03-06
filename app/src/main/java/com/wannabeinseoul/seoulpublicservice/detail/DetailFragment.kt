@@ -53,7 +53,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     private lateinit var commentAdapter: DetailCommentAdapter  // 후기 ListAdapter 선언
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-//    private lateinit var locationSource: FusedLocationSource
 
     private lateinit var myLocation:LatLng  // 내 위치
     private lateinit var itemLocation: LatLng // 아이템 위치
@@ -77,7 +76,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         mapView = binding.root.findViewById(R.id.mv_detail_maps) as MapView
-//        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         return binding.root
     }
 
@@ -160,7 +158,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         vm.serviceData.observe(viewLifecycleOwner) { data ->
             checkLatLng(data)
             bind(data)
-            distanceCheck()
+            if(itemLocation.isValid && myLocation.isValid) distanceCheck()
         }
         vm.textState.observe(viewLifecycleOwner) {
             textOpen = it
