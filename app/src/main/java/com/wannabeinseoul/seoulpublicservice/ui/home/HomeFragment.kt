@@ -354,6 +354,7 @@ class HomeFragment : Fragment() {
 
         // PopupWindow 표시
 //        popupWindow.showAsDropDown(binding.etSearch)
+//        확인용
 
     }
 }
