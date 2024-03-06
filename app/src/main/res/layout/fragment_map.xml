@@ -27,13 +27,13 @@
         android:id="@+id/rv_map_selected_option"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="@+id/tv_map_filter_btn"
+        app:layout_constraintEnd_toStartOf="@+id/tv_map_filter_btn"
         app:layout_constraintStart_toStartOf="@+id/et_map_search"
-        app:layout_constraintTop_toTopOf="@+id/tv_map_filter_btn"
-        app:layout_constraintEnd_toStartOf="@+id/tv_map_filter_btn"/>
+        app:layout_constraintTop_toTopOf="@+id/tv_map_filter_btn" />
 
     <TextView
         android:id="@+id/tv_map_filter_btn"
@@ -53,8 +53,8 @@
         android:id="@+id/cl_map_filter_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="-8dp"
         android:layout_marginTop="-8dp"
+        android:layout_marginEnd="-8dp"
         app:layout_constraintEnd_toEndOf="@+id/tv_map_filter_btn"
         app:layout_constraintTop_toTopOf="@+id/tv_map_filter_btn">
 
@@ -100,8 +100,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:background="@color/white"
-        android:visibility="gone"
         android:elevation="5dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/vp_map_detail_info"
         app:layout_constraintEnd_toEndOf="@+id/vp_map_detail_info">
 
@@ -109,10 +109,10 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@color/point_color"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_map_info_count"
@@ -125,7 +125,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.viewpager2.widget.ViewPager2
@@ -141,18 +141,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <View
-        android:id="@+id/view_map_load"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black_50"/>
-
-    <ImageView
-        android:id="@+id/iv_map_loading_spinner"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_map_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/white"
+        android:contentDescription="Find Current Location"
+        android:src="@drawable/ic_location"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:maxImageSize="36dp"
+        app:tint="@color/point_color" />
 </androidx.constraintlayout.widget.ConstraintLayout>
