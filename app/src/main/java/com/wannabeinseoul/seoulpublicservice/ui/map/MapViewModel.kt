@@ -120,7 +120,7 @@ class MapViewModel(
     }
 
     fun saveService(id: String) {
-        if (savedPrefRepository.savedSvcidListLiveData.value.orEmpty().contains(id)) {
+        if (savedPrefRepository.contains(id)) {
             savedPrefRepository.remove(id)
         } else {
             savedPrefRepository.addSvcid(id)
