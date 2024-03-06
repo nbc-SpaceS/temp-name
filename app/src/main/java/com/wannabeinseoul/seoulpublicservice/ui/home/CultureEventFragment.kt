@@ -1,12 +1,14 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.adapter.ItemAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
@@ -15,6 +17,8 @@ import com.wannabeinseoul.seoulpublicservice.databinding.FragmentCultureEventBin
 class CultureEventFragment : Fragment() {
     private var _binding: FragmentCultureEventBinding? = null
     private val binding get() = _binding!!
+
+    private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -37,9 +41,17 @@ class CultureEventFragment : Fragment() {
         ItemRepository.setItems("CultureEvent", cultureEventItems)
 
         val items = ItemRepository.getItems("CultureEvent")
-
-        val adapter = ItemAdapter(items)
-        binding.rvCultureEvent.adapter = adapter
-        binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
+//        val homeFragment = parentFragment as HomeFragment
+//        val selectedRegion = homeFragment.settingRegions()
+//        Log.d("CultureEventFragment", "Loaded selected region: $selectedRegion")
+//        val adapter = ItemAdapter(items, selectedRegion)
+//        binding.rvCultureEvent.adapter = adapter
+//        binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
+        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
+            Log.d("CultureEventFragment", "Loaded selected region: $selectedRegion")
+            val adapter = ItemAdapter(items, selectedRegion)
+            binding.rvCultureEvent.adapter = adapter
+            binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
+        }
     }
 }
