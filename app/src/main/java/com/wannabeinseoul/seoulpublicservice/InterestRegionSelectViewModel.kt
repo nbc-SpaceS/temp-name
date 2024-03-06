@@ -24,6 +24,7 @@ class InterestRegionSelectViewModel(
     fun selectCheckbox(num: String) {
         _selectedRegionList.value = selectedRegionList.value.orEmpty().toMutableList().apply {
             add(num)
+            // sort 기능 추가
         }
         enableOkayButton()
     }

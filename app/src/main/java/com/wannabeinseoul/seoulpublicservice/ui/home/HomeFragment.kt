@@ -1,30 +1,42 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
+import android.widget.PopupWindow
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.adapter.ItemAdapter
+import com.wannabeinseoul.seoulpublicservice.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
-import com.google.android.material.tabs.TabLayoutMediator
-import com.wannabeinseoul.seoulpublicservice.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -33,7 +45,10 @@ class HomeFragment : Fragment() {
 
     private val regionPrefRepository: RegionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
     private val searchPrefRepository: SearchPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.searchPrefRepository }
+    private val reservationRepository: ReservationRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.reservationRepository }
     private var fragmentContext: Context? = null
+    private lateinit var popupWindow: PopupWindow
+    private lateinit var recyclerView: RecyclerView
 
     private val items: List<Item> by lazy {
         val categories = listOf("Facility", "Education", "CultureEvent", "FacilityRent", "Medical")
@@ -59,6 +74,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -136,20 +152,6 @@ class HomeFragment : Fragment() {
             performSearch(searchText)
         }
 
-        binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
-            Log.d("search", "여기 오나 확인")
-            if (hasFocus) {
-                val recentSearches = searchPrefRepository.load()
-                // 로그로 검색어 목록 확인
-                Log.d("Search", "Loaded all search queries: $recentSearches")
-                val adapter = SearchHistoryAdapter(recentSearches)
-                binding.rvSearchHistory.adapter = adapter
-                binding.rvSearchHistory.visibility = View.VISIBLE
-            } else {
-                binding.rvSearchHistory.visibility = View.GONE
-            }
-        }
-
         binding.etSearch.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val searchText = v.text.toString()
@@ -161,8 +163,24 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivSearch.setOnClickListener {
+            // 검색어를 가져옴
             val searchText = binding.etSearch.text.toString()
-            performSearch(searchText)
+
+            // 검색을 수행하고 결과를 가져옴
+            val searchResults = performSearch(searchText)
+
+//            // 검색 결과를 RecyclerView의 어댑터에 설정
+//            val adapter = HomeSearchAdapter(searchResults)
+//            binding.rvSearchHistory.adapter = adapter
+
+            // tv_service_list, tab_layout, view_pager를 숨김
+            binding.tvServiceList.visibility = View.GONE
+            binding.tabLayout.visibility = View.GONE
+            binding.viewPager.visibility = View.GONE
+
+//            // 검색 결과를 표시하는 RecyclerView를 보이게 함 (수정 필요)
+//            recyclerView.visibility = View.VISIBLE
+
         }
 
         viewPager.adapter = object : FragmentStateAdapter(this) {
@@ -191,48 +209,61 @@ class HomeFragment : Fragment() {
         }.attach()
 
         itemAdapter.notifyDataSetChanged()
+
+        // PopupWindow 생성 및 설정
+        recyclerView = RecyclerView(requireContext()).apply {
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+
+        // PopupWindow 초기화
+        popupWindow = PopupWindow(
+            recyclerView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        // PopupWindow의 배경색을 흰색으로 설정
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+
+        // 화면 밖을 터치하면 PopupWindow가 닫히도록 설정
+        popupWindow.isOutsideTouchable = true
+
+        binding.etSearch.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                // EditText의 너비를 측정
+                val width = binding.etSearch.width
+
+                // PopupWindow width 설정
+                popupWindow.width = width
+
+                // 더 이상 필요하지 않으므로 리스너를 제거
+                binding.etSearch.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
+
+        binding.etSearch.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val recentSearches = searchPrefRepository.load()
+                val adapter = SearchHistoryAdapter(recentSearches).apply {
+                    onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
+                        override fun onItemClick(item: String) {
+                            binding.etSearch.setText(item)
+                            performSearch(item)
+                            popupWindow.dismiss()
+                        }
+                    }
+                }
+                recyclerView.adapter = adapter
+                popupWindow.showAsDropDown(v)
+            }
+            false
+        }
     }
-
-
 
     override fun onResume() {
         super.onResume()
 
-//        val selectedRegions = regionPrefRepository.load().toMutableList()
-//        if (selectedRegions.isNotEmpty()) {
-//            // 스피너에 관심지역 설정 항목 추가
-//            selectedRegions.add("관심지역 재설정")
-//            fragmentContext?.let {
-//                val adapter = ArrayAdapter(it, android.R.layout.simple_spinner_dropdown_item, selectedRegions)
-//                binding.spinnerSelectArea.adapter = adapter
-//                binding.spinnerSelectArea.setBackgroundResource(R.drawable.spinner_background)
-//            }
-//
-//            // 스피너를 보여주고 텍스트뷰를 숨김
-//            binding.spinnerSelectArea.visibility = View.VISIBLE
-//            binding.tvSelectArea.visibility = View.INVISIBLE
-//
-//            // 스피너의 onItemSelectedListener를 설정
-//            binding.spinnerSelectArea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-//                    val selectedItem = parent.getItemAtPosition(position).toString()
-//
-//                    // "관심지역 재설정" 항목을 선택하면 관심지역 설정 페이지로 이동
-//                    if (selectedItem == "관심지역 재설정") {
-//                        val intent = Intent(context, InterestRegionSelectActivity::class.java)
-//                        startActivity(intent)
-//                    }
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>) {
-//                    return
-//                }
-//            }
-//        } else {
-//            // 스피너를 숨기고 텍스트뷰를 보여줌
-//            binding.spinnerSelectArea.visibility = View.INVISIBLE
-//            binding.tvSelectArea.visibility = View.VISIBLE
-//        }
     }
 
     fun settingRegions(): String {
@@ -286,19 +317,24 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    // 검색어를 저장하고 검색 결과를 보여주는 함수, DB에서 검색기능 구현되면 검색결과를 가져오도록 수정해야함
-    private fun searchItems(query: String): List<Item> {
-        return items.filter { it.name.contains(query, ignoreCase = true) }
-    }
 
-    private fun performSearch(query: String) {
+    private fun performSearch(query: String) = lifecycleScope.launch{
         searchPrefRepository.save(query)
         Log.d("Search", "Saved search query: $query") // 로그 찍기
-        val searchedItems = searchItems(query)
-        val adapter = SearchHistoryAdapter(searchedItems.map { it.name })
-        binding.rvSearchHistory.adapter = adapter
-        binding.rvSearchHistory.visibility = View.VISIBLE
+
+        // searchText 메소드를 호출하여 검색 결과를 가져옴
+        val searchResults = reservationRepository.searchText(query)
+
+        // 검색 결과를 SearchHistoryAdapter애 전달하여 RecyclerView에 표시
+        val adapter = SearchHistoryAdapter(searchResults.map { it.SVCNM })
+        /*binding.rvSearchHistory.adapter = adapter*/
+        recyclerView.adapter = adapter
+
+        // rv_search_history RecyclerView를 보이게 설정
+        /*binding.rvSearchHistory.visibility = View.VISIBLE*/
+
+        // PopupWindow 표시
+        popupWindow.showAsDropDown(binding.etSearch)
+
     }
-
-
 }
