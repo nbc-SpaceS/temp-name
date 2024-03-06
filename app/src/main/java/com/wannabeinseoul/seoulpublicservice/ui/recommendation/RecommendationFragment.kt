@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDAO
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
@@ -16,56 +18,71 @@ import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationB
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemRecommendedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 class RecommendationFragment : Fragment() {
+
+    private lateinit var binding: FragmentRecommendationBinding
+    private lateinit var viewModel: RecommendationViewModel
+    private lateinit var recommendPrefRepository: RecommendPrefRepository
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        binding = FragmentRecommendationBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        viewModel = ViewModelProvider(this, factory).get(RecommendationViewModel::class.java)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
+
+        recommendPrefRepository = RecommendPrefRepositoryImpl(requireContext())
+
+        viewModel.recommendations.observe(viewLifecycleOwner) { recommendations ->
+            // Set up RecyclerView with the adapter
+            val adapter = RecommendationAdapter(recommendations)
+            binding.reScroll.adapter = adapter
+
+            // RecyclerView의 어댑터에 데이터를 제출합니다.
+            adapter.submitList(recommendations)
+        }
+        viewModel.fetchRecommendations()
+
+        // 기타 작업 수행
+        val loadedData = recommendPrefRepository.load()
+        println(loadedData)
+    }
 }
-//    private lateinit var binding: FragmentRecommendationBinding
-//    private lateinit var viewModel: RecommendationViewModel
-//    private lateinit var recommendationAdapter: RecommendationAdapter
-
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//        binding = FragmentRecommendationBinding.inflate(inflater, container, false)
-//        return binding.root
-//    }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        setupViewModel()
-//        setupRecyclerView()
-//        observeRecommendations()
-//    }
+//override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//    super.onViewCreated(view, savedInstanceState)
+//    binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
 //
-//    private fun setupViewModel() {
-//        viewModel = ViewModelProvider(this).get(RecommendationViewModel::class.java)
-//    }
-
-//    private fun setupRecyclerView() {
-//        recommendationAdapter = RecommendationAdapter()
+//    viewModel.recommendations.observe(viewLifecycleOwner) { recommendations ->
+//        // Set up RecyclerView with the adapter
+//        val adapter = RecommendationAdapter(recommendations)
+//        binding.reScroll.adapter = adapter
 //
-//        binding.recyclerView.apply {
-//            adapter = recommendationAdapter
-//            layoutManager = LinearLayoutManager(requireContext())
-//        }
+//        // RecyclerView의 어댑터에 데이터를 제출합니다.
+//        adapter.submitList(recommendations)
 //    }
+//    viewModel.fetchRecommendations()
 //
-//    private fun observeRecommendations() {
-//        viewModel.recommendations.observe(viewLifecycleOwner) { recommendations ->
-//            recommendationAdapter.submitList(recommendations)
-//        }
-//    }
+//    // 기타 작업 수행
+//    val loadedData = recommendPrefRepository.load()
+//    println(loadedData)
 //}
-
-
 
 
 

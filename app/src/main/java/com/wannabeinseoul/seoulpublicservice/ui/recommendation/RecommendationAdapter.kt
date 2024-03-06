@@ -7,8 +7,13 @@ import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemRecommendedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
 
-class RecommendationAdapter(private val items: List<RecommendMultiView>) :
+class RecommendationAdapter(private var items: List<RecommendMultiView>) :
     RecyclerView.Adapter<RecommendationAdapter.RecommendationViewHolder>() {
+
+    fun submitList(newItems: List<RecommendMultiView>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecommendationViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -57,25 +62,25 @@ class RecommendationAdapter(private val items: List<RecommendMultiView>) :
             when (item) {
                 is RecommendMultiView.NextWeekRecommendation -> {
                     val recommendation = item.data
-                    binding.tvSharedTitle.text = "Next Week Recommendation"
+                    binding.tvSharedTitle.text = "다음주부터 사용가능한 공공서비스"
                     setupRecommendationView(recommendation, binding)
                 }
 
                 is RecommendMultiView.DisabledRecommendation -> {
                     val recommendation = item.data
-                    binding.tvSharedTitle.text = "Disabled Recommendation"
+                    binding.tvSharedTitle.text = "장애인들을 대상으로 하는 공공서비스"
                     setupRecommendationView(recommendation, binding)
                 }
 
                 is RecommendMultiView.TeenagerRecommendation -> {
                     val recommendation = item.data
-                    binding.tvSharedTitle.text = "Teenager Recommendation"
+                    binding.tvSharedTitle.text = "청소년들을 대상으로 하는 공공서비스"
                     setupRecommendationView(recommendation, binding)
                 }
 
                 is RecommendMultiView.AreaRecommendation -> {
                     val recommendation = item.data
-                    binding.tvSharedTitle.text = "Area Recommendation"
+                    binding.tvSharedTitle.text = "송파구에서 누릴 수 있는 공공서비스 전체"
                     setupRecommendationView(recommendation, binding)
                 }
             }
@@ -87,10 +92,14 @@ class RecommendationAdapter(private val items: List<RecommendMultiView>) :
             binding: RecommendationItemBinding
         ) {
             binding.ivRcSmallImage.load(recommendation.imageUrl)
-            binding.tvRcIsReservationAvailable.text = recommendation.isReservationAvailable
             binding.tvRcPlaceName.text = recommendation.placeName
             binding.tvRcPayType.text = recommendation.payType
             binding.tvRcAreaName.text = recommendation.areaName
+            binding.tvRcIsReservationAvailable.text = if (recommendation.isReservationAvailable) {
+                "예약가능"
+            } else {
+                "예약종료"
+            }
 //        binding.tvRcReview.text = "후기 ${recommendation.reviewCount}개"
             //추가 할 예정.
         }

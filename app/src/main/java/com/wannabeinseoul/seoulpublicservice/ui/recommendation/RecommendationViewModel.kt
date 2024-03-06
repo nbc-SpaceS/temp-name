@@ -1,24 +1,124 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
-import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationDAO
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class RecommendationViewModel {
+class RecommendationViewModel(
+    private val recommendPrefRepository: RecommendPrefRepository,
+    private val getAll2000UseCase: GetAll2000UseCase,
+    private val seoulPublicRepository: SeoulPublicRepository
+) : ViewModel() {
+
+    private val _recommendations = MutableLiveData<List<RecommendMultiView>>()
+    val recommendations: LiveData<List<RecommendMultiView>> get() = _recommendations
+
+    fun fetchRecommendations() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val data = getAll2000UseCase()
+                val recommendations = convertRowsToRecommendations(data)
+                _recommendations.postValue(recommendations)
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+    private fun convertRowsToRecommendations(rows: List<Row>): List<RecommendMultiView> {
+        val recommendations = mutableListOf<RecommendMultiView>()
+
+
+    for (row in rows)
+    {
+        val recommendation = when (row.gubun) {
+            "NextWeek" -> {
+                RecommendMultiView.NextWeekRecommendation(
+                    SealedMulti.Recommendation(
+                        imageUrl = row.imgurl,
+                        isReservationAvailable = isReservationAvailableAbsence(row),
+                        placeName = row.placenm,
+                        payType = row.payatnm,
+                        areaName = row.areanm
+                    )
+                )
+            }
+
+            "Disabled" -> {
+                RecommendMultiView.DisabledRecommendation(
+                    SealedMulti.Recommendation(
+                        imageUrl = row.imgurl,
+                        isReservationAvailable = isReservationAvailableAbsence(row),
+                        placeName = row.placenm,
+                        payType = row.payatnm,
+                        areaName = row.areanm
+                    )
+                )
+            }
+
+            "Teenager" -> {
+                RecommendMultiView.TeenagerRecommendation(
+                    SealedMulti.Recommendation(
+                        imageUrl = row.imgurl,
+                        isReservationAvailable = isReservationAvailableAbsence(row),
+                        placeName = row.placenm,
+                        payType = row.payatnm,
+                        areaName = row.areanm
+                    )
+                )
+            }
+
+            "Area" -> {
+                RecommendMultiView.AreaRecommendation(
+                    SealedMulti.Recommendation(
+                        imageUrl = row.imgurl,
+                        isReservationAvailable = isReservationAvailableAbsence(row),
+                        placeName = row.placenm,
+                        payType = row.payatnm,
+                        areaName = row.areanm
+                    )
+                )
+            }
+
+            else -> throw IllegalArgumentException("Unsupported recommendation type: ${row.gubun}")
+        }
+        recommendations.add(recommendation)
+    }
+    return recommendations
 }
+    companion object {
+        val factory = viewModelFactory {
+            initializer {
+                val container = (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
+                RecommendationViewModel(
+                    seoulPublicRepository = container.seoulPublicRepository,
+                    recommendPrefRepository = container.recommendPrefRepository,
+                    getAll2000UseCase = container.getAll2000UseCase
+                )
+            }
+        }
+    }
+    private fun isReservationAvailableAbsence(row: Row): Boolean {
+        val currentTimeMillis = System.currentTimeMillis()
+        val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
+        val rcptenddtMillis = row.rcptenddt.toLongOrNull() ?: return false
+
+        return currentTimeMillis >= rcptbgndtMillis && currentTimeMillis <= rcptenddtMillis
+    }
+}
+
 
 //    private val reservationRepository: ReservationRepository,
 //    private val recommendPrefRepository: RecommendPrefRepository,
