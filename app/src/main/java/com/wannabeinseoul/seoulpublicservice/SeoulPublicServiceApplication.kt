@@ -2,6 +2,7 @@ package com.wannabeinseoul.seoulpublicservice
 
 import android.app.Application
 import android.content.Context
+import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Looper
@@ -32,6 +33,8 @@ class SeoulPublicServiceApplication : Application() {
 
     private val _initialLoadingFinished: MutableLiveData<Boolean> = MutableLiveData(false)
     val initialLoadingFinished: LiveData<Boolean> get() = _initialLoadingFinished
+
+    var lastLocation: Location? = null
 
     override fun onCreate() {
         super.onCreate()
