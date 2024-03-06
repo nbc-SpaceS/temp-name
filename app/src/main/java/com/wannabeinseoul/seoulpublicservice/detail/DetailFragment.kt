@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -145,6 +146,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         it.btnDetailCall.setOnClickListener { startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${viewModel.serviceData.value?.TELNO}"))) }
         it.btnDetailReservation.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.serviceData.value?.SVCURL))) }
+        it.ivDetailShare.setOnClickListener {
+            val i = Intent(Intent.ACTION_SEND)
+            i.type = "text/html"
+            val url = viewModel.serviceData.value!!.SVCURL
+            i.putExtra(Intent.EXTRA_TEXT, url)
+            startActivity(Intent.createChooser(i, "링크 공유"))
+        }
         it.tvDetailTitleReview.setOnClickListener {
             val bottomSheet = ReviewFragment.newInstance(param1!!)
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
@@ -373,6 +381,18 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             "예약마감" -> {
                 button.text = "예약마감"
                 button.isEnabled = false
+            }
+        }
+        val payment = binding.tvDetailPrice
+        payment.text = data.PAYATNM
+        when(data.PAYATNM) {
+            "무료" -> {
+                payment.setTextColor(Color.parseColor("#FFFFFF"))
+                payment.setBackgroundResource(R.drawable.background_radius_4dp_f8496c)
+            }
+            else -> {
+                payment.setTextColor(Color.parseColor("#828282"))
+                payment.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
             }
         }
     }
