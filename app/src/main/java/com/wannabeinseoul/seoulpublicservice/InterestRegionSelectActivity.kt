@@ -73,6 +73,7 @@ class InterestRegionSelectActivity : AppCompatActivity() {
         viewModel.loadRegion()
 
         ivInterestRegionSelectBackBtn.setOnClickListener {
+            setResult(RESULT_OK)
             finish()
         }
 
