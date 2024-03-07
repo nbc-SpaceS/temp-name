@@ -7,6 +7,8 @@ interface ReviewRepository {
 
     suspend fun reviseReview(id: String, svcId: String, review: String)
 
+    suspend fun getReviewId(svcId: String, userId: String): String
+
     suspend fun checkCredentials(id: String, svcId: String): Boolean
 }
 
@@ -26,6 +28,19 @@ class ReviewRepositoryImpl : ReviewRepository {
                 break
             }
         }
+    }
+
+    override suspend fun getReviewId(svcId: String, userId: String): String {
+        val serviceSnapshot = FBRef.reviewRef.get().await()
+
+        for (snapshot in serviceSnapshot.children) {
+            val review = snapshot.getValue(ReviewEntity::class.java)
+            if (review?.userId == userId && review.svcId == svcId) {
+                return snapshot.key.toString()
+            }
+        }
+
+        return ""
     }
 
     override suspend fun checkCredentials(id: String, svcId: String): Boolean {

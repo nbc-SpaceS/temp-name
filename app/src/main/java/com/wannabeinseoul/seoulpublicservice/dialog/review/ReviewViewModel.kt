@@ -12,6 +12,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintReposit
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ class ReviewViewModel(
     private val reviewRepository: ReviewRepository,
     private val userRepository: UserRepository,
     private val serviceRepository: ServiceRepository,
-    private val complaintRepository: ComplaintRepository
+    private val userBanRepository: UserBanRepository
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
@@ -61,8 +62,11 @@ class ReviewViewModel(
     fun setReviews(svcId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val data = serviceRepository.getServiceReviews(svcId)
+            val banList = userBanRepository.getBanList().toMutableList().apply {
+                remove(idPrefRepository.load())
+            }
 
-            _uiState.postValue(data)
+            _uiState.postValue(data.filter { it.userId !in banList })
         }
     }
 
@@ -108,7 +112,7 @@ class ReviewViewModel(
                     reviewRepository = container.reviewRepository,
                     userRepository = container.userRepository,
                     serviceRepository = container.serviceRepository,
-                    complaintRepository = container.complaintRepository
+                    userBanRepository = container.userBanRepository
                 )
             }
         }
