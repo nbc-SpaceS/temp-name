@@ -56,7 +56,7 @@ class HomeFragment : Fragment() {
         categories.flatMap { ItemRepository.getItems(it) }
     }
 
-    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items, settingRegions()) }
+//    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items, settingRegions()) }
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -118,7 +118,7 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion1.text.toString()))
+            regionPrefRepository.saveSelectedRegion(1)
         }
 
         binding.tvHomeSelectRegion2.setOnClickListener {
@@ -126,7 +126,7 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion2.text.toString()))
+            regionPrefRepository.saveSelectedRegion(2)
         }
 
         binding.tvHomeSelectRegion3.setOnClickListener {
@@ -134,7 +134,7 @@ class HomeFragment : Fragment() {
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion3.text.toString()))
+            regionPrefRepository.saveSelectedRegion(3)
         }
 
         binding.viewControlSpinner.setOnClickListener {
@@ -209,7 +209,7 @@ class HomeFragment : Fragment() {
             }
         }.attach()
 
-        itemAdapter.notifyDataSetChanged()
+//        itemAdapter.notifyDataSetChanged()
 
         // PopupWindow 생성 및 설정
         recyclerView = RecyclerView(requireContext()).apply {
@@ -271,6 +271,7 @@ class HomeFragment : Fragment() {
         val selectedRegions = regionPrefRepository.load().toMutableList()
 
         return if (selectedRegions.isNotEmpty()) {
+            regionPrefRepository.saveSelectedRegion(1)
             binding.tvHomeCurrentRegion.text = selectedRegions[0]
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
             when (selectedRegions.size) {
