@@ -21,6 +21,8 @@ class MyPageFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MyPageViewModel by viewModels { MyPageViewModel.factory }
 
+    private val app by lazy { requireActivity().application as SeoulPublicServiceApplication }
+
     private val showDetailFragment = { svcid: String ->
         DetailFragment.newInstance(svcid)
             .show(requireActivity().supportFragmentManager, "Detail")
@@ -32,7 +34,7 @@ class MyPageFragment : Fragment() {
 
     private val fixedItems: List<MyPageAdapter.MultiView> by lazy {
         listOf(
-            MyPageAdapter.MultiView.Profile {
+            MyPageAdapter.MultiView.Profile(app.user) {
                 EditProfileDialog.newInstance()
                     .show(requireActivity().supportFragmentManager, "EditProfileDialog")
             },
