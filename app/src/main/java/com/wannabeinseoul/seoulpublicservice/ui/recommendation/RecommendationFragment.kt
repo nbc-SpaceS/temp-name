@@ -44,7 +44,7 @@ class RecommendationFragment : Fragment() {
             RecommendationAdapter.MultiView.Tip("그거 아시나요?", "레몬 한개에는 레몬 한개의 비타민이 있습니다."),//수정 할 예정.
 
             RecommendationAdapter.MultiView.Horizontal("청소년들을 대상으로 하는 공공서비스", RecommendationHorizontalAdapter(
-                dbMemoryRepository.getFiltered( areanm = listOf("청소년")).take(5).map { row ->
+                dbMemoryRepository.getFiltered( areanm = listOf("송파구")).take(5).map { row ->
                     row.convertToRecommendationData().apply {
                         runBlocking { reviewCount = serviceRepository.getServiceReviewsCount(row.svcid) + 3 }//후기
                     }
@@ -52,7 +52,7 @@ class RecommendationFragment : Fragment() {
                     showDetailFragment
                     )),
             RecommendationAdapter.MultiView.Horizontal("장애인들을 대상으로 하는 공공서비스", RecommendationHorizontalAdapter(
-                dbMemoryRepository.getFiltered( areanm = listOf("장애인")).take(5).map { row ->
+                dbMemoryRepository.getFiltered( areanm = listOf("송파구")).take(5).map { row ->
                     row.convertToRecommendationData().apply {
                         runBlocking { reviewCount = serviceRepository.getServiceReviewsCount(row.svcid) + 3 }//후기
                     }
@@ -60,7 +60,7 @@ class RecommendationFragment : Fragment() {
                 showDetailFragment
             )),
             RecommendationAdapter.MultiView.Horizontal("다음주부터 사용가능한 공공서비스", RecommendationHorizontalAdapter(
-                dbMemoryRepository.getFiltered( areanm = listOf("다음주")).take(5).map { row ->
+                dbMemoryRepository.getFiltered( areanm = listOf("송파구")).take(5).map { row ->
                     row.convertToRecommendationData().apply {
                         runBlocking { reviewCount = serviceRepository.getServiceReviewsCount(row.svcid) + 3 }//후기
                     }

@@ -8,6 +8,11 @@ interface UserRepository {
         user: UserEntity
     )
 
+    suspend fun updateUserName(
+        id: String,
+        name: String
+    )
+
     suspend fun addUserReview(
         id: String,
         svcId: String
@@ -29,6 +34,14 @@ interface UserRepository {
 class UserRepositoryImpl: UserRepository {
     override fun addUser(id: String, user: UserEntity) {
         FBRef.userRef.child(id).setValue(user)
+    }
+
+    override suspend fun updateUserName(id: String, name: String) {
+        val user = getUser(id)
+
+        FBRef.userRef.child(id).setValue(user?.copy(
+            userName = name
+        ))
     }
 
     override suspend fun addUserReview(id: String, reviewId: String) {
