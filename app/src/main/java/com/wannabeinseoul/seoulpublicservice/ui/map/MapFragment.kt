@@ -55,13 +55,29 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 viewModel.saveService(id)
             },
             moveReservationPage = { url ->
+                viewModel.changeVisible(false)
+                activeMarkers.forEach { marker ->
+                    marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                    marker.zIndex = 0
+                }
                 viewModel.moveReservationPage(url)
             },
             shareUrl = { url ->
-                viewModel.shareReservationPage(url)
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/html"
+                val url = url
+                intent.putExtra(Intent.EXTRA_TEXT, url)
+                val text = "공유하기"
+                startActivity(Intent.createChooser(intent, text))
             },
             moveDetailPage = { id ->
-                viewModel.moveDetailPage(id)
+                viewModel.changeVisible(false)
+                activeMarkers.forEach { marker ->
+                    marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                    marker.zIndex = 0
+                }
+                val dialog = DetailFragment.newInstance(id)
+                dialog.show(requireActivity().supportFragmentManager, "Detail")
             },
             savedPrefRepository = container.savedPrefRepository
         )
@@ -105,6 +121,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
 
         binding.tvMapFilterBtn.setOnClickListener {
+            viewModel.changeVisible(false)
+            activeMarkers.forEach { marker ->
+                marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                marker.zIndex = 0
+            }
             val dialog = FilterFragment.newInstance(
                 onClickButton = {
                     viewModel.loadSavedOptions()
@@ -117,10 +138,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.fabMapCurrentLocation.setOnClickListener {
             moveCamera(locationSource.lastLocation?.latitude, locationSource.lastLocation?.longitude)
         }
+
+        viewModel.initMap()
     }
 
     private fun initViewModel() = with(viewModel) {
-        initMap()
         loadSavedOptions()
 
         hasFilter.observe(viewLifecycleOwner) {
@@ -152,20 +174,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     Uri.parse(it)
                 )
             )
-        }
-
-        shareUrl.observe(viewLifecycleOwner) {
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/html"
-            val url = it
-            intent.putExtra(Intent.EXTRA_TEXT, url)
-            val text = "공유하기"
-            startActivity(Intent.createChooser(intent, text))
-        }
-
-        detailInfoId.observe(viewLifecycleOwner) {
-            val dialog = DetailFragment.newInstance(it)
-            dialog.show(requireActivity().supportFragmentManager, "Detail")
         }
 
         canStart.observe(viewLifecycleOwner) { start ->
@@ -254,6 +262,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+        initViewModel()
     }
 
     override fun onPause() {
