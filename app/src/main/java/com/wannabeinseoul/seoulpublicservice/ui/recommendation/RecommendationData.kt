@@ -9,7 +9,7 @@ data class RecommendationData(
     val svcstatnm: String,
     val imageUrl: String,
     val svcid: String,
-    val reviewCount: Int
+    var reviewCount: Int
 )
 
 fun Row.convertToRecommendationData() = RecommendationData(
@@ -19,7 +19,7 @@ fun Row.convertToRecommendationData() = RecommendationData(
     svcstatnm = this.svcstatnm,
     imageUrl = this.imgurl,
     svcid = this.svcid,
-    reviewCount = this.svcid.toIntOrNull() ?: 0
+    reviewCount = 0
 )
 
 fun List<Row>.convertToRecommendationDataList() =

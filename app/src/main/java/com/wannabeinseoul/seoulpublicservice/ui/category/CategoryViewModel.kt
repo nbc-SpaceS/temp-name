@@ -8,9 +8,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
+import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.convertToRecommendationDataList
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,27 +22,37 @@ class CategoryViewModel(
     private val categoryPrefRepository: CategoryPrefRepository,
     private val regionPrefRepository: RegionPrefRepository,
     private val getAll2000UseCase: GetAll2000UseCase,
-    private val seoulPublicRepository: SeoulPublicRepository
+    private val seoulPublicRepository: SeoulPublicRepository,
+    private val dbMemoryRepository: DbMemoryRepository,
+
 ) : ViewModel() {
 
-    private val _categories = MutableLiveData<List<CategoryData>>()
+    private val _categories = MutableLiveData<List<CategoryData>>(emptyList())
     val categories: LiveData<List<CategoryData>> get() = _categories
+
 
     fun fetchCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // 3개의 저장된 지역구 가져오기
-//                val selectedRegions = regionPrefRepository.selectedRegions.take(3)
-//                // 가져온 지역구에 해당하는 데이터를 모두 가져오기
-//                val rowList = getAll2000UseCase(selectedRegions)
-//                val categories = rowList.convertToCategoryDataList()
+                val rowList = getAll2000UseCase()
+                val categories = rowList.convertToCategoryDataList()
 //                _categories.postValue(categories)
             } catch (e: Exception) {
                 // Handle error
             }
         }
     }
+    fun updateList (minclassnm:String) {
+        _categories.value = dbMemoryRepository.getFiltered(minclassnm = listOf(minclassnm)).convertToCategoryDataList()
+        //minclassnm은 소분류명
+    }
+    private fun isReservationAvailableAbsence(row: Row): Boolean {
+        val currentTimeMillis = System.currentTimeMillis()
+        val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
+        val rcptenddtMillis = row.rcptenddt.toLongOrNull() ?: return false
 
+        return currentTimeMillis >= rcptbgndtMillis && currentTimeMillis <= rcptenddtMillis
+    }
     companion object {
         val factory = viewModelFactory {
             initializer {
@@ -48,7 +61,8 @@ class CategoryViewModel(
                     seoulPublicRepository = container.seoulPublicRepository,
                     categoryPrefRepository = container.categoryPrefRepository,
                     regionPrefRepository = container.regionPrefRepository,
-                    getAll2000UseCase = container.getAll2000UseCase
+                    getAll2000UseCase = container.getAll2000UseCase,
+                    dbMemoryRepository = container.dbMemoryRepository,
                 )
             }
         }

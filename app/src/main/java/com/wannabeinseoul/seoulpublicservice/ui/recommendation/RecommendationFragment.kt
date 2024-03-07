@@ -13,6 +13,7 @@ import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
+import kotlinx.coroutines.runBlocking
 
 class RecommendationFragment : Fragment() {
 
@@ -22,46 +23,50 @@ class RecommendationFragment : Fragment() {
 
     private val app by lazy { requireActivity().application as SeoulPublicServiceApplication }
     private val dbMemoryRepository by lazy { app.container.dbMemoryRepository }
+    private val serviceRepository by lazy { app.container.serviceRepository }
 
     private val showDetailFragment = { svcid: String ->
         DetailFragment.newInstance(svcid)
             .show(requireActivity().supportFragmentManager, "Detail")
     }
 
-    private val horizontalAdapter1 by lazy {
-        RecommendationHorizontalAdapter(
-            dbMemoryRepository.getAll().take(5).convertToRecommendationDataList().toMutableList(),
-            showDetailFragment
-        )
-    }
-
-    private val horizontalAdapter2 by lazy {
-        RecommendationHorizontalAdapter(
-            dbMemoryRepository.getAll().take(10).convertToRecommendationDataList().toMutableList(),
-            showDetailFragment
-        )
-    }
-
-    private val horizontalAdapter3 by lazy {
-        RecommendationHorizontalAdapter(
-            dbMemoryRepository.getAll().take(10).convertToRecommendationDataList().toMutableList(),
-            showDetailFragment
-        )
-    }
-    private val horizontalAdapter4 by lazy {
-        RecommendationHorizontalAdapter(
-            dbMemoryRepository.getAll().take(10).convertToRecommendationDataList().toMutableList(),
-            showDetailFragment
-        )
-    }
-
     private val mainList by lazy {
         listOf(
-            RecommendationAdapter.MultiView.Horizontal("송파구에 있는 추천 서비스", horizontalAdapter1),
-            RecommendationAdapter.MultiView.Tip("그거 아시나요?", "레몬 한개에는 레몬 한개의 비타민이 있습니다."),
-            RecommendationAdapter.MultiView.Horizontal("청소년들을 대상으로 하는 공공서비스", horizontalAdapter2),
-            RecommendationAdapter.MultiView.Horizontal("장애인들을 대상으로 하는 공공서비스", horizontalAdapter3),
-            RecommendationAdapter.MultiView.Horizontal("다음주부터 사용가능한 공공서비스", horizontalAdapter4)
+            RecommendationAdapter.MultiView.Horizontal("송파구에 있는 추천 서비스",
+                RecommendationHorizontalAdapter(
+                dbMemoryRepository.getFiltered( areanm = listOf("송파구")).take(5).map { row ->
+                    row.convertToRecommendationData().apply {
+                        runBlocking { reviewCount = serviceRepository.getServiceReviewsCount(row.svcid) + 3 }//후기
+                    }
+                }.toMutableList(),
+                        showDetailFragment
+            )),
+            RecommendationAdapter.MultiView.Tip("그거 아시나요?", "레몬 한개에는 레몬 한개의 비타민이 있습니다."),//수정 할 예정.
+
+            RecommendationAdapter.MultiView.Horizontal("청소년들을 대상으로 하는 공공서비스", RecommendationHorizontalAdapter(
+                dbMemoryRepository.getFiltered( areanm = listOf("청소년")).take(5).map { row ->
+                    row.convertToRecommendationData().apply {
+                        runBlocking { reviewCount = serviceRepository.getServiceReviewsCount(row.svcid) + 3 }//후기
+                    }
+                }.toMutableList(),
+                    showDetailFragment
+                    )),
+            RecommendationAdapter.MultiView.Horizontal("장애인들을 대상으로 하는 공공서비스", RecommendationHorizontalAdapter(
+                dbMemoryRepository.getFiltered( areanm = listOf("장애인")).take(5).map { row ->
+                    row.convertToRecommendationData().apply {
+                        runBlocking { reviewCount = serviceRepository.getServiceReviewsCount(row.svcid) + 3 }//후기
+                    }
+                }.toMutableList(),
+                showDetailFragment
+            )),
+            RecommendationAdapter.MultiView.Horizontal("다음주부터 사용가능한 공공서비스", RecommendationHorizontalAdapter(
+                dbMemoryRepository.getFiltered( areanm = listOf("다음주")).take(5).map { row ->
+                    row.convertToRecommendationData().apply {
+                        runBlocking { reviewCount = serviceRepository.getServiceReviewsCount(row.svcid) + 3 }//후기
+                    }
+                }.toMutableList(),
+                showDetailFragment
+            ))
         )
     }
 

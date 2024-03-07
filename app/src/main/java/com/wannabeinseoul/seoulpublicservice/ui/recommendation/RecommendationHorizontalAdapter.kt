@@ -15,15 +15,12 @@ class RecommendationHorizontalAdapter(
         RecyclerView.ViewHolder(b.root) {
 
         fun onBind(item: RecommendationData) {
-
-
             b.ivRcSmallImage.load(item.imageUrl)
             b.tvRcPlaceName.text = item.placeName
             b.tvRcPayType.text = item.payType
             b.tvRcAreaName.text = item.areaName
             b.tvRcReview.text = "후기 ${item.reviewCount}개"
             b.root.setOnClickListener { onItemClick(item.svcid) }
-
         }
     }
 

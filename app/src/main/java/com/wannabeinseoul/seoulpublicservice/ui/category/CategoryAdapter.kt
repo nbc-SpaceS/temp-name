@@ -2,53 +2,50 @@ package com.wannabeinseoul.seoulpublicservice.ui.category
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.CategoryItemBinding
 
 
-class CategoryAdapter(
-    private val onItemClick: (String) -> Unit
-) : RecyclerView.Adapter<CategoryAdapter.CategoryItemViewHolder>() {
+class CategoryAdapter(private val onItemClick: (svcid: String) -> Unit) :
+    ListAdapter<CategoryData, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback()) {
+    private lateinit var categoryData: CategoryData
 
-    private var categoryList: List<CategoryData> = emptyList()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = CategoryItemBinding.inflate(inflater, parent, false)
-        return CategoryItemViewHolder(binding, onItemClick)
-    }
-
-    override fun onBindViewHolder(holder: CategoryItemViewHolder, position: Int) {
-        val category = categoryList[position]
-        holder.bind(category)
-    }
-
-    override fun getItemCount(): Int = categoryList.size
-
-    fun submitList(newList: List<CategoryData>) {
-        categoryList = newList
-        notifyDataSetChanged()
-    }
-
-    inner class CategoryItemViewHolder(private val binding: CategoryItemBinding, onItemClick: (String) -> Unit) : RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.root.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val category = categoryList[position]
-                    onItemClick(category.svcid)
-                }
-            }
-        }
-
-        fun bind(category: CategoryData) {
+    inner class CategoryViewHolder(private val binding: CategoryItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: CategoryData) {
             binding.apply {
-                ivCtImage.load(category.imageUrl)
-                tvCtPlaceName.text = category.placeName
-                tvCtNotFree.text = category.payType
+                binding.ivCtImage.load(item.imageUrl)
+                binding.tvCtPlaceName.text = item.placeName
+                binding.tvCtNotFree.text = item.payType
+                binding.root.setOnClickListener { onItemClick(item.svcid) }
+//apply 쓰고 binding 불필요
             }
         }
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+        val binding =
+            CategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CategoryViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.bind(item)
+    }
+
+}
+
+class CategoryDiffCallback : DiffUtil.ItemCallback<CategoryData>() {
+    override fun areItemsTheSame(oldItem: CategoryData, newItem: CategoryData): Boolean {
+        return oldItem.svcid == newItem.svcid
+    }
+
+    override fun areContentsTheSame(oldItem: CategoryData, newItem: CategoryData): Boolean {
+        return oldItem == newItem
+    }
+
 }
