@@ -15,6 +15,7 @@
         android:background="@drawable/background_radius_10dp_dfdfdd"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="5dp"
+        android:enabled="false"
         android:drawableTint="@color/black"
         android:hint="검색어를 입력하세요."
         android:paddingStart="8dp"

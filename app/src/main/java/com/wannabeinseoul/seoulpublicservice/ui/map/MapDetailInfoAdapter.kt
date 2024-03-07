@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.map
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,6 +87,7 @@ class MapDetailInfoAdapter(
         override fun onBind(item: DetailInfoWindow) = with(binding) {
             if (item.saved) {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
+                ivMapInfoSaveServiceBtn.drawable.setTint(Color.parseColor("#F8496C"))
             } else {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
             }
@@ -122,6 +124,7 @@ class MapDetailInfoAdapter(
                 saveService(item.svcid)
                 if (savedPrefRepository.contains(item.svcid)) {
                     ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
+                    ivMapInfoSaveServiceBtn.drawable.setTint(Color.parseColor("#F8496C"))
                 } else {
                     ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
                 }
