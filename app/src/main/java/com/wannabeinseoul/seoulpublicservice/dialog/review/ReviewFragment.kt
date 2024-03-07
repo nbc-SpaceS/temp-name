@@ -16,7 +16,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentReviewBinding
+import com.wannabeinseoul.seoulpublicservice.dialog.complaint.ComplaintFragment
 
 class ReviewFragment(
     private val svcId: String,
@@ -28,10 +30,17 @@ class ReviewFragment(
 
     private val viewModel: ReviewViewModel by viewModels { ReviewViewModel.factory }
 
+    private val app by lazy {
+        requireActivity().application as SeoulPublicServiceApplication
+    }
+    private val container by lazy {
+        app.container
+    }
+
     private val adapter: ReviewAdapter by lazy {
         ReviewAdapter(
             complaintUser = {
-                Toast.makeText(requireContext(), "${it}에 대한 신고가 접수되었습니다.", Toast.LENGTH_SHORT).show()
+                viewModel.checkComplaintSelf(it)
             }
         )
     }
@@ -130,6 +139,14 @@ class ReviewFragment(
                 }
             }
         }
+
+        isComplaintSelf.observe(viewLifecycleOwner) {
+            if (it.first) {
+                Toast.makeText(requireContext(), "스스로를 신고할 수는 없습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                ComplaintFragment.newInstance(it.second).show(requireActivity().supportFragmentManager, "Complaint")
+            }
+        }
     }
 
     private fun setInitialState() {
@@ -143,14 +160,4 @@ class ReviewFragment(
             0
         )
     }
-
-//    companion object {
-//        @JvmStatic
-//        fun newInstance(serviceID: String) =
-//            ReviewFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString(REVIEW_PARAM, serviceID)
-//                }
-//            }
-//    }
 }

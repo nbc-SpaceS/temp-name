@@ -39,7 +39,7 @@ class ServiceRepositoryImpl: ServiceRepository {
             FBRef.serviceRef.child(svcId).setValue(ServiceEntity(svcId))
         }
 
-        var serviceSnapshot = FBRef.serviceRef.get().await()
+        val serviceSnapshot = FBRef.serviceRef.get().await()
 
         var targetService: ServiceEntity? = null
         for (snapshot in serviceSnapshot.children) {

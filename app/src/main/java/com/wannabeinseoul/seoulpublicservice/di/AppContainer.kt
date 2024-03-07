@@ -7,6 +7,8 @@ import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
@@ -61,6 +63,7 @@ interface AppContainer {
     val reviewRepository: ReviewRepository
     val userRepository: UserRepository
     val serviceRepository: ServiceRepository
+    val complaintRepository: ComplaintRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -162,5 +165,9 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val serviceRepository: ServiceRepository by lazy {
         ServiceRepositoryImpl()
+    }
+
+    override val complaintRepository: ComplaintRepository by lazy {
+        ComplaintRepositoryImpl()
     }
 }

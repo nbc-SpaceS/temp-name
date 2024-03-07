@@ -17,6 +17,10 @@ interface UserRepository {
         id: String
     ) : UserEntity?
 
+    suspend fun getUserId(
+        name: String
+    ) : String
+
     suspend fun getReview(
         id: String
     ) : List<ReviewEntity>
@@ -47,6 +51,19 @@ class UserRepositoryImpl: UserRepository {
         }
 
         return targetUser
+    }
+
+    override suspend fun getUserId(name: String): String {
+        val userSnapshot = FBRef.userRef.get().await()
+
+        for (snapshot in userSnapshot.children) {
+            val user = snapshot.getValue(UserEntity::class.java)
+            if (user?.userName == name) {
+                return snapshot.key!!
+            }
+        }
+
+        return ""
     }
 
     override suspend fun getReview(id: String): List<ReviewEntity> {
