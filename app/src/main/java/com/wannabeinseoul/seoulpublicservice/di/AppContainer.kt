@@ -19,12 +19,16 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepository
@@ -67,6 +71,8 @@ interface AppContainer {
     val serviceRepository: ServiceRepository
     val complaintRepository: ComplaintRepository
     val userBanRepository: UserBanRepository
+    val categoryPrefRepository: CategoryPrefRepository
+    val recommendPrefRepository: RecommendPrefRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -154,12 +160,21 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
     override val savedPrefRepository: SavedPrefRepository by lazy {
         SavedPrefRepositoryImpl(context)
     }
+
     override val searchPrefRepository: SearchPrefRepository by lazy {
         SearchPrefRepositoryImpl(context)
     }
 
     override val reviewRepository: ReviewRepository by lazy {
         ReviewRepositoryImpl()
+    }
+
+    override val categoryPrefRepository: CategoryPrefRepository by lazy {
+        CategoryPrefRepositoryImpl(context)
+    }
+
+    override val recommendPrefRepository: RecommendPrefRepository by lazy {
+        RecommendPrefRepositoryImpl(context)
     }
 
     override val userRepository: UserRepository by lazy {
