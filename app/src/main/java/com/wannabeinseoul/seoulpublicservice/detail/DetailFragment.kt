@@ -332,7 +332,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     // 후기 어댑터 연결(임시)
     private fun connectToCommentList(context: Context) {
-        val sample = DetailCommentSample().dataList
         commentAdapter = DetailCommentAdapter()
         binding.rvDetailReview.apply {
             adapter = commentAdapter
@@ -397,16 +396,16 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         val payment = binding.tvDetailPrice
         payment.text = data.PAYATNM
-        when(data.PAYATNM) {
-            "무료" -> {
-                payment.setTextColor(Color.parseColor("#FFFFFF"))
-                payment.setBackgroundResource(R.drawable.background_radius_4dp_f8496c)
-            }
-            else -> {
-                payment.setTextColor(Color.parseColor("#828282"))
-                payment.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
-            }
-        }
+//        when(data.PAYATNM) {
+//            "무료" -> {
+//                payment.setTextColor(Color.parseColor("#FFFFFF"))
+//                payment.setBackgroundResource(R.drawable.background_radius_4dp_f8496c)
+//            }
+//            else -> {
+//                payment.setTextColor(Color.parseColor("#828282"))
+//                payment.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
+//            }
+//        }
     }
 
     companion object {
