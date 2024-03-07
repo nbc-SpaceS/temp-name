@@ -37,7 +37,6 @@
         android:id="@+id/tv_map_info_service"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="잠실제3농구경기장"
@@ -55,7 +54,8 @@
         android:src="@drawable/ic_save_empty"
         app:layout_constraintBottom_toBottomOf="@+id/btn_map_info_reservation"
         app:layout_constraintStart_toStartOf="@+id/tv_map_info_service"
-        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation" />
+        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation"
+        app:tint="@color/black" />
 
     <ImageView
         android:id="@+id/iv_map_info_share_btn"
@@ -65,14 +65,15 @@
         android:src="@drawable/ic_share"
         app:layout_constraintBottom_toBottomOf="@+id/btn_map_info_reservation"
         app:layout_constraintStart_toEndOf="@+id/iv_map_info_save_service_btn"
-        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation" />
+        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation"
+        app:tint="@color/black" />
 
     <TextView
         android:id="@+id/tv_map_info_pay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_radius_4dp_f8496c"
         android:layout_marginTop="12dp"
+        android:background="@drawable/background_radius_4dp_f8496c"
         android:paddingHorizontal="10dp"
         android:paddingVertical="2dp"
         android:text="유료"
