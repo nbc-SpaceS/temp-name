@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.wannabeinseoul.seoulpublicservice.R
 
@@ -10,9 +11,18 @@ class CategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        // 카테고리 프래그먼트를 추가합니다.
+        // 카테고리 프래그먼트를 추가
         supportFragmentManager.beginTransaction()
             .replace(R.id.category_fragment_container, CategoryFragment())
             .commit()
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        findViewById<View>(R.id.iv_back)?.setOnClickListener {
+            onBackPressed()
+        }
     }
-}
+        override fun onSupportNavigateUp(): Boolean {
+            onBackPressed() // 뒤로가기 버튼 클릭 시 onBackPressed() 호출
+            return true
+        }
+    }
