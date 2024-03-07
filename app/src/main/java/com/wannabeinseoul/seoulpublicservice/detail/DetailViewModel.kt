@@ -54,7 +54,7 @@ class DetailViewModel(
 
     fun getData(svcID: String) {
         viewModelScope.launch{
-            val result = viewModelScope.async(Dispatchers.IO) {
+            val result = viewModelScope.async(Dispatchers.IO) { // runBlocking으로 사용해도 됨
                 reservationRepository.getService(svcID)
             }.await()
             result.let {
