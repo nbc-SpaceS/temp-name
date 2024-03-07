@@ -144,7 +144,10 @@ class ReviewFragment(
             if (it.first) {
                 Toast.makeText(requireContext(), "스스로를 신고할 수는 없습니다.", Toast.LENGTH_SHORT).show()
             } else {
-                ComplaintFragment.newInstance(it.second).show(requireActivity().supportFragmentManager, "Complaint")
+                val complaintFragment = ComplaintFragment(svcId, it.second) {
+                    setReviews(svcId)
+                }
+                complaintFragment.show(requireActivity().supportFragmentManager, "Complaint")
             }
         }
     }
