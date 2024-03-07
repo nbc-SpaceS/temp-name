@@ -15,6 +15,8 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
@@ -64,6 +66,7 @@ interface AppContainer {
     val userRepository: UserRepository
     val serviceRepository: ServiceRepository
     val recommendPrefRepository: RecommendPrefRepository
+    val categoryPrefRepository: CategoryPrefRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -140,6 +143,10 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
     override val recommendPrefRepository: RecommendPrefRepository by lazy {
         RecommendPrefRepositoryImpl(context = context)
     }
+    override val categoryPrefRepository: CategoryPrefRepository by lazy {
+        CategoryPrefRepositoryImpl(context = context)
+    }
+
     /** Room과 관련된 Repository에 의존성 주입?? */
     private val database by lazy { ReservationDatabase.getDatabase(context) }
     override val reservationRepository by lazy {

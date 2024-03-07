@@ -21,14 +21,7 @@ class RecommendationHorizontalAdapter(
             b.tvRcPlaceName.text = item.placeName
             b.tvRcPayType.text = item.payType
             b.tvRcAreaName.text = item.areaName
-//            b.tvRcIsReservationAvailable.text = if (item.svcstatnm) {
-//                "예약가능"
-//            } else {
-//                "예약종료"
-//            }
-//        binding.tvRcReview.text = "후기 ${recommendation.reviewCount}개"
-            //추가 할 예정.
-
+            b.tvRcReview.text = "후기 ${item.reviewCount}개"
             b.root.setOnClickListener { onItemClick(item.svcid) }
 
         }

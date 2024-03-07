@@ -82,7 +82,6 @@ class RecommendationAdapter(private var items: List<MultiView>) :
     override fun onBindViewHolder(holder: CommonViewHolder, position: Int) {
         holder.onBind(items[position])
 
-
     }
 
     fun submitList(newItems: List<MultiView>) {
