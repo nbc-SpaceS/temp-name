@@ -6,6 +6,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class SplashActivity : AppCompatActivity() {
@@ -23,33 +26,42 @@ class SplashActivity : AppCompatActivity() {
 
         /** 액티비티에서 의존성 주입 */
         val app = (application as SeoulPublicServiceApplication)
+        val container = app.container
+
         app.initialLoadingFinished.let { livedata ->
             livedata.observe(this) {
-                Log.d("jj-스플래시", "initialLoadingFinished 옵저버 $it")
+                Log.d("jj-스플래시", "옵저버:initialLoadingFinished - $it")
                 if (it != true) return@observe
                 if (createFinished) {
                     Log.d("jj-스플래시", "옵저버에서 이동 (스플래시 create가 먼저 끝남, 일반적)")
                     moveToNextActivity()
                     return@observe
                 }
-                initialLoadingFinished = true
+                initialLoadingFinished = it
             }
             initialLoadingFinished = livedata.value!!
         }
 
-        val container = app.container
-        if (container.idPrefRepository.load() == "") {
+        val loadedId = container.idPrefRepository.load()
+        if (loadedId.isBlank()) {
             val id = UUID.randomUUID().toString()
-            container.idPrefRepository.save(id)
-            container.userRepository.addUser(
-                id,
-                UserEntity(
-                    userName = "익명-${id.substring(0..5)}",
-                    userProfileImage = "",
-                    userColor = "#" + (1..6).map { id.replace("-", "").random() }.joinToString(""),
-                    reviewIdList = emptyList()
-                )
+            val user = UserEntity(
+                userName = "익명-${id.substring(0..5)}",
+                userProfileImage = "",
+                userColor = "#" + (1..6).map { id.replace("-", "").random() }.joinToString(""),
+                reviewIdList = emptyList()
             )
+            container.idPrefRepository.save(id)
+            container.userRepository.addUser(id, user)
+            app.user = user
+        } else {
+            try {
+                CoroutineScope(Dispatchers.IO).launch {
+                    app.user = container.userRepository.getUser(loadedId)
+                }
+            } catch (e: Throwable) {
+                Log.e("jj-스플래시", "userRepository.getUser 과정에서 에러. loadedId: $loadedId, e: $e")
+            }
         }
 
         container.filterPrefRepository.clearData()
