@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.dialog.complaint
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,11 +14,11 @@ import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentComplaintBinding
 
-class ComplaintFragment(private val name: String) : DialogFragment() {
-
-    companion object {
-        fun newInstance(name: String) = ComplaintFragment(name)
-    }
+class ComplaintFragment(
+    private val svcId: String,
+    private val name: String,
+    private val clickOk: () -> Unit
+) : DialogFragment() {
 
     private var _binding: FragmentComplaintBinding? = null
     private val binding get() = _binding!!
@@ -51,7 +52,7 @@ class ComplaintFragment(private val name: String) : DialogFragment() {
         }
 
         btnComplaintOkay.setOnClickListener {
-            viewModel.addComplaint(name)
+            viewModel.addComplaint(svcId, name)
         }
     }
 
@@ -65,5 +66,10 @@ class ComplaintFragment(private val name: String) : DialogFragment() {
 
             dismiss()
         }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        clickOk()
+        super.onDismiss(dialog)
     }
 }

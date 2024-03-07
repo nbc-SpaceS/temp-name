@@ -2,91 +2,88 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="180dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/iv_recommendSmallVideoItems"
     android:layout_marginStart="15dp">
-    <TextView
-        android:id="@+id/tv_shared_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:text="저장한 공공서비스"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_rcSmallImage"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/iv_recommendSmallVideoItems"
         android:layout_width="180dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="8dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_shared_title" />
-
-    <TextView
-        android:id="@+id/tv_rcIsReservationAvailable"
-        android:layout_width="50dp"
-        android:layout_height="18dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/register"
-        android:gravity="center"
-        android:text="예약가능"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_rcSmallImage" />
-
-    <TextView
-        android:id="@+id/tv_rcPlaceName"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="5dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:gravity="center"
-        android:text="잠실제3축구장3123123123123123123123123"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_rcSmallImage" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_rcPayType"
-        android:layout_width="51dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/pay"
-        android:gravity="center_horizontal"
-        android:text="유료"
-        android:textColor="@color/white"
-        android:textSize="11sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_rcPlaceName" />
+        <ImageView
+            android:id="@+id/iv_rcSmallImage"
+            android:layout_width="180dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_rcAreaName"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="1dp"
-        android:gravity="center"
-        android:text="송파구"
-        android:textColor="#777777"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_rcPayType" />
+        <TextView
+            android:id="@+id/tv_rcIsReservationAvailable"
+            android:layout_width="50dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/register"
+            android:gravity="center"
+            android:text="예약가능"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_rcSmallImage" />
+
+        <TextView
+            android:id="@+id/tv_rcPlaceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="5dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="잠실제3축구장3123123123123123123123123"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_rcSmallImage" />
+
+        <TextView
+            android:id="@+id/tv_rcPayType"
+            android:layout_width="51dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/pay"
+            android:gravity="center_horizontal"
+            android:text="유료"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_rcPlaceName" />
+
+        <TextView
+            android:id="@+id/tv_rcAreaName"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="1dp"
+            android:gravity="center"
+            android:text="송파구"
+            android:textColor="#777777"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_rcPayType" />
+
+
 
     <TextView
         android:id="@+id/tv_rcReview"
@@ -101,4 +98,5 @@
         android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_rcPayType" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

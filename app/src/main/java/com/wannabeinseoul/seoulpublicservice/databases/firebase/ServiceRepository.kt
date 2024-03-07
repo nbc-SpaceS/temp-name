@@ -72,7 +72,6 @@ class ServiceRepositoryImpl: ServiceRepository {
         val resultList: MutableList<ReviewItem> = mutableListOf()
         targetReviewList.forEach { review ->
             for (snapshot in userSnapShot.children) {
-                Log.d("dkj", "${snapshot.key} ${review.userId}")
                 if (snapshot.key == review.userId) {
                     val user = snapshot.getValue(UserEntity::class.java)
                     resultList.add(ReviewItem(

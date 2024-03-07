@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.di.AppContainer
 import com.wannabeinseoul.seoulpublicservice.di.DefaultAppContainer
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
@@ -35,6 +36,8 @@ class SeoulPublicServiceApplication : Application() {
     val initialLoadingFinished: LiveData<Boolean> get() = _initialLoadingFinished
 
     var lastLocation: Location? = null
+
+    var user: UserEntity? = null
 
     override fun onCreate() {
         super.onCreate()
