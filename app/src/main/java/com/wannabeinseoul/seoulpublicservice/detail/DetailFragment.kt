@@ -279,11 +279,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
 
     override fun onStop() {
         super.onStop()
+        viewModel.close()
         mapView.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        viewModel.close()
         mapView.onDestroy()
         _binding = null
     }
