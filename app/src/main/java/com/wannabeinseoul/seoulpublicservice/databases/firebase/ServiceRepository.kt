@@ -1,7 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firebase
 
-import android.util.Log
 import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewItem
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 interface ServiceRepository {
@@ -22,6 +24,10 @@ interface ServiceRepository {
     suspend fun getServiceReviewsCount(
         svcId: String
     ) : Int
+
+    suspend fun getServiceReviewsCount(
+        svcIdList: List<String>
+    ) : List<Int>
 }
 
 class ServiceRepositoryImpl: ServiceRepository {
@@ -95,6 +101,15 @@ class ServiceRepositoryImpl: ServiceRepository {
 
         return service?.reviewIdList?.size ?: 0
     }
+
+    override suspend fun getServiceReviewsCount(svcIdList: List<String>) =
+        coroutineScope {
+            svcIdList.map { svcId ->
+                async {
+                    getServiceReviewsCount(svcId)
+                }
+            }.awaitAll()
+        }
 
     private suspend fun checkService(svcId: String): Boolean {
         val serviceSnapshot = FBRef.serviceRef.get().await()
