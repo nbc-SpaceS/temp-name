@@ -286,6 +286,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
         super.onDestroyView()
         mapView.onDestroy()
         _binding = null
+        dialog?.dismiss()
     }
 
     override fun onLowMemory() {

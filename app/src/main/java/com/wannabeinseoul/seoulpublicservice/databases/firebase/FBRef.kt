@@ -9,5 +9,6 @@ class FBRef {
         val reviewRef = database.getReference("review")
         val userRef = database.getReference("user")
         val serviceRef = database.getReference("service")
+        val complaintRef = database.getReference("complaint")
     }
 }

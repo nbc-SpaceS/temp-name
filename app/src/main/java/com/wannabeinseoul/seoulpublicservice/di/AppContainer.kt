@@ -7,6 +7,8 @@ import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
@@ -15,16 +17,12 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
-import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
-import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepository
@@ -65,8 +63,7 @@ interface AppContainer {
     val reviewRepository: ReviewRepository
     val userRepository: UserRepository
     val serviceRepository: ServiceRepository
-    val recommendPrefRepository: RecommendPrefRepository
-    val categoryPrefRepository: CategoryPrefRepository
+    val complaintRepository: ComplaintRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -140,12 +137,6 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
     override val idPrefRepository: IdPrefRepository by lazy {
         IdPrefRepositoryImpl(context = context)
     }
-    override val recommendPrefRepository: RecommendPrefRepository by lazy {
-        RecommendPrefRepositoryImpl(context = context)
-    }
-    override val categoryPrefRepository: CategoryPrefRepository by lazy {
-        CategoryPrefRepositoryImpl(context = context)
-    }
 
     /** Room과 관련된 Repository에 의존성 주입?? */
     private val database by lazy { ReservationDatabase.getDatabase(context) }
@@ -174,5 +165,9 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val serviceRepository: ServiceRepository by lazy {
         ServiceRepositoryImpl()
+    }
+
+    override val complaintRepository: ComplaintRepository by lazy {
+        ComplaintRepositoryImpl()
     }
 }

@@ -19,23 +19,23 @@ class MapDetailInfoAdapter(
     private val shareUrl: (String) -> Unit,
     private val moveDetailPage: (String) -> Unit,
     private val savedPrefRepository: SavedPrefRepository
-) : ListAdapter<Row, MapDetailInfoAdapter.InfoViewHolder>(object : DiffUtil.ItemCallback<Row>() {
-    override fun areItemsTheSame(oldItem: Row, newItem: Row): Boolean {
+) : ListAdapter<DetailInfoWindow, MapDetailInfoAdapter.InfoViewHolder>(object : DiffUtil.ItemCallback<DetailInfoWindow>() {
+    override fun areItemsTheSame(oldItem: DetailInfoWindow, newItem: DetailInfoWindow): Boolean {
         return oldItem.svcid == newItem.svcid
     }
 
-    override fun areContentsTheSame(oldItem: Row, newItem: Row): Boolean {
+    override fun areContentsTheSame(oldItem: DetailInfoWindow, newItem: DetailInfoWindow): Boolean {
         return oldItem == newItem
     }
 
 }) {
     abstract class InfoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        abstract fun onBind(item: Row)
+        abstract fun onBind(item: DetailInfoWindow)
     }
 
     override fun getItemViewType(position: Int): Int {
         val info = getItem(position)
-        return if (info is Row) {
+        return if (info is DetailInfoWindow) {
             0
         } else {
             1
@@ -83,8 +83,8 @@ class MapDetailInfoAdapter(
         private val moveDetailPage: (String) -> Unit,
         private val savedPrefRepository: SavedPrefRepository
     ) : InfoViewHolder(binding.root) {
-        override fun onBind(item: Row) = with(binding) {
-            if (savedPrefRepository.contains(item.svcid)) {
+        override fun onBind(item: DetailInfoWindow) = with(binding) {
+            if (item.saved) {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_fill)
             } else {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
@@ -144,6 +144,6 @@ class MapDetailInfoAdapter(
     class UnknownInfoViewHolder(
         private val binding: ItemMapInfoWindowBinding
     ) : InfoViewHolder(binding.root) {
-        override fun onBind(item: Row) = Unit
+        override fun onBind(item: DetailInfoWindow) = Unit
     }
 }

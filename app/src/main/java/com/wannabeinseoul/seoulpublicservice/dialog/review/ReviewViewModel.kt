@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
@@ -22,7 +23,8 @@ class ReviewViewModel(
     private val idPrefRepository: IdPrefRepository,
     private val reviewRepository: ReviewRepository,
     private val userRepository: UserRepository,
-    private val serviceRepository: ServiceRepository
+    private val serviceRepository: ServiceRepository,
+    private val complaintRepository: ComplaintRepository
 ) : ViewModel() {
 
     private val _uiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
@@ -30,6 +32,9 @@ class ReviewViewModel(
 
     private val _reviewCredentials: MutableLiveData<Boolean> = MutableLiveData()
     val reviewCredentials: LiveData<Boolean> get() = _reviewCredentials
+
+    private val _isComplaintSelf: MutableLiveData<Pair<Boolean, String>> = MutableLiveData()
+    val isComplaintSelf: LiveData<Pair<Boolean, String>> get() = _isComplaintSelf
 
     fun uploadReview(svcId: String, review: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -79,6 +84,18 @@ class ReviewViewModel(
         }
     }
 
+    fun checkComplaintSelf(name: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = userRepository.getUserId(name)
+
+            if (id == idPrefRepository.load()) {
+                _isComplaintSelf.postValue(Pair(true, name))
+            } else {
+                _isComplaintSelf.postValue(Pair(false, name))
+            }
+        }
+    }
+
     companion object {
         /** 뷰모델팩토리에서 의존성주입을 해준다 */
         val factory = viewModelFactory {
@@ -90,7 +107,8 @@ class ReviewViewModel(
                     idPrefRepository = container.idPrefRepository,
                     reviewRepository = container.reviewRepository,
                     userRepository = container.userRepository,
-                    serviceRepository = container.serviceRepository
+                    serviceRepository = container.serviceRepository,
+                    complaintRepository = container.complaintRepository
                 )
             }
         }
