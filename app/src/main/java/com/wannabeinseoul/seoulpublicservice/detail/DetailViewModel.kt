@@ -28,26 +28,26 @@ class DetailViewModel(
     private val serviceRepository: ServiceRepository,
     private val savedPrefRepository: SavedPrefRepository
 ) : ViewModel() {
-    private var _serviceData = MutableLiveData<ReservationEntity>()
+    private val _serviceData = MutableLiveData<ReservationEntity>()
     val serviceData: LiveData<ReservationEntity> get() = _serviceData
 
     // 닫기 이벤트
-    private var _closeEvent = MutableLiveData<Boolean>()
+    private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
     private val _myLocationCallback = MutableLiveData<Boolean>()
     val myLocationCallback:LiveData<Boolean> get() = _myLocationCallback
 
-    private var _textState = MutableLiveData<Boolean>()
+    private val _textState = MutableLiveData<Boolean>()
     val textState: LiveData<Boolean> get() = _textState
 
-    private var _reviewUiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
+    private val _reviewUiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
     val reviewUiState: LiveData<List<ReviewItem>> get() = _reviewUiState
 
-    private var _savedID: MutableLiveData<Boolean> = MutableLiveData()
+    private val _savedID: MutableLiveData<Boolean> = MutableLiveData()
     val savedID: LiveData<Boolean> get() = _savedID
 
-    private var _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
+    private val _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
     val favoriteChanged: LiveData<Boolean> get() = _favoriteChanged
 
     fun getData(svcID: String) {
@@ -93,15 +93,6 @@ class DetailViewModel(
 
             _reviewUiState.postValue(data)
         }
-    }
-
-    fun close() {
-        _savedID = MutableLiveData()
-        _favoriteChanged = MutableLiveData()
-        _textState = MutableLiveData()
-        _reviewUiState = MutableLiveData()
-        _closeEvent = MutableLiveData()
-        _serviceData = MutableLiveData()
     }
 
     companion object {
