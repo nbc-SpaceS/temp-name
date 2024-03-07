@@ -287,8 +287,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
         mapView.onDestroy()
         _binding = null
         dialog?.dismiss()
-        viewModel.close()
-        destroyObservers()
     }
 
     override fun onLowMemory() {
@@ -407,15 +405,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
                 payment.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
             }
         }
-    }
-
-    private fun destroyObservers() {
-        viewModel.myLocationCallback.removeObservers(viewLifecycleOwner)
-        viewModel.serviceData.removeObservers(viewLifecycleOwner)
-        viewModel.textState.removeObservers(viewLifecycleOwner)
-        viewModel.closeEvent.removeObservers(viewLifecycleOwner)
-        viewModel.reviewUiState.removeObservers(viewLifecycleOwner)
-        viewModel.favoriteChanged.removeObservers(viewLifecycleOwner)
     }
 
     companion object {
