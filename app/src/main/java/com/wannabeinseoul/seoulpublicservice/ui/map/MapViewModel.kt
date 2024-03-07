@@ -46,23 +46,11 @@ class MapViewModel(
         MutableLiveData()
     val filteringData: LiveData<HashMap<Pair<String, String>, List<Row>>> get() = _filteringData
 
-    private var _updateData: MutableLiveData<List<Row>> = MutableLiveData()
-    val updateData: LiveData<List<Row>> get() = _updateData
+    private var _updateData: MutableLiveData<List<DetailInfoWindow>> = MutableLiveData()
+    val updateData: LiveData<List<DetailInfoWindow>> get() = _updateData
 
     private var _moveToUrl: MutableLiveData<String> = MutableLiveData()
     val moveToUrl: LiveData<String> get() = _moveToUrl
-
-    private var _shareUrl: MutableLiveData<String> = MutableLiveData()
-    val shareUrl: LiveData<String> get() = _shareUrl
-
-    private var _detailInfoId: MutableLiveData<String> = MutableLiveData()
-    val detailInfoId: LiveData<String> get() = _detailInfoId
-
-    private var _reviews: MutableLiveData<List<ReviewEntity>> = MutableLiveData()
-    val reviews: LiveData<List<ReviewEntity>> get() = _reviews
-
-    private var _user: MutableLiveData<UserEntity> = MutableLiveData()
-    val user: LiveData<UserEntity> get() = _user
 
     fun loadSavedOptions() {
         _canStart.value = false
@@ -131,20 +119,23 @@ class MapViewModel(
         _moveToUrl.value = url
     }
 
-    fun shareReservationPage(url: String) {
-        _shareUrl.value = url
-    }
-
-    fun moveDetailPage(id: String) {
-        _detailInfoId.value = id
-    }
-
     fun changeVisible(flag: Boolean) {
         _visibleInfoWindow.value = flag
     }
 
     fun updateInfo(info: List<Row>) {
-        _updateData.value = info
+        _updateData.value = info.map {
+            DetailInfoWindow(
+                svcid = it.svcid,
+                imgurl = it.imgurl,
+                areanm = it.areanm,
+                svcnm = it.svcnm,
+                payatnm = it.payatnm,
+                svcstatnm = it.svcstatnm,
+                svcurl = it.svcurl,
+                saved = savedPrefRepository.contains(it.svcid)
+            )
+        }
     }
 
     fun initMap() {
@@ -157,8 +148,6 @@ class MapViewModel(
         _visibleInfoWindow = MutableLiveData()
         _updateData = MutableLiveData()
         _moveToUrl = MutableLiveData()
-        _shareUrl = MutableLiveData()
-        _detailInfoId = MutableLiveData()
     }
 
     companion object {
