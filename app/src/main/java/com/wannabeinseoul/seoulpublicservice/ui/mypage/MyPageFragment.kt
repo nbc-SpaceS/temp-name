@@ -10,8 +10,6 @@ import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMyPageBinding
 import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
-import kotlin.random.Random
 
 class MyPageFragment : Fragment() {
 
@@ -47,39 +45,42 @@ class MyPageFragment : Fragment() {
         MyPageAdapter(
             onClearClick = { viewModel.clearSavedList() },
             onReviewedClick = showDetailFragment,
-        ).apply {
-            val rows = (requireActivity().application as SeoulPublicServiceApplication).rowList
-            if (rows.isEmpty()) {
-                var a = 0
-                submitList(
-                    fixedItems + listOf(
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
-                        MyPageAdapter.MultiView
-                            .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
-                    )
-                )
-            } else {
-                val random = Random
-                submitList(fixedItems + List(9) {
-                    MyPageAdapter.MultiView.Reviewed(rows[random.nextInt(rows.size)])
-                })
-            }
-        }
+        )
+//            .apply {
+////                val rows = (requireActivity().application as SeoulPublicServiceApplication).rowList
+////                if (rows.isEmpty()) {
+////                    var a = 0
+////                    submitList(
+////                        fixedItems + listOf(
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "가가구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "나나구")),
+////                            MyPageAdapter.MultiView
+////                                .Reviewed(Row.new(svcnm = "${++a} 번째 제목~~", areanm = "다다구")),
+////                        )
+////                    )
+////                } else {
+////                    val random = Random
+////                    submitList(fixedItems + List(9) {
+////                        MyPageAdapter.MultiView.Reviewed(rows[random.nextInt(rows.size)])
+////                    })
+////                }
+//
+//                submitList(fixedItems)
+//            }
     }
 
     override fun onCreateView(
@@ -117,6 +118,12 @@ class MyPageFragment : Fragment() {
         vm.savedList.observe(viewLifecycleOwner) {
             Log.d("jj-마이페이지 프래그먼트", "옵저버:savedList ${it.toString().take(255)}")
             myPageSavedAdapter.submitList(it)
+        }
+        vm.reviewedList.observe(viewLifecycleOwner) { reviewedDataList ->
+            Log.d("jj-마이페이지 프래그먼트", "옵저버:reviewedList ${reviewedDataList.toString().take(255)}")
+            myPageAdapter.submitList(fixedItems + reviewedDataList.map {
+                MyPageAdapter.MultiView.Reviewed(it)
+            })
         }
     }
 }
