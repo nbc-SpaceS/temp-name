@@ -23,9 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.*
-import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
@@ -41,9 +38,9 @@ import kotlin.math.sqrt
 private const val DETAIL_PARAM = "detail_param1"
 private const val LOCATION_PERMISSION_REQUEST_CODE = 5000
 
-class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이동 시 ScrollView 잠금 해야됌
-    private lateinit var mapView: MapView
-    private lateinit var naverMap: NaverMap
+class DetailFragment : DialogFragment()/*, OnMapReadyCallback*/ {       // Map 이동 시 ScrollView 잠금 해야됌
+//    private lateinit var mapView: MapView
+//    private lateinit var naverMap: NaverMap
 
     private var _binding: FragmentDetailBinding? = null
     val binding get() = _binding!!
@@ -78,20 +75,20 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
-        mapView = binding.root.findViewById(R.id.mv_detail_maps) as MapView
+//        mapView = binding.root.findViewById(R.id.mv_detail_maps) as MapView
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {   // 여기가 메인
         super.onViewCreated(view, savedInstanceState)
-        mapView.onCreate(savedInstanceState)
+//        mapView.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         favorite(viewModel.savedID.value!!)
         fetchCallback()
         connectToCommentList(requireContext())
     }
 
-    private fun requestLocationPermission() {
+    private fun requestLocationPermission() {       // 위치 권한 요청
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -105,7 +102,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun getCurrentLocation(callback: (LatLng) -> Unit) {
+    private fun getCurrentLocation(callback: (LatLng) -> Unit) {    // 현위치 가져오기
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -125,14 +122,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun fetchCallback() {
+    private fun fetchCallback() {       // 위치 받고나서 다음 코드 실행
         getCurrentLocation {
             myLocation = it
             viewModel.myLocationCallbackEvent(true)
 
             viewModelInit()
             viewInit()
-            mapView.getMapAsync(this)
+//            mapView.getMapAsync(this)
         }
     }
 
@@ -187,7 +184,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun bind(data : ReservationEntity) {
+    private fun bind(data : ReservationEntity) {    // 레이아웃과 데이터 연결하기
         buttonDesign(data)
         binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
@@ -211,7 +208,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         return itemLocation
     }
 
-    private fun distanceCheck() {
+    private fun distanceCheck() {       // 현위치로부터 얼마게??
         val distance = distance(itemLocation, myLocation)
         binding.tvDetailDistanceFromHere.text =
             when {
@@ -221,36 +218,36 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             }
     }
 
-    override fun onMapReady(nMap: NaverMap) {
-        naverMap = nMap
-        naverMap.apply {
-            maxZoom = 19.0
-            minZoom = 11.0
-            locationSource = locationSource
-            locationTrackingMode = LocationTrackingMode.NoFollow
-            cameraPosition = CameraPosition(itemLocation, 14.0)
-            uiSettings.apply {
-                isLogoClickEnabled = false
-                isScaleBarEnabled = false
-                isCompassEnabled = false
-                isZoomControlEnabled = false
-                isScrollGesturesEnabled = false
-                isScaleBarEnabled = false
-                setLogoMargin(0, 0, 0, 0)
-            }
-            markerStyle()
-        }
-    }
-
-    private fun markerStyle() {
-        val marker = Marker()
-        marker.position = itemLocation
-        marker.map = naverMap
-        marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = requireContext().getColor(R.color.point_color)
-        marker.width = 80
-        marker.height = 100
-    }
+//    override fun onMapReady(nMap: NaverMap) {
+//        naverMap = nMap
+//        naverMap.apply {
+//            maxZoom = 19.0
+//            minZoom = 11.0
+//            locationSource = locationSource
+//            locationTrackingMode = LocationTrackingMode.NoFollow
+//            cameraPosition = CameraPosition(itemLocation, 14.0)
+//            uiSettings.apply {
+//                isLogoClickEnabled = false
+//                isScaleBarEnabled = false
+//                isCompassEnabled = false
+//                isZoomControlEnabled = false
+//                isScrollGesturesEnabled = false
+//                isScaleBarEnabled = false
+//                setLogoMargin(0, 0, 0, 0)
+//            }
+//            markerStyle()
+//        }
+//    }
+//
+//    private fun markerStyle() {
+//        val marker = Marker()
+//        marker.position = itemLocation
+//        marker.map = naverMap
+//        marker.icon = MarkerIcons.BLACK
+//        marker.iconTintColor = requireContext().getColor(R.color.point_color)
+//        marker.width = 80
+//        marker.height = 100
+//    }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
@@ -259,39 +256,39 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+//        mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+//        mapView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+//        mapView.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+//        mapView.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+//        mapView.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mapView.onDestroy()
+//        mapView.onDestroy()
         _binding = null
         dialog?.dismiss()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+//        mapView.onLowMemory()
     }
 
     private fun dateFormat(date: String): String {
@@ -301,7 +298,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         return datePattern.format(dateTime)
     }
 
-    private fun showMore(state : Boolean) {
+    private fun showMore(state : Boolean) {     // 내용 더보기
         val text = binding.tvDetailDescription
         val more = binding.tvDetailShowMore
         val layoutParams = text.layoutParams
@@ -322,7 +319,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun favorite(state: Boolean) {
+    private fun favorite(state: Boolean) {  // 즐겨찾기
         when(state) {
             true -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_color)
             false -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_empty)
@@ -339,7 +336,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun detailInfo(str: ReservationEntity): SpannableStringBuilder {
+    private fun detailInfo(str: ReservationEntity): SpannableStringBuilder {    // 예약관련정보 Bold처리
         val list = listOf("서비스 대상","서비스 일자","예약 가능 일자","시설 사용 시간","취소 가능 기준")
         var text = "${list[0]} : ${str.USETGTINFO}\n" +
                 "${list[1]} : ${dateFormat(str.SVCOPNBGNDT)} ~ ${dateFormat(str.SVCOPNENDDT)}\n" +
@@ -369,7 +366,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     }
 
 
-    private fun buttonDesign(data: ReservationEntity) {
+    private fun buttonDesign(data: ReservationEntity) {     // 예약하기 버튼 상태
         val button = binding.btnDetailReservation
         when(data.SVCSTATNM) {
             "접수중" -> {
@@ -395,7 +392,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         val payment = binding.tvDetailPrice
         payment.text = data.PAYATNM
-        when(data.PAYATNM) {
+        when(data.PAYATNM) {            // 요금 뱃지
             "무료" -> {
                 payment.setTextColor(Color.parseColor("#FFFFFF"))
                 payment.setBackgroundResource(R.drawable.background_radius_4dp_f8496c)
