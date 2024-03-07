@@ -8,22 +8,69 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class RecommendationViewModel(
     private val recommendPrefRepository: RecommendPrefRepository,
     private val getAll2000UseCase: GetAll2000UseCase,
-    private val seoulPublicRepository: SeoulPublicRepository
+    private val seoulPublicRepository: SeoulPublicRepository,
+    private val reservationRepository: ReservationRepository,
+    private val serviceRepository: ServiceRepository
 ) : ViewModel() {
 
     private val _recommendations = MutableLiveData<List<RecommendationAdapter.MultiView>>()
     val recommendations: LiveData<List<RecommendationAdapter.MultiView>> get() = _recommendations
+
+    private val _firstRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+    val firstRecommendation: LiveData<List<RecommendationData>> get() = _firstRecommendation
+
+    private val _secondRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+    val secondRecommendation: LiveData<List<RecommendationData>> get() = _secondRecommendation
+
+    private val _thirdRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+    val thirdRecommendation: LiveData<List<RecommendationData>> get() = _thirdRecommendation
+
+    private val _forthRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+    val forthRecommendation: LiveData<List<RecommendationData>> get() = _forthRecommendation
+
+    private val recommendationList = listOf(
+        _firstRecommendation,
+        _secondRecommendation,
+        _thirdRecommendation,
+        _forthRecommendation
+    )
+
+    fun getList(query: String, position: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val entity = reservationRepository.getFilter(emptyList(), listOf(query), emptyList(), emptyList())
+            val count = serviceRepository.getServiceReviewsCount(entity.take(5).map { it.SVCID })
+
+            val itemList = mutableListOf<RecommendationData>()
+            for (i in 0 until 5) {
+                itemList.add(RecommendationData(
+                    payType = entity[0].PAYATNM,
+                    areaName = entity[0].AREANM,
+                    placeName = entity[0].PLACENM,
+                    svcstatnm = entity[0].SVCSTATNM,
+                    imageUrl = entity[0].IMGURL,
+                    svcid = entity[0].SVCID,
+                    reviewCount = count[i]
+                ))
+            }
+
+            recommendationList[position].postValue(itemList)
+        }
+    }
 
     fun fetchRecommendations() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -44,7 +91,9 @@ class RecommendationViewModel(
                 RecommendationViewModel(
                     seoulPublicRepository = container.seoulPublicRepository,
                     recommendPrefRepository = container.recommendPrefRepository,
-                    getAll2000UseCase = container.getAll2000UseCase
+                    getAll2000UseCase = container.getAll2000UseCase,
+                    reservationRepository = container.reservationRepository,
+                    serviceRepository = container.serviceRepository
                 )
             }
         }
