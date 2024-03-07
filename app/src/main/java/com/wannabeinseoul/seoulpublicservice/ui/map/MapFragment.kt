@@ -39,6 +39,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val app by lazy {
         requireActivity().application as SeoulPublicServiceApplication
     }
+
     private val container by lazy {
         app.container
     }
