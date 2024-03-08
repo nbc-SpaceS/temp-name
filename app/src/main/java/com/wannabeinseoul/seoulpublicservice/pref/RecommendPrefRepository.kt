@@ -8,8 +8,6 @@ interface RecommendPrefRepository {
     fun load(): List<String>
 }
 
-
-
 class RecommendPrefRepositoryImpl(context: Context) : RecommendPrefRepository {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("recommend_prefs", Context.MODE_PRIVATE)
     private val KEY_RECOMMENDATIONS = "recommendations"
