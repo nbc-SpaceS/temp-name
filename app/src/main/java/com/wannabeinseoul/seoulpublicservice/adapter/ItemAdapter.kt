@@ -51,7 +51,7 @@ class ItemAdapter(private var items: List<Item>, private val regionPrefRepositor
             }
         }
 
-//        // 아이템이 클릭되지 않았을 때 아이콘의 배경색과 색상을 원래대로 설정
+        // 아이템이 클릭되지 않았을 때 아이콘의 배경색과 색상을 원래대로 설정
 //        holder.icon.setBackgroundResource(R.drawable.background_radius_10dp_dfdfdd)
 //        holder.icon.clearColorFilter()
     }
