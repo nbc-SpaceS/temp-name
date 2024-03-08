@@ -42,24 +42,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:layout_marginEnd="5dp"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="2"
-            android:text="잠실제3축구장3123123123123123123123123"
+            android:text="잠실제3축구장"
             android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_rcSmallImage" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_rcAreaName" />
 
         <TextView
             android:id="@+id/tv_rcPayType"
             android:layout_width="51dp"
             android:layout_height="18dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
             android:background="@drawable/background_pointcolor_with_rounded"
             android:gravity="center|top"
             android:text="유료"
@@ -73,30 +75,29 @@
             android:id="@+id/tv_rcAreaName"
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:layout_marginStart="38dp"
-            android:layout_marginTop="1dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="송파구"
             android:textColor="#737373"
             android:textSize="14dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_rcPayType" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_rcSmallImage" />
 
 
-
-    <TextView
-        android:id="@+id/tv_rcReview"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_marginEnd="38dp"
-        android:layout_marginTop="1dp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:text="후기 2개"
-        android:textColor="#737373"
-        android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_rcPayType" />
+        <TextView
+            android:id="@+id/tv_rcReview"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="3dp"
+            android:gravity="center"
+            android:text="후기 2개"
+            android:textColor="#737373"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tv_rcPayType"
+            app:layout_constraintTop_toBottomOf="@+id/tv_rcPlaceName" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
