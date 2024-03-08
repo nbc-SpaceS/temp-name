@@ -9,13 +9,12 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_comment_profile"
         android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/tv_comment_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_comment_user"
-        app:layout_constraintVertical_bias="0.25"
         app:shapeAppearanceOverlay="@style/RoundImage"
         app:srcCompat="@drawable/ic_profile_image" />
 
@@ -24,34 +23,37 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="28dp"
         android:maxLines="1"
         android:text="TextView"
         android:textColor="#686868"
         android:textSize="12sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_comment_text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/iv_comment_profile"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tv_comment_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-
         android:layout_marginEnd="28dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="TextView"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/tv_comment_user"
-        app:layout_constraintTop_toBottomOf="@id/tv_comment_user" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment_user" />
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider2"
         android:layout_width="0dp"
         android:layout_height="0.5dp"
         android:layout_marginTop="10dp"

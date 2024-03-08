@@ -5,7 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/iv_recommendSmallVideoItems"
         android:layout_width="180dp"
@@ -25,15 +24,16 @@
 
         <TextView
             android:id="@+id/tv_rcIsReservationAvailable"
-            android:layout_width="65dp"
-            android:layout_height="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:paddingHorizontal="8dp"
             android:background="@drawable/register"
             android:gravity="center"
             android:text="예약가능"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iv_rcSmallImage" />
 
@@ -62,11 +62,12 @@
             android:layout_height="18dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="3dp"
+            android:paddingHorizontal="8dp"
             android:background="@drawable/background_pointcolor_with_rounded"
             android:gravity="center|top"
             android:text="유료"
             android:textColor="@color/white"
-            android:textSize="13dp"
+            android:textSize="12dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_rcPlaceName" />
@@ -89,14 +90,13 @@
             android:id="@+id/tv_rcReview"
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:layout_marginStart="5dp"
             android:gravity="center"
             android:text="후기 12개"
             android:textColor="#777777"
-            android:textSize="13dp"
+            android:textSize="12dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_rcPayType"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_rcPayType"
+            app:layout_constraintEnd_toEndOf="@+id/tv_rcPlaceName"
             app:layout_constraintTop_toTopOf="@+id/tv_rcPayType" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

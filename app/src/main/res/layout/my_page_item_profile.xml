@@ -74,7 +74,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/pencil" />
+            app:srcCompat="@drawable/ic_edit_profile" />
 
         <TextView
             android:id="@+id/tv_profile_edit"

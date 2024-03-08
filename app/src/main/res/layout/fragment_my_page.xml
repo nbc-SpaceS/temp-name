@@ -13,5 +13,4 @@
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

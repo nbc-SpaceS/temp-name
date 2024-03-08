@@ -24,8 +24,8 @@ class CategoryActivity : AppCompatActivity() {
             .replace(R.id.category_fragment_container, CategoryFragment())
             .commit()
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        findViewById<View>(R.id.iv_back)?.setOnClickListener {
+//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        findViewById<View>(R.id.iv_category_back)?.setOnClickListener {
             onBackPressed()
         }
     }

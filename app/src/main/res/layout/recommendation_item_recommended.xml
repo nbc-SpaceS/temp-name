@@ -32,6 +32,4 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/tvSharedText"
         tools:listitem="@layout/recommendation_item" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
