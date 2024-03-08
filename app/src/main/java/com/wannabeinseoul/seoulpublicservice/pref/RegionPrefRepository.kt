@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 /** 관심 지역을 저장하는 Repository. */
 interface RegionPrefRepository {
@@ -25,10 +24,7 @@ class RegionPrefRepositoryImpl(context: Context) : RegionPrefRepository {
     }
 
     override fun save(value: List<String>) {
-//        clearData()
-
-        val json = gson.toJson(value)
-        pref.edit().putString("selectedRegion", json).apply()
+        clearData()
 
 //        _selectedRegion.value = value.firstOrNull() ?: ""
     }

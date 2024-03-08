@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -57,4 +56,5 @@ class FacilityFragment : Fragment() {
 //            binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
 //        }
     }
+
 }

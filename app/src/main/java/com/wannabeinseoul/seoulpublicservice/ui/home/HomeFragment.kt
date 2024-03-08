@@ -21,15 +21,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectActivity
-import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.adapter.HomeSearchAdapter
@@ -117,32 +114,29 @@ class HomeFragment : Fragment() {
             resultLauncher.launch(intent)
         }
 
+        binding.tvHomeSelectRegion1.setOnClickListener {
+            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion1.text
+            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
+            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            regionPrefRepository.saveSelectedRegion(1)
+        }
 
-            binding.tvHomeSelectRegion1.setOnClickListener {
-                binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion1.text
-                binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
-                binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-                binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-                regionPrefRepository.saveSelectedRegion(1)
-            }
+        binding.tvHomeSelectRegion2.setOnClickListener {
+            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion2.text
+            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
+            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            regionPrefRepository.saveSelectedRegion(2)
+        }
 
-
-            binding.tvHomeSelectRegion2.setOnClickListener {
-                binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion2.text
-                binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
-                binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
-                binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-                regionPrefRepository.saveSelectedRegion(2)
-            }
-
-            binding.tvHomeSelectRegion3.setOnClickListener {
-                binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion3.text
-                binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
-                binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
-                binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-                regionPrefRepository.saveSelectedRegion(3)
-            }
-
+        binding.tvHomeSelectRegion3.setOnClickListener {
+            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion3.text
+            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
+            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            regionPrefRepository.saveSelectedRegion(3)
+        }
 
         binding.viewControlSpinner.setOnClickListener {
             binding.clHomeRegionList.isVisible = false

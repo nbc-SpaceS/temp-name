@@ -54,8 +54,7 @@
         android:src="@drawable/ic_save_empty"
         app:layout_constraintBottom_toBottomOf="@+id/btn_map_info_reservation"
         app:layout_constraintStart_toStartOf="@+id/tv_map_info_service"
-        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation"
-        app:tint="@color/black" />
+        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation" />
 
     <ImageView
         android:id="@+id/iv_map_info_share_btn"
@@ -65,8 +64,7 @@
         android:src="@drawable/ic_share"
         app:layout_constraintBottom_toBottomOf="@+id/btn_map_info_reservation"
         app:layout_constraintStart_toEndOf="@+id/iv_map_info_save_service_btn"
-        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation"
-        app:tint="@color/black" />
+        app:layout_constraintTop_toTopOf="@+id/btn_map_info_reservation" />
 
     <TextView
         android:id="@+id/tv_map_info_pay"

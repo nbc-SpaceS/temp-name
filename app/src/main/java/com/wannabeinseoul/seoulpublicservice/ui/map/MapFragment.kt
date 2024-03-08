@@ -1,18 +1,19 @@
 package com.wannabeinseoul.seoulpublicservice.ui.map
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.wannabeinseoul.seoulpublicservice.R
-import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
@@ -24,8 +25,11 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
+import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -35,6 +39,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
     private lateinit var locationSource: FusedLocationSource
+
+    private var isStart: Boolean = false
 
     private val app by lazy {
         requireActivity().application as SeoulPublicServiceApplication
@@ -58,7 +64,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             moveReservationPage = { url ->
                 viewModel.changeVisible(false)
                 activeMarkers.forEach { marker ->
-                    marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                    marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                     marker.zIndex = 0
                 }
                 viewModel.moveReservationPage(url)
@@ -74,7 +80,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             moveDetailPage = { id ->
                 viewModel.changeVisible(false)
                 activeMarkers.forEach { marker ->
-                    marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                    marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                     marker.zIndex = 0
                 }
                 val dialog = DetailFragment.newInstance(id)
@@ -85,6 +91,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private val viewModel: MapViewModel by viewModels { MapViewModel.factory }
+
+    private val matchingColor = hashMapOf(
+        "문화체험" to R.color.marker1_solid,
+        "공간시설" to R.color.marker2_solid,
+        "진료복지" to R.color.marker3_solid,
+        "체육시설" to R.color.marker4_solid,
+        "교육강좌" to R.color.marker5_solid
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -124,7 +138,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.tvMapFilterBtn.setOnClickListener {
             viewModel.changeVisible(false)
             activeMarkers.forEach { marker ->
-                marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                 marker.zIndex = 0
             }
             val dialog = FilterFragment.newInstance(
@@ -137,14 +151,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.fabMapCurrentLocation.setOnClickListener {
-            moveCamera(locationSource.lastLocation?.latitude, locationSource.lastLocation?.longitude)
+            moveCamera(app.lastLocation?.latitude, app.lastLocation?.longitude)
         }
 
         viewModel.initMap()
+
     }
 
     private fun initViewModel() = with(viewModel) {
-        loadSavedOptions()
+        if (!isStart) viewModel.loadSavedOptions()
+        isStart = true
 
         hasFilter.observe(viewLifecycleOwner) {
             if (it) {
@@ -178,11 +194,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         canStart.observe(viewLifecycleOwner) { start ->
+
             if (start) {
                 activeMarkers.forEach {
                     it.map = null
                 }
                 activeMarkers.clear()
+
+                if (filteringData.value?.size == 0) {
+                    Toast.makeText(requireContext(), "필터링 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                }
 
                 filteringData.value?.forEach {
                     val marker = Marker()
@@ -190,16 +211,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     marker.position = LatLng(it.key.first.toDouble(), it.key.second.toDouble())
                     marker.map = naverMap
                     marker.icon = MarkerIcons.BLACK
-                    marker.iconTintColor = requireContext().getColor(R.color.point_color)
-                    marker.tag = it.key
+                    marker.iconTintColor = requireContext().getColor(matchingColor[it.value[0].maxclassnm] ?: R.color.gray)
+                    marker.tag = it.value[0].maxclassnm
                     marker.onClickListener = Overlay.OnClickListener { _ ->
                         viewModel.changeVisible(true)
                         activeMarkers.forEach { marker ->
-                            marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                            marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                             marker.zIndex = 0
                         }
                         marker.iconTintColor =
-                            requireContext().getColor(R.color.clicked_marker_solid)
+                            requireContext().getColor(R.color.point_color)
                         marker.zIndex = 10
                         viewModel.updateInfo(it.value)
                         moveCamera(it.key.first.toDouble(), it.key.second.toDouble())
@@ -221,13 +242,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.setOnMapClickListener { pointF, latLng ->
             viewModel.changeVisible(false)
             activeMarkers.forEach { marker ->
-                marker.iconTintColor = requireContext().getColor(R.color.point_color)
+                marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                 marker.zIndex = 0
             }
         }
 
         naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // GPS 권한 없으면 이거 하면 멈춰버려서 권한 체크로 감싸줌
+            naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
+        }
         naverMap.uiSettings.isLogoClickEnabled = false
         naverMap.uiSettings.isScaleBarEnabled = false
         naverMap.uiSettings.isCompassEnabled = false
@@ -264,6 +295,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onResume()
         mapView.onResume()
         initViewModel()
+        isStart = false
     }
 
     override fun onPause() {
