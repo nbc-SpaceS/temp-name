@@ -10,6 +10,7 @@
         <shape android:shape="rectangle">
             <corners android:radius="12dp"/>
             <solid android:color="@color/unClicked_button_solid"/>
+            <stroke android:color="@color/unClicked_button_stroke" android:width="0.5dp"/>
         </shape>
     </item>
 </selector>
