@@ -1,8 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.pref
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 
 /** 관심 지역을 저장하는 Repository. */
@@ -25,6 +23,12 @@ class RegionPrefRepositoryImpl(context: Context) : RegionPrefRepository {
 
     override fun save(value: List<String>) {
         clearData()
+        val json = gson.toJson(value)
+        pref.edit().putString("selectedRegion", json).apply()
+//        value.forEach {
+//            pref.edit().putString(it, it).apply()
+//        }
+
 
 //        _selectedRegion.value = value.firstOrNull() ?: ""
     }
