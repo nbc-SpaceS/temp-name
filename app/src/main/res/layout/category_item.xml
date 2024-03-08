@@ -7,10 +7,9 @@
     android:layout_height="wrap_content"
     android:layout_margin="15dp">
 
-
     <ImageView
         android:id="@+id/iv_ctImage"
-        android:layout_width="143dp"
+        android:layout_width="150dp"
         android:layout_height="95dp"
         android:background="@drawable/background_radius_10dp_828282"
         android:scaleType="centerCrop"
@@ -35,8 +34,9 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="12dp"
+            android:ellipsize="end"
             android:gravity="start"
-            android:maxLines="3"
+            android:maxLines="2"
             android:text="여기는 장소 이름이 들어가는곳"
             android:textColor="@color/black"
             android:textSize="16dp"
@@ -47,14 +47,15 @@
 
         <TextView
             android:id="@+id/tv_ctNotFree"
-            android:layout_width="120dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="4dp"
             android:background="@drawable/background_white_with_rounded_stroke"
             android:gravity="center"
+            android:paddingHorizontal="8dp"
             android:text="유료"
-            android:textColor="#737373"
+            android:textColor="@color/gray"
             android:textSize="14dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -62,30 +63,32 @@
 
         <TextView
             android:id="@+id/tv_ctFree"
-            android:layout_width="120dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="90dp"
-            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/background_pointcolor_with_rounded"
             android:gravity="center"
+            android:paddingHorizontal="8dp"
             android:text="무료"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="14dp"
             android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/tv_ctReservationEnd"
-            android:layout_width="65dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginBottom="4dp"
             android:background="@drawable/background_white_with_rounded_stroke"
             android:gravity="center"
+            android:paddingHorizontal="8dp"
             android:text="예약 종료"
-            android:textColor="#737373"
+            android:textColor="@color/gray"
             android:textSize="14dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -94,20 +97,19 @@
 
         <TextView
             android:id="@+id/tv_isReservationAvailable"
-            android:layout_width="65dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/background_white_with_f8496c_stroke"
             android:gravity="center"
+            android:paddingHorizontal="8dp"
             android:text="예약가능"
-            android:textColor="#F8496C"
+            android:textColor="@color/point_color"
             android:textSize="14dp"
+            android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
+            app:layout_constraintStart_toStartOf="@+id/tv_ctBox" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

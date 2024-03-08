@@ -43,7 +43,7 @@ class CategoryFragment : Fragment() {
 
     private fun initView() {
         binding.reCategory.adapter = adapter
-        viewModel.updateList("야구장")
+        viewModel.updateList("축구장")
         //라이브데이터에 리스트를 넣어놈.
     }
 

@@ -1,11 +1,13 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.CategoryItemBinding
 
 
@@ -19,7 +21,14 @@ class CategoryAdapter(private val onItemClick: (svcid: String) -> Unit) :
             binding.apply {
                 binding.ivCtImage.load(item.imageUrl)
                 binding.tvCtPlaceName.text = item.placeName
-                binding.tvCtNotFree.text = item.payType
+                binding.tvCtNotFree.text = item.payType.take(2)
+                if (item.payType.take(2) == "유료") {
+                    binding.tvCtNotFree.setTextColor(Color.parseColor("#5E5E5E"))
+                    binding.tvCtNotFree.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
+                } else {
+                    binding.tvCtNotFree.setTextColor(Color.parseColor("#FFFFFF"))
+                    binding.tvCtNotFree.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
+                }
                 binding.root.setOnClickListener { onItemClick(item.svcid) }
 //apply 쓰고 binding 불필요
             }
