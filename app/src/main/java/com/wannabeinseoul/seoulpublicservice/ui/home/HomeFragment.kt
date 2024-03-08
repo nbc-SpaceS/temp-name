@@ -182,10 +182,10 @@ class HomeFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "체육시설"
-                1 -> tab.text = "교육"
+                1 -> tab.text = "교육강좌"
                 2 -> tab.text = "문화행사"
                 3 -> tab.text = "시설대관"
-                4 -> tab.text = "진료"
+                4 -> tab.text = "진료복지"
             }
         }.attach()
 
