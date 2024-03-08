@@ -98,4 +98,7 @@ interface ReservationDAO {
 
     @RawQuery
     suspend fun putSearchText(query: SupportSQLiteQuery): List<ReservationEntity>
+
+    @Query("SELECT * FROM ReservationEntity WHERE X != '' AND Y != ''")
+    fun getNOTEmptyXY() : List<ReservationEntity>
 }
