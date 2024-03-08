@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 //    id("com.google.dagger.hilt.android")
 }
 
@@ -12,11 +13,11 @@ val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
-    namespace = "com.example.seoulpublicservice"
+    namespace = "com.wannabeinseoul.seoulpublicservice"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.seoulpublicservice"
+        applicationId = "com.wannabeinseoul.seoulpublicservice"
         minSdk = 31
         targetSdk = 34
         versionCode = 1
@@ -59,6 +60,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -77,6 +79,18 @@ dependencies {
 
     implementation("androidx.room:room-runtime:2.6.1") // Room 라이브러리
     ksp("androidx.room:room-compiler:2.6.1") // Room의 애노테이션 프로세서
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // 지도 페이지 관련 라이브러리
+    implementation("com.naver.maps:map-sdk:3.17.0")
+    implementation("com.google.android.gms:play-services-location:21.1.0")
+
+
+    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-database-ktx")
 
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
