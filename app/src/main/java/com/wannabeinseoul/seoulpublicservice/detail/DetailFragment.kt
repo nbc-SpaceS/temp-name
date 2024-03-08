@@ -68,7 +68,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         viewModel.getData(param1!!)
         viewModel.savedID(param1!!)
-        requestLocationPermission()
+//        requestLocationPermission()  // 권한 요청은 메인액티비티에서 처음에 하고 있습니다
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = Dialog(requireContext(), R.style.DetailTransparent)
@@ -230,7 +230,17 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             maxZoom = 19.0
             minZoom = 11.0
             locationSource = locationSource
-            locationTrackingMode = LocationTrackingMode.None
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                // GPS 권한 없으면 이거 하면 멈춰버려서 권한 체크로 감싸줌
+                locationTrackingMode = LocationTrackingMode.NoFollow
+            }
             cameraPosition = CameraPosition(itemLocation, 14.0)
             uiSettings.apply {
                 isLogoClickEnabled = false
