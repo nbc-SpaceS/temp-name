@@ -230,7 +230,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
             maxZoom = 19.0
             minZoom = 11.0
             locationSource = locationSource
-            locationTrackingMode = LocationTrackingMode.NoFollow
+            locationTrackingMode = LocationTrackingMode.None
             cameraPosition = CameraPosition(itemLocation, 14.0)
             uiSettings.apply {
                 isLogoClickEnabled = false
