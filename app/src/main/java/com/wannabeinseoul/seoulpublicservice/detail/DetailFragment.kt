@@ -239,6 +239,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
                 isZoomControlEnabled = false
                 isScrollGesturesEnabled = false
                 isScaleBarEnabled = false
+                isRotateGesturesEnabled = false
+                isZoomGesturesEnabled = false
+                isIndoorLevelPickerEnabled = false
+                isLocationButtonEnabled = false
+                isTiltGesturesEnabled = false
                 setLogoMargin(0, 0, 0, 0)
             }
             markerStyle()
