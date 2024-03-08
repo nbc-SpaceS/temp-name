@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="8dp"
-        android:text="댓글 단 글"
+        android:text="후기 남긴 서비스"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

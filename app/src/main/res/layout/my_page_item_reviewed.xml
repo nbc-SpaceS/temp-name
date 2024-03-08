@@ -39,23 +39,29 @@
 
         <TextView
             android:id="@+id/tv_reviewed_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="공공서비스 제목이 들어가는 공간"
             android:textSize="13sp"
             app:layout_constraintBottom_toTopOf="@id/tv_reviewed_review_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_reviewed_thumbnail"
             app:layout_constraintTop_toBottomOf="@id/tv_reviewed_area" />
 
         <TextView
             android:id="@+id/tv_reviewed_review_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="내 닉네임 : 댓글 내용이 들어가는 공간"
             android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_reviewed_thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_reviewed_thumbnail" />
 
         <TextView
