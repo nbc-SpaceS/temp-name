@@ -21,6 +21,7 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Align
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
@@ -155,7 +156,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         viewModel.initMap()
-
     }
 
     private fun initViewModel() = with(viewModel) {
@@ -194,7 +194,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         canStart.observe(viewLifecycleOwner) { start ->
-
             if (start) {
                 activeMarkers.forEach {
                     it.map = null
@@ -213,6 +212,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     marker.icon = MarkerIcons.BLACK
                     marker.iconTintColor = requireContext().getColor(matchingColor[it.value[0].maxclassnm] ?: R.color.gray)
                     marker.tag = it.value[0].maxclassnm
+                    marker.captionText = it.value.size.toString()
+                    marker.setCaptionAligns(Align.Top)
+                    marker.captionTextSize = 16f
+                    marker.captionMinZoom = 13.0
+                    marker.captionMaxZoom = 14.8
                     marker.onClickListener = Overlay.OnClickListener { _ ->
                         viewModel.changeVisible(true)
                         activeMarkers.forEach { marker ->
@@ -245,6 +249,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                 marker.zIndex = 0
             }
+            val cameraUpdate = CameraUpdate.zoomTo(14.5).animate(CameraAnimation.Easing, 300)
+            naverMap.moveCamera(cameraUpdate)
         }
 
         naverMap.locationSource = locationSource

@@ -1,9 +1,11 @@
 package com.wannabeinseoul.seoulpublicservice
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsControllerCompat
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +22,12 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        window.apply {
+            // 상태바의 아이콘과 배경색 변경
+            statusBarColor = Color.WHITE
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
+        }
 
         var initialLoadingFinished = false
         var createFinished = false
