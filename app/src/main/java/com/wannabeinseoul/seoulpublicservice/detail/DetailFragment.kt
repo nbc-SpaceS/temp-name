@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
@@ -123,6 +122,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                         }
                     }
                 }
+        } else {
+            val currentLocation = LatLng(100.0, 100.0)
+            callback(currentLocation)
         }
     }
 
@@ -216,8 +218,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         val distance = distance(itemLocation, myLocation)
         binding.tvDetailDistanceFromHere.text =
             when {
-                distance/1000 < 1 && distance <= 640000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
-                distance/1000 >= 1 && distance <= 640000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+                distance/1000 < 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
+                distance/1000 >= 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
                 else -> "현위치로부터 ?km"
             }
     }
@@ -228,7 +230,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             maxZoom = 19.0
             minZoom = 11.0
             locationSource = locationSource
-            locationTrackingMode = LocationTrackingMode.NoFollow
+            locationTrackingMode = LocationTrackingMode.None
             cameraPosition = CameraPosition(itemLocation, 14.0)
             uiSettings.apply {
                 isLogoClickEnabled = false
@@ -237,6 +239,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 isZoomControlEnabled = false
                 isScrollGesturesEnabled = false
                 isScaleBarEnabled = false
+                isRotateGesturesEnabled = false
+                isZoomGesturesEnabled = false
+                isIndoorLevelPickerEnabled = false
+                isLocationButtonEnabled = false
+                isTiltGesturesEnabled = false
                 setLogoMargin(0, 0, 0, 0)
             }
             markerStyle()
