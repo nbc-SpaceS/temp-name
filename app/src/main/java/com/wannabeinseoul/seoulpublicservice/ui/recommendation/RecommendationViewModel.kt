@@ -15,9 +15,7 @@ import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 class RecommendationViewModel(
@@ -58,12 +56,12 @@ class RecommendationViewModel(
             val itemList = mutableListOf<RecommendationData>()
             for (i in 0 until 5) {
                 itemList.add(RecommendationData(
-                    payType = entity[0].PAYATNM,
-                    areaName = entity[0].AREANM,
-                    placeName = entity[0].PLACENM,
-                    svcstatnm = entity[0].SVCSTATNM,
-                    imageUrl = entity[0].IMGURL,
-                    svcid = entity[0].SVCID,
+                    payType = entity[i].PAYATNM,
+                    areaName = entity[i].AREANM,
+                    placeName = entity[i].PLACENM,
+                    svcstatnm = entity[i].SVCSTATNM,
+                    imageUrl = entity[i].IMGURL,
+                    svcid = entity[i].SVCID,
                     reviewCount = count[i]
                 ))
             }
