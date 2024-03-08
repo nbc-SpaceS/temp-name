@@ -3,12 +3,14 @@ package com.wannabeinseoul.seoulpublicservice
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -33,6 +35,12 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        window.apply {
+            // 상태바의 아이콘과 배경색 변경
+            statusBarColor = Color.WHITE
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
+        }
 
         if (!hasPermission()) {
             requestPermissions(permissions, 5000)

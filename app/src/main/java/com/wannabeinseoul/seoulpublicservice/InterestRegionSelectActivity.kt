@@ -1,10 +1,12 @@
 package com.wannabeinseoul.seoulpublicservice
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.WindowInsetsControllerCompat
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivityInterestRegionSelectBinding
 
 
@@ -64,6 +66,12 @@ class InterestRegionSelectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        window.apply {
+            // 상태바의 아이콘과 배경색 변경
+            statusBarColor = Color.WHITE
+            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
+        }
 
         initView()
         initViewModel()
