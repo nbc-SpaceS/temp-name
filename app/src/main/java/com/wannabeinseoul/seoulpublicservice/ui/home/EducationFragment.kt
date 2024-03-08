@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -45,17 +46,14 @@ class EducationFragment : Fragment() {
         ItemRepository.setItems("Education", educationItems)
 
         val items = ItemRepository.getItems("Education")
-//        val homeFragment = parentFragment as HomeFragment
-//        val selectedRegion = homeFragment.settingRegions()
-//        Log.d("EducationFragment", "Loaded selected region: $selectedRegion")
-//        val adapter = ItemAdapter(items, selectedRegion)
-//        binding.rvEducation.adapter = adapter
-//        binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
-        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
-            Log.d("EducationFragment", "Loaded selected region: $selectedRegion")
-            val adapter = ItemAdapter(items, selectedRegion)
-            binding.rvEducation.adapter = adapter
-            binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
-        }
+        val adapter = ItemAdapter(items, regionPrefRepository)
+        binding.rvEducation.adapter = adapter
+        binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
+//        homeViewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
+//            val selectedRegion = region
+//            val adapter = ItemAdapter(items, selectedRegion)
+//            binding.rvEducation.adapter = adapter
+//            binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
+//        }
     }
 }

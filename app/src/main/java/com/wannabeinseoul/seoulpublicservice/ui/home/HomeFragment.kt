@@ -15,17 +15,21 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectActivity
+import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.adapter.HomeSearchAdapter
@@ -56,7 +60,7 @@ class HomeFragment : Fragment() {
         categories.flatMap { ItemRepository.getItems(it) }
     }
 
-    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items, settingRegions()) }
+//    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items, settingRegions()) }
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -113,29 +117,32 @@ class HomeFragment : Fragment() {
             resultLauncher.launch(intent)
         }
 
-        binding.tvHomeSelectRegion1.setOnClickListener {
-            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion1.text
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion1.text.toString()))
-        }
 
-        binding.tvHomeSelectRegion2.setOnClickListener {
-            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion2.text
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion2.text.toString()))
-        }
+            binding.tvHomeSelectRegion1.setOnClickListener {
+                binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion1.text
+                binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
+                binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
+                binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+                regionPrefRepository.saveSelectedRegion(1)
+            }
 
-        binding.tvHomeSelectRegion3.setOnClickListener {
-            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion3.text
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.save(listOf(binding.tvHomeSelectRegion3.text.toString()))
-        }
+
+            binding.tvHomeSelectRegion2.setOnClickListener {
+                binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion2.text
+                binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
+                binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
+                binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+                regionPrefRepository.saveSelectedRegion(2)
+            }
+
+            binding.tvHomeSelectRegion3.setOnClickListener {
+                binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion3.text
+                binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
+                binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
+                binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
+                regionPrefRepository.saveSelectedRegion(3)
+            }
+
 
         binding.viewControlSpinner.setOnClickListener {
             binding.clHomeRegionList.isVisible = false
@@ -163,27 +170,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        binding.ivSearch.setOnClickListener {
-            // 검색어를 가져옴
-            val searchText = binding.etSearch.text.toString()
-
-            // 검색을 수행하고 결과를 가져옴
-            val searchResults = performSearch(searchText)
-
-//            // 검색 결과를 RecyclerView의 어댑터에 설정
-//            val adapter = HomeSearchAdapter(searchResults)
-//            binding.rvSearchHistory.adapter = adapter
-
-            // tv_service_list, tab_layout, view_pager를 숨김
-            binding.tvServiceList.visibility = View.GONE
-            binding.tabLayout.visibility = View.GONE
-            binding.viewPager.visibility = View.GONE
-
-//            // 검색 결과를 표시하는 RecyclerView를 보이게 함 (수정 필요)
-//            recyclerView.visibility = View.VISIBLE
-
-        }
-
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 5
 
@@ -209,7 +195,21 @@ class HomeFragment : Fragment() {
             }
         }.attach()
 
-        itemAdapter.notifyDataSetChanged()
+//        itemAdapter.notifyDataSetChanged()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // RecyclerView가 보일 때만 ViewPager, TabLayout을 보이게 하고, RecyclerView를 숨김
+                if (binding.rvSearchResults.visibility == View.VISIBLE) {
+                    binding.viewPager.visibility = View.VISIBLE
+                    binding.tabLayout.visibility = View.VISIBLE
+                    binding.rvSearchResults.visibility = View.GONE
+                } else {
+                    isEnabled = false
+                    requireActivity().onBackPressed()
+                }
+            }
+        })
 
         // PopupWindow 생성 및 설정
         recyclerView = RecyclerView(requireContext()).apply {
@@ -271,6 +271,7 @@ class HomeFragment : Fragment() {
         val selectedRegions = regionPrefRepository.load().toMutableList()
 
         return if (selectedRegions.isNotEmpty()) {
+            regionPrefRepository.saveSelectedRegion(1)
             binding.tvHomeCurrentRegion.text = selectedRegions[0]
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
             when (selectedRegions.size) {
@@ -330,7 +331,6 @@ class HomeFragment : Fragment() {
         val adapter = HomeSearchAdapter(searchResults)
         binding.rvSearchResults.adapter = adapter
         binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
-
 
         // tv_service_list, tab_layout, view_pager를 숨김
         binding.tvServiceList.visibility = View.GONE
