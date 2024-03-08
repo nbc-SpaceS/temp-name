@@ -46,14 +46,8 @@ class FacilityRentFragment : Fragment() {
         val adapter = ItemAdapter(items, regionPrefRepository)
         binding.rvFacilityRent.adapter = adapter
         binding.rvFacilityRent.layoutManager = GridLayoutManager(requireContext(), 4)
-//        val homeFragment = parentFragment as HomeFragment
-//        val selectedRegion = homeFragment.settingRegions()
-//        Log.d("FacilityRentFragment", "Loaded selected region: $selectedRegion")
-//        val adapter = ItemAdapter(items, selectedRegion)
-//        binding.rvFacilityRent.adapter = adapter
-//        binding.rvFacilityRent.layoutManager = GridLayoutManager(requireContext(), 4)
-//        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
-//            Log.d("FacilityRentFragment", "Loaded selected region: $selectedRegion")
+//        homeViewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
+//            val selectedRegion = region
 //            val adapter = ItemAdapter(items, selectedRegion)
 //            binding.rvFacilityRent.adapter = adapter
 //            binding.rvFacilityRent.layoutManager = GridLayoutManager(requireContext(), 4)

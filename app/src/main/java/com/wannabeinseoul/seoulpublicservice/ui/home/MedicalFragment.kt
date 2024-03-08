@@ -39,15 +39,8 @@ class MedicalFragment : Fragment() {
         val adapter = ItemAdapter(items, regionPrefRepository)
         binding.rvMedical.adapter = adapter
         binding.rvMedical.layoutManager = GridLayoutManager(requireContext(), 4)
-
-//        val homeFragment = parentFragment as HomeFragment
-//        val selectedRegion = homeFragment.settingRegions()
-//        Log.d("MedicalFragment", "Loaded selected region: $selectedRegion")
-//        val adapter = ItemAdapter(items, selectedRegion)
-//        binding.rvMedical.adapter = adapter
-//        binding.rvMedical.layoutManager = GridLayoutManager(requireContext(), 4)
-//        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
-//            Log.d("MedicalFragment", "Loaded selected region: $selectedRegion")
+//        homeViewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
+//            val selectedRegion = region
 //            val adapter = ItemAdapter(items, selectedRegion)
 //            binding.rvMedical.adapter = adapter
 //            binding.rvMedical.layoutManager = GridLayoutManager(requireContext(), 4)

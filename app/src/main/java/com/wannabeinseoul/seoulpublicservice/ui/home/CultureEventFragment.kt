@@ -44,14 +44,7 @@ class CultureEventFragment : Fragment() {
         val adapter = ItemAdapter(items, regionPrefRepository)
         binding.rvCultureEvent.adapter = adapter
         binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
-
-//        val homeFragment = parentFragment as HomeFragment
-//        val selectedRegion = homeFragment.settingRegions()
-//        Log.d("CultureEventFragment", "Loaded selected region: $selectedRegion")
-//        val adapter = ItemAdapter(items, selectedRegion)
-//        binding.rvCultureEvent.adapter = adapter
-//        binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
-//        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
+//         regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
 //            Log.d("CultureEventFragment", "Loaded selected region: $selectedRegion")
 //            val adapter = ItemAdapter(items, selectedRegion)
 //            binding.rvCultureEvent.adapter = adapter

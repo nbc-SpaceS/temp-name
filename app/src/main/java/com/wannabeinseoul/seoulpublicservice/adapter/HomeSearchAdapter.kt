@@ -25,7 +25,7 @@ class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        // ivImage에 이미지를 로드하는 코드를 추가
+        // ivImage에 coil 라이브러리를 사용하여 이미지 로드
         holder.ivImage.load(item.IMGURL)
         holder.tvPlaceName.text = item.PLACENM
         holder.tvIsFree.text = item.PAYATNM

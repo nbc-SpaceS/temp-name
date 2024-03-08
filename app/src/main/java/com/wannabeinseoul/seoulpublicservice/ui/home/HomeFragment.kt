@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -163,27 +164,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        binding.ivSearch.setOnClickListener {
-            // 검색어를 가져옴
-            val searchText = binding.etSearch.text.toString()
-
-            // 검색을 수행하고 결과를 가져옴
-            val searchResults = performSearch(searchText)
-
-//            // 검색 결과를 RecyclerView의 어댑터에 설정
-//            val adapter = HomeSearchAdapter(searchResults)
-//            binding.rvSearchHistory.adapter = adapter
-
-            // tv_service_list, tab_layout, view_pager를 숨김
-            binding.tvServiceList.visibility = View.GONE
-            binding.tabLayout.visibility = View.GONE
-            binding.viewPager.visibility = View.GONE
-
-//            // 검색 결과를 표시하는 RecyclerView를 보이게 함 (수정 필요)
-//            recyclerView.visibility = View.VISIBLE
-
-        }
-
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 5
 
@@ -203,13 +183,27 @@ class HomeFragment : Fragment() {
             when (position) {
                 0 -> tab.text = "체육시설"
                 1 -> tab.text = "교육강좌"
-                2 -> tab.text = "문화체험"
+                2 -> tab.text = "문화행사"
                 3 -> tab.text = "시설대관"
                 4 -> tab.text = "진료복지"
             }
         }.attach()
 
 //        itemAdapter.notifyDataSetChanged()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // RecyclerView가 보일 때만 ViewPager, TabLayout을 보이게 하고, RecyclerView를 숨김
+                if (binding.rvSearchResults.visibility == View.VISIBLE) {
+                    binding.viewPager.visibility = View.VISIBLE
+                    binding.tabLayout.visibility = View.VISIBLE
+                    binding.rvSearchResults.visibility = View.GONE
+                } else {
+                    isEnabled = false
+                    requireActivity().onBackPressed()
+                }
+            }
+        })
 
         // PopupWindow 생성 및 설정
         recyclerView = RecyclerView(requireContext()).apply {
@@ -331,7 +325,6 @@ class HomeFragment : Fragment() {
         val adapter = HomeSearchAdapter(searchResults)
         binding.rvSearchResults.adapter = adapter
         binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
-
 
         // tv_service_list, tab_layout, view_pager를 숨김
         binding.tvServiceList.visibility = View.GONE
