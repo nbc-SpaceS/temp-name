@@ -85,13 +85,13 @@ class ReservationRepositoryImpl(
         reservationDAO.deleteAll()
     }
     override suspend fun getAll() : List<ReservationEntity> {
-        val redesignedList: List<ReservationEntity> = reservationDAO.getNOTBlank()
+        val redesignedList: List<ReservationEntity> = reservationDAO.getNOTEmptyXY()
         deleteAll()
         insertAll(redesignedList)
         return reservationDAO.getAll()
     }
     override suspend fun getAllBefore() = reservationDAO.getAll()
-    override suspend fun getAllNOTBlanks(): List<ReservationEntity> = reservationDAO.getNOTBlank()
+    override suspend fun getAllNOTBlanks(): List<ReservationEntity> = reservationDAO.getNOTEmptyXY()
     override suspend fun getReservationsWithBigType(type: String) = reservationDAO.getItemsWithBigType(type)
     override suspend fun getReservationsWithSmallType(type: String) = reservationDAO.getItemsWithSmallType(type)
     override suspend fun getReservationsWithSmallTypes(types: List<String>) = reservationDAO.getItemsWithSmallTypes(types)

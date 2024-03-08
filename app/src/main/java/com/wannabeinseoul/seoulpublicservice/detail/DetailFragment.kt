@@ -6,13 +6,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.text.SpannableStringBuilder
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -198,7 +194,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             it.tvDetailName.text = data.SVCNM
             it.tvDetailLocation.text = "${data.AREANM} - ${data.PLACENM}"
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
-            it.tvDetailInfo.text = detailInfo(data)
+            it.tvDetailUsetgtinfo.text = data.USETGTINFO.trim()
+            it.tvDetailSvcopndt.text = "${dateFormat(data.SVCOPNBGNDT)} ~ ${dateFormat(data.SVCOPNENDDT)}"
+            it.tvDetailRcptdt.text = "${dateFormat(data.RCPTBGNDT)} ~ ${dateFormat(data.RCPTENDDT)}"
+            it.tvDetailV.text = "${data.V_MIN} ~ ${data.V_MAX}"
+            it.tvDetailRevstdday.text = "${data.REVSTDDAYNM} ${data.REVSTDDAY}일 전"
             it.tvDetailDescription.text = Html.fromHtml(data.DTLCONT, Html.FROM_HTML_MODE_LEGACY)
         }
     }
@@ -356,23 +356,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
     }
 
-    private fun detailInfo(str: ReservationEntity): SpannableStringBuilder {
-        val list = listOf("서비스 대상","서비스 일자","예약 가능 일자","시설 사용 시간","취소 가능 기준")
-        var text = "${list[0]}\n${str.USETGTINFO}\n\n" +
-                "${list[1]}\n${dateFormat(str.SVCOPNBGNDT)} ~ ${dateFormat(str.SVCOPNENDDT)}\n\n" +
-                "${list[2]}\n${dateFormat(str.RCPTBGNDT)} ~ ${dateFormat(str.RCPTENDDT)}\n\n" +
-                "${list[3]}\n${str.V_MIN} ~ ${str.V_MAX}\n\n" +
-                "${list[4]}\n${str.REVSTDDAYNM} ${str.REVSTDDAY}일 전"
-        val ssb = SpannableStringBuilder(text)
-        for (word in list) {
-            val startIndex = text.indexOf(word)
-            val endIndex = startIndex + word.length
-            ssb.setSpan(StyleSpan(Typeface.BOLD), startIndex, endIndex, 0)
-            ssb.setSpan(AbsoluteSizeSpan(18, true), startIndex, endIndex, 0)
-        }
-        return ssb
-    }
-
     // 두 지점 간의 직선 거리를 계산하는 함수
     private fun distance(point1: LatLng, point2: LatLng): Double {
         val R = 6371 // 지구의 반지름 (단위: km)
@@ -411,18 +394,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 button.isEnabled = false
             }
         }
+        val telBtn = binding.btnDetailCall
+        when {
+            data.TELNO.isBlank() -> telBtn.isEnabled = false
+            data.TELNO.isNotBlank() -> telBtn.isEnabled = true
+        }
         val payment = binding.tvDetailPrice
         payment.text = data.PAYATNM
-//        when(data.PAYATNM) {
-//            "무료" -> {
-//                payment.setTextColor(Color.parseColor("#FFFFFF"))
-//                payment.setBackgroundResource(R.drawable.background_radius_4dp_f8496c)
-//            }
-//            else -> {
-//                payment.setTextColor(Color.parseColor("#828282"))
-//                payment.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
-//            }
-//        }
     }
 
     companion object {
