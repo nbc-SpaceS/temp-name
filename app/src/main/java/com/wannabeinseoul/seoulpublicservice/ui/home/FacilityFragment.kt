@@ -46,18 +46,22 @@ class FacilityFragment : Fragment() {
         ItemRepository.setItems("Facility", facilityItems)
 
         val items = ItemRepository.getItems("Facility")
+        val adapter = ItemAdapter(items, regionPrefRepository)
+        binding.rvFacility.adapter = adapter
+        binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
+
 //        val homeFragment = parentFragment as HomeFragment
 //        val selectedRegion = homeFragment.settingRegions()
 //        Log.d("FacilityFragment", "Loaded selected region: $selectedRegion")
 //        val adapter = ItemAdapter(items, selectedRegion)
 //        binding.rvFacility.adapter = adapter
 //        binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
-        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
-            Log.d("FacilityFragment", "Loaded selected region: $selectedRegion")
-            val adapter = ItemAdapter(items, selectedRegion)
-            binding.rvFacility.adapter = adapter
-            binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
-        }
+//        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
+//            Log.d("FacilityFragment", "Loaded selected region: $selectedRegion")
+//            val adapter = ItemAdapter(items, selectedRegion)
+//            binding.rvFacility.adapter = adapter
+//            binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
+//        }
     }
 
 }

@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemHomeBinding
+import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryActivity
 
-class ItemAdapter(private var items: List<Item>, private var selectedRegion: String) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+class ItemAdapter(private var items: List<Item>, private val regionPrefRepository: RegionPrefRepository) : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemViewHolder(binding)
@@ -28,7 +29,7 @@ class ItemAdapter(private var items: List<Item>, private var selectedRegion: Str
         holder.icon.setColorFilter(Color.WHITE)
 
         holder.itemView.setOnClickListener {
-            if (selectedRegion == "지역선택") {
+            if (regionPrefRepository.loadSelectedRegion() == "지역선택") {
                 Toast.makeText(it.context, "선호지역을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show()
             } else {
                 // 아이콘의 배경색과 색상을 변경
@@ -37,9 +38,9 @@ class ItemAdapter(private var items: List<Item>, private var selectedRegion: Str
                 // 선택된 항목의 데이터와 지역을 가지고 카테고리 페이지로 이동
                 val intent = Intent(it.context, CategoryActivity::class.java).apply {
                     putExtra("category", item.name)
-                    putExtra("region", selectedRegion)
+                    putExtra("region", regionPrefRepository.loadSelectedRegion())
                 }
-                Log.d("ItemAdapter", "Moving to CategoryActivity with category: ${item.name}, region: $selectedRegion")
+                Log.d("ItemAdapter", "Moving to CategoryActivity with category: ${item.name}, region: ${regionPrefRepository.loadSelectedRegion()}")
                 it.context.startActivity(intent)
 
                 // 일정 시간 후에 아이콘의 배경색과 색상을 원래대로 복원
