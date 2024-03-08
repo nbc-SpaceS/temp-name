@@ -12,6 +12,7 @@
     <color name="point_color">#F8496C</color>
     <color name="pay">#FFCCCC</color>
     <color name="black_gray">#828282</color>
+    <color name="black_70">#70000000</color>
 
     <color name="unClicked_button_solid">#E4E4E4</color>
     <color name="unClicked_button_stroke">#5B5B5B</color>
