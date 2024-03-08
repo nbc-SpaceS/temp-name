@@ -21,6 +21,7 @@ fun Row.convertToRecommendationData() = RecommendationData(
     svcid = this.svcid,
     reviewCount = 0
 )
+//플레이스네ㅐ임을 서비스스텟으로
 
 fun List<Row>.convertToRecommendationDataList() =
     this.map { it.convertToRecommendationData() }
