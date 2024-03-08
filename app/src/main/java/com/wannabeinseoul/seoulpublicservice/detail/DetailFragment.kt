@@ -192,7 +192,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         binding.let {
             it.tvDetailTypeSmall.text = data.MINCLASSNM
             it.tvDetailName.text = data.SVCNM
-            it.tvDetailLocation.text = "${data.AREANM} - ${data.PLACENM}"
+            it.tvDetailLocation.text = "${data.AREANM} - ${Html.fromHtml(data.PLACENM, Html.FROM_HTML_MODE_LEGACY)}"
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailUsetgtinfo.text = data.USETGTINFO.trim()
             it.tvDetailSvcopndt.text = "${dateFormat(data.SVCOPNBGNDT)} ~ ${dateFormat(data.SVCOPNENDDT)}"
