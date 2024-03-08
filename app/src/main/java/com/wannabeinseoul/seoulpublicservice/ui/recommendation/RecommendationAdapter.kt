@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemRecommendedBinding
-import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemRecommendedTipBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedTipBinding
 
 class RecommendationAdapter(private var items: List<MultiView>) :
     RecyclerView.Adapter<RecommendationAdapter.CommonViewHolder>() {
@@ -41,7 +41,7 @@ class RecommendationAdapter(private var items: List<MultiView>) :
     }
 
     inner class RecommendationViewHolder(
-        private val binding: MyPageItemRecommendedBinding,
+        private val binding: RecommendationItemRecommendedBinding,
     ) : CommonViewHolder(binding.root) {
 
         override fun onBind(item: MultiView) {
@@ -52,12 +52,12 @@ class RecommendationAdapter(private var items: List<MultiView>) :
         }
     }
 
-    inner class TipViewHolder(private val b: MyPageItemRecommendedTipBinding) :
+    inner class TipViewHolder(private val b: RecommendationItemRecommendedTipBinding) :
         CommonViewHolder(b.root) {
 
         override fun onBind(item: MultiView) {
 //                b.tvTitle.text = (item as MultiView.Tip).title
-            b.tvTip.text = (item as MultiView.Tip).content
+            b.tvTipContent.text = (item as MultiView.Tip).content
         }
     }
 
@@ -68,12 +68,12 @@ class RecommendationAdapter(private var items: List<MultiView>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonViewHolder {
         return when (MultiView.Type.values()[viewType]) {
             MultiView.Type.HORIZONTAL -> RecommendationViewHolder(
-                MyPageItemRecommendedBinding
+                RecommendationItemRecommendedBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 
             MultiView.Type.TIP -> TipViewHolder(
-                MyPageItemRecommendedTipBinding
+                RecommendationItemRecommendedTipBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
         }

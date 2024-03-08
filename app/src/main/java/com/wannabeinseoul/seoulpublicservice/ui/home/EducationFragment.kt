@@ -45,17 +45,21 @@ class EducationFragment : Fragment() {
         ItemRepository.setItems("Education", educationItems)
 
         val items = ItemRepository.getItems("Education")
+        val adapter = ItemAdapter(items, regionPrefRepository)
+        binding.rvEducation.adapter = adapter
+        binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
+
 //        val homeFragment = parentFragment as HomeFragment
 //        val selectedRegion = homeFragment.settingRegions()
 //        Log.d("EducationFragment", "Loaded selected region: $selectedRegion")
 //        val adapter = ItemAdapter(items, selectedRegion)
 //        binding.rvEducation.adapter = adapter
 //        binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
-        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
-            Log.d("EducationFragment", "Loaded selected region: $selectedRegion")
-            val adapter = ItemAdapter(items, selectedRegion)
-            binding.rvEducation.adapter = adapter
-            binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
-        }
+//        regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
+//            Log.d("EducationFragment", "Loaded selected region: $selectedRegion")
+//            val adapter = ItemAdapter(items, selectedRegion)
+//            binding.rvEducation.adapter = adapter
+//            binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
+//        }
     }
 }

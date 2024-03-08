@@ -334,7 +334,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
 
     // 후기 어댑터 연결(임시)
     private fun connectToCommentList(context: Context) {
-        val sample = DetailCommentSample().dataList
         commentAdapter = DetailCommentAdapter()
         binding.rvDetailReview.apply {
             adapter = commentAdapter

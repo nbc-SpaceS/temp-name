@@ -92,19 +92,23 @@ class MapViewModel(
             )
 
             readyData = true
+            if (readyMap && readyData) {
+                _canStart.postValue(true)
+            }
             checkCanDraw()
         }
     }
 
     fun checkReadyMap() {
         readyMap = true
+        if (readyMap && readyData) {
+            _canStart.postValue(true)
+        }
         checkCanDraw()
     }
 
     private fun checkCanDraw() {
-        if (readyMap && readyData) {
-            _canStart.postValue(true)
-        }
+
     }
 
     fun saveService(id: String) {

@@ -7,7 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gray">#DFDFDD</color>
+    <color name="gray">#5E5E5E</color>
     <color name="black_50">#60000000</color>
     <color name="point_color">#F8496C</color>
     <color name="pay">#FFCCCC</color>
@@ -15,10 +15,16 @@
 
     <color name="unClicked_button_solid">#E4E4E4</color>
     <color name="unClicked_button_stroke">#5B5B5B</color>
-    <color name="unable_button_solid">#DFDFDF</color>
+    <color name="unable_button_solid">#F1F1F1</color>
     <color name="unable_button_text">#8E8E8E</color>
     <color name="cancel_button_solid">#828282</color>
-    <color name="search_editText_solid">#DFDFDD</color>
+    <color name="search_editText_solid">#E2E2E2</color>
     <color name="clicked_marker_solid">#FFAC1C</color>
     <color name="enable_move_text_color">#25B1FF</color>
+
+    <color name="marker1_solid">#25B1FF</color>
+    <color name="marker2_solid">#FFAC1C</color>
+    <color name="marker3_solid">#1FCD26</color>
+    <color name="marker4_solid">#FF5722</color>
+    <color name="marker5_solid">#673AB7</color>
 </resources>
