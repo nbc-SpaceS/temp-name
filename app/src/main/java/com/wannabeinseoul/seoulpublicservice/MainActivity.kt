@@ -36,12 +36,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        window.apply {
-            // 상태바의 아이콘과 배경색 변경
-            statusBarColor = Color.WHITE
-            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
-        }
-
         if (!hasPermission()) {
             requestPermissions(permissions, 5000)
         }

@@ -31,9 +31,6 @@ class ComplaintFragment(
     ): View {
         _binding = FragmentComplaintBinding.inflate(inflater, container, false)
 
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
-
         return binding.root
     }
 

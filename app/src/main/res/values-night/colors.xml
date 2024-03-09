@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#EFEFEF</color>
+    <color name="gray">#A5A5A5</color>
+    <color name="black_50">#60000000</color>
+    <color name="point_color">#F8496C</color>
+    <color name="pay">#FFCCCC</color>
+    <color name="black_gray">#828282</color>
+    <color name="black_70">#70000000</color>
+    <color name="total_background">#2B2B2B</color>
+    <color name="total_text_color">#EFEFEF</color>
+
+    <color name="unClicked_button_solid">#404040</color>
+    <color name="unClicked_button_stroke">#5B5B5B</color>
+    <color name="unClicked_button_text">#7A7A7A</color>
+    <color name="select_region_layout_solid">#2B2B2B</color>
+    <color name="select_region_layout_stroke">#414141</color>
+    <color name="unable_button_solid">#5F5F5F</color>
+    <color name="unable_button_text">#A1A1A1</color>
+    <color name="cancel_button_solid">#828282</color>
+    <color name="search_editText_solid">#404040</color>
+    <color name="clicked_marker_solid">#F8496C</color>
+    <color name="enable_move_text_color">#25B1FF</color>
+    <color name="filter_reset_button_text">#6A6A6A</color>
+    <color name="fab_current_position_button_solid">#2B2B2B</color>
+    <color name="fab_current_position_icon_solid">#EFEFEF</color>
+    <color name="edit_profile_button_solid">#3A3A3A</color>
+    <color name="material_divider_solid">#404040</color>
+    <color name="review_user_name_text">#C5C5C5</color>
+    <color name="review_hint_text">#C6C6C6</color>
+
+    <color name="marker1_solid">#25B1FF</color>
+    <color name="marker2_solid">#FFAC1C</color>
+    <color name="marker3_solid">#1FCD26</color>
+    <color name="marker4_solid">#FF5722</color>
+    <color name="marker5_solid">#673AB7</color>
+</resources>

@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="관심 지역은 최대 3개까지 선택가능합니다."
-        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
