@@ -13,12 +13,6 @@ class CategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        window.apply {
-            // 상태바의 아이콘과 배경색 변경
-            statusBarColor = Color.WHITE
-            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
-        }
-
         // 카테고리 프래그먼트를 추가
         supportFragmentManager.beginTransaction()
             .replace(R.id.category_fragment_container, CategoryFragment())

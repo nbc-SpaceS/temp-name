@@ -67,12 +67,6 @@ class InterestRegionSelectActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        window.apply {
-            // 상태바의 아이콘과 배경색 변경
-            statusBarColor = Color.WHITE
-            WindowInsetsControllerCompat(this, this.decorView).isAppearanceLightStatusBars = true
-        }
-
         initView()
         initViewModel()
     }

@@ -2,6 +2,7 @@ package com.wannabeinseoul.seoulpublicservice.dialog.review
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -162,5 +163,11 @@ class ReviewFragment(
             binding.etReviewInputField.windowToken,
             0
         )
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+
+        dismissAllowingStateLoss()
     }
 }

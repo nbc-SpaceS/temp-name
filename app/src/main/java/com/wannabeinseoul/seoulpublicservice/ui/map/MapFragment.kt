@@ -168,7 +168,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 binding.clMapFilterCount.isVisible = true
                 binding.tvMapFilterCount.text = filterCount.toString()
             } else {
-                binding.tvMapFilterBtn.setTextColor(requireContext().getColor(R.color.black))
+                binding.tvMapFilterBtn.setTextColor(requireContext().getColor(R.color.total_text_color))
                 binding.clMapFilterCount.isVisible = false
             }
         }
