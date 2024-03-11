@@ -6,39 +6,61 @@
     android:layout_height="match_parent"
     tools:context=".ui.category.CategoryFragment">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/activity_category"
-        app:layout_constraintBottom_toTopOf="@+id/tv_ctTitle"
+    <EditText
+        android:id="@+id/et_category_search"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/background_radius_12dp_edittext"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="5dp"
+        android:enabled="false"
+        android:hint="검색어를 입력하세요."
+        android:paddingStart="8dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_category_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_category_back"
+        app:layout_constraintTop_toTopOf="@+id/iv_category_back" />
+
+    <ImageView
+        android:id="@+id/iv_category_back"
+        android:layout_width="28sp"
+        android:layout_height="28sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_ctTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="20dp"
         android:clipToOutline="true"
         android:text="야구장"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@+id/et_category_search" />
 
     <TextView
         android:id="@+id/tv_ctFree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="276dp"
-        android:layout_marginTop="110dp"
+        android:layout_marginEnd="8dp"
         android:gravity="center"
         android:text="무료"
         android:textColor="#8E8E8E"
         android:textSize="16dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ctIsReservationAvailable"
+        app:layout_constraintEnd_toStartOf="@+id/tv_ctIsReservationAvailable"
+        app:layout_constraintTop_toTopOf="@+id/tv_ctIsReservationAvailable" />
 
     <TextView
         android:id="@+id/tv_ctClickFree"
@@ -59,15 +81,14 @@
         android:id="@+id/tv_ctIsReservationAvailable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="320dp"
-        android:layout_marginTop="110dp"
+        android:layout_marginEnd="20dp"
         android:gravity="center"
         android:text="예약가능"
         android:textColor="#8E8E8E"
         android:textSize="16dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ctTitle" />
 
     <TextView
         android:id="@+id/tv_ctClickIsReservationAvailable"
@@ -85,31 +106,26 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:background="@drawable/edittext_background"
-        android:clipToOutline="true"
-        android:maxLines="1"
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_ctIsReservationAvailable" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/re_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line"
+        app:layout_constraintTop_toBottomOf="@+id/materialDivider"
         tools:listitem="@layout/category_item" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

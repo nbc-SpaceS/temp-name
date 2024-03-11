@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/background_radius_12dp_edittext"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="5dp"
@@ -43,7 +43,6 @@
         android:layout_marginEnd="20dp"
         android:drawableEnd="@drawable/ic_filter"
         android:text="필터"
-        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_map_search" />
@@ -132,7 +131,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:background="@drawable/background_radius_10dp"
+        android:background="@drawable/background_radius_12dp"
         android:clipToOutline="true"
         android:elevation="5dp"
         android:visibility="gone"
@@ -146,12 +145,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/fab_current_position_button_solid"
         android:contentDescription="Find Current Location"
         android:src="@drawable/ic_location"
         app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="32dp"
-        app:tint="@color/point_color" />
+        app:tint="@color/fab_current_position_icon_solid" />
 </androidx.constraintlayout.widget.ConstraintLayout>

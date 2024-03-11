@@ -1,8 +1,10 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsControllerCompat
 import com.wannabeinseoul.seoulpublicservice.R
 
 class CategoryActivity : AppCompatActivity() {
@@ -16,8 +18,8 @@ class CategoryActivity : AppCompatActivity() {
             .replace(R.id.category_fragment_container, CategoryFragment())
             .commit()
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        findViewById<View>(R.id.iv_back)?.setOnClickListener {
+//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        findViewById<View>(R.id.iv_category_back)?.setOnClickListener {
             onBackPressed()
         }
     }

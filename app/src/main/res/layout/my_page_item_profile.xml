@@ -18,7 +18,7 @@
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="56dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/background_radius_10dp"
+        android:background="@drawable/background_radius_12dp"
         android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,10 +30,10 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/corners_round"
+        android:backgroundTint="@color/white"
         android:clipToOutline="true"
         android:elevation="8dp"
         android:scaleType="centerCrop"
-        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@id/v_profile_card_background"
         app:layout_constraintEnd_toEndOf="@id/v_profile_card_background"
         app:layout_constraintStart_toStartOf="@id/v_profile_card_background"
@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@drawable/background_radius_10dp"
+        android:background="@drawable/background_edit_profile_button"
         android:elevation="12dp"
         android:paddingHorizontal="16dp"
         android:paddingVertical="4dp"
@@ -74,7 +74,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/pencil" />
+            app:srcCompat="@drawable/ic_edit_profile" />
 
         <TextView
             android:id="@+id/tv_profile_edit"

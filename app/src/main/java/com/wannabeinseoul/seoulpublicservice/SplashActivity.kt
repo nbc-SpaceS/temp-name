@@ -1,9 +1,11 @@
 package com.wannabeinseoul.seoulpublicservice
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsControllerCompat
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
 import kotlinx.coroutines.CoroutineScope
