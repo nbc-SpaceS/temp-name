@@ -57,8 +57,6 @@ class HomeFragment : Fragment() {
         categories.flatMap { ItemRepository.getItems(it) }
     }
 
-//    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items, settingRegions()) }
-
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
@@ -84,13 +82,6 @@ class HomeFragment : Fragment() {
 
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
-
-
-//        // 지역 선택 화면으로 이동
-//        binding.tvSelectArea.setOnClickListener {
-//            val intent = Intent(context, InterestRegionSelectActivity::class.java)
-//            startActivity(intent)
-//        }
 
         binding.clHomeSetRegion.setOnClickListener {
             if (binding.clHomeRegionList.isVisible) {
@@ -188,8 +179,6 @@ class HomeFragment : Fragment() {
                 4 -> tab.text = "진료복지"
             }
         }.attach()
-
-//        itemAdapter.notifyDataSetChanged()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
