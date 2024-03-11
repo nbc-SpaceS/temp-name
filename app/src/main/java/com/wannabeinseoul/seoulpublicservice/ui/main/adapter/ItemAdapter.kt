@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.adapter
+package com.wannabeinseoul.seoulpublicservice.ui.main.adapter
 
 import android.content.Intent
 import android.graphics.Color
@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.data.Item
