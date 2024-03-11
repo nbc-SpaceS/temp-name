@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMyPageBinding
-import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 
 class MyPageFragment : Fragment() {
 

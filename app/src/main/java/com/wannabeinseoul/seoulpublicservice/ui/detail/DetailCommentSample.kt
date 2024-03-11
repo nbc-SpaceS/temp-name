@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.detail
+package com.wannabeinseoul.seoulpublicservice.ui.detail
 
 class DetailCommentSample {
     val dataList = listOf(
