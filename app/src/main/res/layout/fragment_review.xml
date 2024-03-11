@@ -74,6 +74,7 @@
         android:maxLines="1"
         android:paddingHorizontal="8dp"
         android:textColorHint="@color/review_hint_text"
+        android:textColor="@color/total_text_color"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/iv_review_send_btn"
