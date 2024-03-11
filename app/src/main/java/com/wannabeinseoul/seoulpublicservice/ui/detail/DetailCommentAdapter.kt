@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
-import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewItem
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 
 class DetailCommentAdapter:ListAdapter<ReviewItem, DetailCommentAdapter.Holder>(object : DiffUtil.ItemCallback<ReviewItem>() {
     override fun areItemsTheSame(oldItem: ReviewItem, newItem: ReviewItem): Boolean {

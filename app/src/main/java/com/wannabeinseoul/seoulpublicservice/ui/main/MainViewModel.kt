@@ -1,10 +1,10 @@
-package com.wannabeinseoul.seoulpublicservice
+package com.wannabeinseoul.seoulpublicservice.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.wannabeinseoul.seoulpublicservice.dialog.complaint.ComplaintUserInfo
-import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewItem
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 
 class MainViewModel: ViewModel() {
 

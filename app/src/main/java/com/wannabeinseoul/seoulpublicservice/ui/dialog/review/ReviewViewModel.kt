@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.review
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
-import com.wannabeinseoul.seoulpublicservice.dialog.complaint.ComplaintUserInfo
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.CheckComplaintSelfUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.CheckCredentialsUseCase

@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice
+package com.wannabeinseoul.seoulpublicservice.ui.interestregionselect
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 
 class InterestRegionSelectViewModel(

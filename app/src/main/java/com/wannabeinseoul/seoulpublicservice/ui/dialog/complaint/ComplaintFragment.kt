@@ -1,18 +1,15 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.complaint
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint
 
 import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.wannabeinseoul.seoulpublicservice.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentComplaintBinding
 

@@ -1,10 +1,9 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.review
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,10 +17,10 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.wannabeinseoul.seoulpublicservice.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentReviewBinding
-import com.wannabeinseoul.seoulpublicservice.dialog.complaint.ComplaintFragment
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintFragment
 
 class ReviewFragment: BottomSheetDialogFragment() {
 

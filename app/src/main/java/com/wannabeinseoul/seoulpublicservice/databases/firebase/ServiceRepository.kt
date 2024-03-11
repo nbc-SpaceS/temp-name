@@ -1,6 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firebase
 
-import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewItem
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -80,14 +80,16 @@ class ServiceRepositoryImpl: ServiceRepository {
             for (snapshot in userSnapShot.children) {
                 if (snapshot.key == review.userId) {
                     val user = snapshot.getValue(UserEntity::class.java)
-                    resultList.add(ReviewItem(
+                    resultList.add(
+                        ReviewItem(
                         review.userId ?: "",
                         user?.userName ?: "",
                         review.uploadTime ?: "",
                         review.content ?: "",
                         user?.userColor ?: "",
                         user?.userProfileImage ?: ""
-                    ))
+                    )
+                    )
                     break
                 }
             }

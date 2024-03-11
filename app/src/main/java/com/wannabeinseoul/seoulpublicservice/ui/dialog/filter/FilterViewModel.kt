@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.filter
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.filter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

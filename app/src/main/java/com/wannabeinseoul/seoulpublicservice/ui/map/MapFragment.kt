@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,12 +27,12 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
-import com.wannabeinseoul.seoulpublicservice.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
-import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.filter.FilterFragment
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 

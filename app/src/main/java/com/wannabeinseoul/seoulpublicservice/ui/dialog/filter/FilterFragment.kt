@@ -1,8 +1,7 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.filter
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.filter
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentFilterBinding
 import com.google.android.material.chip.Chip
-import com.wannabeinseoul.seoulpublicservice.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class FilterFragment : DialogFragment() {
 

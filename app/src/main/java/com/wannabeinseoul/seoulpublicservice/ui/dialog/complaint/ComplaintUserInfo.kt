@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.complaint
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint
 
 data class ComplaintUserInfo(
     val svcId: String,

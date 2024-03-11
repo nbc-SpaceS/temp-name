@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.review
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
 data class ReviewItem(
     val userId: String,

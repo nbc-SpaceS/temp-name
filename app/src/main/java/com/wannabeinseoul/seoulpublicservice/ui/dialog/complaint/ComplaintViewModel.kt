@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.complaint
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
