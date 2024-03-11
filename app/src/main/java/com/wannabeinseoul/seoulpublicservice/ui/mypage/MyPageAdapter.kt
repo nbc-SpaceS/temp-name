@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -127,10 +128,16 @@ class MyPageAdapter(
         private var isAdapterNotBound = true
 
         override fun onBind(item: MultiView) {
+            item as MultiView.Saved
             if (isAdapterNotBound) {
-                b.rvSaved.adapter = (item as MultiView.Saved).myPageSavedAdapter
+                b.rvSaved.adapter = item.myPageSavedAdapter
                 isAdapterNotBound = false
             }
+
+            // TODO: onBind에서 하면 전체삭제 했을 때 안바뀜.
+            //  프래그먼트에서 옵저빙해서 바꿔야. 호출을 거기서 만드려면 람다식으로는 불가.
+            //  그냥 텍뷰를 public으로 뽑아서 만져야하나..?
+            b.tvSavedNothing.isVisible = item.myPageSavedAdapter.itemCount == 0
         }
     }
 
