@@ -29,9 +29,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.adapter.HomeSearchAdapter
-import com.wannabeinseoul.seoulpublicservice.adapter.ItemAdapter
-import com.wannabeinseoul.seoulpublicservice.adapter.SearchHistoryAdapter
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
