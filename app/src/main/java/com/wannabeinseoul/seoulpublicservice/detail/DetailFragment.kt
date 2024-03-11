@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -183,6 +184,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
         }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
+            binding.tvDetailEmptyDescription.isVisible = it.isEmpty()
             mainViewModel.setCurrentReviewList(it)
         }
         vm.favoriteChanged.observe(viewLifecycleOwner) {
