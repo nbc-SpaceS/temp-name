@@ -13,9 +13,9 @@ class GetDetailSeoulUseCase(
     private val keyDetail = "keyDetail"  //ddd
     private val gson = Gson()
 
-    suspend operator fun invoke(svcid: String): DetailRow? {
-        val item = seoulPublicRepository.getDetail(svcid) ?: return null
-        prefRepository.save(keyDetail + svcid, gson.toJson(item))  //ddd
+    suspend operator fun invoke(svcId: String): DetailRow? {
+        val item = seoulPublicRepository.getDetail(svcId) ?: return null
+        prefRepository.save(keyDetail + svcId, gson.toJson(item))  //ddd
         return item
     }
 

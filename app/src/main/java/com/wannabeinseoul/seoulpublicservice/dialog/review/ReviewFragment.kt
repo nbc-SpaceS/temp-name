@@ -40,7 +40,7 @@ class ReviewFragment: BottomSheetDialogFragment() {
     }
 
     private val svcId by lazy {
-        mainViewModel.getServiceId()
+        mainViewModel.selectedServiceId
     }
 
     override fun onCreateView(
@@ -93,7 +93,7 @@ class ReviewFragment: BottomSheetDialogFragment() {
     }
 
     private fun initViewModel() = with(viewModel) {
-        val storedReviewList = mainViewModel.getCurrentReviewList()
+        val storedReviewList = mainViewModel.currentReviewList
         if (storedReviewList.isNotEmpty()) {
             setReviewsByList(storedReviewList)
         } else {
@@ -153,11 +153,14 @@ class ReviewFragment: BottomSheetDialogFragment() {
             if (it.first) {
                 Toast.makeText(requireContext(), "스스로를 신고할 수는 없습니다.", Toast.LENGTH_SHORT).show()
             } else {
-                val complaintFragment = ComplaintFragment(svcId, it.second) {
-                    setReviews(svcId)
-                }
+                val complaintFragment = ComplaintFragment.newInstance()
+                mainViewModel.setComplaintUserInfo(it.second)
                 complaintFragment.show(requireActivity().supportFragmentManager, "Complaint")
             }
+        }
+
+        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
+            setReviews(svcId)
         }
     }
 

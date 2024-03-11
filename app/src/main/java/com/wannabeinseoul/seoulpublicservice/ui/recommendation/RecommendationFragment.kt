@@ -34,66 +34,6 @@ class RecommendationFragment : Fragment() {
     }
 
     private val mainList by lazy {
-        listOf(
-            RecommendationAdapter.MultiView.Horizontal(
-                "송파구에 있는 추천 서비스",
-                RecommendationHorizontalAdapter(
-                    dbMemoryRepository.getFiltered(areanm = listOf("송파구")).take(5).map { row ->
-                        row.convertToRecommendationData().apply {
-                            runBlocking {
-                                reviewCount =
-                                    serviceRepository.getServiceReviewsCount(row.svcid) + 3
-                            }//후기
-                        }
-                    }.toMutableList(),
-                    showDetailFragment
-                )
-            ),
-            RecommendationAdapter.MultiView.Tip("그거 아시나요?", "레몬 한개에는 레몬 한개의 비타민이 있습니다."),//수정 할 예정.
-
-            RecommendationAdapter.MultiView.Horizontal(
-                "청소년들을 대상으로 하는 공공서비스", RecommendationHorizontalAdapter(
-                    dbMemoryRepository.getFiltered(areanm = listOf("송파구")).take(5).map { row ->
-                        row.convertToRecommendationData().apply {
-                            runBlocking {
-                                reviewCount =
-                                    serviceRepository.getServiceReviewsCount(row.svcid) + 3
-                            }//후기
-                        }
-                    }.toMutableList(),
-                    showDetailFragment
-                )
-            ),
-            RecommendationAdapter.MultiView.Horizontal(
-                "장애인들을 대상으로 하는 공공서비스", RecommendationHorizontalAdapter(
-                    dbMemoryRepository.getFiltered(areanm = listOf("송파구")).take(5).map { row ->
-                        row.convertToRecommendationData().apply {
-                            runBlocking {
-                                reviewCount =
-                                    serviceRepository.getServiceReviewsCount(row.svcid) + 3
-                            }//후기
-                        }
-                    }.toMutableList(),
-                    showDetailFragment
-                )
-            ),
-            RecommendationAdapter.MultiView.Horizontal(
-                "다음주부터 사용가능한 공공서비스", RecommendationHorizontalAdapter(
-                    dbMemoryRepository.getFiltered(areanm = listOf("송파구")).take(5).map { row ->
-                        row.convertToRecommendationData().apply {
-                            runBlocking {
-                                reviewCount =
-                                    serviceRepository.getServiceReviewsCount(row.svcid) + 3
-                            }//후기
-                        }
-                    }.toMutableList(),
-                    showDetailFragment
-                )
-            )
-        )
-    }
-
-    private val mainList2 by lazy {
         mutableListOf(
             RecommendationAdapter.MultiView.Horizontal(
                 "",
@@ -125,7 +65,7 @@ class RecommendationFragment : Fragment() {
         )
     }
 
-    private val recommendationAdapter by lazy { RecommendationAdapter(mainList2) }
+    private val recommendationAdapter by lazy { RecommendationAdapter(mainList) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -162,47 +102,47 @@ class RecommendationFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel.firstRecommendation.observe(viewLifecycleOwner) {
-            mainList2[0] = RecommendationAdapter.MultiView.Horizontal(
+            mainList[0] = RecommendationAdapter.MultiView.Horizontal(
                 "송파구에 있는 추천 서비스",
                 RecommendationHorizontalAdapter(
                     it.toMutableList(),
                     showDetailFragment
                 )
             )
-            recommendationAdapter.submitList(mainList2.toList())
+            recommendationAdapter.submitList(mainList.toList())
         }
 
         viewModel.secondRecommendation.observe(viewLifecycleOwner) {
-            mainList2[2] = RecommendationAdapter.MultiView.Horizontal(
+            mainList[2] = RecommendationAdapter.MultiView.Horizontal(
                 "송파구에 있는 추천 서비스",
                 RecommendationHorizontalAdapter(
                     it.toMutableList(),
                     showDetailFragment
                 )
             )
-            recommendationAdapter.submitList(mainList2.toList())
+            recommendationAdapter.submitList(mainList.toList())
         }
 
         viewModel.thirdRecommendation.observe(viewLifecycleOwner) {
-            mainList2[3] = RecommendationAdapter.MultiView.Horizontal(
+            mainList[3] = RecommendationAdapter.MultiView.Horizontal(
                 "송파구에 있는 추천 서비스",
                 RecommendationHorizontalAdapter(
                     it.toMutableList(),
                     showDetailFragment
                 )
             )
-            recommendationAdapter.submitList(mainList2.toList())
+            recommendationAdapter.submitList(mainList.toList())
         }
 
         viewModel.forthRecommendation.observe(viewLifecycleOwner) {
-            mainList2[4] = RecommendationAdapter.MultiView.Horizontal(
+            mainList[4] = RecommendationAdapter.MultiView.Horizontal(
                 "송파구에 있는 추천 서비스",
                 RecommendationHorizontalAdapter(
                     it.toMutableList(),
                     showDetailFragment
                 )
             )
-            recommendationAdapter.submitList(mainList2.toList())
+            recommendationAdapter.submitList(mainList.toList())
         }
 
     }

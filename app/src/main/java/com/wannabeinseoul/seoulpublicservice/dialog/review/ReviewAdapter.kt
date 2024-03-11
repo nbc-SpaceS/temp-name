@@ -31,7 +31,7 @@ class ReviewAdapter(
             tvCommentUser.text = item.userName
             ivCommentProfile.drawable.setTint(Color.parseColor(item.userColor))
             clItemDetailComment.setOnLongClickListener {
-                complaintUser(item.userName)
+                complaintUser(item.userId)
                 true
             }
         }
