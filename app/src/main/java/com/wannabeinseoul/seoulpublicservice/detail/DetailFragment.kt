@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -22,6 +23,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
+import com.wannabeinseoul.seoulpublicservice.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
@@ -45,6 +47,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     val binding get() = _binding!!
 
     private val viewModel: DetailViewModel by viewModels { DetailViewModel.factory }
+    private val mainViewModel: MainViewModel by activityViewModels()
+
     private var param1: String? = null
     private var textOpen = false    // 텍스트 뷰가 펼쳐져 있는지(false = 접힌 상태, true = 펼친 상태)
 
@@ -154,9 +158,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             startActivity(Intent.createChooser(i, "링크 공유"))
         }
         it.tvDetailReviewMoveBtn.setOnClickListener {
-            val bottomSheet = ReviewFragment(param1!!) {
-                viewModel.setReviews(param1!!)
-            }
+            mainViewModel.setServiceId(param1!!)
+            val bottomSheet = ReviewFragment()
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
     }
@@ -180,9 +183,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
+            mainViewModel.setCurrentReviewList(it)
         }
         vm.favoriteChanged.observe(viewLifecycleOwner) {
             favorite(it)
+        }
+
+        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
+            vm.setReviews(param1!!)
         }
     }
 

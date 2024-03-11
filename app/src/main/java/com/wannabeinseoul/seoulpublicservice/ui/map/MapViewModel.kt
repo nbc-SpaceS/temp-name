@@ -95,7 +95,6 @@ class MapViewModel(
             if (readyMap && readyData) {
                 _canStart.postValue(true)
             }
-            checkCanDraw()
         }
     }
 
@@ -104,11 +103,6 @@ class MapViewModel(
         if (readyMap && readyData) {
             _canStart.postValue(true)
         }
-        checkCanDraw()
-    }
-
-    private fun checkCanDraw() {
-
     }
 
     fun saveService(id: String) {
