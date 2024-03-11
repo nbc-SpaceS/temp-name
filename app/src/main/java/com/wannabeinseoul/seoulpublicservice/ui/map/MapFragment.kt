@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.naver.maps.geometry.LatLng
@@ -26,6 +28,7 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import com.wannabeinseoul.seoulpublicservice.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
@@ -80,6 +83,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             },
             moveDetailPage = { id ->
                 viewModel.changeVisible(false)
+                Log.d("MapFragment", "${mainViewModel.getServiceId()}")
                 activeMarkers.forEach { marker ->
                     marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                     marker.zIndex = 0
@@ -92,6 +96,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private val viewModel: MapViewModel by viewModels { MapViewModel.factory }
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private val matchingColor = hashMapOf(
         "문화체험" to R.color.marker1_solid,
@@ -142,12 +147,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                 marker.zIndex = 0
             }
-            val dialog = FilterFragment.newInstance(
-                onClickButton = {
-                    viewModel.loadSavedOptions()
-                    rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
-                }
-            )
+            val dialog = FilterFragment.newInstance()
             dialog.show(requireActivity().supportFragmentManager, "FilterFragment")
         }
 
@@ -231,6 +231,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         true
                     }
                 }
+            }
+        }
+
+        mainViewModel.applyFilter.observe(viewLifecycleOwner) {
+            if (it) {
+                viewModel.loadSavedOptions()
+                rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
             }
         }
     }

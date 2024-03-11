@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,31 +13,23 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.wannabeinseoul.seoulpublicservice.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
-import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentReviewBinding
 import com.wannabeinseoul.seoulpublicservice.dialog.complaint.ComplaintFragment
 
-class ReviewFragment(
-    private val svcId: String,
-    private val callback: () -> Unit
-) : BottomSheetDialogFragment() {
+class ReviewFragment: BottomSheetDialogFragment() {
 
     private var _binding: FragmentReviewBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: ReviewViewModel by viewModels { ReviewViewModel.factory }
-
-    private val app by lazy {
-        requireActivity().application as SeoulPublicServiceApplication
-    }
-    private val container by lazy {
-        app.container
-    }
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private val adapter: ReviewAdapter by lazy {
         ReviewAdapter(
@@ -46,6 +39,9 @@ class ReviewFragment(
         )
     }
 
+    private val svcId by lazy {
+        mainViewModel.getServiceId()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +65,8 @@ class ReviewFragment(
 
     private fun initView() = with(binding) {
 
+        isCancelable = true
+
         rvReviewList.adapter = adapter
 
         ivReviewSendBtn.setOnClickListener {
@@ -85,8 +83,12 @@ class ReviewFragment(
             false
         }
 
-        dialog?.setOnDismissListener {
-            callback()
+        dialog?.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                dismiss()
+                return@setOnKeyListener true
+            }
+            false
         }
     }
 
@@ -166,8 +168,7 @@ class ReviewFragment(
     }
 
     override fun onDismiss(dialog: DialogInterface) {
+        mainViewModel.setReviewListState(true)
         super.onDismiss(dialog)
-
-        dismissAllowingStateLoss()
     }
 }
