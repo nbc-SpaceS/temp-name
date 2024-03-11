@@ -13,7 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -22,6 +24,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
+import com.wannabeinseoul.seoulpublicservice.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
@@ -35,9 +38,8 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 private const val DETAIL_PARAM = "detail_param1"
-private const val LOCATION_PERMISSION_REQUEST_CODE = 5000
 
-class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이동 시 ScrollView 잠금 해야됌
+class DetailFragment : DialogFragment(), OnMapReadyCallback {
     private lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
 
@@ -45,6 +47,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     val binding get() = _binding!!
 
     private val viewModel: DetailViewModel by viewModels { DetailViewModel.factory }
+    private val mainViewModel: MainViewModel by activityViewModels()
+
     private var param1: String? = null
     private var textOpen = false    // 텍스트 뷰가 펼쳐져 있는지(false = 접힌 상태, true = 펼친 상태)
 
@@ -64,7 +68,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         viewModel.getData(param1!!)
         viewModel.savedID(param1!!)
-//        requestLocationPermission()  // 권한 요청은 메인액티비티에서 처음에 하고 있습니다
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = Dialog(requireContext(), R.style.DetailTransparent)
@@ -78,27 +81,15 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {   // 여기가 메인
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
+//        binding.mvDetailMaps.visibility = View.VISIBLE
+//        binding.ivDetailMapsSnapshot.visibility = View.INVISIBLE
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         favorite(viewModel.savedID.value!!)
         fetchCallback()
         connectToCommentList(requireContext())
-    }
-
-    private fun requestLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        }
     }
 
     private fun getCurrentLocation(callback: (LatLng) -> Unit) {
@@ -154,9 +145,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
             startActivity(Intent.createChooser(i, "링크 공유"))
         }
         it.tvDetailReviewMoveBtn.setOnClickListener {
-            val bottomSheet = ReviewFragment(param1!!) {
-                viewModel.setReviews(param1!!)
-            }
+            mainViewModel.setServiceId(param1!!)
+            val bottomSheet = ReviewFragment()
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
     }
@@ -180,10 +170,20 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
+            binding.tvDetailEmptyDescription.isVisible = it.isEmpty()
+            mainViewModel.setCurrentReviewList(it)
         }
         vm.favoriteChanged.observe(viewLifecycleOwner) {
             favorite(it)
         }
+        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
+            vm.setReviews(param1!!)
+        }
+//        vm.mapSettingFinished.observe(viewLifecycleOwner) {
+//            if(it) {
+//                snapshotCallback()
+//            }
+//        }
     }
 
     private fun bind(data : ReservationEntity) {
@@ -255,12 +255,16 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
                 isLocationButtonEnabled = false
                 isTiltGesturesEnabled = false
                 setLogoMargin(0, 0, 0, 0)
+//                Log.i("This is DetailFragment","onMapReady : setLogoMargin")
             }
             markerStyle()
         }
+//        Log.i("This is DetailFragment","mapFinish: ")
+//        viewModel.mapFinish(true)
     }
 
     private fun markerStyle() {
+//        Log.i("This is DetailFragment","markerStyle : ")
         val marker = Marker()
         marker.position = itemLocation
         marker.map = naverMap
@@ -269,6 +273,17 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
         marker.width = 80
         marker.height = 100
     }
+//
+//    private fun snapshotCallback() {
+//        Log.i("This is DetailFragment","Snapshot Ready : ")
+//        naverMap.takeSnapshot {
+//            Log.i("This is DetailFragment","take Snapshot : $it")
+//            binding.ivDetailMapsSnapshot.loadWithHolder(it)
+//            binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
+//            binding.mvDetailMaps.visibility = View.GONE
+//            mapView.onDestroy()
+//        }
+//    }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
@@ -283,6 +298,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+//        Log.i("This is DetailFragment","onResume : ")
     }
 
     override fun onPause() {
@@ -303,6 +319,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map 이�
     override fun onDestroyView() {
         super.onDestroyView()
         mapView.onDestroy()
+//        viewModel.mapFinish(false)
         _binding = null
         dialog?.dismiss()
     }

@@ -51,6 +51,8 @@ class DetailViewModel(
 
     private val _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
     val favoriteChanged: LiveData<Boolean> get() = _favoriteChanged
+    private val _mapSettingFinished: MutableLiveData<Boolean> = MutableLiveData()
+    val mapSettingFinished: LiveData<Boolean> get() = _mapSettingFinished
 
     fun getData(svcID: String) {
         viewModelScope.launch{
@@ -78,6 +80,10 @@ class DetailViewModel(
     fun savedID(id: String) {
         _savedID.value = savedPrefRepository.contains(id)
     }
+
+//    fun mapFinish(event: Boolean) {
+//        _mapSettingFinished.value = event
+//    }
 
     fun changeFavorite(id: String) {
         if(savedPrefRepository.contains(id)) {

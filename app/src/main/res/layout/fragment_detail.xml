@@ -64,10 +64,10 @@
                     android:layout_marginEnd="20dp"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_share"
-                    app:tint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/btn_detail_back"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/btn_detail_back" />
+                    app:layout_constraintTop_toTopOf="@+id/btn_detail_back"
+                    app:tint="@color/white" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -80,7 +80,7 @@
                 android:paddingEnd="12dp"
                 android:paddingBottom="1dp"
                 android:text="유료"
-                android:textColor="@color/black_gray"
+                android:textColor="@color/gray"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_detail_type_small"
@@ -363,9 +363,11 @@
                 android:background="@drawable/background_white_with_rounded_16dp_stroke"
                 android:clipToOutline="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps">
+
+            </com.naver.maps.map.MapView>
 
             <TextView
                 android:id="@+id/tv_detail_title_description"
@@ -378,7 +380,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mv_detail_maps" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_detail_maps_snapshot"/>
 
             <TextView
                 android:id="@+id/tv_detail_show_more"
@@ -463,6 +465,34 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_review" />
+
+            <TextView
+                android:id="@+id/tv_detail_empty_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:paddingBottom="20dp"
+                android:gravity="center"
+                android:text="작성된 후기가 없습니다."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_review" />
+
+            <ImageView
+                android:id="@+id/iv_detail_maps_snapshot"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/background_white_with_rounded_16dp_stroke"
+                android:clipToOutline="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/place_holder_1"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
