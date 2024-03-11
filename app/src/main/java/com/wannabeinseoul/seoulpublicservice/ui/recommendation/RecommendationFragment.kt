@@ -9,9 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
-import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
-import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
-import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
 import kotlinx.coroutines.runBlocking
 

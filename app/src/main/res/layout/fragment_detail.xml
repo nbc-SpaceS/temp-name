@@ -5,7 +5,7 @@
     android:id="@+id/cl_detail_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".detail.DetailFragment">
+    tools:context=".ui.detail.DetailFragment">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -94,6 +94,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
                 android:text="소분류"
+                android:textColor="#000000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_detail_img" />
 
@@ -106,6 +107,7 @@
                 android:ellipsize="marquee"
                 android:maxLines="1"
                 android:text="제목"
+                android:textColor="#000000"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/iv_detail_favorite"
@@ -120,19 +122,22 @@
                 android:ellipsize="marquee"
                 android:maxLines="1"
                 android:text="장소"
+                android:textColor="#3C3C3C"
                 android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/tv_detail_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_name" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_distance_from_here" />
 
             <TextView
                 android:id="@+id/tv_detail_distance_from_here"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:text="현위치로부터 ?km"
+                android:textColor="#A5A5A5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_location" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_name" />
 
             <ImageView
                 android:id="@+id/iv_detail_favorite"
@@ -161,7 +166,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/btn_detail_reservation"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_distance_from_here" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_location" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_detail_reservation"
@@ -186,6 +191,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
                 android:text="예약 관련 정보"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -210,9 +216,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="서비스 대상"
+                    android:textColor="#000000"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -223,7 +230,6 @@
                     android:id="@+id/tv_detail_usetgtinfo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingStart="12dp"
                     android:paddingEnd="8dp"
                     android:text="대상 내용"
                     android:textSize="16sp"
@@ -249,7 +255,6 @@
                     android:id="@+id/tv_detail_svcopndt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingStart="12dp"
                     android:paddingEnd="4dp"
                     android:text="서비스 일자 내용"
                     android:textSize="16sp"
@@ -275,7 +280,6 @@
                     android:id="@+id/tv_detail_rcptdt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingStart="12dp"
                     android:paddingEnd="4dp"
                     android:text="예약 가능 일자 내용"
                     android:textSize="16sp"
@@ -301,7 +305,6 @@
                     android:id="@+id/tv_detail_v"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingStart="12dp"
                     android:paddingEnd="4dp"
                     android:text="시설 사용 시간 내용"
                     android:textSize="16sp"
@@ -327,8 +330,7 @@
                     android:id="@+id/tv_detail_revstdday"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:paddingStart="12dp"
+                    android:layout_marginBottom="8dp"
                     android:paddingEnd="4dp"
                     android:text="취소 가능 기준 내용"
                     android:textSize="16sp"
@@ -346,6 +348,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
                 android:text="지도"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -360,9 +363,11 @@
                 android:background="@drawable/background_white_with_rounded_16dp_stroke"
                 android:clipToOutline="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps">
+
+            </com.naver.maps.map.MapView>
 
             <TextView
                 android:id="@+id/tv_detail_title_description"
@@ -371,10 +376,11 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
                 android:text="설명"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mv_detail_maps" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_detail_maps_snapshot"/>
 
             <TextView
                 android:id="@+id/tv_detail_show_more"
@@ -415,6 +421,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="8dp"
                     android:text="설명"
+                    android:textColor="#000000"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -425,6 +432,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
                 android:text="후기"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -470,6 +478,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_review" />
+
+            <ImageView
+                android:id="@+id/iv_detail_maps_snapshot"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/background_white_with_rounded_16dp_stroke"
+                android:clipToOutline="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/place_holder_1"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

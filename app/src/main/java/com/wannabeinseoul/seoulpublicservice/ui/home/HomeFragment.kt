@@ -29,9 +29,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.adapter.HomeSearchAdapter
-import com.wannabeinseoul.seoulpublicservice.adapter.ItemAdapter
-import com.wannabeinseoul.seoulpublicservice.adapter.SearchHistoryAdapter
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
@@ -56,8 +55,6 @@ class HomeFragment : Fragment() {
         val categories = listOf("Facility", "Education", "CultureEvent", "FacilityRent", "Medical")
         categories.flatMap { ItemRepository.getItems(it) }
     }
-
-//    private val itemAdapter: ItemAdapter by lazy { ItemAdapter(items, settingRegions()) }
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -84,13 +81,6 @@ class HomeFragment : Fragment() {
 
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
-
-
-//        // 지역 선택 화면으로 이동
-//        binding.tvSelectArea.setOnClickListener {
-//            val intent = Intent(context, InterestRegionSelectActivity::class.java)
-//            startActivity(intent)
-//        }
 
         binding.clHomeSetRegion.setOnClickListener {
             if (binding.clHomeRegionList.isVisible) {
@@ -188,8 +178,6 @@ class HomeFragment : Fragment() {
                 4 -> tab.text = "진료복지"
             }
         }.attach()
-
-//        itemAdapter.notifyDataSetChanged()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {

@@ -15,7 +15,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -33,7 +32,7 @@ import com.wannabeinseoul.seoulpublicservice.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
-import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
 
 class MapFragment : Fragment(), OnMapReadyCallback {

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentNotificationsBinding
-import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 
 class NotificationsFragment : Fragment() {
 
