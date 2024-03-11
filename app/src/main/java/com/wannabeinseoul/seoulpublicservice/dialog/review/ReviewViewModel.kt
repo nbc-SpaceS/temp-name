@@ -70,6 +70,10 @@ class ReviewViewModel(
         }
     }
 
+    fun setReviewsByList(list: List<ReviewItem>) {
+        _uiState.value = list
+    }
+
     fun reviseReview(svcId: String, review: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val id = idPrefRepository.load()

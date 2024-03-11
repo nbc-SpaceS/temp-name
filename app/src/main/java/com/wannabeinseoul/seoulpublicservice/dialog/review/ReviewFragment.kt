@@ -93,7 +93,13 @@ class ReviewFragment: BottomSheetDialogFragment() {
     }
 
     private fun initViewModel() = with(viewModel) {
-        setReviews(svcId)
+        val storedReviewList = mainViewModel.getCurrentReviewList()
+        if (storedReviewList.isNotEmpty()) {
+            setReviewsByList(storedReviewList)
+        } else {
+            setReviews(svcId)
+        }
+
         checkWritableUser(svcId)
 
         uiState.observe(viewLifecycleOwner) {

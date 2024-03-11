@@ -183,6 +183,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {       // Map Ïù¥Îè
         }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
+            mainViewModel.setCurrentReviewList(it)
         }
         vm.favoriteChanged.observe(viewLifecycleOwner) {
             favorite(it)
