@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,6 +69,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
         viewModel.getData(param1!!)
         viewModel.savedID(param1!!)
+        Log.i("This is DetailFragment","onCreate : ")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = Dialog(requireContext(), R.style.DetailTransparent)
@@ -84,11 +86,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
+        Log.i("This is DetailFragment","onViewCreated : ")
 //        binding.mvDetailMaps.visibility = View.VISIBLE
 //        binding.ivDetailMapsSnapshot.visibility = View.INVISIBLE
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         favorite(viewModel.savedID.value!!)
         fetchCallback()
+        Log.i("This is DetailFragment","onViewCreated / fetchCallback : ")
         connectToCommentList(requireContext())
     }
 
@@ -116,10 +120,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun fetchCallback() {
+        Log.i("This is DetailFragment","fetchCallback : ")
         getCurrentLocation {
             myLocation = it
             viewModel.myLocationCallbackEvent(true)
-
+            Log.i("This is DetailFragment","fetchCallback / getCurrentLocation : ")
             viewModelInit()
             viewInit()
             mapView.getMapAsync(this)
@@ -255,16 +260,16 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
                 isLocationButtonEnabled = false
                 isTiltGesturesEnabled = false
                 setLogoMargin(0, 0, 0, 0)
-//                Log.i("This is DetailFragment","onMapReady : setLogoMargin")
+                Log.i("This is DetailFragment","onMapReady : setLogoMargin")
             }
             markerStyle()
         }
-//        Log.i("This is DetailFragment","mapFinish: ")
+        Log.i("This is DetailFragment","mapFinish: ")
 //        viewModel.mapFinish(true)
     }
 
     private fun markerStyle() {
-//        Log.i("This is DetailFragment","markerStyle : ")
+        Log.i("This is DetailFragment","markerStyle : ")
         val marker = Marker()
         marker.position = itemLocation
         marker.map = naverMap
@@ -287,38 +292,45 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
+        Log.i("This is DetailFragment","onDismiss : ")
         viewModel.close(false)
     }
 
+
     override fun onStart() {
         super.onStart()
+        Log.i("This is DetailFragment","onStart : ")
         mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-//        Log.i("This is DetailFragment","onResume : ")
+        Log.i("This is DetailFragment","onResume : ")
     }
 
     override fun onPause() {
         super.onPause()
+        Log.i("This is DetailFragment","onPause : ")
         mapView.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        Log.i("This is DetailFragment","onSaveInstanceState : ")
         mapView.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
+        Log.i("This is DetailFragment","onStop : ")
         mapView.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mapView.onDestroy()
+        Log.i("This is DetailFragment","onDestroyView : ")
+//        mapView.onDestroy()
 //        viewModel.mapFinish(false)
         _binding = null
         dialog?.dismiss()
