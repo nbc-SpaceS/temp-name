@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -135,7 +136,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private fun initView() {
         binding.vpMapDetailInfo.adapter = adapter
-        binding.vpMapDetailInfo.registerOnPageChangeCallback(object : OnPageChangeCallback() {})
+        binding.vpMapDetailInfo.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.tvMapInfoCount.text = "${position + 1}"
+            }
+        })
         binding.vpMapDetailInfo.offscreenPageLimit = 1
 
         binding.rvMapSelectedOption.adapter = rvAdapter
@@ -156,6 +162,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         viewModel.initMap()
+        mainViewModel.applyFilter.observe(viewLifecycleOwner) {
+            if (it) {
+                viewModel.loadSavedOptions()
+                rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
+            }
+        }
     }
 
     private fun initViewModel() = with(viewModel) {
@@ -181,7 +193,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         updateData.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list.toList())
-            binding.tvMapInfoCount.text = list.size.toString()
+            binding.tvMapInfoCount.text = "1"
         }
 
         moveToUrl.observe(viewLifecycleOwner) {
@@ -231,13 +243,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         true
                     }
                 }
-            }
-        }
-
-        mainViewModel.applyFilter.observe(viewLifecycleOwner) {
-            if (it) {
-                viewModel.loadSavedOptions()
-                rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
             }
         }
     }
@@ -293,7 +298,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 y ?: app.lastLocation?.latitude ?: 37.5666,
                 x ?: app.lastLocation?.longitude ?: 126.9782
             ),
-            15.0
+            14.5
         ).animate(CameraAnimation.Easing, 600)
 
         naverMap.moveCamera(cameraUpdate)

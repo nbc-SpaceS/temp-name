@@ -93,6 +93,93 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_map_filter_btn" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_select_region_layout"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/mv_naver">
+
+        <TextView
+            android:id="@+id/tv_map_marker1_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_round"
+            android:backgroundTint="@color/marker1_solid"
+            android:paddingHorizontal="6dp"
+            android:text="문화체험"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_map_marker2_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/corners_round"
+            android:backgroundTint="@color/marker2_solid"
+            android:paddingHorizontal="6dp"
+            android:text="공간시설"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_map_marker1_description"
+            app:layout_constraintTop_toBottomOf="@+id/tv_map_marker1_description" />
+
+        <TextView
+            android:id="@+id/tv_map_marker3_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/corners_round"
+            android:backgroundTint="@color/marker3_solid"
+            android:paddingHorizontal="6dp"
+            android:text="진료복지"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_map_marker2_description"
+            app:layout_constraintTop_toBottomOf="@+id/tv_map_marker2_description" />
+
+        <TextView
+            android:id="@+id/tv_map_marker4_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/corners_round"
+            android:backgroundTint="@color/marker4_solid"
+            android:paddingHorizontal="6dp"
+            android:text="체육시설"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tv_map_marker3_description"
+            app:layout_constraintTop_toBottomOf="@+id/tv_map_marker3_description" />
+
+        <TextView
+            android:id="@+id/tv_map_marker5_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/corners_round"
+            android:backgroundTint="@color/marker5_solid"
+            android:paddingHorizontal="6dp"
+            android:text="교육강좌"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_map_marker4_description"
+            app:layout_constraintTop_toBottomOf="@+id/tv_map_marker4_description" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_map_info_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
