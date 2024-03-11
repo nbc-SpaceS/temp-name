@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.filter
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.filter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,21 +8,24 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
+import com.wannabeinseoul.seoulpublicservice.usecase.LoadSavedFilterOptionsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SaveFilterOptionsUseCase
 
 class FilterViewModel(
-    private val filterPrefRepository: FilterPrefRepository
+    private val saveFilterOptionsUseCase: SaveFilterOptionsUseCase,
+    private val loadSavedFilterOptionsUseCase: LoadSavedFilterOptionsUseCase
 ) : ViewModel() {
 
-    private val selectedOptions = listOf(
-        mutableListOf<String>(), // 서비스 종류의 '체육시설'
-        mutableListOf<String>(), // 서비스 종류의 '교육'
-        mutableListOf<String>(), // 서비스 종류의 '문화행사'
-        mutableListOf<String>(), // 서비스 종류의 '시설대관'
-        mutableListOf<String>(), // 서비스 종류의 '진료'
-        mutableListOf<String>(), // 관심 지역의 '서울시'
-        mutableListOf<String>(), // 관심 지역의 '이외지역'
-        mutableListOf<String>(), // '접수 가능 여부'
-        mutableListOf<String>()  // '요금'
+    private val selectedOptions = listOf<MutableList<String>>(
+        mutableListOf(), // 서비스 종류의 '체육시설'
+        mutableListOf(), // 서비스 종류의 '교육'
+        mutableListOf(), // 서비스 종류의 '문화행사'
+        mutableListOf(), // 서비스 종류의 '시설대관'
+        mutableListOf(), // 서비스 종류의 '진료'
+        mutableListOf(), // 관심 지역의 '서울시'
+        mutableListOf(), // 관심 지역의 '이외지역'
+        mutableListOf(), // '접수 가능 여부'
+        mutableListOf()  // '요금'
     )
 
     private val _loadedFilterOptions: MutableLiveData<List<List<String>>> = MutableLiveData()
@@ -44,11 +47,11 @@ class FilterViewModel(
     }
 
     fun save() {
-        filterPrefRepository.save(selectedOptions)
+        saveFilterOptionsUseCase(selectedOptions)
     }
 
     fun load() {
-        _loadedFilterOptions.value = filterPrefRepository.load()
+        _loadedFilterOptions.value = loadSavedFilterOptionsUseCase()
         _enableReset.value = loadedFilterOptions.value.orEmpty().any { it.isNotEmpty() }
     }
 
@@ -59,7 +62,8 @@ class FilterViewModel(
                 val application = (this[APPLICATION_KEY] as SeoulPublicServiceApplication)
                 val container = application.container
                 FilterViewModel(
-                    filterPrefRepository = container.filterPrefRepository
+                    saveFilterOptionsUseCase = container.saveFilterOptionsUseCase,
+                    loadSavedFilterOptionsUseCase = container.loadSavedFilterOptionsUseCase
                 )
             }
         }

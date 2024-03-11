@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,12 +27,12 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
-import com.wannabeinseoul.seoulpublicservice.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
-import com.wannabeinseoul.seoulpublicservice.dialog.filter.FilterFragment
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.filter.FilterFragment
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -48,10 +47,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private val app by lazy {
         requireActivity().application as SeoulPublicServiceApplication
-    }
-
-    private val container by lazy {
-        app.container
     }
 
     private val activeMarkers: MutableList<Marker> = mutableListOf()
@@ -76,14 +71,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             shareUrl = { url ->
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/html"
-                val url = url
                 intent.putExtra(Intent.EXTRA_TEXT, url)
                 val text = "공유하기"
                 startActivity(Intent.createChooser(intent, text))
             },
             moveDetailPage = { id ->
                 viewModel.changeVisible(false)
-                Log.d("MapFragment", "${mainViewModel.getServiceId()}")
                 activeMarkers.forEach { marker ->
                     marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                     marker.zIndex = 0
@@ -91,7 +84,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 val dialog = DetailFragment.newInstance(id)
                 dialog.show(requireActivity().supportFragmentManager, "Detail")
             },
-            savedPrefRepository = container.savedPrefRepository
+            savedPrefRepository = viewModel.getSavedPrefRepository()
         )
     }
 
@@ -144,7 +137,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.vpMapDetailInfo.offscreenPageLimit = 1
 
         binding.rvMapSelectedOption.adapter = rvAdapter
-        rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
+        rvAdapter.submitList(viewModel.loadSavedOptions().flatten())
 
         binding.tvMapFilterBtn.setOnClickListener {
             viewModel.changeVisible(false)
@@ -163,14 +156,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         viewModel.initMap()
         mainViewModel.applyFilter.observe(viewLifecycleOwner) {
             if (it) {
-                viewModel.loadSavedOptions()
-                rvAdapter.submitList(app.container.filterPrefRepository.load().flatten())
+                viewModel.setServiceData()
+                rvAdapter.submitList(viewModel.loadSavedOptions().flatten())
             }
         }
     }
 
     private fun initViewModel() = with(viewModel) {
-        if (!isStart) viewModel.loadSavedOptions()
+        if (!isStart) viewModel.setServiceData()
         isStart = true
 
         hasFilter.observe(viewLifecycleOwner) {
@@ -254,7 +247,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         viewModel.checkReadyMap()
 
-        naverMap.setOnMapClickListener { pointF, latLng ->
+        naverMap.setOnMapClickListener { _, _ ->
             viewModel.changeVisible(false)
             activeMarkers.forEach { marker ->
                 marker.iconTintColor = requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)

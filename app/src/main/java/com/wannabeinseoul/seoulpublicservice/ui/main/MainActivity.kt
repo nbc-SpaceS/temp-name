@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice
+package com.wannabeinseoul.seoulpublicservice.ui.main
 
 import android.Manifest
 import android.content.Context
@@ -16,6 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
