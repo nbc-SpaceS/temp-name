@@ -11,6 +11,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemProfileBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedNothingBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemSavedBinding
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 import com.wannabeinseoul.seoulpublicservice.util.parseColor
@@ -36,6 +37,7 @@ class MyPageAdapter(
             SAVED,
             REVIEWED_HEADER,
             REVIEWED,
+            REVIEWED_NOTHING,
 //            LOADING,
         }
 
@@ -62,6 +64,10 @@ class MyPageAdapter(
             val reviewedData: ReviewedData
         ) : MultiView {
             override val viewType: Type = Type.REVIEWED
+        }
+
+        data object ReviewedNothing : MultiView {
+            override val viewType: Type = Type.REVIEWED_NOTHING
         }
 
 //        data object Loading : MultiView {
@@ -149,6 +155,11 @@ class MyPageAdapter(
         }
     }
 
+    inner class ReviewedNothingHolder(b: MyPageItemReviewedNothingBinding) :
+        CommonViewHolder(b.root) {
+        override fun onBind(item: MultiView) {}
+    }
+
 //    inner class LoadingHolder(private val b: ItemLoadingProgressBinding) :
 //        CommonViewHolder(b.root) {
 //        override fun onBind(item: MultiView) {
@@ -164,11 +175,6 @@ class MyPageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonViewHolder {
         return when (MultiView.Type.values()[viewType]) {
-            MultiView.Type.REVIEWED_HEADER -> ReviewedHeaderHolder(
-                MyPageItemReviewedHeaderBinding
-                    .inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-
             MultiView.Type.PROFILE -> ProfileHolder(
                 MyPageItemProfileBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -179,8 +185,18 @@ class MyPageAdapter(
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 
+            MultiView.Type.REVIEWED_HEADER -> ReviewedHeaderHolder(
+                MyPageItemReviewedHeaderBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+
             MultiView.Type.REVIEWED -> ReviewedHolder(
                 MyPageItemReviewedBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+
+            MultiView.Type.REVIEWED_NOTHING -> ReviewedNothingHolder(
+                MyPageItemReviewedNothingBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 

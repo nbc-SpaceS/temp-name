@@ -123,9 +123,11 @@ class MyPageFragment : Fragment() {
         }
         vm.reviewedList.observe(viewLifecycleOwner) { reviewedDataList ->
             Log.d("jj-마이페이지 프래그먼트", "옵저버:reviewedList ${reviewedDataList.toString().take(255)}")
-            myPageAdapter.submitList(fixedItems + reviewedDataList.map {
-                MyPageAdapter.MultiView.Reviewed(it)
-            })
+            myPageAdapter.submitList(fixedItems +
+                    if (reviewedDataList.isEmpty()) listOf(MyPageAdapter.MultiView.ReviewedNothing)
+                    else reviewedDataList.map { MyPageAdapter.MultiView.Reviewed(it) }
+            )
         }
     }
+
 }
