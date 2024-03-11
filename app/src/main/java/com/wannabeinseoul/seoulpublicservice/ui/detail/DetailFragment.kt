@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.detail
+package com.wannabeinseoul.seoulpublicservice.ui.detail
 
 import android.Manifest
 import android.app.Dialog

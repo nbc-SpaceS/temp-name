@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.detail
+package com.wannabeinseoul.seoulpublicservice.ui.detail
 
 data class DetailCommentType(
     val name: String,

@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.detail
+package com.wannabeinseoul.seoulpublicservice.ui.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
