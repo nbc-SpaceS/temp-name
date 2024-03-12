@@ -14,9 +14,9 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
-import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -83,16 +83,6 @@ class DetailViewModel(
 
     fun mapFinish(event: Boolean) {
         _mapSettingFinished.value = event
-    }
-
-    fun clear() {
-        _closeEvent = MutableLiveData()
-        _favoriteChanged = MutableLiveData()
-        _savedID = MutableLiveData()
-        _serviceData = MutableLiveData()
-        _textState = MutableLiveData()
-        _mapSettingFinished = MutableLiveData()
-        _myLocationCallback = MutableLiveData()
     }
 
     fun changeFavorite(id: String) {

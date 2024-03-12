@@ -335,7 +335,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         mapView.onDestroy()
         Log.i("This is DetailFragment","onDestroyView : ")
         _binding = null
-        viewModel.clear()
         dialog?.dismiss()
     }
 
