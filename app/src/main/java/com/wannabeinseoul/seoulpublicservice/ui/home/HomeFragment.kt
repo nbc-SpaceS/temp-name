@@ -26,17 +26,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
-import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
-import com.wannabeinseoul.seoulpublicservice.data.Item
-import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
