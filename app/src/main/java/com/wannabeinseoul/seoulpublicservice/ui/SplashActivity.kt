@@ -3,6 +3,7 @@ package com.wannabeinseoul.seoulpublicservice.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.animation.AlphaAnimation
 import androidx.appcompat.app.AppCompatActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainActivity
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -29,6 +30,11 @@ class SplashActivity : AppCompatActivity() {
         /** 액티비티에서 의존성 주입 */
         val app = (application as SeoulPublicServiceApplication)
         val container = app.container
+
+        binding.tvSplashDescription.startAnimation(AlphaAnimation(0.0f, 0.1f).apply {
+            startOffset = 100
+            duration = 1500
+        })
 
         app.initialLoadingFinished.let { livedata ->
             livedata.observe(this) {

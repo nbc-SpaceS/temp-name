@@ -284,7 +284,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         Handler(Looper.getMainLooper()).postDelayed({
             naverMap.takeSnapshot {
                 Log.i("This is DetailFragment","take Snapshot : $it")
-                binding.ivDetailMapsSnapshot.loadWithHolder(it)   // 로딩 이미지가 순식간에 지나가긴 하는데 너무 거슬려서 일단 주석처리함
+//                binding.ivDetailMapsSnapshot.loadWithHolder(it)   // 로딩 이미지가 순식간에 지나가긴 하는데 너무 거슬려서 일단 주석처리함
+                binding.ivDetailMapsSnapshot.setImageBitmap(it)
                 binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
                 binding.mvDetailMaps.visibility = View.GONE  // VISIBLE 일 때 지도랑 이미지뷰랑 같이 뿅! 하고 사라져버림
             }
