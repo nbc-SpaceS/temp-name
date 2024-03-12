@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemProfileBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedNothingBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemSavedBinding
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 import com.wannabeinseoul.seoulpublicservice.util.parseColor
@@ -36,6 +38,7 @@ class MyPageAdapter(
             SAVED,
             REVIEWED_HEADER,
             REVIEWED,
+            REVIEWED_NOTHING,
 //            LOADING,
         }
 
@@ -62,6 +65,10 @@ class MyPageAdapter(
             val reviewedData: ReviewedData
         ) : MultiView {
             override val viewType: Type = Type.REVIEWED
+        }
+
+        data object ReviewedNothing : MultiView {
+            override val viewType: Type = Type.REVIEWED_NOTHING
         }
 
 //        data object Loading : MultiView {
@@ -121,10 +128,16 @@ class MyPageAdapter(
         private var isAdapterNotBound = true
 
         override fun onBind(item: MultiView) {
+            item as MultiView.Saved
             if (isAdapterNotBound) {
-                b.rvSaved.adapter = (item as MultiView.Saved).myPageSavedAdapter
+                b.rvSaved.adapter = item.myPageSavedAdapter
                 isAdapterNotBound = false
             }
+
+            // TODO: onBind에서 하면 전체삭제 했을 때 안바뀜.
+            //  프래그먼트에서 옵저빙해서 바꿔야. 호출을 거기서 만드려면 람다식으로는 불가.
+            //  그냥 텍뷰를 public으로 뽑아서 만져야하나..?
+            b.tvSavedNothing.isVisible = item.myPageSavedAdapter.itemCount == 0
         }
     }
 
@@ -149,6 +162,11 @@ class MyPageAdapter(
         }
     }
 
+    inner class ReviewedNothingHolder(b: MyPageItemReviewedNothingBinding) :
+        CommonViewHolder(b.root) {
+        override fun onBind(item: MultiView) {}
+    }
+
 //    inner class LoadingHolder(private val b: ItemLoadingProgressBinding) :
 //        CommonViewHolder(b.root) {
 //        override fun onBind(item: MultiView) {
@@ -164,11 +182,6 @@ class MyPageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonViewHolder {
         return when (MultiView.Type.values()[viewType]) {
-            MultiView.Type.REVIEWED_HEADER -> ReviewedHeaderHolder(
-                MyPageItemReviewedHeaderBinding
-                    .inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-
             MultiView.Type.PROFILE -> ProfileHolder(
                 MyPageItemProfileBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -179,8 +192,18 @@ class MyPageAdapter(
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 
+            MultiView.Type.REVIEWED_HEADER -> ReviewedHeaderHolder(
+                MyPageItemReviewedHeaderBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+
             MultiView.Type.REVIEWED -> ReviewedHolder(
                 MyPageItemReviewedBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+
+            MultiView.Type.REVIEWED_NOTHING -> ReviewedNothingHolder(
+                MyPageItemReviewedNothingBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 
