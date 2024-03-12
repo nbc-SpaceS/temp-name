@@ -149,9 +149,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun viewModelInit() = viewModel.let { vm ->
-        vm.myLocationCallback.observe(viewLifecycleOwner) {
-            if(it) myLocCall = true
-        }
+        vm.myLocationCallback.observe(viewLifecycleOwner) { if(it) myLocCall = true }
         vm.serviceData.observe(viewLifecycleOwner) { data ->
             checkLatLng(data)
             bind(data)
@@ -162,20 +160,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             textOpen = it
             showMore(it)
         }
-        vm.closeEvent.observe(viewLifecycleOwner) { close ->
-            if(close) dismiss()
-        }
+        vm.closeEvent.observe(viewLifecycleOwner) { close -> if(close) dismiss() }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
             binding.tvDetailEmptyDescription.isVisible = it.isEmpty()
             mainViewModel.setCurrentReviewList(it)
         }
-        vm.favoriteChanged.observe(viewLifecycleOwner) {
-            favorite(it)
-        }
-        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
-            vm.setReviews(param1!!)
-        }
+        vm.favoriteChanged.observe(viewLifecycleOwner) { favorite(it) }
+        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) { vm.setReviews(param1!!) }
     }
 
     private fun bind(data : ReservationEntity) {
@@ -207,15 +199,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun distanceCheck() {
-        val distance = viewModel.distance(itemLocation, myLocation)
-        binding.tvDetailDistanceFromHere.text = viewModel.distanceCheckResponse(distance)
+        binding.tvDetailDistanceFromHere.text = viewModel.distanceCheckResponse(viewModel.distance(itemLocation, myLocation))
     }
 
     override fun onMapReady(nMap: NaverMap) {
         naverMap = nMap
         naverMap.apply {
-            maxZoom = 19.0
-            minZoom = 11.0
             locationSource = locationSource
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
@@ -265,7 +254,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         Handler(Looper.getMainLooper()).postDelayed({
             naverMap.takeSnapshot {
                 Log.i("This is DetailFragment","take Snapshot : $it")
-//                binding.ivDetailMapsSnapshot.loadWithHolder(it)   // 로딩 이미지가 순식간에 지나가긴 하는데 너무 거슬려서 일단 주석처리함
                 binding.ivDetailMapsSnapshot.setImageBitmap(it)
                 binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
                 binding.mvDetailMaps.visibility = View.GONE  // VISIBLE 일 때 지도랑 이미지뷰랑 같이 뿅! 하고 사라져버림
@@ -279,7 +267,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         Log.i("This is DetailFragment","onDismiss : ")
         viewModel.close(false)
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -323,8 +310,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         super.onLowMemory()
         mapView.onLowMemory()
     }
-
-
 
     private fun showMore(state : Boolean) {
         val text = binding.tvDetailDescription
