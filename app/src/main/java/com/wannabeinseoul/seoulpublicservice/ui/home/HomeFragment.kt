@@ -37,6 +37,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -134,9 +135,10 @@ class HomeFragment : Fragment() {
             binding.viewControlSpinner.isVisible = false
         }
 
-        // 공지사항 화면으로 이동
+        // 알림 화면으로 이동
         binding.ivNotification.setOnClickListener {
-
+            val notificationFragment = NotificationsFragment.newInstance()
+            notificationFragment.show(requireActivity().supportFragmentManager, "NotificationFragment")
         }
 
         binding.ivSearch.setOnClickListener {
