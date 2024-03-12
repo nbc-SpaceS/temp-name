@@ -14,6 +14,7 @@ import com.wannabeinseoul.seoulpublicservice.usecase.GetSavedServiceUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.LoadSavedFilterOptionsUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.MappingDetailInfoWindowUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.SaveServiceUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SearchServiceDataOnMapUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -22,7 +23,8 @@ class MapViewModel(
     private val filterServiceDataOnMapUseCase: FilterServiceDataOnMapUseCase,
     private val saveServiceUseCase: SaveServiceUseCase,
     private val mappingDetailInfoWindowUseCase: MappingDetailInfoWindowUseCase,
-    private val getSavedServiceUseCase: GetSavedServiceUseCase
+    private val getSavedServiceUseCase: GetSavedServiceUseCase,
+    private val searchServiceDataOnMapUseCase: SearchServiceDataOnMapUseCase
 ) : ViewModel() {
 
     private var readyMap: Boolean = false
@@ -36,9 +38,6 @@ class MapViewModel(
 
     private var _canStart: MutableLiveData<Boolean> = MutableLiveData()
     val canStart: LiveData<Boolean> get() = _canStart
-
-    private var _visibleInfoWindow: MutableLiveData<Boolean> = MutableLiveData()
-    val visibleInfoWindow: LiveData<Boolean> get() = _visibleInfoWindow
 
     private var _filteringData: MutableLiveData<HashMap<Pair<String, String>, List<Row>>> =
         MutableLiveData()
@@ -68,6 +67,24 @@ class MapViewModel(
         }
     }
 
+    fun setServiceData(word: String) {
+        _canStart.value = false
+        readyData = false
+        val savedOptions = loadSavedOptions()
+
+        _filterCount = savedOptions.count { it.isNotEmpty() }
+//        _hasFilter.value = savedOptions.any { it.isNotEmpty() }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            _filteringData.postValue(searchServiceDataOnMapUseCase(word, savedOptions))
+
+            readyData = true
+            if (readyMap) {
+                _canStart.postValue(true)
+            }
+        }
+    }
+
     fun loadSavedOptions(): List<List<String>> = loadSavedFilterOptionsUseCase()
 
     fun checkReadyMap() {
@@ -85,10 +102,6 @@ class MapViewModel(
         _moveToUrl.value = url
     }
 
-    fun changeVisible(flag: Boolean) {
-        _visibleInfoWindow.value = flag
-    }
-
     fun updateInfo(info: List<Row>) {
         _updateData.value = mappingDetailInfoWindowUseCase(info)
     }
@@ -102,7 +115,6 @@ class MapViewModel(
     fun clearData() {
         _filteringData = MutableLiveData()
         _hasFilter = MutableLiveData()
-        _visibleInfoWindow = MutableLiveData()
         _updateData = MutableLiveData()
         _moveToUrl = MutableLiveData()
     }
@@ -118,7 +130,8 @@ class MapViewModel(
                     filterServiceDataOnMapUseCase = container.filterServiceDataOnMapUseCase,
                     saveServiceUseCase = container.saveServiceUseCase,
                     mappingDetailInfoWindowUseCase = container.mappingDetailInfoWindowUseCase,
-                    getSavedServiceUseCase = container.getSavedServiceUseCase
+                    getSavedServiceUseCase = container.getSavedServiceUseCase,
+                    searchServiceDataOnMapUseCase = container.searchServiceDataOnMapUseCase
                 )
             }
         }

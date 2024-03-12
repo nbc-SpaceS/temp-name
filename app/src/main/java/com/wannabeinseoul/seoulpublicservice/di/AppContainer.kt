@@ -52,6 +52,7 @@ import com.wannabeinseoul.seoulpublicservice.usecase.MappingDetailInfoWindowUseC
 import com.wannabeinseoul.seoulpublicservice.usecase.ReviseReviewUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.SaveFilterOptionsUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.SaveServiceUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SearchServiceDataOnMapUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.UploadReviewUseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -81,6 +82,7 @@ interface AppContainer {
     val reviseReviewUseCase: ReviseReviewUseCase
     val checkCredentialsUseCase: CheckCredentialsUseCase
     val checkComplaintSelfUseCase: CheckComplaintSelfUseCase
+    val searchServiceDataOnMapUseCase: SearchServiceDataOnMapUseCase
     val prefRepository: PrefRepository
     val rowPrefRepository: RowPrefRepository
     val regionPrefRepository: RegionPrefRepository
@@ -230,6 +232,13 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         CheckComplaintSelfUseCase(
             idPrefRepository = idPrefRepository,
             userRepository = userRepository
+        )
+    }
+
+    override val searchServiceDataOnMapUseCase by lazy {
+        SearchServiceDataOnMapUseCase(
+            reservationRepository = reservationRepository,
+            dbMemoryRepository = dbMemoryRepository
         )
     }
 
