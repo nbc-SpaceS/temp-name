@@ -8,7 +8,8 @@ data class CategoryData(
     val payType: String, // 지불 유형
     val areaName: String, // 지역 이름
     val isReservationAvailable: Boolean, // 예약 가능 여부
-    val svcid: String // 서비스 ID
+    val svcid: String, // 서비스 ID
+    val minclassnm: String
 )
 
 fun Row.convertToCategoryData() = CategoryData(
@@ -17,7 +18,8 @@ fun Row.convertToCategoryData() = CategoryData(
     payType = this.payatnm,
     areaName = this.areanm,
     isReservationAvailable = this.svcstatnm == "예약가능",
-    svcid = this.svcid
+    svcid = this.svcid,
+    minclassnm = this.minclassnm
 )
 
 fun List<Row>.convertToCategoryDataList(): List<CategoryData> =
