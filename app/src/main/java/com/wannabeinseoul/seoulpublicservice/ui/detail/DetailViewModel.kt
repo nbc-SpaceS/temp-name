@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.naver.maps.geometry.LatLng
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
@@ -20,6 +21,12 @@ import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class DetailViewModel(
     private val reservationRepository: ReservationRepository,
@@ -115,6 +122,33 @@ class DetailViewModel(
                     userBanRepository = container.userBanRepository
                 )
             }
+        }
+    }
+
+    fun dateFormat(date: String): String {  // 날짜 포맷
+        val datePattern = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+        val dateTime = LocalDateTime.parse(date, formatter)
+        return datePattern.format(dateTime)
+    }
+
+    // 두 지점 간의 직선 거리를 계산하는 함수
+    fun distance(point1: LatLng, point2: LatLng): Double {
+        val R = 6371 // 지구의 반지름 (단위: km)
+        val latDistance = Math.toRadians(point2.latitude - point1.latitude)
+        val lonDistance = Math.toRadians(point2.longitude - point1.longitude)
+        val a = sin(latDistance / 2) * sin(latDistance / 2) +
+                (cos(Math.toRadians(point1.latitude)) * cos(Math.toRadians(point2.latitude)) *
+                        sin(lonDistance / 2) * sin(lonDistance / 2))
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return R * c * 1000 // 단위를 미터로 변환
+    }
+
+    fun distanceCheckResponse(distance : Double): String {
+        return when {
+            distance/1000 < 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
+            distance/1000 >= 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+            else -> "현위치로부터 ?km"
         }
     }
 }
