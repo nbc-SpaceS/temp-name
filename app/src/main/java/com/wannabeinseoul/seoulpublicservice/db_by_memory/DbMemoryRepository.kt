@@ -40,6 +40,14 @@ interface DbMemoryRepository {
         payatnm: List<String>? = null
     ): List<Row>
 
+    fun getFilteredPlusWord(
+        word: String,
+        minclassnm: List<String>? = null,
+        areanm: List<String>? = null,
+        svcstatnm: List<String>? = null,
+        payatnm: List<String>? = null
+    ): List<Row>
+
     fun findBySvcid(svcid: String): Row?
 }
 
@@ -56,6 +64,16 @@ class DbMemoryRepositoryImpl(private val getAppRowList: () -> List<Row>) : DbMem
         payatnm: List<String>?
     ): List<Row> {
         return getHaveLocation().getFiltered(minclassnm, areanm, svcstatnm, payatnm)
+    }
+
+    override fun getFilteredPlusWord(
+        word: String,
+        minclassnm: List<String>?,
+        areanm: List<String>?,
+        svcstatnm: List<String>?,
+        payatnm: List<String>?
+    ): List<Row> {
+        return getHaveLocation().getFilteredPlusWord(word, minclassnm, areanm, svcstatnm, payatnm)
     }
 
     override fun findBySvcid(svcid: String) = getAppRowList().find { it.svcid == svcid }
@@ -97,3 +115,32 @@ fun List<Row>.getFiltered(
         }
     }
 }
+
+fun List<Row>.getFilteredPlusWord(
+    word: String,
+    minclassnm: List<String>?,
+    areanm: List<String>?,
+    svcstatnm: List<String>?,
+    payatnm: List<String>?
+): List<Row> {
+    return if (areanm?.any { it == "시외" || it == "서울제외지역" } == true) {
+        getHaveLocation().filter {
+            (it.svcnm.contains(word) || it.placenm.contains(word) || it.areanm.contains(word)
+                    || it.telno.contains(word) || it.minclassnm.contains(word) || it.usetgtinfo.contains(word)) &&
+                    (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
+                    (areanm.isEmpty() || it.areanm.isNotBlank() && (it.areanm in areanm || it.isNotInSeoul())) &&
+                    (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
+                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
+        }
+    } else {
+        getHaveLocation().filter {
+            (it.svcnm.contains(word) || it.placenm.contains(word) || it.areanm.contains(word)
+                    || it.telno.contains(word) || it.minclassnm.contains(word) || it.usetgtinfo.contains(word)) &&
+                    (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
+                    (areanm.isNullOrEmpty() || it.areanm in areanm) &&
+                    (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
+                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
+        }
+    }
+}
+

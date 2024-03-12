@@ -15,8 +15,10 @@
         android:background="@drawable/background_radius_12dp_edittext"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="5dp"
-        android:enabled="false"
         android:hint="검색어를 입력하세요."
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
         android:paddingStart="8dp"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,6 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="-6dp"
         android:layout_marginEnd="-4dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/tv_map_filter_btn"
         app:layout_constraintTop_toTopOf="@+id/tv_map_filter_btn">
 
