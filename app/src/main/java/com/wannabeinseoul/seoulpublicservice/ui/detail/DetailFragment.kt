@@ -27,11 +27,11 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
-import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewFragment
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -176,7 +176,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
         vm.closeEvent.observe(viewLifecycleOwner) { close ->
             if(close) {
-//                snapshotCallback()
                 dismiss()
             }
         }
@@ -191,12 +190,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
             vm.setReviews(param1!!)
         }
-//        vm.mapSettingFinished.observe(viewLifecycleOwner) {
-//            if(it) {
-////                dismiss()
-//                snapshotCallback()
-//            }
-//        }
     }
 
     private fun bind(data : ReservationEntity) {
@@ -291,10 +284,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         Handler(Looper.getMainLooper()).postDelayed({
             naverMap.takeSnapshot {
                 Log.i("This is DetailFragment","take Snapshot : $it")
-//                binding.ivDetailMapsSnapshot.loadWithHolder(it)   // 로딩 이미지가 순식간에 지나가긴 하는데 너무 거슬려서 일단 주석처리함
-                binding.ivDetailMapsSnapshot.setImageBitmap(it)
+                binding.ivDetailMapsSnapshot.loadWithHolder(it)   // 로딩 이미지가 순식간에 지나가긴 하는데 너무 거슬려서 일단 주석처리함
                 binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
-                binding.mvDetailMaps.visibility = View.GONE
+                binding.mvDetailMaps.visibility = View.GONE  // VISIBLE 일 때 지도랑 이미지뷰랑 같이 뿅! 하고 사라져버림
             }
             Log.i("This is DetailFragment","Handler/snapshotCallback : ")
         }, 1200)
@@ -340,9 +332,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mapView.onDestroy()
         Log.i("This is DetailFragment","onDestroyView : ")
         _binding = null
-        mapView.onDestroy()
         viewModel.clear()
         dialog?.dismiss()
     }
@@ -399,7 +391,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     // 두 지점 간의 직선 거리를 계산하는 함수
     private fun distance(point1: LatLng, point2: LatLng): Double {
         val R = 6371 // 지구의 반지름 (단위: km)
-
         val latDistance = Math.toRadians(point2.latitude - point1.latitude)
         val lonDistance = Math.toRadians(point2.longitude - point1.longitude)
         val a = sin(latDistance / 2) * sin(latDistance / 2) +
