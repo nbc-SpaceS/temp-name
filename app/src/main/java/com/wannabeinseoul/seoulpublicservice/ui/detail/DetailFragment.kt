@@ -297,7 +297,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
                 binding.mvDetailMaps.visibility = View.GONE
             }
             Log.i("This is DetailFragment","Handler/snapshotCallback : ")
-        }, 5000)
+        }, 1800)
         viewModel.mapFinish(true)
     }
 
