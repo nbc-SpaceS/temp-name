@@ -42,20 +42,38 @@ class RecommendationViewModel(
     private val _forthRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
     val forthRecommendation: LiveData<List<RecommendationData>> get() = _forthRecommendation
 
-    private val recommendationList = listOf(
+    val recommendationList = listOf(
         _firstRecommendation,
         _secondRecommendation,
         _thirdRecommendation,
         _forthRecommendation
     )
 
+//    private var aa = List(4) {
+//        RecommendationAdapter
+//            .MultiView.Horizontal(
+//                "",
+//                RecommendationHorizontalAdapter(
+//                    emptyList<RecommendationData>().toMutableList(),
+//                    showDetailFragment
+//                )
+//            )
+//
+//    }
+
     fun getList(query: String, position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val entity = reservationRepository.getFilter(emptyList(), listOf(query), emptyList(), emptyList())
+            val entity = reservationRepository.searchText(query)
+//            val entity = reservationRepository.getFilter(emptyList(), listOf(query), emptyList(), emptyList())
             val count = serviceRepository.getServiceReviewsCount(entity.take(5).map { it.SVCID })
 
             val itemList = mutableListOf<RecommendationData>()
-            for (i in 0 until 5) {
+
+            val minSize = minOf(entity.size, count.size)
+
+            require(minSize >= 5) { "entity 또는 count의 크기가 충분하지 않습니다." }
+
+            for (i in 0 until minSize) {
                 itemList.add(RecommendationData(
                     payType = entity[i].PAYATNM,
                     areaName = entity[i].AREANM,
