@@ -4,11 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -16,7 +14,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
@@ -70,28 +67,38 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             moveReservationPage = { url ->
                 changeDetailVisible(false)
                 zoomOut()
+
                 activeMarkers.forEach { marker ->
                     marker.iconTintColor =
                         requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                     marker.zIndex = 0
                 }
-                viewModel.moveReservationPage(url)
+
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(url)
+                    )
+                )
             },
             shareUrl = { url ->
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/html"
                 intent.putExtra(Intent.EXTRA_TEXT, url)
                 val text = "공유하기"
+
                 startActivity(Intent.createChooser(intent, text))
             },
             moveDetailPage = { id ->
                 changeDetailVisible(false)
                 zoomOut()
+
                 activeMarkers.forEach { marker ->
                     marker.iconTintColor =
                         requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                     marker.zIndex = 0
                 }
+
                 val dialog = DetailFragment.newInstance(id)
                 dialog.show(requireActivity().supportFragmentManager, "Detail")
             },
@@ -155,12 +162,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         binding.tvMapFilterBtn.setOnClickListener {
             changeDetailVisible(false)
-            zoomOut()
+
             activeMarkers.forEach { marker ->
                 marker.iconTintColor =
                     requireContext().getColor(matchingColor[marker.tag] ?: R.color.gray)
                 marker.zIndex = 0
             }
+
             val dialog = FilterFragment.newInstance()
             dialog.show(requireActivity().supportFragmentManager, "FilterFragment")
         }
@@ -185,7 +193,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         binding.etMapSearch.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 changeDetailVisible(false)
-                zoomOut()
             }
         }
 
@@ -216,15 +223,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         updateData.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list.toList())
             binding.tvMapInfoCount.text = "1"
-        }
-
-        moveToUrl.observe(viewLifecycleOwner) {
-            startActivity(
-                Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(it)
-                )
-            )
         }
 
         canStart.observe(viewLifecycleOwner) { start ->
@@ -377,6 +375,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
+        binding.etMapSearch.setText("")
         mapView.onPause()
     }
 
@@ -387,13 +386,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStop() {
         super.onStop()
-        viewModel.clearData()
         mapView.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.clearData()
         mapView.onDestroy()
     }
 
