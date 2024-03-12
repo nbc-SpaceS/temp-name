@@ -26,6 +26,7 @@ class RecommendationViewModel(
     private val serviceRepository: ServiceRepository
 ) : ViewModel() {
 
+
     private val _recommendations = MutableLiveData<List<RecommendationAdapter.MultiView>>()
     val recommendations: LiveData<List<RecommendationAdapter.MultiView>> get() = _recommendations
 
@@ -62,11 +63,17 @@ class RecommendationViewModel(
                     svcstatnm = entity[i].SVCSTATNM,
                     imageUrl = entity[i].IMGURL,
                     svcid = entity[i].SVCID,
+                    usetgtinfo = entity[i].USETGTINFO,
                     reviewCount = count[i]
                 ))
             }
 
-            recommendationList[position].postValue(itemList)
+            when(position) {
+                0 -> _firstRecommendation.postValue(itemList)
+                1 -> _secondRecommendation.postValue(itemList)
+                2 -> _thirdRecommendation.postValue(itemList)
+                3 -> _forthRecommendation.postValue(itemList)
+            }
         }
     }
 

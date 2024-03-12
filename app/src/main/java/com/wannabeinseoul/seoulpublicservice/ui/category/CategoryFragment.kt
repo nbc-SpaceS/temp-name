@@ -9,20 +9,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentCategoryBinding
 import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
+
 //ctrl alt o
 class CategoryFragment : Fragment() {
 
     private lateinit var binding: FragmentCategoryBinding
-//    private lateinit var categoryAdapter: CategoryAdapter
-    private val viewModel: CategoryViewModel by viewModels{CategoryViewModel.factory}
+
+    //    private lateinit var categoryAdapter: CategoryAdapter
+    private val viewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
 
     private val showDetailFragment = { svcid: String ->
         DetailFragment.newInstance(svcid)
             .show(requireActivity().supportFragmentManager, "Detail")
-            }
+    }
 
     private val adapter by lazy {
-        CategoryAdapter{}
+        CategoryAdapter {}
     }
 
     override fun onCreateView(
@@ -36,6 +38,10 @@ class CategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.ivCategoryBack.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         initView()
         initViewModel()
