@@ -152,6 +152,18 @@ class FilterFragment : DialogFragment() {
         )
     }
 
+    private val chipGroupCountList by lazy {
+        listOf(
+            binding.tvFilterTitle1Header1Count,
+            binding.tvFilterTitle1Header2Count,
+            binding.tvFilterTitle1Header3Count,
+            binding.tvFilterTitle1Header4Count,
+            binding.tvFilterTitle1Header5Count,
+            binding.tvFilterTitle2Header1Count,
+            binding.tvFilterTitle2Header2Count,
+        )
+    }
+
     private val moreButtonList by lazy {
         listOf(
             binding.ivFilterTitle1Header1Btn,
@@ -237,6 +249,15 @@ class FilterFragment : DialogFragment() {
                     val selectedOption = filterOptions[index].first { it.first == id }.second
                     viewModel.saveTemporary(index, selectedOption)
                     viewModel.checkTemporary()
+                }
+
+                if (index < 7) {
+                    if (checkedIds.size != 0) {
+                        chipGroupCountList[index].text = "${checkedIds.size}개 선택"
+                        chipGroupCountList[index].isVisible = true
+                    } else {
+                        chipGroupCountList[index].isVisible = false
+                    }
                 }
             }
         }
