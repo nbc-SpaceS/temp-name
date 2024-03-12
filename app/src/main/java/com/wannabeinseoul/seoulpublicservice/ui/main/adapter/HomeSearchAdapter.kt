@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.adapter
+package com.wannabeinseoul.seoulpublicservice.ui.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

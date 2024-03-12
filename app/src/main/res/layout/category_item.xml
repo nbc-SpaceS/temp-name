@@ -38,7 +38,6 @@
             android:gravity="start"
             android:maxLines="2"
             android:text="여기는 장소 이름이 들어가는곳"
-            android:textColor="@color/black"
             android:textSize="16dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

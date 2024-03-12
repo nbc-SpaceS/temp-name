@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.dialog.review
+package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -31,7 +31,7 @@ class ReviewAdapter(
             tvCommentUser.text = item.userName
             ivCommentProfile.drawable.setTint(Color.parseColor(item.userColor))
             clItemDetailComment.setOnLongClickListener {
-                complaintUser(item.userName)
+                complaintUser(item.userId)
                 true
             }
         }

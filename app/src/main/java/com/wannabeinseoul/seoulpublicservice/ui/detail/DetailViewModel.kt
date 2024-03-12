@@ -14,7 +14,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
-import com.wannabeinseoul.seoulpublicservice.dialog.review.ReviewItem
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import kotlinx.coroutines.Dispatchers
