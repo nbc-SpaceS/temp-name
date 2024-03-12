@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
@@ -87,8 +89,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
         Log.i("This is DetailFragment","onViewCreated : ")
-//        binding.mvDetailMaps.visibility = View.VISIBLE
-//        binding.ivDetailMapsSnapshot.visibility = View.INVISIBLE
+        binding.mvDetailMaps.visibility = View.VISIBLE
+        binding.ivDetailMapsSnapshot.visibility = View.INVISIBLE
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         favorite(viewModel.savedID.value!!)
         fetchCallback()
@@ -127,7 +129,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             Log.i("This is DetailFragment","fetchCallback / getCurrentLocation : ")
             viewModelInit()
             viewInit()
+            Log.i("This is DetailFragment","viewInit : ")
             mapView.getMapAsync(this)
+            Log.i("This is DetailFragment","getMapAsync : ")
         }
     }
 
@@ -171,7 +175,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             showMore(it)
         }
         vm.closeEvent.observe(viewLifecycleOwner) { close ->
-            if(close) dismiss()
+            if(close) {
+//                snapshotCallback()
+                dismiss()
+            }
         }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
@@ -186,6 +193,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
 //        vm.mapSettingFinished.observe(viewLifecycleOwner) {
 //            if(it) {
+////                dismiss()
 //                snapshotCallback()
 //            }
 //        }
@@ -265,7 +273,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             markerStyle()
         }
         Log.i("This is DetailFragment","mapFinish: ")
-//        viewModel.mapFinish(true)
+        Handler(Looper.getMainLooper()).postDelayed({
+            snapshotCallback()
+            Log.i("This is DetailFragment","Handler/snapshotCallback : ")
+        }, 5000)
     }
 
     private fun markerStyle() {
@@ -278,17 +289,17 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         marker.width = 80
         marker.height = 100
     }
-//
-//    private fun snapshotCallback() {
-//        Log.i("This is DetailFragment","Snapshot Ready : ")
-//        naverMap.takeSnapshot {
-//            Log.i("This is DetailFragment","take Snapshot : $it")
-//            binding.ivDetailMapsSnapshot.loadWithHolder(it)
-//            binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
-//            binding.mvDetailMaps.visibility = View.GONE
-//            mapView.onDestroy()
-//        }
-//    }
+
+    private fun snapshotCallback() {
+        Log.i("This is DetailFragment","Snapshot Ready : ")
+        naverMap.takeSnapshot {
+            Log.i("This is DetailFragment","take Snapshot : $it")
+            binding.ivDetailMapsSnapshot.loadWithHolder(it)
+            binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
+            binding.mvDetailMaps.visibility = View.GONE
+        }
+        viewModel.mapFinish(true)
+    }
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
@@ -330,9 +341,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     override fun onDestroyView() {
         super.onDestroyView()
         Log.i("This is DetailFragment","onDestroyView : ")
-//        mapView.onDestroy()
-//        viewModel.mapFinish(false)
         _binding = null
+        mapView.onDestroy()
+        viewModel.clear()
         dialog?.dismiss()
     }
 
