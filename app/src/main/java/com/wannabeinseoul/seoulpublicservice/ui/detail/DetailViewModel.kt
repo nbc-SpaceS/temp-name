@@ -14,9 +14,9 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
-import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -51,8 +51,6 @@ class DetailViewModel(
 
     private val _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
     val favoriteChanged: LiveData<Boolean> get() = _favoriteChanged
-    private val _mapSettingFinished: MutableLiveData<Boolean> = MutableLiveData()
-    val mapSettingFinished: LiveData<Boolean> get() = _mapSettingFinished
 
     fun getData(svcID: String) {
         viewModelScope.launch{
@@ -80,10 +78,6 @@ class DetailViewModel(
     fun savedID(id: String) {
         _savedID.value = savedPrefRepository.contains(id)
     }
-
-//    fun mapFinish(event: Boolean) {
-//        _mapSettingFinished.value = event
-//    }
 
     fun changeFavorite(id: String) {
         if(savedPrefRepository.contains(id)) {
