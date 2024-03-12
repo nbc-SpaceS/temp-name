@@ -33,21 +33,15 @@ class MapViewModel(
     private var _filterCount: Int = 0
     val filterCount: Int get() = _filterCount
 
-    private var _hasFilter: MutableLiveData<Boolean> = MutableLiveData()
-    val hasFilter: LiveData<Boolean> get() = _hasFilter
-
-    private var _canStart: MutableLiveData<Boolean> = MutableLiveData()
+    private val _canStart: MutableLiveData<Boolean> = MutableLiveData()
     val canStart: LiveData<Boolean> get() = _canStart
 
-    private var _filteringData: MutableLiveData<HashMap<Pair<String, String>, List<Row>>> =
+    private val _filteringData: MutableLiveData<HashMap<Pair<String, String>, List<Row>>> =
         MutableLiveData()
     val filteringData: LiveData<HashMap<Pair<String, String>, List<Row>>> get() = _filteringData
 
-    private var _updateData: MutableLiveData<List<DetailInfoWindow>> = MutableLiveData()
+    private val _updateData: MutableLiveData<List<DetailInfoWindow>> = MutableLiveData()
     val updateData: LiveData<List<DetailInfoWindow>> get() = _updateData
-
-    private var _moveToUrl: MutableLiveData<String> = MutableLiveData()
-    val moveToUrl: LiveData<String> get() = _moveToUrl
 
     fun setServiceData() {
         _canStart.value = false
@@ -55,7 +49,6 @@ class MapViewModel(
         val savedOptions = loadSavedOptions()
 
         _filterCount = savedOptions.count { it.isNotEmpty() }
-        _hasFilter.value = savedOptions.any { it.isNotEmpty() }
 
         viewModelScope.launch(Dispatchers.IO) {
             _filteringData.postValue(filterServiceDataOnMapUseCase(savedOptions))
@@ -73,7 +66,6 @@ class MapViewModel(
         val savedOptions = loadSavedOptions()
 
         _filterCount = savedOptions.count { it.isNotEmpty() }
-//        _hasFilter.value = savedOptions.any { it.isNotEmpty() }
 
         viewModelScope.launch(Dispatchers.IO) {
             _filteringData.postValue(searchServiceDataOnMapUseCase(word, savedOptions))
@@ -98,10 +90,6 @@ class MapViewModel(
         saveServiceUseCase(id)
     }
 
-    fun moveReservationPage(url: String) {
-        _moveToUrl.value = url
-    }
-
     fun updateInfo(info: List<Row>) {
         _updateData.value = mappingDetailInfoWindowUseCase(info)
     }
@@ -111,13 +99,6 @@ class MapViewModel(
     }
 
     fun getSavedPrefRepository() = getSavedServiceUseCase()
-
-    fun clearData() {
-        _filteringData = MutableLiveData()
-        _hasFilter = MutableLiveData()
-        _updateData = MutableLiveData()
-        _moveToUrl = MutableLiveData()
-    }
 
     companion object {
         /** 뷰모델팩토리에서 의존성주입을 해준다 */
