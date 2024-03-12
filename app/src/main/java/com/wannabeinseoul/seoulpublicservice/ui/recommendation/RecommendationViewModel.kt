@@ -30,24 +30,25 @@ class RecommendationViewModel(
     private val _recommendations = MutableLiveData<List<RecommendationAdapter.MultiView>>()
     val recommendations: LiveData<List<RecommendationAdapter.MultiView>> get() = _recommendations
 
-    private val _firstRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val firstRecommendation: LiveData<List<RecommendationData>> get() = _firstRecommendation
+//    private val _firstRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+//    val firstRecommendation: LiveData<List<RecommendationData>> get() = _firstRecommendation
+//
+//    private val _secondRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+//    val secondRecommendation: LiveData<List<RecommendationData>> get() = _secondRecommendation
+//
+//    private val _thirdRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+//    val thirdRecommendation: LiveData<List<RecommendationData>> get() = _thirdRecommendation
+//
+//    private val _forthRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
+//    val forthRecommendation: LiveData<List<RecommendationData>> get() = _forthRecommendation
 
-    private val _secondRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val secondRecommendation: LiveData<List<RecommendationData>> get() = _secondRecommendation
+    private val _recommendationListLivedataList = List(4) {
+        MutableLiveData<List<RecommendationData>>()
+    }
 
-    private val _thirdRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val thirdRecommendation: LiveData<List<RecommendationData>> get() = _thirdRecommendation
-
-    private val _forthRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val forthRecommendation: LiveData<List<RecommendationData>> get() = _forthRecommendation
-
-    val recommendationList = listOf(
-        _firstRecommendation,
-        _secondRecommendation,
-        _thirdRecommendation,
-        _forthRecommendation
-    )
+    val recommendationListLivedataList get() = List<LiveData<List<RecommendationData>>>(4) {
+        _recommendationListLivedataList[it]
+    }
 
 //    private var aa = List(4) {
 //        RecommendationAdapter
@@ -60,6 +61,38 @@ class RecommendationViewModel(
 //            )
 //
 //    }
+
+    init {
+        viewModelScope.launch {
+            _recommendationListLivedataList[0].postValue(getQuery("송파구"))
+        }
+        viewModelScope.launch {
+            _recommendationListLivedataList[1].postValue(getQuery("청소년"))
+        }
+        viewModelScope.launch {
+            _recommendationListLivedataList[2].postValue(getQuery("장애인"))
+        }
+        viewModelScope.launch {
+            _recommendationListLivedataList[3].postValue(getQuery("풋살"))
+        }
+    }
+
+    private suspend fun getQuery(query: String): List<RecommendationData> {
+        val reservationEntities = reservationRepository.searchText(query).take(5)
+        val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
+        return List(reservationEntities.size) {
+            RecommendationData(
+                payType = reservationEntities[it].PAYATNM,
+                areaName = reservationEntities[it].AREANM,
+                placeName = reservationEntities[it].PLACENM,
+                svcstatnm = reservationEntities[it].SVCSTATNM,
+                imageUrl = reservationEntities[it].IMGURL,
+                svcid = reservationEntities[it].SVCID,
+                usetgtinfo = reservationEntities[it].USETGTINFO,
+                reviewCount = counts[it]
+            )
+        }
+    }
 
     fun getList(query: String, position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -86,12 +119,14 @@ class RecommendationViewModel(
                 ))
             }
 
-            when(position) {
-                0 -> _firstRecommendation.postValue(itemList)
-                1 -> _secondRecommendation.postValue(itemList)
-                2 -> _thirdRecommendation.postValue(itemList)
-                3 -> _forthRecommendation.postValue(itemList)
-            }
+            _recommendationListLivedataList.forEach { it.postValue(itemList) }
+
+//            when(position) {
+//                0 -> _firstRecommendation.postValue(itemList)
+//                1 -> _secondRecommendation.postValue(itemList)
+//                2 -> _thirdRecommendation.postValue(itemList)
+//                3 -> _forthRecommendation.postValue(itemList)
+//            }
         }
     }
 
