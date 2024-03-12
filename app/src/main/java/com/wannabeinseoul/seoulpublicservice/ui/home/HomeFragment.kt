@@ -303,8 +303,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun performSearch(query: String) = lifecycleScope.launch{
-        searchPrefRepository.save(query)
-        Log.d("Search", "Saved search query: $query") // 로그 찍기
+        // 검색어가 비어있지 않을 때만 검색어가 저장됨
+        if (query.isNotEmpty()) {
+            searchPrefRepository.save(query)
+            Log.d("Search", "Saved search query: $query") // 로그 찍기
+        }
 
         // searchText 메소드를 호출하여 검색 결과를 가져옴
         val searchResults = reservationRepository.searchText(query)

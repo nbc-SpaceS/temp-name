@@ -22,12 +22,7 @@ class SearchHistoryAdapter(private val items: List<String>) : RecyclerView.Adapt
         val item = items[position]
         holder.textView.text = item
         holder.itemView.setOnClickListener { onItemClickListener?.onItemClick(item) }
-//        holder.deleteButton.setOnClickListener {
-//            // 삭제 버튼을 클릭하면 해당 항목을 삭제
-//            items.removeAt(position)
-//            notifyItemRemoved(position)
-//            // TODO: SearchPrefRepository에서 해당 항목을 삭제하는 코드를 추가
-//        }
+
     }
 
     override fun getItemCount() = items.size
