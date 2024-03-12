@@ -174,8 +174,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 if (textView.text.isNotEmpty()) {
                     viewModel.setServiceData(textView.text.toString())
                 } else {
-                    Toast.makeText(requireContext(), "검색어 없이 검색할 수 없습니다.", Toast.LENGTH_SHORT)
-                        .show()
+                    viewModel.setServiceData()
                 }
                 setInitialState()
                 true
