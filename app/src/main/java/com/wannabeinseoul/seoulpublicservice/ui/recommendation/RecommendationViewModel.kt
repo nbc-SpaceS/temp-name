@@ -54,7 +54,7 @@ class RecommendationViewModel(
             val count = serviceRepository.getServiceReviewsCount(entity.take(5).map { it.SVCID })
 
             val itemList = mutableListOf<RecommendationData>()
-            for (i in entity.indices) {
+            for (i in count.indices) {
                 itemList.add(RecommendationData(
                     payType = entity[i].PAYATNM,
                     areaName = entity[i].AREANM,
