@@ -290,7 +290,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             }
             Log.i("This is DetailFragment","Handler/snapshotCallback : ")
         }, 1200)
-        viewModel.mapFinish(true)
     }
 
     override fun onDismiss(dialog: DialogInterface) {

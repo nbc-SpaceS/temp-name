@@ -30,29 +30,27 @@ class DetailViewModel(
     private val savedPrefRepository: SavedPrefRepository,
     private val userBanRepository: UserBanRepository
 ) : ViewModel() {
-    private var _serviceData = MutableLiveData<ReservationEntity>()
+    private val _serviceData = MutableLiveData<ReservationEntity>()
     val serviceData: LiveData<ReservationEntity> get() = _serviceData
 
     // 닫기 이벤트
-    private var _closeEvent = MutableLiveData<Boolean>()
+    private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
-    private var _myLocationCallback = MutableLiveData<Boolean>()
+    private val _myLocationCallback = MutableLiveData<Boolean>()
     val myLocationCallback:LiveData<Boolean> get() = _myLocationCallback
 
-    private var _textState = MutableLiveData<Boolean>()
+    private val _textState = MutableLiveData<Boolean>()
     val textState: LiveData<Boolean> get() = _textState
 
     private val _reviewUiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
     val reviewUiState: LiveData<List<ReviewItem>> get() = _reviewUiState
 
-    private var _savedID: MutableLiveData<Boolean> = MutableLiveData()
+    private val _savedID: MutableLiveData<Boolean> = MutableLiveData()
     val savedID: LiveData<Boolean> get() = _savedID
 
-    private var _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
+    private val _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
     val favoriteChanged: LiveData<Boolean> get() = _favoriteChanged
-    private var _mapSettingFinished: MutableLiveData<Boolean> = MutableLiveData()
-    val mapSettingFinished: LiveData<Boolean> get() = _mapSettingFinished
 
     fun getData(svcID: String) {
         viewModelScope.launch{
@@ -79,10 +77,6 @@ class DetailViewModel(
 
     fun savedID(id: String) {
         _savedID.value = savedPrefRepository.contains(id)
-    }
-
-    fun mapFinish(event: Boolean) {
-        _mapSettingFinished.value = event
     }
 
     fun changeFavorite(id: String) {
