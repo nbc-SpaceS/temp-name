@@ -273,10 +273,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             markerStyle()
         }
         Log.i("This is DetailFragment","mapFinish: ")
-        Handler(Looper.getMainLooper()).postDelayed({
-            snapshotCallback()
-            Log.i("This is DetailFragment","Handler/snapshotCallback : ")
-        }, 5000)
+        snapshotCallback()
     }
 
     private fun markerStyle() {
@@ -291,13 +288,16 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun snapshotCallback() {
-        Log.i("This is DetailFragment","Snapshot Ready : ")
-        naverMap.takeSnapshot {
-            Log.i("This is DetailFragment","take Snapshot : $it")
-            binding.ivDetailMapsSnapshot.loadWithHolder(it)
-            binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
-            binding.mvDetailMaps.visibility = View.GONE
-        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            naverMap.takeSnapshot {
+                Log.i("This is DetailFragment","take Snapshot : $it")
+//                binding.ivDetailMapsSnapshot.loadWithHolder(it)   // 로딩 이미지가 순식간에 지나가긴 하는데 너무 거슬려서 일단 주석처리함
+                binding.ivDetailMapsSnapshot.setImageBitmap(it)
+                binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
+                binding.mvDetailMaps.visibility = View.GONE
+            }
+            Log.i("This is DetailFragment","Handler/snapshotCallback : ")
+        }, 5000)
         viewModel.mapFinish(true)
     }
 
