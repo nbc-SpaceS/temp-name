@@ -91,6 +91,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
 
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")

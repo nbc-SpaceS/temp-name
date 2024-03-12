@@ -13,6 +13,17 @@ interface UserRepository {
         name: String
     )
 
+    suspend fun updateUserProfileImage(
+        id: String,
+        profileImage: String
+    )
+
+    suspend fun updateAll(
+        id: String,
+        name: String = "",
+        profileImage: String = ""
+    )
+
     suspend fun addUserReview(
         id: String,
         svcId: String
@@ -41,6 +52,23 @@ class UserRepositoryImpl: UserRepository {
 
         FBRef.userRef.child(id).setValue(user?.copy(
             userName = name
+        ))
+    }
+
+    override suspend fun updateUserProfileImage(id: String, profileImage: String) {
+        val user = getUser(id)
+
+        FBRef.userRef.child(id).setValue(user?.copy(
+            userProfileImage = profileImage
+        ))
+    }
+
+    override suspend fun updateAll(id: String, name: String, profileImage: String) {
+        val user = getUser(id)
+
+        FBRef.userRef.child(id).setValue(user?.copy(
+            userName = name,
+            userProfileImage = profileImage
         ))
     }
 
