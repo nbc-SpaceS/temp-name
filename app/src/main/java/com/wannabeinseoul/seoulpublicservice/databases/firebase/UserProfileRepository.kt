@@ -12,7 +12,7 @@ class UserProfileRepositoryImpl: UserProfileRepository {
         return try {
             val uploadTask = FBRef.userProfileRef.child("${userId}.png").putFile(uri)
             uploadTask.await()
-            FBRef.userProfileRef.child("${userId}.png").downloadUrl.await().toString()
+            FBRef.ref.child("userProfile/${userId}.png").downloadUrl.await().toString()
         } catch (e: Exception) {
             ""
         }

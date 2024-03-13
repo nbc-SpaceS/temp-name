@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firebase
 
+import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
 import kotlinx.coroutines.tasks.await
 
 interface ReviewRepository {

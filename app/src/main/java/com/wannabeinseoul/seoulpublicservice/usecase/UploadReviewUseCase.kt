@@ -1,11 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
-import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

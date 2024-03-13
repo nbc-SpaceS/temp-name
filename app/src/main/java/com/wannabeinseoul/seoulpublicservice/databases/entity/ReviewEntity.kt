@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.databases.firebase
+package com.wannabeinseoul.seoulpublicservice.databases.entity
 
 data class ReviewEntity(
     val svcId: String? = "",

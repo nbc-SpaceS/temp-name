@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemProfileBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
@@ -155,7 +155,7 @@ class MyPageAdapter(
             b.tvReviewedArea.text = row.areanm
             b.tvReviewedTitle.text = row.svcnm
             b.tvReviewedReviewContent.text = reviewedData.content
-            b.tvReviewedDate.text = reviewedData.uploadTime
+            b.tvReviewedDate.text = reviewedData.uploadTime.substring(2..15)
 
             b.root.setOnClickListener { onReviewedClick(row.svcid) }
         }
