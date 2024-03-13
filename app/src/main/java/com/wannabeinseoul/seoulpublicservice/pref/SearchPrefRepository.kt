@@ -6,6 +6,7 @@ import android.content.Context
 interface SearchPrefRepository {
     fun save(value: String)
     fun load(): List<String>
+    fun delete(value: String)
 }
 
 class SearchPrefRepositoryImpl(context: Context) : SearchPrefRepository {
@@ -23,4 +24,12 @@ class SearchPrefRepositoryImpl(context: Context) : SearchPrefRepository {
     }
 
     override fun load(): List<String> = pref.getStringSet("searches", emptySet())?.toList() ?: emptyList()
+
+    override fun delete(value: String) {
+        val searches = load().toMutableList()
+        searches.remove(value)  // 검색어 삭제
+        pref.edit().putStringSet("searches", searches.toSet()).apply()
+    }
+
+
 }
