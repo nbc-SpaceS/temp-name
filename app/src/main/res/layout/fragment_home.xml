@@ -47,6 +47,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/layout_search" />
 
+    <ImageView
+        android:id="@+id/iv_home_notification_count_background"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/background_corners_round_f8496c"
+        android:clipToOutline="true"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/iv_notification"
+        app:layout_constraintTop_toTopOf="@+id/iv_notification"
+        app:tint="@color/point_color" />
+
     <TextView
         android:id="@+id/tv_service_list"
         android:layout_width="wrap_content"
@@ -128,7 +139,7 @@
             android:ems="10"
             android:maxLines="1"
             android:imeOptions="actionSearch"
-            android:hint="검색어를 입력해주세요"
+            android:hint="전체 공공서비스 대상 검색"
             android:inputType="text"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"

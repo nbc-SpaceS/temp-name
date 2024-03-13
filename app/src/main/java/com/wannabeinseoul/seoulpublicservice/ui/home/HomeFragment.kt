@@ -3,9 +3,12 @@ package com.wannabeinseoul.seoulpublicservice.ui.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -15,6 +18,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
@@ -35,6 +40,7 @@ import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
+import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -48,6 +54,8 @@ class HomeFragment : Fragment() {
     private var fragmentContext: Context? = null
     private lateinit var popupWindow: PopupWindow
     private lateinit var recyclerView: RecyclerView
+
+    private var backPressedOnce = false
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -73,6 +81,7 @@ class HomeFragment : Fragment() {
         setupViewPager()
         setupBackPress()
         settingPopupWindow()
+//        checkNotification()
 
         with(binding) {
             clHomeSetRegion.setOnClickListener {
@@ -128,7 +137,8 @@ class HomeFragment : Fragment() {
             }
 
             ivNotification.setOnClickListener {
-                // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
+                val notificationFragment = NotificationsFragment.newInstance()
+                notificationFragment.show(requireActivity().supportFragmentManager, "NotificationFragment")
             }
 
             ivSearch.setOnClickListener {
@@ -222,9 +232,16 @@ class HomeFragment : Fragment() {
                     binding.viewPager.visibility = View.VISIBLE
                     binding.tabLayout.visibility = View.VISIBLE
                     binding.rvSearchResults.visibility = View.GONE
-                } else {
+                } else if (backPressedOnce) {
                     isEnabled = false
-                    requireActivity().onBackPressed()
+                    requireActivity().finish()
+                } else {
+                    backPressedOnce = true
+                    Toast.makeText(requireContext(), "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        backPressedOnce = false
+                    }, 2000)
                 }
             }
         })
@@ -332,4 +349,19 @@ class HomeFragment : Fragment() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
+
+      //아직 구현하지 못한 내용
+//    private fun checkNotification() {
+//        val sharedPreferences = requireContext().getSharedPreferences("SavedPrefRepository", Context.MODE_PRIVATE)
+//        val gson = Gson()
+//        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+//            if (key == "keyNotificationSvcidList") {
+//                val json = sharedPreferences.getString(key, null) ?: ""
+//                val result = gson.fromJson(json, Array<String>::class.java).toList()
+//                Log.d("dkj4", "$result")
+//                binding.ivHomeNotificationCountBackground.isVisible = result.isNotEmpty()
+//            }
+//        }
+//        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+//    }
 }

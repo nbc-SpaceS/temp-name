@@ -347,8 +347,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     private fun favorite(state: Boolean) {
         when(state) {
-            true -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_color)
-            false -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_empty)
+            true -> {
+                binding.ivDetailFavorite.setImageResource(R.drawable.ic_save_fill)
+                binding.ivDetailFavorite.drawable.setTint(requireContext().getColor(R.color.point_color))
+            }
+            false -> {
+                binding.ivDetailFavorite.setImageResource(R.drawable.ic_save_empty)
+            }
         }
     }
 
