@@ -30,6 +30,9 @@ class MyPageAdapter(
     }
 ) {
 
+    /** 프래그먼트에서 멀티뷰 아이템의 isVisible을 변경하기 위한 람다식 */
+    var setSavedNothingVisible: ((boolean: Boolean) -> Unit)? = null
+
     /** 멀티뷰 sealed interface */
     sealed interface MultiView {
 
@@ -123,6 +126,7 @@ class MyPageAdapter(
 
         init {
             b.tvSavedClear.setOnClickListener { onClearClick() }
+            setSavedNothingVisible = { b.tvSavedNothing.isVisible = it }
         }
 
         private var isAdapterNotBound = true
@@ -133,11 +137,6 @@ class MyPageAdapter(
                 b.rvSaved.adapter = item.myPageSavedAdapter
                 isAdapterNotBound = false
             }
-
-            // TODO: onBind에서 하면 전체삭제 했을 때 안바뀜.
-            //  프래그먼트에서 옵저빙해서 바꿔야. 호출을 거기서 만드려면 람다식으로는 불가.
-            //  그냥 텍뷰를 public으로 뽑아서 만져야하나..?
-            b.tvSavedNothing.isVisible = item.myPageSavedAdapter.itemCount == 0
         }
     }
 
