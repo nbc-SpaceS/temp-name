@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
-import android.app.appsearch.SearchResults
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -161,7 +160,7 @@ class HomeFragment : Fragment() {
 
                     // 뒤로 가기 버튼을 누를 때 cl_home_region_list를 숨깁니다.
                     binding.clHomeRegionList.isVisible = false
-
+                    binding.tvServiceList.visibility = View.VISIBLE
                     binding.viewPager.visibility = View.VISIBLE
                     binding.tabLayout.visibility = View.VISIBLE
                     binding.rvSearchResults.visibility = View.GONE
