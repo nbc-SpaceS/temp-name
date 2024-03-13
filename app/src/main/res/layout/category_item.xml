@@ -5,13 +5,15 @@
     android:id="@+id/iv_smallVideoItems"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp">
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="16dp">
 
     <ImageView
         android:id="@+id/iv_ctImage"
         android:layout_width="150dp"
         android:layout_height="95dp"
         android:background="@drawable/background_radius_10dp_828282"
+        android:clipToOutline="true"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,35 +22,45 @@
         android:id="@+id/tv_ctBox"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_ctImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_ctImage"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
-
         <TextView
-            android:id="@+id/tv_ctPlaceName"
+            android:id="@+id/tv_ctServiceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginStart="8dp"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="2"
-            android:text="여기는 장소 이름이 들어가는곳"
+            android:text="여기는 서비스 이름이 들어가는곳"
             android:textSize="16dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_ctBox"
-            app:layout_constraintTop_toTopOf="@+id/tv_ctBox" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_category_item_place"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="여기는 장소 이름이 들어가는 곳"
+            android:textColor="@color/gray"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/tv_ctServiceName"
+            app:layout_constraintStart_toStartOf="@+id/tv_ctServiceName"
+            app:layout_constraintTop_toBottomOf="@+id/tv_ctServiceName" />
 
         <TextView
             android:id="@+id/tv_ctNotFree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
             android:layout_marginBottom="4dp"
             android:background="@drawable/background_white_with_rounded_stroke"
             android:gravity="center"
@@ -58,31 +70,13 @@
             android:textSize="14dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_ctFree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/background_pointcolor_with_rounded"
-            android:gravity="center"
-            android:paddingHorizontal="8dp"
-            android:text="무료"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/tv_ctServiceName" />
 
         <TextView
             android:id="@+id/tv_ctReservationEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="4dp"
             android:background="@drawable/background_white_with_rounded_stroke"
             android:gravity="center"
             android:paddingHorizontal="8dp"
@@ -90,25 +84,18 @@
             android:textColor="@color/gray"
             android:textSize="14dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_ctBox" />
-
-
-        <TextView
-            android:id="@+id/tv_isReservationAvailable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/background_white_with_f8496c_stroke"
-            android:gravity="center"
-            android:paddingHorizontal="8dp"
-            android:text="예약가능"
-            android:textColor="@color/point_color"
-            android:textSize="14dp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tv_ctBox" />
+            app:layout_constraintBottom_toBottomOf="@+id/tv_ctNotFree"
+            app:layout_constraintStart_toEndOf="@+id/tv_ctNotFree"
+            app:layout_constraintTop_toTopOf="@+id/tv_ctNotFree" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        app:dividerColor="@color/black_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_ctImage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

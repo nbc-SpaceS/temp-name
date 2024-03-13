@@ -84,6 +84,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         mapView.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         favorite(viewModel.savedID.value!!)
+        viewInit()
+        viewModelInit()
         fetchCallback()
         connectToCommentList(requireContext())
     }
@@ -154,7 +156,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         vm.serviceData.observe(viewLifecycleOwner) { data ->
             checkLatLng(data)
             bind(data)
-            if (itemLocation.isValid && myLocation.isValid) distanceCheck()
+//            if (itemLocation.isValid && myLocation.isValid) distanceCheck()
         }
         vm.setReviews(param1!!)
         vm.textState.observe(viewLifecycleOwner) {
@@ -274,18 +276,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        dialog?.setOnKeyListener { _, keyCode, event ->
-            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                Log.i("This is DetailFragment","key Event Active true : ")
-                snapshotCallback()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    dismiss()
-                }, 50)
-                true
-            } else {
-                false
-            }
-        }
         Log.i("This is DetailFragment","onResume : ")
     }
 
@@ -343,8 +333,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     private fun favorite(state: Boolean) {
         when(state) {
-            true -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_color)
-            false -> binding.ivDetailFavorite.setImageResource(R.drawable.ic_star_empty)
+            true -> {
+                binding.ivDetailFavorite.setImageResource(R.drawable.ic_save_fill)
+                binding.ivDetailFavorite.drawable.setTint(requireContext().getColor(R.color.point_color))
+            }
+            false -> {
+                binding.ivDetailFavorite.setImageResource(R.drawable.ic_save_empty)
+            }
         }
     }
 
