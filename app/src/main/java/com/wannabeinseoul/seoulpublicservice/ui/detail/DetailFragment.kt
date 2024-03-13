@@ -261,7 +261,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     override fun onDismiss(dialog: DialogInterface) {
         Log.i("This is DetailFragment","onDismiss : ")
-        binding.mvDetailMaps.visibility = View.GONE
         viewModel.close(false)
         super.onDismiss(dialog)
     }
