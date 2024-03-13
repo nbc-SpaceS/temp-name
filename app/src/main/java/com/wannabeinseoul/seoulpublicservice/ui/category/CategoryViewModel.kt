@@ -24,12 +24,10 @@ class CategoryViewModel(
     private val getAll2000UseCase: GetAll2000UseCase,
     private val seoulPublicRepository: SeoulPublicRepository,
     private val dbMemoryRepository: DbMemoryRepository,
-
 ) : ViewModel() {
 
     private val _categories = MutableLiveData<List<CategoryData>>(emptyList())
     val categories: LiveData<List<CategoryData>> get() = _categories
-
 
     fun fetchCategories() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -42,10 +40,12 @@ class CategoryViewModel(
             }
         }
     }
-    fun updateList (minclassnm:String) {
-        _categories.value = dbMemoryRepository.getFiltered(minclassnm = listOf(minclassnm)).convertToCategoryDataList()
+
+    fun updateList (areanm: String, minclassnm:String) {
+        _categories.value = dbMemoryRepository.getFiltered(areanm = listOf(areanm), minclassnm = listOf(minclassnm)).convertToCategoryDataList()
         //minclassnm은 소분류명
     }
+
     private fun isReservationAvailableAbsence(row: Row): Boolean {
         val currentTimeMillis = System.currentTimeMillis()
         val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
@@ -53,6 +53,7 @@ class CategoryViewModel(
 
         return currentTimeMillis >= rcptbgndtMillis && currentTimeMillis <= rcptenddtMillis
     }
+
     companion object {
         val factory = viewModelFactory {
             initializer {

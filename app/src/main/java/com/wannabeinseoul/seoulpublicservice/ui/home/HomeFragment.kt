@@ -4,12 +4,15 @@ import android.app.appsearch.SearchResults
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,9 +21,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -31,6 +32,7 @@ import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
+import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -42,6 +44,8 @@ class HomeFragment : Fragment() {
     private val searchPrefRepository: SearchPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.searchPrefRepository }
     private val reservationRepository: ReservationRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.reservationRepository }
     private var fragmentContext: Context? = null
+
+    private var backPressedOnce = false
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -144,6 +148,8 @@ class HomeFragment : Fragment() {
     private fun setupNotificationClick(binding: FragmentHomeBinding) {
         binding.ivNotification.setOnClickListener {
             // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
+            val notificationFragment = NotificationsFragment.newInstance()
+            notificationFragment.show(requireActivity().supportFragmentManager, "NotificationFragment")
         }
     }
 
@@ -159,9 +165,16 @@ class HomeFragment : Fragment() {
                     binding.viewPager.visibility = View.VISIBLE
                     binding.tabLayout.visibility = View.VISIBLE
                     binding.rvSearchResults.visibility = View.GONE
-                } else {
+                } else if (backPressedOnce) {
                     isEnabled = false
-                    requireActivity().onBackPressed()
+                    requireActivity().finish()
+                } else {
+                    backPressedOnce = true
+                    Toast.makeText(requireContext(), "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        backPressedOnce = false
+                    }, 2000)
                 }
             }
         })
