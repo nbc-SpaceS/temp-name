@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -236,7 +237,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             markerStyle()
         }
         Log.i("This is DetailFragment","mapFinish: ")
-        snapshotCallback()
     }
 
     private fun markerStyle() {
@@ -251,21 +251,19 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun snapshotCallback() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            naverMap.takeSnapshot {
-                Log.i("This is DetailFragment","take Snapshot : $it")
-                binding.ivDetailMapsSnapshot.setImageBitmap(it)
-                binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
-                binding.mvDetailMaps.visibility = View.GONE  // VISIBLE 일 때 지도랑 이미지뷰랑 같이 뿅! 하고 사라져버림
-            }
-            Log.i("This is DetailFragment","Handler/snapshotCallback : ")
-        }, 1200)
+        naverMap.takeSnapshot {
+            Log.i("This is DetailFragment", "take Snapshot : $it")
+            binding.ivDetailMapsSnapshot.setImageBitmap(it)
+            binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
+            binding.mvDetailMaps.visibility = View.GONE
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
         Log.i("This is DetailFragment","onDismiss : ")
+        binding.mvDetailMaps.visibility = View.GONE
         viewModel.close(false)
+        super.onDismiss(dialog)
     }
 
     override fun onStart() {
@@ -277,6 +275,18 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+        dialog?.setOnKeyListener { _, keyCode, event ->
+            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                Log.i("This is DetailFragment","key Event Active true : ")
+                snapshotCallback()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    dismiss()
+                }, 50)
+                true
+            } else {
+                false
+            }
+        }
         Log.i("This is DetailFragment","onResume : ")
     }
 
@@ -299,11 +309,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         mapView.onDestroy()
         Log.i("This is DetailFragment","onDestroyView : ")
         _binding = null
-        dialog?.dismiss()
+//        dialog?.dismiss()
+        super.onDestroyView()
     }
 
     override fun onLowMemory() {
