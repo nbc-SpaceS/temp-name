@@ -155,7 +155,7 @@ class MyPageAdapter(
             b.tvReviewedArea.text = row.areanm
             b.tvReviewedTitle.text = row.svcnm
             b.tvReviewedReviewContent.text = reviewedData.content
-            b.tvReviewedDate.text = reviewedData.uploadTime
+            b.tvReviewedDate.text = reviewedData.uploadTime.substring(2..15)
 
             b.root.setOnClickListener { onReviewedClick(row.svcid) }
         }

@@ -19,8 +19,8 @@ import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.atan2
@@ -61,11 +61,11 @@ class DetailViewModel(
 
     fun getData(svcID: String) {
         viewModelScope.launch{
-            val result = viewModelScope.async(Dispatchers.IO) { // runBlocking으로 사용해도 됨
+            val result = runBlocking(Dispatchers.IO) { // runBlocking으로 사용해도 됨
                 reservationRepository.getService(svcID)
-            }.await()
+            }
             result.let {
-                _serviceData.value = result
+                _serviceData.value = it
             }
         }
     }

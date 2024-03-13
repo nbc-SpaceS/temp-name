@@ -57,13 +57,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     private lateinit var myLocation: LatLng  // 내 위치
     private lateinit var itemLocation: LatLng // 아이템 위치
 
-    private var myLocCall = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(DETAIL_PARAM)
         }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         viewModel.getData(param1!!)
         viewModel.savedID(param1!!)
     }
@@ -82,45 +81,35 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         favorite(viewModel.savedID.value!!)
-        viewInit()
+        getCurrentLocation()
+        mapViewSet()
         viewModelInit()
-        fetchCallback()
+        viewInit()
+        mapView.getMapAsync(this)
         connectToCommentList(requireContext())
     }
 
-    private fun getCurrentLocation(callback: (LatLng) -> Unit) {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+    private fun getCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location ->
                     if (location != null) {
                         val latitude = location.latitude
                         val longitude = location.longitude
                         if (latitude != 0.0 && longitude != 0.0 && !latitude.toString().contains("37.42") && !longitude.toString().contains("-122.08")) {
-                            val currentLocation = LatLng(latitude, longitude)
-                            callback(currentLocation)
+                            myLocation = LatLng(latitude, longitude)
+                            viewModel.myLocationCallbackEvent(true)
                         }
                     }
                 }
+                .addOnFailureListener { e ->
+                    throw Exception("Error! : ", e)
+                }
         } else {
-            val currentLocation = LatLng(100.0, 100.0)
-            callback(currentLocation)
-        }
-    }
-
-    private fun fetchCallback() {
-        mapViewSet()
-        getCurrentLocation {
-            myLocation = it
+            myLocation = LatLng(100.0, 100.0)
             viewModel.myLocationCallbackEvent(true)
-            viewModelInit()
-            viewInit()
-            mapView.getMapAsync(this)
         }
     }
 
@@ -149,14 +138,24 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             val bottomSheet = ReviewFragment()
             bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
+        keyEvent()
     }
 
     private fun viewModelInit() = viewModel.let { vm ->
-        vm.myLocationCallback.observe(viewLifecycleOwner) { if(it) myLocCall = true }
         vm.serviceData.observe(viewLifecycleOwner) { data ->
-            checkLatLng(data)
+            checkLatLng(data)   // itemLocation은 여기서 검사해서 반환함
             bind(data)
-//            if (itemLocation.isValid && myLocation.isValid) distanceCheck()
+            Log.i("This is DetailFragment","viewModelInit / serviceData.observe: ")
+        }
+        vm.myLocationCallback.observe(viewLifecycleOwner) {
+            Log.i("This is DetailFragment","viewModelInit / serviceData.myLocationCallback.observe : ")
+            if(it) {
+                Log.i("This is DetailFragment", "viewModelInit / serviceData.myLocationCallback.true : ")
+                if (::myLocation.isInitialized) {
+                    Log.i("This is DetailFragment","viewModelInit / serviceData.myLocationCallback.initialized : ")
+                    distanceCheck()
+                }
+            }
         }
         vm.setReviews(param1!!)
         vm.textState.observe(viewLifecycleOwner) {
@@ -258,6 +257,21 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             binding.ivDetailMapsSnapshot.setImageBitmap(it)
             binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
             binding.mvDetailMaps.visibility = View.GONE
+        }
+    }
+
+    private fun keyEvent() {
+        dialog?.setOnKeyListener { _, keyCode, event ->
+            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                Log.i("This is DetailFragment","key Event Active true : ")
+                snapshotCallback()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    dismiss()
+                }, 50)
+                true
+            } else {
+                false
+            }
         }
     }
 
