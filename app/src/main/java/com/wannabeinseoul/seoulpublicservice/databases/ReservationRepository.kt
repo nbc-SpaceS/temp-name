@@ -152,7 +152,7 @@ class ReservationRepositoryImpl(
     override fun getService(serviceID: String) = reservationDAO.getService(serviceID)
 
     override suspend fun searchText(text: String): List<ReservationEntity> {
-        val queryStr = "SELECT * FROM ReservationEntity WHERE (SVCNM LIKE '%$text%' OR PLACENM LIKE '%$text%' OR AREANM LIKE '%$text%' OR TELNO LIKE '%$text%' OR MINCLASSNM LIKE '%$text%' OR USETGTINFO LIKE '%$text%')"
+        val queryStr = "SELECT * FROM ReservationEntity WHERE (SVCNM LIKE '%${text.trim()}%' OR PLACENM LIKE '%${text.trim()}%' OR AREANM LIKE '%${text.trim()}%' OR TELNO LIKE '%${text.trim()}%' OR MINCLASSNM LIKE '%${text.trim()}%' OR USETGTINFO LIKE '%${text.trim()}%')"
         val query = SimpleSQLiteQuery(queryStr)
         return reservationDAO.rawQuery(query)
     }
@@ -190,7 +190,7 @@ class ReservationRepositoryImpl(
         }
         val queryStr = "SELECT * FROM ReservationEntity " +
                 "WHERE (MINCLASSNM IN ('$subStr')) AND (AREANM IN ('$locStr')) AND (SVCSTATNM IN ('$svcStr')) AND (PAYATNM IN ('$payStr')) " +
-                "AND (SVCNM LIKE '%$text%' OR PLACENM LIKE '%$text%' OR AREANM LIKE '%$text%' OR TELNO LIKE '%$text%' OR MINCLASSNM LIKE '%$text%' OR USETGTINFO LIKE '%$text%')"
+                "AND (SVCNM LIKE '%${text.trim()}%' OR PLACENM LIKE '%${text.trim()}%' OR AREANM LIKE '%${text.trim()}%' OR TELNO LIKE '%${text.trim()}%' OR MINCLASSNM LIKE '%${text.trim()}%' OR USETGTINFO LIKE '%$text%')"
         Log.i("This is ReservationRepository","Query문 : $queryStr\n")
         val query = SimpleSQLiteQuery(queryStr)
         return reservationDAO.rawQuery(query)
