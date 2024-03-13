@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Html
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -145,14 +144,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         vm.serviceData.observe(viewLifecycleOwner) { data ->
             checkLatLng(data)   // itemLocation은 여기서 검사해서 반환함
             bind(data)
-            Log.i("This is DetailFragment","viewModelInit / serviceData.observe: ")
         }
         vm.myLocationCallback.observe(viewLifecycleOwner) {
-            Log.i("This is DetailFragment","viewModelInit / serviceData.myLocationCallback.observe : ")
             if(it) {
-                Log.i("This is DetailFragment", "viewModelInit / serviceData.myLocationCallback.true : ")
                 if (::myLocation.isInitialized) {
-                    Log.i("This is DetailFragment","viewModelInit / serviceData.myLocationCallback.initialized : ")
                     distanceCheck()
                 }
             }
@@ -233,15 +228,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
                 isLocationButtonEnabled = false
                 isTiltGesturesEnabled = false
                 setLogoMargin(0, 0, 0, 0)
-                Log.i("This is DetailFragment","onMapReady : setLogoMargin")
             }
             markerStyle()
         }
-        Log.i("This is DetailFragment","mapFinish: ")
     }
 
     private fun markerStyle() {
-        Log.i("This is DetailFragment","markerStyle : ")
         val marker = Marker()
         marker.position = itemLocation
         marker.map = naverMap
@@ -253,7 +245,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     private fun snapshotCallback() {
         naverMap.takeSnapshot {
-            Log.i("This is DetailFragment", "take Snapshot : $it")
             binding.ivDetailMapsSnapshot.setImageBitmap(it)
             binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
             binding.mvDetailMaps.visibility = View.GONE
@@ -263,7 +254,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     private fun keyEvent() {
         dialog?.setOnKeyListener { _, keyCode, event ->
             if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-                Log.i("This is DetailFragment","key Event Active true : ")
                 snapshotCallback()
                 Handler(Looper.getMainLooper()).postDelayed({
                     dismiss()
@@ -276,46 +266,38 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        Log.i("This is DetailFragment","onDismiss : ")
         viewModel.close(false)
         super.onDismiss(dialog)
     }
 
     override fun onStart() {
         super.onStart()
-        Log.i("This is DetailFragment","onStart : ")
         mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        Log.i("This is DetailFragment","onResume : ")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.i("This is DetailFragment","onPause : ")
         mapView.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Log.i("This is DetailFragment","onSaveInstanceState : ")
         mapView.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
-        Log.i("This is DetailFragment","onStop : ")
         mapView.onStop()
     }
 
     override fun onDestroyView() {
         mapView.onDestroy()
-        Log.i("This is DetailFragment","onDestroyView : ")
         _binding = null
-//        dialog?.dismiss()
         super.onDestroyView()
     }
 
