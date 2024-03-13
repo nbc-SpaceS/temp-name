@@ -30,17 +30,7 @@ class RecommendationViewModel(
     private val _recommendations = MutableLiveData<List<RecommendationAdapter.MultiView>>()
     val recommendations: LiveData<List<RecommendationAdapter.MultiView>> get() = _recommendations
 
-//    private val _firstRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-//    val firstRecommendation: LiveData<List<RecommendationData>> get() = _firstRecommendation
-//
-//    private val _secondRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-//    val secondRecommendation: LiveData<List<RecommendationData>> get() = _secondRecommendation
-//
-//    private val _thirdRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-//    val thirdRecommendation: LiveData<List<RecommendationData>> get() = _thirdRecommendation
-//
-//    private val _forthRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-//    val forthRecommendation: LiveData<List<RecommendationData>> get() = _forthRecommendation
+
 
     private val _recommendationListLivedataList = List(4) {
         MutableLiveData<List<RecommendationData>>()
@@ -50,17 +40,6 @@ class RecommendationViewModel(
         _recommendationListLivedataList[it]
     }
 
-//    private var aa = List(4) {
-//        RecommendationAdapter
-//            .MultiView.Horizontal(
-//                "",
-//                RecommendationHorizontalAdapter(
-//                    emptyList<RecommendationData>().toMutableList(),
-//                    showDetailFragment
-//                )
-//            )
-//
-//    }
 
     init {
         viewModelScope.launch {
