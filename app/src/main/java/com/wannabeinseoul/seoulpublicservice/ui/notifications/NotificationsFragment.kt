@@ -1,19 +1,30 @@
 package com.wannabeinseoul.seoulpublicservice.ui.notifications
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentNotificationsBinding
-import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.filter.FilterFragment
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
-class NotificationsFragment : Fragment() {
+class NotificationsFragment : DialogFragment() {
+
+    companion object {
+        fun newInstance() = NotificationsFragment()
+    }
 
     private var _binding: FragmentNotificationsBinding? = null
     private val binding get() = _binding!!
+
     private val viewModel: NotificationsViewModel by viewModels { NotificationsViewModel.factory }
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,9 +35,8 @@ class NotificationsFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return Dialog(requireContext(), R.style.DetailTransparent)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,20 +45,23 @@ class NotificationsFragment : Fragment() {
         initViewModel()
     }
 
-    private fun initView() = binding.let { b ->
-        b.btnTemp1.setOnClickListener { viewModel.setRandomOne() }
-        b.tvTemp1.setOnClickListener {
-            val dialog = DetailFragment.newInstance("S240104091254073361")
-            dialog.show(requireActivity().supportFragmentManager, "Detail")
+    private fun initView() = with(binding) {
+        ivNotificationBackBtn.setOnClickListener {
+            dismiss()
         }
     }
 
-    private fun initViewModel() = viewModel.let { vm ->
-        vm.text.observe(viewLifecycleOwner) {
-            binding.tvTemp1.text = it
-        }
-        vm.isBtnEnabled.observe(viewLifecycleOwner) {
-            binding.btnTemp1.isEnabled = it
-        }
+    private fun initViewModel() = with(viewModel) {
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+
     }
 }

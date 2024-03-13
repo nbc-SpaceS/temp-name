@@ -10,7 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.di.AppContainer
 import com.wannabeinseoul.seoulpublicservice.di.DefaultAppContainer
 import com.wannabeinseoul.seoulpublicservice.seoul.Row

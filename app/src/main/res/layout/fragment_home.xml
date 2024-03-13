@@ -47,6 +47,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/layout_search" />
 
+    <ImageView
+        android:id="@+id/iv_home_notification_count_background"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="@drawable/background_corners_round_f8496c"
+        android:clipToOutline="true"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/iv_notification"
+        app:layout_constraintTop_toTopOf="@+id/iv_notification"
+        app:tint="@color/point_color" />
+
     <TextView
         android:id="@+id/tv_service_list"
         android:layout_width="wrap_content"
@@ -83,6 +94,73 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="28dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_home_set_region" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/background_radius_10dp_dfdfdd"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cl_home_set_region"
+        app:layout_constraintEnd_toStartOf="@+id/iv_notification"
+        app:layout_constraintStart_toEndOf="@+id/cl_home_set_region"
+        app:layout_constraintTop_toTopOf="@+id/cl_home_set_region">
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/et_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:ems="10"
+            android:maxLines="1"
+            android:imeOptions="actionSearch"
+            android:hint="전체 공공서비스 대상 검색"
+            android:inputType="text"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_search"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_history"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        android:background="@drawable/background_radius_12dp"
+        android:elevation="0dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/layout_search"
+        app:layout_constraintStart_toStartOf="@+id/layout_search"
+        app:layout_constraintTop_toBottomOf="@+id/layout_search" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_home_region_list"
@@ -158,69 +236,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_home_select_region3" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search_results"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="28dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_home_set_region" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/background_radius_10dp_dfdfdd"
-        android:padding="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cl_home_set_region"
-        app:layout_constraintEnd_toStartOf="@+id/iv_notification"
-        app:layout_constraintStart_toEndOf="@+id/cl_home_set_region"
-        app:layout_constraintTop_toTopOf="@+id/cl_home_set_region">
-
-        <ImageView
-            android:id="@+id/iv_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/ic_search"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/et_search"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:ems="10"
-            android:maxLines="1"
-            android:imeOptions="actionSearch"
-            android:hint="검색어를 입력해주세요"
-            android:inputType="text"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_search"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_search_history"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="10dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_search" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

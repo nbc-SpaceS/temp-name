@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMyPageBinding
-import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 
 class MyPageFragment : Fragment() {
 
@@ -49,7 +49,7 @@ class MyPageFragment : Fragment() {
             onReviewedClick = showDetailFragment,
         )
 //            .apply {
-////                val rows = (requireActivity().application as SeoulPublicServiceApplication).rowList
+////                val rows = app.rowList
 ////                if (rows.isEmpty()) {
 ////                    var a = 0
 ////                    submitList(
@@ -109,23 +109,32 @@ class MyPageFragment : Fragment() {
     }
 
     private fun initViewModel() = viewModel.let { vm ->
-        (requireActivity().application as SeoulPublicServiceApplication).container
-            .savedPrefRepository.savedSvcidListLiveData.observe(viewLifecycleOwner) {
-                Log.d(
-                    "jj-마이페이지 프래그먼트",
-                    "옵저버:savedPrefRepository.savedSvcidListLiveData ${it.toString().take(255)}"
-                )
-                vm.loadSavedList(it)
-            }
+        app.container.savedPrefRepository.savedSvcidListLiveData.observe(viewLifecycleOwner) {
+            Log.d(
+                "jj-마이페이지 프래그먼트",
+                "옵저버:savedPrefRepository.savedSvcidListLiveData ${it.toString().take(255)}"
+            )
+            vm.loadSavedList(it)
+        }
         vm.savedList.observe(viewLifecycleOwner) {
             Log.d("jj-마이페이지 프래그먼트", "옵저버:savedList ${it.toString().take(255)}")
-            myPageSavedAdapter.submitList(it)
+            myPageSavedAdapter.submitList(it) {
+                myPageAdapter.setSavedNothingVisible?.invoke(it.isEmpty())
+            }
         }
         vm.reviewedList.observe(viewLifecycleOwner) { reviewedDataList ->
             Log.d("jj-마이페이지 프래그먼트", "옵저버:reviewedList ${reviewedDataList.toString().take(255)}")
-            myPageAdapter.submitList(fixedItems + reviewedDataList.map {
-                MyPageAdapter.MultiView.Reviewed(it)
-            })
+            myPageAdapter.submitList(fixedItems +
+                    if (reviewedDataList.isEmpty()) listOf(MyPageAdapter.MultiView.ReviewedNothing)
+                    else reviewedDataList.map { MyPageAdapter.MultiView.Reviewed(it) }
+            )
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        myPageAdapter.setSavedNothingVisible?.invoke(myPageSavedAdapter.itemCount == 0)
+    }
+
 }

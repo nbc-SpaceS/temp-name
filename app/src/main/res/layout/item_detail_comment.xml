@@ -8,9 +8,10 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_comment_profile"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintBottom_toBottomOf="@+id/tv_comment_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_comment_user"
@@ -53,9 +54,9 @@
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/materialDivider2"
         android:layout_width="0dp"
-        android:layout_height="0.5dp"
+        android:layout_height="1dp"
         android:layout_marginTop="10dp"
-        android:background="@color/black_gray"
+        app:dividerColor="@color/black_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

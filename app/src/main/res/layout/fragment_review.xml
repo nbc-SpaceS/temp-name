@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".dialog.review.ReviewFragment">
+    tools:context=".ui.dialog.review.ReviewFragment">
 
     <TextView
         android:id="@+id/tv_review_title"
@@ -38,9 +38,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="20dp"
-        android:nestedScrollingEnabled="false"
         android:orientation="vertical"
-        android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/et_review_input_field"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,6 +71,7 @@
         android:inputType="text"
         android:maxLines="1"
         android:paddingHorizontal="8dp"
+        android:textColor="@color/total_text_color"
         android:textColorHint="@color/review_hint_text"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"

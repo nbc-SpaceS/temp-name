@@ -15,8 +15,12 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepositor
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserProfileRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserProfileRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserFSRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserFSRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
@@ -39,8 +43,21 @@ import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.usecase.CheckComplaintSelfUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.CheckCredentialsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.ComplaintUserUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.FilterServiceDataOnMapUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetDetailSeoulUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.GetReviewListUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.GetSavedServiceUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.LoadSavedFilterOptionsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.MappingDetailInfoWindowUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.ReviseReviewUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SaveFilterOptionsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SaveServiceUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SearchServiceDataOnMapUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.UploadReviewUseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -57,6 +74,19 @@ interface AppContainer {
     val seoulPublicRepository: SeoulPublicRepository
     val getAll2000UseCase: GetAll2000UseCase
     val getDetailSeoulUseCase: GetDetailSeoulUseCase
+    val loadSavedFilterOptionsUseCase: LoadSavedFilterOptionsUseCase
+    val filterServiceDataOnMapUseCase: FilterServiceDataOnMapUseCase
+    val saveServiceUseCase: SaveServiceUseCase
+    val mappingDetailInfoWindowUseCase: MappingDetailInfoWindowUseCase
+    val getSavedServiceUseCase: GetSavedServiceUseCase
+    val complaintUserUseCase: ComplaintUserUseCase
+    val saveFilterOptionsUseCase: SaveFilterOptionsUseCase
+    val uploadReviewUseCase: UploadReviewUseCase
+    val getReviewListUseCase: GetReviewListUseCase
+    val reviseReviewUseCase: ReviseReviewUseCase
+    val checkCredentialsUseCase: CheckCredentialsUseCase
+    val checkComplaintSelfUseCase: CheckComplaintSelfUseCase
+    val searchServiceDataOnMapUseCase: SearchServiceDataOnMapUseCase
     val prefRepository: PrefRepository
     val rowPrefRepository: RowPrefRepository
     val regionPrefRepository: RegionPrefRepository
@@ -73,6 +103,8 @@ interface AppContainer {
     val userBanRepository: UserBanRepository
     val categoryPrefRepository: CategoryPrefRepository
     val recommendPrefRepository: RecommendPrefRepository
+    val userProfileRepository: UserProfileRepository
+    val userFSRepository: UserFSRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -124,6 +156,95 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         GetDetailSeoulUseCase(
             seoulPublicRepository = seoulPublicRepository,
             prefRepository = prefRepository
+        )
+    }
+
+    override val loadSavedFilterOptionsUseCase by lazy {
+        LoadSavedFilterOptionsUseCase(
+            filterPrefRepository = filterPrefRepository
+        )
+    }
+
+    override val filterServiceDataOnMapUseCase by lazy {
+        FilterServiceDataOnMapUseCase(
+            reservationRepository = reservationRepository,
+            dbMemoryRepository = dbMemoryRepository
+        )
+    }
+
+    override val saveServiceUseCase by lazy {
+        SaveServiceUseCase(
+            savedPrefRepository = savedPrefRepository
+        )
+    }
+
+    override val mappingDetailInfoWindowUseCase by lazy {
+        MappingDetailInfoWindowUseCase(
+            savedPrefRepository = savedPrefRepository
+        )
+    }
+
+    override val getSavedServiceUseCase by lazy {
+        GetSavedServiceUseCase(
+            savedPrefRepository = savedPrefRepository
+        )
+    }
+
+    override val complaintUserUseCase by lazy {
+        ComplaintUserUseCase(
+            reviewRepository = reviewRepository,
+            complaintRepository = complaintRepository
+        )
+    }
+
+    override val saveFilterOptionsUseCase by lazy {
+        SaveFilterOptionsUseCase(
+            filterPrefRepository = filterPrefRepository
+        )
+    }
+
+    override val uploadReviewUseCase by lazy {
+        UploadReviewUseCase(
+            idPrefRepository = idPrefRepository,
+            reviewRepository = reviewRepository,
+            userRepository = userRepository,
+            serviceRepository = serviceRepository
+        )
+    }
+
+    override val getReviewListUseCase by lazy {
+        GetReviewListUseCase(
+            idPrefRepository = idPrefRepository,
+            serviceRepository = serviceRepository,
+            userBanRepository = userBanRepository
+        )
+    }
+
+    override val reviseReviewUseCase by lazy {
+        ReviseReviewUseCase(
+            idPrefRepository = idPrefRepository,
+            reviewRepository = reviewRepository
+        )
+    }
+
+    override val checkCredentialsUseCase by lazy {
+        CheckCredentialsUseCase(
+            idPrefRepository = idPrefRepository,
+            reviewRepository = reviewRepository
+        )
+    }
+
+    override val checkComplaintSelfUseCase by lazy {
+        CheckComplaintSelfUseCase(
+            idPrefRepository = idPrefRepository,
+            userRepository = userRepository
+        )
+    }
+
+    override val searchServiceDataOnMapUseCase by lazy {
+        SearchServiceDataOnMapUseCase(
+            reservationRepository = reservationRepository,
+            dbMemoryRepository = dbMemoryRepository
         )
     }
 
@@ -191,5 +312,13 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val userBanRepository: UserBanRepository by lazy {
         UserBanRepositoryImpl()
+    }
+
+    override val userProfileRepository by lazy {
+        UserProfileRepositoryImpl()
+    }
+
+    override val userFSRepository: UserFSRepository by lazy {
+        UserFSRepositoryImpl()
     }
 }

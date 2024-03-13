@@ -4,13 +4,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemProfileBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedNothingBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemSavedBinding
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 import com.wannabeinseoul.seoulpublicservice.util.parseColor
@@ -28,6 +30,9 @@ class MyPageAdapter(
     }
 ) {
 
+    /** 프래그먼트에서 멀티뷰 아이템의 isVisible을 변경하기 위한 람다식 */
+    var setSavedNothingVisible: ((boolean: Boolean) -> Unit)? = null
+
     /** 멀티뷰 sealed interface */
     sealed interface MultiView {
 
@@ -36,6 +41,7 @@ class MyPageAdapter(
             SAVED,
             REVIEWED_HEADER,
             REVIEWED,
+            REVIEWED_NOTHING,
 //            LOADING,
         }
 
@@ -62,6 +68,10 @@ class MyPageAdapter(
             val reviewedData: ReviewedData
         ) : MultiView {
             override val viewType: Type = Type.REVIEWED
+        }
+
+        data object ReviewedNothing : MultiView {
+            override val viewType: Type = Type.REVIEWED_NOTHING
         }
 
 //        data object Loading : MultiView {
@@ -116,13 +126,15 @@ class MyPageAdapter(
 
         init {
             b.tvSavedClear.setOnClickListener { onClearClick() }
+            setSavedNothingVisible = { b.tvSavedNothing.isVisible = it }
         }
 
         private var isAdapterNotBound = true
 
         override fun onBind(item: MultiView) {
+            item as MultiView.Saved
             if (isAdapterNotBound) {
-                b.rvSaved.adapter = (item as MultiView.Saved).myPageSavedAdapter
+                b.rvSaved.adapter = item.myPageSavedAdapter
                 isAdapterNotBound = false
             }
         }
@@ -143,10 +155,15 @@ class MyPageAdapter(
             b.tvReviewedArea.text = row.areanm
             b.tvReviewedTitle.text = row.svcnm
             b.tvReviewedReviewContent.text = reviewedData.content
-            b.tvReviewedDate.text = reviewedData.uploadTime
+            b.tvReviewedDate.text = reviewedData.uploadTime.substring(2..15)
 
             b.root.setOnClickListener { onReviewedClick(row.svcid) }
         }
+    }
+
+    inner class ReviewedNothingHolder(b: MyPageItemReviewedNothingBinding) :
+        CommonViewHolder(b.root) {
+        override fun onBind(item: MultiView) {}
     }
 
 //    inner class LoadingHolder(private val b: ItemLoadingProgressBinding) :
@@ -164,11 +181,6 @@ class MyPageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonViewHolder {
         return when (MultiView.Type.values()[viewType]) {
-            MultiView.Type.REVIEWED_HEADER -> ReviewedHeaderHolder(
-                MyPageItemReviewedHeaderBinding
-                    .inflate(LayoutInflater.from(parent.context), parent, false)
-            )
-
             MultiView.Type.PROFILE -> ProfileHolder(
                 MyPageItemProfileBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
@@ -179,8 +191,18 @@ class MyPageAdapter(
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 
+            MultiView.Type.REVIEWED_HEADER -> ReviewedHeaderHolder(
+                MyPageItemReviewedHeaderBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+
             MultiView.Type.REVIEWED -> ReviewedHolder(
                 MyPageItemReviewedBinding
+                    .inflate(LayoutInflater.from(parent.context), parent, false)
+            )
+
+            MultiView.Type.REVIEWED_NOTHING -> ReviewedNothingHolder(
+                MyPageItemReviewedNothingBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 
