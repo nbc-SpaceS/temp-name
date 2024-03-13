@@ -1,6 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.ComplaintEntity
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo

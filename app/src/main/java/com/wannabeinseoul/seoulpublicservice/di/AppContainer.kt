@@ -19,6 +19,8 @@ import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserProfileRepos
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserProfileRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserFSRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserFSRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
@@ -102,6 +104,7 @@ interface AppContainer {
     val categoryPrefRepository: CategoryPrefRepository
     val recommendPrefRepository: RecommendPrefRepository
     val userProfileRepository: UserProfileRepository
+    val userFSRepository: UserFSRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -313,5 +316,9 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val userProfileRepository by lazy {
         UserProfileRepositoryImpl()
+    }
+
+    override val userFSRepository: UserFSRepository by lazy {
+        UserFSRepositoryImpl()
     }
 }

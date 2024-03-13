@@ -7,7 +7,7 @@ import android.view.animation.AlphaAnimation
 import androidx.appcompat.app.AppCompatActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainActivity
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,9 @@ class SplashActivity : AppCompatActivity() {
             }
             initialLoadingFinished = livedata.value!!
         }
-
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d("dkj", "${container.userFSRepository.getUserId("result")}")
+        }
         val loadedId = container.idPrefRepository.load()
         if (loadedId.isBlank()) {
             val id = UUID.randomUUID().toString()

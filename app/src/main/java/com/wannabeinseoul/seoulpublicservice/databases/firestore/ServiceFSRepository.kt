@@ -1,15 +1,18 @@
-package com.wannabeinseoul.seoulpublicservice.databases.firebase
+package com.wannabeinseoul.seoulpublicservice.databases.firestore
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.entity.ServiceEntity
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
+import com.wannabeinseoul.seoulpublicservice.databases.firebase.FBRef
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
-interface ServiceRepository {
+interface ServiceFSRepository {
 
     suspend fun addServiceReview(
         svcId: String,
@@ -33,7 +36,9 @@ interface ServiceRepository {
     ) : List<Int>
 }
 
-class ServiceRepositoryImpl: ServiceRepository {
+class ServiceFSRepositoryImpl: ServiceFSRepository {
+
+    private val fireStore = Firebase.firestore
 
     override suspend fun addServiceReview(svcId: String, reviewId: String) {
         val service = getService(svcId)
@@ -117,6 +122,9 @@ class ServiceRepositoryImpl: ServiceRepository {
         }
 
     private suspend fun checkService(svcId: String): Boolean {
+        fireStore.collection("service").document(svcId).get().addOnSuccessListener {
+
+        }
         val serviceSnapshot = FBRef.serviceRef.get().await()
 
         for (snapshot in serviceSnapshot.children) {

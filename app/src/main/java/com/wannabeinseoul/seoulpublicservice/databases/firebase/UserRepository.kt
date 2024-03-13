@@ -1,5 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firebase
 
+import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import kotlinx.coroutines.tasks.await
 
 interface UserRepository {
@@ -26,7 +28,7 @@ interface UserRepository {
 
     suspend fun addUserReview(
         id: String,
-        svcId: String
+        reviewId: String
     )
 
     suspend fun getUser(

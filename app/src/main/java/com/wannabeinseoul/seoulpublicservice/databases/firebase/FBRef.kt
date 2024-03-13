@@ -14,6 +14,7 @@ class FBRef {
         val userBanRef = database.getReference("userBan")
 
         private val storage = Firebase.storage
+        val ref = storage.reference
         val userProfileRef = storage.getReference("userProfile")
     }
 }
