@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -96,6 +97,21 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         fetchCallback()
         Log.i("This is DetailFragment","onViewCreated / fetchCallback : ")
         connectToCommentList(requireContext())
+
+        // 뒤로가기로 다이얼로그 닫을 때 맵뷰 뚫리는거 막기
+        requireDialog().setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                binding.mvDetailMaps.isVisible = false
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    dismiss()
+                }, 1)
+
+                // true면 이벤트 처리 끝남, false면 나머지 기본 동작
+                return@setOnKeyListener true
+            }
+            false
+        }
     }
 
     private fun getCurrentLocation(callback: (LatLng) -> Unit) {
