@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,12 +34,6 @@ import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 private const val DETAIL_PARAM = "detail_param1"
 
@@ -71,7 +66,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
         viewModel.getData(param1!!)
         viewModel.savedID(param1!!)
-        Log.i("This is DetailFragment","onCreate : ")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = Dialog(requireContext(), R.style.DetailTransparent)
@@ -88,13 +82,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
-        Log.i("This is DetailFragment","onViewCreated : ")
-        binding.mvDetailMaps.visibility = View.VISIBLE
-        binding.ivDetailMapsSnapshot.visibility = View.INVISIBLE
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         favorite(viewModel.savedID.value!!)
         fetchCallback()
-        Log.i("This is DetailFragment","onViewCreated / fetchCallback : ")
         connectToCommentList(requireContext())
     }
 
@@ -122,17 +112,19 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun fetchCallback() {
-        Log.i("This is DetailFragment","fetchCallback : ")
+        mapViewSet()
         getCurrentLocation {
             myLocation = it
             viewModel.myLocationCallbackEvent(true)
-            Log.i("This is DetailFragment","fetchCallback / getCurrentLocation : ")
             viewModelInit()
             viewInit()
-            Log.i("This is DetailFragment","viewInit : ")
             mapView.getMapAsync(this)
-            Log.i("This is DetailFragment","getMapAsync : ")
         }
+    }
+
+    private fun mapViewSet() {
+        binding.mvDetailMaps.visibility = View.VISIBLE
+        binding.ivDetailMapsSnapshot.visibility = View.INVISIBLE
     }
 
     private fun viewInit() = binding.let {
@@ -141,16 +133,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             viewModel.textOpened(!textOpen)
             showMore(textOpen)
         }
-        it.ivDetailFavorite.setOnClickListener {
-            viewModel.changeFavorite(param1!!)
-        }
+        it.ivDetailFavorite.setOnClickListener { viewModel.changeFavorite(param1!!) }
         it.btnDetailCall.setOnClickListener { startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${viewModel.serviceData.value?.TELNO}"))) }
         it.btnDetailReservation.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.serviceData.value?.SVCURL))) }
         it.ivDetailShare.setOnClickListener {
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/html"
-            val url = viewModel.serviceData.value!!.SVCURL
-            i.putExtra(Intent.EXTRA_TEXT, url)
+            i.putExtra(Intent.EXTRA_TEXT, viewModel.serviceData.value!!.SVCURL)
             startActivity(Intent.createChooser(i, "링크 공유"))
         }
         it.tvDetailReviewMoveBtn.setOnClickListener {
@@ -161,9 +150,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun viewModelInit() = viewModel.let { vm ->
-        vm.myLocationCallback.observe(viewLifecycleOwner) {
-            if(it) myLocCall = true
-        }
+        vm.myLocationCallback.observe(viewLifecycleOwner) { if(it) myLocCall = true }
         vm.serviceData.observe(viewLifecycleOwner) { data ->
             checkLatLng(data)
             bind(data)
@@ -174,35 +161,27 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             textOpen = it
             showMore(it)
         }
-        vm.closeEvent.observe(viewLifecycleOwner) { close ->
-            if(close) {
-                dismiss()
-            }
-        }
+        vm.closeEvent.observe(viewLifecycleOwner) { close -> if(close) dismiss() }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it)
             binding.tvDetailEmptyDescription.isVisible = it.isEmpty()
             mainViewModel.setCurrentReviewList(it)
         }
-        vm.favoriteChanged.observe(viewLifecycleOwner) {
-            favorite(it)
-        }
-        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
-            vm.setReviews(param1!!)
-        }
+        vm.favoriteChanged.observe(viewLifecycleOwner) { favorite(it) }
+        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) { vm.setReviews(param1!!) }
     }
 
     private fun bind(data : ReservationEntity) {
         buttonDesign(data)
-        binding.ivDetailImg.loadWithHolder(data.IMGURL)
         binding.let {
+            it.ivDetailImg.loadWithHolder(data.IMGURL)
             it.tvDetailTypeSmall.text = data.MINCLASSNM
             it.tvDetailName.text = data.SVCNM
             it.tvDetailLocation.text = "${data.AREANM} - ${Html.fromHtml(data.PLACENM, Html.FROM_HTML_MODE_LEGACY)}"
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailUsetgtinfo.text = data.USETGTINFO.trim()
-            it.tvDetailSvcopndt.text = "${dateFormat(data.SVCOPNBGNDT)} ~ ${dateFormat(data.SVCOPNENDDT)}"
-            it.tvDetailRcptdt.text = "${dateFormat(data.RCPTBGNDT)} ~ ${dateFormat(data.RCPTENDDT)}"
+            it.tvDetailSvcopndt.text = "${viewModel.dateFormat(data.SVCOPNBGNDT)} ~ ${viewModel.dateFormat(data.SVCOPNENDDT)}"
+            it.tvDetailRcptdt.text = "${viewModel.dateFormat(data.RCPTBGNDT)} ~ ${viewModel.dateFormat(data.RCPTENDDT)}"
             it.tvDetailV.text = "${data.V_MIN} ~ ${data.V_MAX}"
             it.tvDetailRevstdday.text = "${data.REVSTDDAYNM} ${data.REVSTDDAY}일 전"
             it.tvDetailDescription.text = Html.fromHtml(data.DTLCONT, Html.FROM_HTML_MODE_LEGACY)
@@ -221,20 +200,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun distanceCheck() {
-        val distance = distance(itemLocation, myLocation)
-        binding.tvDetailDistanceFromHere.text =
-            when {
-                distance/1000 < 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
-                distance/1000 >= 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
-                else -> "현위치로부터 ?km"
-            }
+        binding.tvDetailDistanceFromHere.text = viewModel.distanceCheckResponse(viewModel.distance(itemLocation, myLocation))
     }
 
     override fun onMapReady(nMap: NaverMap) {
         naverMap = nMap
         naverMap.apply {
-            maxZoom = 19.0
-            minZoom = 11.0
             locationSource = locationSource
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
@@ -266,7 +237,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             markerStyle()
         }
         Log.i("This is DetailFragment","mapFinish: ")
-        snapshotCallback()
     }
 
     private fun markerStyle() {
@@ -281,24 +251,19 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun snapshotCallback() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            naverMap.takeSnapshot {
-                Log.i("This is DetailFragment","take Snapshot : $it")
-//                binding.ivDetailMapsSnapshot.loadWithHolder(it)   // 로딩 이미지가 순식간에 지나가긴 하는데 너무 거슬려서 일단 주석처리함
-                binding.ivDetailMapsSnapshot.setImageBitmap(it)
-                binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
-                binding.mvDetailMaps.visibility = View.GONE  // VISIBLE 일 때 지도랑 이미지뷰랑 같이 뿅! 하고 사라져버림
-            }
-            Log.i("This is DetailFragment","Handler/snapshotCallback : ")
-        }, 1200)
+        naverMap.takeSnapshot {
+            Log.i("This is DetailFragment", "take Snapshot : $it")
+            binding.ivDetailMapsSnapshot.setImageBitmap(it)
+            binding.ivDetailMapsSnapshot.visibility = View.VISIBLE
+            binding.mvDetailMaps.visibility = View.GONE
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
         Log.i("This is DetailFragment","onDismiss : ")
         viewModel.close(false)
+        super.onDismiss(dialog)
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -309,6 +274,18 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+        dialog?.setOnKeyListener { _, keyCode, event ->
+            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                Log.i("This is DetailFragment","key Event Active true : ")
+                snapshotCallback()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    dismiss()
+                }, 50)
+                true
+            } else {
+                false
+            }
+        }
         Log.i("This is DetailFragment","onResume : ")
     }
 
@@ -331,23 +308,16 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         mapView.onDestroy()
         Log.i("This is DetailFragment","onDestroyView : ")
         _binding = null
-        dialog?.dismiss()
+//        dialog?.dismiss()
+        super.onDestroyView()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
-    }
-
-    private fun dateFormat(date: String): String {
-        val datePattern = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
-        val dateTime = LocalDateTime.parse(date, formatter)
-        return datePattern.format(dateTime)
     }
 
     private fun showMore(state : Boolean) {
@@ -386,19 +356,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
     }
-
-    // 두 지점 간의 직선 거리를 계산하는 함수
-    private fun distance(point1: LatLng, point2: LatLng): Double {
-        val R = 6371 // 지구의 반지름 (단위: km)
-        val latDistance = Math.toRadians(point2.latitude - point1.latitude)
-        val lonDistance = Math.toRadians(point2.longitude - point1.longitude)
-        val a = sin(latDistance / 2) * sin(latDistance / 2) +
-                (cos(Math.toRadians(point1.latitude)) * cos(Math.toRadians(point2.latitude)) *
-                        sin(lonDistance / 2) * sin(lonDistance / 2))
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return R * c * 1000 // 단위를 미터로 변환
-    }
-
 
     private fun buttonDesign(data: ReservationEntity) {
         val button = binding.btnDetailReservation
