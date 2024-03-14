@@ -117,7 +117,7 @@ class HomeFragment : Fragment() {
 
         binding.tvHomeSelectRegion1.setOnClickListener {
             binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion1.text
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
+            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
             regionPrefRepository.saveSelectedRegion(1)
@@ -125,7 +125,7 @@ class HomeFragment : Fragment() {
 
         binding.tvHomeSelectRegion2.setOnClickListener {
             binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion2.text
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
+            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.total_text_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
             regionPrefRepository.saveSelectedRegion(2)
@@ -133,7 +133,7 @@ class HomeFragment : Fragment() {
 
         binding.tvHomeSelectRegion3.setOnClickListener {
             binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion3.text
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
+            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.total_text_color))
             binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
             binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
             regionPrefRepository.saveSelectedRegion(3)
@@ -217,7 +217,7 @@ class HomeFragment : Fragment() {
         return if (selectedRegions.isNotEmpty()) {
             regionPrefRepository.saveSelectedRegion(1)
             binding.tvHomeCurrentRegion.text = selectedRegions[0]
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
+            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
             when (selectedRegions.size) {
                 1 -> {
                     binding.tvHomeSelectRegion1.text = selectedRegions[0]

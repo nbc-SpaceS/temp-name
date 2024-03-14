@@ -234,6 +234,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                 if (filteringData.value?.size == 0) {
                     Toast.makeText(requireContext(), "필터링 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "${filteringData.value?.size}+개의 서비스가 있습니다.", Toast.LENGTH_SHORT).show()
                 }
 
                 filteringData.value?.forEach {

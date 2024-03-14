@@ -17,6 +17,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
+        android:background="@drawable/background_service_item_layout"
+        android:clipToOutline="true"
         android:scaleType="centerCrop"
         android:src="@drawable/place_holder_1"
         app:layout_constraintBottom_toBottomOf="parent"

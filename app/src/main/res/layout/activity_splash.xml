@@ -13,10 +13,12 @@
         android:background="@drawable/background_radius_30dp"
         android:clipToOutline="true"
         android:src="@drawable/ic_splash"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_splash_description"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/tv_splash_description"
@@ -27,7 +29,9 @@
         android:text="근처에 있지만 알지 못했던 다양한 공공서비스를\n확인하고 즐겨보세요"
         android:textColor="@color/gray"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_logo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

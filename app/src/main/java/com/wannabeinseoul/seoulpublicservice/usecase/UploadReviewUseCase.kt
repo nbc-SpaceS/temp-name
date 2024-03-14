@@ -18,8 +18,6 @@ class UploadReviewUseCase(
         val id = idPrefRepository.load()
         val reviewId = id.takeLast(4) + System.currentTimeMillis().toString()
 
-        userRepository.addUserReview(id, reviewId)
-        serviceRepository.addServiceReview(svcId, reviewId)
         reviewRepository.addReview(
             reviewId,
             ReviewEntity(
@@ -30,5 +28,7 @@ class UploadReviewUseCase(
                 content = review
             )
         )
+        userRepository.addUserReview(id, reviewId)
+        serviceRepository.addServiceReview(svcId, reviewId)
     }
 }
