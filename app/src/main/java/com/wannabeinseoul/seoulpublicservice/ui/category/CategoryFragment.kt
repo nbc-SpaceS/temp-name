@@ -40,6 +40,8 @@ class CategoryFragment : Fragment() {
 
         initView()
         initViewModel()
+
+        categoryClick()
     }
 
     private fun initView() {
@@ -61,5 +63,12 @@ class CategoryFragment : Fragment() {
         }
     }
 
-
+    private fun categoryClick() {  // 인터페이스로 받은 svcid를 상세 페이지로 넘기기
+        adapter.categoryItemClick = object : CategoryItemClick {
+            override fun onClick(svcID: String) {
+                val dialog = DetailFragment.newInstance(svcID)
+                dialog.show(requireActivity().supportFragmentManager, "CategoryFrag")
+            }
+        }
+    }
 }

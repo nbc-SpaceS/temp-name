@@ -47,6 +47,11 @@ class CategoryAdapter(private val onItemClick: (svcid: String) -> Unit) :
 //apply 쓰고 binding 불필요
             }
         }
+        fun click(svcID: String) {
+            binding.ivSmallVideoItems.setOnClickListener {
+                categoryItemClick?.onClick(svcID)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -58,8 +63,10 @@ class CategoryAdapter(private val onItemClick: (svcid: String) -> Unit) :
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+        holder.click(item.svcid)
     }
 
+    var categoryItemClick: CategoryItemClick? = null
 }
 
 class CategoryDiffCallback : DiffUtil.ItemCallback<CategoryData>() {
@@ -71,4 +78,9 @@ class CategoryDiffCallback : DiffUtil.ItemCallback<CategoryData>() {
         return oldItem == newItem
     }
 
+}
+
+// 카테고리 아이템 클릭 시 상세 페이지로 SVCID를 전달하기 위한 인터페이스
+interface CategoryItemClick {
+    fun onClick(svcID: String)
 }
