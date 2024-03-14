@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -327,10 +329,14 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupRootClickListener(binding: FragmentHomeBinding) {
-        binding.root.setOnClickListener {
-            // layout_search 바깥 부분을 클릭하면 EditText의 포커스 제거
-            binding.etSearch.clearFocus()
+        binding.root.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                // 터치 이벤트가 발생하면 포커스를 해제
+                binding.etSearch.clearFocus()
+            }
+            true
         }
     }
 
