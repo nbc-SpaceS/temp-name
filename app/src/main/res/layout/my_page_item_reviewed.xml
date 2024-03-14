@@ -22,12 +22,11 @@
             android:layout_width="88dp"
             android:layout_height="66dp"
             android:scaleType="centerCrop"
-            android:background="@drawable/background_radius_16dp_imageview"
+            android:background="@drawable/background_service_item_layout"
             android:clipToOutline="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/place_holder_1" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_reviewed_area"

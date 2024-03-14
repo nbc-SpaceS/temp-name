@@ -107,6 +107,10 @@ class DetailViewModel(
         }
     }
 
+    fun setReviews(reviewList: List<ReviewItem>) {
+        _reviewUiState.value = reviewList
+    }
+
     companion object {
         val factory = viewModelFactory {
             initializer {

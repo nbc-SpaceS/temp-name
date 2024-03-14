@@ -234,6 +234,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
                 if (filteringData.value?.size == 0) {
                     Toast.makeText(requireContext(), "필터링 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "${filteringData.value?.size}+개의 서비스가 있습니다.", Toast.LENGTH_SHORT).show()
                 }
 
                 filteringData.value?.forEach {
@@ -262,6 +264,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             requireContext().getColor(R.color.point_color)
                         marker.zIndex = 10
                         viewModel.updateInfo(it.value)
+                        binding.vpMapDetailInfo.setCurrentItem(0, false)
                         moveCamera(it.key.first.toDouble(), it.key.second.toDouble())
                         true
                     }

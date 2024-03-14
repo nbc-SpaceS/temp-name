@@ -35,9 +35,10 @@ class ReviewViewModel(
     val isComplaintSelf: LiveData<Pair<Boolean, ComplaintUserInfo>> get() = _isComplaintSelf
 
     fun uploadReview(svcId: String, review: String) {
+        _reviewCredentials.postValue(false)
+
         viewModelScope.launch(Dispatchers.IO) {
             uploadReviewUseCase(svcId, review)
-            _reviewCredentials.postValue(false)
             _uiState.postValue(getReviewListUseCase(svcId))
         }
     }

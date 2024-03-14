@@ -28,7 +28,7 @@
                 android:layout_height="256dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/place_holder_1"
+                android:background="@color/unClicked_button_solid"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
