@@ -1,25 +1,21 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
-import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
-import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
 
 class RecommendationFragment : Fragment() {
 
     private lateinit var binding: FragmentRecommendationBinding
-    private lateinit var viewModel: RecommendationViewModel
+    private val viewModel: RecommendationViewModel by viewModels { factory }
 
 
     private val app by lazy { requireActivity().application as SeoulPublicServiceApplication }
@@ -41,34 +37,64 @@ class RecommendationFragment : Fragment() {
         }
 //눌렀을때 쇼디테일 가도록 할 예정.
 
-    private val horizontalAdapters = List(4) {
-        RecommendationHorizontalAdapter(
-            emptyList<RecommendationData>().toMutableList(), showDetailFragment
-        )
-    }
+//    private val horizontalAdapters = List(4) {
+//        RecommendationHorizontalAdapter(
+//            emptyList<RecommendationData>().toMutableList(), showDetailFragment
+//        )
+//    }
+
+//    private val horizontalAdapters by lazy {
+//        viewModel.recommendationListLivedataList.map { liveData ->
+//            RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
+//                .also { adapter ->
+//                    liveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
+//                }
+//        }
+//    }
 
 
-
-    private val horizontals by lazy {
-        List(4) {
-            val region = regionPrefRepository.loadSelectedRegion()
-            RecommendationAdapter.MultiView.Horizontal(
-                "$region", horizontalAdapters[it]
-            )
-        }
-    }
+//    private val horizontals by lazy {
+//        List(4) {
+//            val region = regionPrefRepository.loadSelectedRegion()
+//            RecommendationAdapter.MultiView.Horizontal(
+//                "$region", horizontalAdapters[it]
+//            )
+//        }
+//    }
 //    private val horizontals = List(4) {
 //        RecommendationAdapter.MultiView.Horizontal(
 //            "1234", horizontalAdapters[it]
 //        )
 //    }
 
+    private val recommendationAdapter = RecommendationAdapter()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentRecommendationBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        initViewModel()
+
+    }
+
+    private fun initView() = binding.let { binding ->
+        binding.reScroll.adapter = recommendationAdapter
+        binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+
+
     private val tipsHeader = listOf(
         "서울시 관련 Tip!",
         "앱 관련 문제 Tip!",
         "생활 관련 Tip!"
     )
-
     private val tipsMap = mapOf(
         "서울시 관련 Tip!" to listOf(
             "추천 서비스에서는 지역 설정에 따라 추천항목이 달라집니다.",
@@ -86,7 +112,7 @@ class RecommendationFragment : Fragment() {
             "서울시의 신호등이 서울의 상징인 해치 캐릭터를 넣는 방안을 추진 중 입니다.",
             "시속 100km 이상의 속도로 수도권에서 서울 도심까지 출퇴근을 30분 만에 할 수 있는 'GTX-A'가 개통될 예정입니다.",
             "6월부터는 서울 한강에 '서울의 달'이라는 열기구가 건물 50층의 높이로 뜰 예정입니다."
-    ),
+        ),
         "앱 관련 문제 Tip!" to listOf(
             "문제가 생겼을 때는 앱을 다시 시작해 보거나, 안전한 사용을 위해 앱을 업데이트해 보세요.",
             "앱에서 접속 문제가 발생할 경우, 저장된 캐시를 지우고 다시 시도해 보세요.",
@@ -116,53 +142,41 @@ class RecommendationFragment : Fragment() {
             "남은 떡국떡을 물에 잠시 불린 뒤 180도로 설정한 에어프라이어에 10분 정도 조리하면 바삭한 간식이 됩니다."
         ),
     )
-    private val randomTipHeader = tipsHeader.random()
-    private val randomTip = tipsMap[randomTipHeader]?.random() ?: ""
+    private val randomTipHeader: String = tipsHeader.random()
+    private val randomTip: String = tipsMap[randomTipHeader]?.random() ?: ""
 
-    private val recommendationAdapter by lazy {
-        RecommendationAdapter().apply {
-            submitList(
-                listOf(
-                    horizontals[0],
-                    horizontals[1],
-                    RecommendationAdapter.MultiView.Tip(
-                        randomTipHeader, randomTip
-                    ),
-                    horizontals[2],
-                    horizontals[3],
+
+
+
+
+    private fun initViewModel() = viewModel.let { vm ->
+//        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
+//            liveData.observe(viewLifecycleOwner) {
+//                horizontalAdapters.getOrNull(index)?.submitList(it)
+//            }
+//        }
+
+        vm.horizontalDataList.observe(viewLifecycleOwner) { horizontalDataList ->
+            val multiViews: MutableList<RecommendationAdapter.MultiView> = horizontalDataList.map {
+                RecommendationAdapter.MultiView.Horizontal(
+                    it.title,
+                    RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
+                        .apply { submitList(it.list) }
                 )
-            )
+            }.toMutableList()
+//            if (multiViews.size >= 2) multiViews.add(2,)
+            multiViews.add(1, RecommendationAdapter.MultiView.Tip(randomTipHeader, randomTip))
+//            if (multiViews.size >= 2) multiViews.add(
+//                2,
+//
+//                RecommendationAdapter.MultiView.Tip("팁 제목입니다", "팁 내용입니다")
+
+            viewModel.setMultiViews(multiViews)
+        }
+
+        vm.multiViews.observe(viewLifecycleOwner) {
+            recommendationAdapter.submitList(it)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentRecommendationBinding.inflate(inflater, container, false)
-        val view = binding.root
-
-        viewModel = ViewModelProvider(this, factory)[RecommendationViewModel::class.java]
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        initViewModel()
-
-    }
-
-    private fun initView() = binding.let { binding ->
-        binding.reScroll.adapter = recommendationAdapter
-        binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-
-    private fun initViewModel() {
-        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
-            liveData.observe(viewLifecycleOwner) {
-                horizontalAdapters.getOrNull(index)?.submitList(it)
-            }
-        }
-    }
 }
