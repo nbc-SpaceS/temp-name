@@ -6,7 +6,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import kotlinx.coroutines.tasks.await
 
-interface UserFSRepository {
+interface UserRepository {
     fun addUser(
         id: String,
         user: UserEntity
@@ -46,7 +46,7 @@ interface UserFSRepository {
     ): List<ReviewEntity>
 }
 
-class UserFSRepositoryImpl : UserFSRepository {
+class UserRepositoryImpl : UserRepository {
     private val fireStore = Firebase.firestore
 
     override fun addUser(id: String, user: UserEntity) {

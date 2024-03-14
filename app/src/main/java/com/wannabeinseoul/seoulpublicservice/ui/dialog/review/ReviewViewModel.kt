@@ -8,12 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo
-import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.CheckComplaintSelfUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.CheckCredentialsUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetReviewListUseCase

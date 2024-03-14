@@ -54,6 +54,7 @@ class SplashActivity : AppCompatActivity() {
         if (loadedId.isBlank()) {
             val id = UUID.randomUUID().toString()
             val user = UserEntity(
+                userId = id,
                 userName = "익명-${id.substring(0..5)}",
                 userProfileImage = "",
                 userColor = "#" + (1..6).map { id.replace("-", "").random() }.joinToString(""),
