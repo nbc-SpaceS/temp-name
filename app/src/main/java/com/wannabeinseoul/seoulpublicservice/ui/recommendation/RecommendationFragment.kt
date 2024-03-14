@@ -89,7 +89,6 @@ class RecommendationFragment : Fragment() {
     }
 
 
-
     private val tipsHeader = listOf(
         "서울시 관련 Tip!",
         "앱 관련 문제 Tip!",
@@ -146,9 +145,6 @@ class RecommendationFragment : Fragment() {
     private val randomTip: String = tipsMap[randomTipHeader]?.random() ?: ""
 
 
-
-
-
     private fun initViewModel() = viewModel.let { vm ->
 //        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
 //            liveData.observe(viewLifecycleOwner) {
@@ -164,7 +160,6 @@ class RecommendationFragment : Fragment() {
                         .apply { submitList(it.list) }
                 )
             }.toMutableList()
-//            if (multiViews.size >= 2) multiViews.add(2,)
             multiViews.add(1, RecommendationAdapter.MultiView.Tip(randomTipHeader, randomTip))
 //            if (multiViews.size >= 2) multiViews.add(
 //                2,
