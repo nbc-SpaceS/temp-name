@@ -34,7 +34,12 @@ class MyPageFragment : Fragment() {
 
     private val fixedItems: List<MyPageAdapter.MultiView> by lazy {
         listOf(
-            MyPageAdapter.MultiView.Profile(app.user) {
+            MyPageAdapter.MultiView.Profile(
+//                app.userId,
+                app.userColor,
+                app.userProfileImageDrawable,
+                app.userName,
+            ) {
                 EditProfileDialog.newInstance()
                     .show(requireActivity().supportFragmentManager, "EditProfileDialog")
             },
@@ -45,6 +50,7 @@ class MyPageFragment : Fragment() {
 
     private val myPageAdapter by lazy {
         MyPageAdapter(
+            lifecycleOwner = viewLifecycleOwner,
             onClearClick = { viewModel.clearSavedList() },
             onReviewedClick = showDetailFragment,
         )
