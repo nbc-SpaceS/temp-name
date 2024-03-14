@@ -94,6 +94,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
 
+
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
 //    ksp("com.google.dagger:hilt-android-compiler:2.50")
