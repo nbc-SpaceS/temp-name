@@ -6,10 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMyPageBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class MyPageFragment : Fragment() {
 
@@ -20,6 +27,7 @@ class MyPageFragment : Fragment() {
     private var _binding: FragmentMyPageBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MyPageViewModel by viewModels { MyPageViewModel.factory }
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private val app by lazy { requireActivity().application as SeoulPublicServiceApplication }
 
@@ -129,11 +137,19 @@ class MyPageFragment : Fragment() {
                     else reviewedDataList.map { MyPageAdapter.MultiView.Reviewed(it) }
             )
         }
+
+        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
+            CoroutineScope(Dispatchers.IO).launch {
+                viewModel.loadReviewedList()
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.loadReviewedList()
+        }
         myPageAdapter.setSavedNothingVisible?.invoke(myPageSavedAdapter.itemCount == 0)
     }
 
