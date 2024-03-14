@@ -1,25 +1,21 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
-import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
-import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
 
 class RecommendationFragment : Fragment() {
 
     private lateinit var binding: FragmentRecommendationBinding
-    private lateinit var viewModel: RecommendationViewModel
+    private val viewModel: RecommendationViewModel by viewModels { factory }
 
 
     private val app by lazy { requireActivity().application as SeoulPublicServiceApplication }
@@ -41,12 +37,20 @@ class RecommendationFragment : Fragment() {
         }
 //눌렀을때 쇼디테일 가도록 할 예정.
 
-    private val horizontalAdapters = List(4) {
-        RecommendationHorizontalAdapter(
-            emptyList<RecommendationData>().toMutableList(), showDetailFragment
-        )
-    }
+//    private val horizontalAdapters = List(4) {
+//        RecommendationHorizontalAdapter(
+//            emptyList<RecommendationData>().toMutableList(), showDetailFragment
+//        )
+//    }
 
+    private val horizontalAdapters by lazy {
+        viewModel.recommendationListLivedataList.map { liveData ->
+            RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
+                .also { adapter ->
+                    liveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
+                }
+        }
+    }
 
 
     private val horizontals by lazy {
@@ -83,10 +87,7 @@ class RecommendationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentRecommendationBinding.inflate(inflater, container, false)
-        val view = binding.root
-
-        viewModel = ViewModelProvider(this, factory)[RecommendationViewModel::class.java]
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,10 +104,10 @@ class RecommendationFragment : Fragment() {
 
 
     private fun initViewModel() {
-        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
-            liveData.observe(viewLifecycleOwner) {
-                horizontalAdapters.getOrNull(index)?.submitList(it)
-            }
-        }
+//        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
+//            liveData.observe(viewLifecycleOwner) {
+//                horizontalAdapters.getOrNull(index)?.submitList(it)
+//            }
+//        }
     }
 }
