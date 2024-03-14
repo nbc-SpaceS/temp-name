@@ -43,45 +43,31 @@ class RecommendationFragment : Fragment() {
 //        )
 //    }
 
-    private val horizontalAdapters by lazy {
-        viewModel.recommendationListLivedataList.map { liveData ->
-            RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
-                .also { adapter ->
-                    liveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
-                }
-        }
-    }
+//    private val horizontalAdapters by lazy {
+//        viewModel.recommendationListLivedataList.map { liveData ->
+//            RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
+//                .also { adapter ->
+//                    liveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
+//                }
+//        }
+//    }
 
 
-    private val horizontals by lazy {
-        List(4) {
-            val region = regionPrefRepository.loadSelectedRegion()
-            RecommendationAdapter.MultiView.Horizontal(
-                "$region", horizontalAdapters[it]
-            )
-        }
-    }
+//    private val horizontals by lazy {
+//        List(4) {
+//            val region = regionPrefRepository.loadSelectedRegion()
+//            RecommendationAdapter.MultiView.Horizontal(
+//                "$region", horizontalAdapters[it]
+//            )
+//        }
+//    }
 //    private val horizontals = List(4) {
 //        RecommendationAdapter.MultiView.Horizontal(
 //            "1234", horizontalAdapters[it]
 //        )
 //    }
 
-    private val recommendationAdapter by lazy {
-        RecommendationAdapter().apply {
-            submitList(
-                listOf(
-                    horizontals[0],
-                    horizontals[1],
-                    RecommendationAdapter.MultiView.Tip(
-                        "그거 아시나요?", "이 앱에는 누군가의 피 땀 눈물이 들어있다는 것을"
-                    ),
-                    horizontals[2],
-                    horizontals[3],
-                )
-            )
-        }
-    }
+    private val recommendationAdapter = RecommendationAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -103,11 +89,30 @@ class RecommendationFragment : Fragment() {
     }
 
 
-    private fun initViewModel() {
+    private fun initViewModel() = viewModel.let { vm ->
 //        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
 //            liveData.observe(viewLifecycleOwner) {
 //                horizontalAdapters.getOrNull(index)?.submitList(it)
 //            }
 //        }
+
+        vm.horizontalDataList.observe(viewLifecycleOwner) { horizontalDataList ->
+            val multiViews: MutableList<RecommendationAdapter.MultiView> = horizontalDataList.map {
+                RecommendationAdapter.MultiView.Horizontal(
+                    it.title,
+                    RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
+                        .apply { submitList(it.list) }
+                )
+            }.toMutableList()
+            if (multiViews.size >= 2) multiViews.add(
+                2,
+                RecommendationAdapter.MultiView.Tip("팁 제목입니다", "팁 내용입니다")
+            )
+            viewModel.setMultiViews(multiViews)
+        }
+
+        vm.multiViews.observe(viewLifecycleOwner) {
+            recommendationAdapter.submitList(it)
+        }
     }
 }
