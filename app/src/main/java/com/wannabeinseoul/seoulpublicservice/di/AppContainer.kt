@@ -7,18 +7,18 @@ import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ComplaintRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserProfileRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserProfileRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ComplaintRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ComplaintRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
@@ -94,14 +94,14 @@ interface AppContainer {
     val dbMemoryRepository: DbMemoryRepository
     val savedPrefRepository: SavedPrefRepository
     val searchPrefRepository: SearchPrefRepository
-    val reviewRepository: ReviewRepository
-    val userRepository: UserRepository
-    val serviceRepository: ServiceRepository
-    val complaintRepository: ComplaintRepository
-    val userBanRepository: UserBanRepository
     val categoryPrefRepository: CategoryPrefRepository
     val recommendPrefRepository: RecommendPrefRepository
     val userProfileRepository: UserProfileRepository
+    val userRepository: UserRepository
+    val serviceRepository: ServiceRepository
+    val reviewRepository: ReviewRepository
+    val complaintRepository: ComplaintRepository
+    val userBanRepository: UserBanRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -283,10 +283,6 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         SearchPrefRepositoryImpl(context)
     }
 
-    override val reviewRepository: ReviewRepository by lazy {
-        ReviewRepositoryImpl()
-    }
-
     override val categoryPrefRepository: CategoryPrefRepository by lazy {
         CategoryPrefRepositoryImpl(context)
     }
@@ -295,23 +291,27 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         RecommendPrefRepositoryImpl(context)
     }
 
+    override val userProfileRepository by lazy {
+        UserProfileRepositoryImpl()
+    }
+
     override val userRepository: UserRepository by lazy {
         UserRepositoryImpl()
     }
 
-    override val serviceRepository: ServiceRepository by lazy {
+    override val serviceRepository by lazy {
         ServiceRepositoryImpl()
     }
 
-    override val complaintRepository: ComplaintRepository by lazy {
+    override val reviewRepository by lazy {
+        ReviewRepositoryImpl()
+    }
+
+    override val complaintRepository by lazy {
         ComplaintRepositoryImpl()
     }
 
-    override val userBanRepository: UserBanRepository by lazy {
+    override val userBanRepository by lazy {
         UserBanRepositoryImpl()
-    }
-
-    override val userProfileRepository by lazy {
-        UserProfileRepositoryImpl()
     }
 }

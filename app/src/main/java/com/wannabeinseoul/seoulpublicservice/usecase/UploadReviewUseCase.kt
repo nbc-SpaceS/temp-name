@@ -1,11 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewEntity
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
-import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
+import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -25,6 +23,7 @@ class UploadReviewUseCase(
         reviewRepository.addReview(
             reviewId,
             ReviewEntity(
+                reviewId = reviewId,
                 userId = id,
                 svcId = svcId,
                 uploadTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),

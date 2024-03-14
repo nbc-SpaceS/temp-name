@@ -7,7 +7,7 @@ import android.view.animation.AlphaAnimation
 import androidx.appcompat.app.AppCompatActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainActivity
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserEntity
+import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,6 +54,7 @@ class SplashActivity : AppCompatActivity() {
         if (loadedId.isBlank()) {
             val id = UUID.randomUUID().toString()
             val user = UserEntity(
+                userId = id,
                 userName = "익명-${id.substring(0..5)}",
                 userProfileImage = "",
                 userColor = "#" + (1..6).map { id.replace("-", "").random() }.joinToString(""),

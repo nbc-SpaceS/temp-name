@@ -37,7 +37,8 @@ interface DbMemoryRepository {
         minclassnm: List<String>? = null,
         areanm: List<String>? = null,
         svcstatnm: List<String>? = null,
-        payatnm: List<String>? = null
+        payatnm: List<String>? = null,
+        ugtGetInfo : List < String >? = null
     ): List<Row>
 
     fun getFilteredPlusWord(
@@ -61,9 +62,10 @@ class DbMemoryRepositoryImpl(private val getAppRowList: () -> List<Row>) : DbMem
         minclassnm: List<String>?,
         areanm: List<String>?,
         svcstatnm: List<String>?,
-        payatnm: List<String>?
+        payatnm: List<String>?,
+        usetgtinfo: List<String>?
     ): List<Row> {
-        return getHaveLocation().getFiltered(minclassnm, areanm, svcstatnm, payatnm)
+        return getHaveLocation().getFiltered(minclassnm, areanm, svcstatnm, payatnm, usetgtinfo)
     }
 
     override fun getFilteredPlusWord(
@@ -90,7 +92,8 @@ fun List<Row>.getFiltered(
     minclassnm: List<String>?,
     areanm: List<String>?,
     svcstatnm: List<String>?,
-    payatnm: List<String>?
+    payatnm: List<String>?,
+    usetgtinfo: List<String>?
 ): List<Row> {
 //    Log.d(
 //        "jj-DbMemoryRepositoryImpl",
@@ -104,14 +107,16 @@ fun List<Row>.getFiltered(
             (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
                     (areanm.isEmpty() || it.areanm.isNotBlank() && (it.areanm in areanm || it.isNotInSeoul())) &&
                     (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
-                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
+                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm) &&
+                    (usetgtinfo.isNullOrEmpty() || it.usetgtinfo in usetgtinfo)
         }
     } else {
         getHaveLocation().filter {
             (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
                     (areanm.isNullOrEmpty() || it.areanm in areanm) &&
                     (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
-                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
+                    (payatnm.isNullOrEmpty() || it.payatnm in payatnm) &&
+                    (usetgtinfo.isNullOrEmpty() || it.usetgtinfo in usetgtinfo)
         }
     }
 }

@@ -24,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.Gson
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
@@ -360,4 +361,19 @@ class HomeFragment : Fragment() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
+
+      //아직 구현하지 못한 내용
+//    private fun checkNotification() {
+//        val sharedPreferences = requireContext().getSharedPreferences("SavedPrefRepository", Context.MODE_PRIVATE)
+//        val gson = Gson()
+//        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+//            if (key == "keyNotificationSvcidList") {
+//                val json = sharedPreferences.getString(key, null) ?: ""
+//                val result = gson.fromJson(json, Array<String>::class.java).toList()
+//                Log.d("dkj4", "$result")
+//                binding.ivHomeNotificationCountBackground.isVisible = result.isNotEmpty()
+//            }
+//        }
+//        sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
+//    }
 }

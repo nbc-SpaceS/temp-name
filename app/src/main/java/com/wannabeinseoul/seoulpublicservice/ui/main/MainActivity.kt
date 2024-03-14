@@ -3,13 +3,10 @@ package com.wannabeinseoul.seoulpublicservice.ui.main
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Rect
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -68,12 +65,14 @@ class MainActivity : AppCompatActivity() {
 
                     app.lastLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 
-                    lm.getCurrentLocation(
-                        LocationManager.GPS_PROVIDER,
-                        null,
-                        application.mainExecutor
-                    ) {
-                        app.lastLocation = it
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        lm.getCurrentLocation(
+                            LocationManager.GPS_PROVIDER,
+                            null,
+                            application.mainExecutor
+                        ) {
+                            app.lastLocation = it
+                        }
                     }
 
                     Log.d("jj-메인액티비티", "위치 갱신: ${app.lastLocation}")
