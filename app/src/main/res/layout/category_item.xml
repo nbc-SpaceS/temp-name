@@ -12,7 +12,7 @@
         android:id="@+id/iv_ctImage"
         android:layout_width="150dp"
         android:layout_height="95dp"
-        android:background="@drawable/background_radius_10dp_828282"
+        android:background="@drawable/background_service_item_layout"
         android:clipToOutline="true"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"

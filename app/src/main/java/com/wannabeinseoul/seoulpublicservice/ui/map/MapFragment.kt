@@ -264,6 +264,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                             requireContext().getColor(R.color.point_color)
                         marker.zIndex = 10
                         viewModel.updateInfo(it.value)
+                        binding.vpMapDetailInfo.setCurrentItem(0, false)
                         moveCamera(it.key.first.toDouble(), it.key.second.toDouble())
                         true
                     }
