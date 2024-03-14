@@ -2,13 +2,9 @@ package com.wannabeinseoul.seoulpublicservice.di
 
 import android.content.Context
 import com.wannabeinseoul.seoulpublicservice.BuildConfig
-import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
-import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ComplaintRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ComplaintRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
@@ -17,6 +13,8 @@ import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceReposito
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
@@ -37,6 +35,8 @@ import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
@@ -292,7 +292,7 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
     }
 
     override val userProfileRepository by lazy {
-        UserProfileRepositoryImpl()
+        UserProfileRepositoryImpl(userRepository)
     }
 
     override val userRepository: UserRepository by lazy {

@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firestore
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -9,7 +10,9 @@ interface UserProfileRepository {
     suspend fun uploadProfileImage(userId: String, uri: Uri): String
 }
 
-class UserProfileRepositoryImpl: UserProfileRepository {
+class UserProfileRepositoryImpl(
+    private val userRepository: UserRepository,
+) : UserProfileRepository {
 
     private val storage = Firebase.storage
     private val ref = storage.reference
@@ -19,8 +22,11 @@ class UserProfileRepositoryImpl: UserProfileRepository {
         return try {
             val uploadTask = userProfileRef.child("${userId}.png").putFile(uri)
             uploadTask.await()
-            ref.child("userProfile/${userId}.png").downloadUrl.await().toString()
+            val uploadedUrl = ref.child("userProfile/${userId}.png").downloadUrl.await().toString()
+            userRepository.updateUserProfileImage(userId, uploadedUrl)
+            uploadedUrl
         } catch (e: Exception) {
+            Log.e("jj-UserProfileRepository", "uploadProfileImage fail: $e")
             ""
         }
     }
