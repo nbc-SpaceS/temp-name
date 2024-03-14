@@ -3,12 +3,14 @@ package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedTipBinding
 
-class RecommendationAdapter(private var items: List<MultiView>) :
-    RecyclerView.Adapter<RecommendationAdapter.CommonViewHolder>() {
+class RecommendationAdapter :
+    ListAdapter<RecommendationAdapter.MultiView, RecyclerView.ViewHolder>(DiffCallback()) {
 
     sealed interface MultiView {
 
@@ -32,60 +34,62 @@ class RecommendationAdapter(private var items: List<MultiView>) :
         ) : MultiView {
             override val viewType: Type = Type.TIP
         }
-
-
-    }
-
-    abstract inner class CommonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun onBind(item: MultiView)
     }
 
     inner class RecommendationViewHolder(
         private val binding: RecommendationItemRecommendedBinding,
-    ) : CommonViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        override fun onBind(item: MultiView) {
-            binding.reShared.adapter = (item as MultiView.Horizontal).adapter
+        fun bind(item: MultiView.Horizontal) {
+            binding.reShared.adapter = item.adapter
             binding.tvSharedText.text = item.headerTitle
-
-
         }
     }
 
-    inner class TipViewHolder(private val b: RecommendationItemRecommendedTipBinding) :
-        CommonViewHolder(b.root) {
+    inner class TipViewHolder(private val binding: RecommendationItemRecommendedTipBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        override fun onBind(item: MultiView) {
-//                b.tvTitle.text = (item as MultiView.Tip).title
-            b.tvTipContent.text = (item as MultiView.Tip).content
+        fun bind(item: MultiView.Tip) {
+            binding.tvTipTitle.text = item.title
+            binding.tvTipContent.text = item.content
         }
     }
 
-    override fun getItemCount(): Int = items.size
-
-    override fun getItemViewType(position: Int): Int = items[position].viewType.ordinal
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonViewHolder {
-        return when (MultiView.Type.values()[viewType]) {
-            MultiView.Type.HORIZONTAL -> RecommendationViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            MultiView.Type.HORIZONTAL.ordinal -> RecommendationViewHolder(
                 RecommendationItemRecommendedBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
 
-            MultiView.Type.TIP -> TipViewHolder(
+            MultiView.Type.TIP.ordinal -> TipViewHolder(
                 RecommendationItemRecommendedTipBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
+
+            else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
-    override fun onBindViewHolder(holder: CommonViewHolder, position: Int) {
-        holder.onBind(items[position])
-
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = getItem(position)
+        when (item.viewType) {
+            MultiView.Type.HORIZONTAL -> (holder as RecommendationViewHolder).bind(item as MultiView.Horizontal)
+            MultiView.Type.TIP -> (holder as TipViewHolder).bind(item as MultiView.Tip)
+        }
     }
 
-    fun submitList(newItems: List<MultiView>) {
-        items = newItems
-        notifyDataSetChanged()
+    override fun getItemViewType(position: Int): Int {
+        return getItem(position).viewType.ordinal
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<MultiView>() {
+        override fun areItemsTheSame(oldItem: MultiView, newItem: MultiView): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: MultiView, newItem: MultiView): Boolean {
+            return oldItem == newItem
+        }
     }
 }
