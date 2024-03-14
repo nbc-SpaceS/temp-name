@@ -164,7 +164,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             mainViewModel.setCurrentReviewList(it)
         }
         vm.favoriteChanged.observe(viewLifecycleOwner) { favorite(it) }
-        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) { vm.setReviews(param1!!) }
+
+        mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
+            if (mainViewModel.currentReviewList.isNotEmpty()) {
+                vm.setReviews(mainViewModel.currentReviewList)
+            } else {
+                vm.setReviews(param1!!)
+            }
+        }
     }
 
     private fun bind(data : ReservationEntity) {

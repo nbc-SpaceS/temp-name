@@ -95,8 +95,6 @@ class ReviewFragment: BottomSheetDialogFragment() {
         val storedReviewList = mainViewModel.currentReviewList
         if (storedReviewList.isNotEmpty()) {
             setReviewsByList(storedReviewList)
-        } else {
-            setReviews(svcId)
         }
 
         checkWritableUser(svcId)
@@ -176,6 +174,7 @@ class ReviewFragment: BottomSheetDialogFragment() {
     }
 
     override fun onDismiss(dialog: DialogInterface) {
+        viewModel.uiState.value?.let { mainViewModel.setCurrentReviewList(it) }
         mainViewModel.setReviewListState(true)
         super.onDismiss(dialog)
     }
