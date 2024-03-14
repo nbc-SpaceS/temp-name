@@ -11,10 +11,10 @@ import com.naver.maps.geometry.LatLng
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserBanRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem

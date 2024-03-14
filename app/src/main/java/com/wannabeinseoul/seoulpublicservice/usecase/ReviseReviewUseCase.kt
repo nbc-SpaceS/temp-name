@@ -1,6 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 
 class ReviseReviewUseCase(

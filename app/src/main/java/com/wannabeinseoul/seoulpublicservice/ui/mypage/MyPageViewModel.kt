@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
@@ -53,7 +53,7 @@ class MyPageViewModel(
         savedPrefRepository.clear()
     }
 
-    private suspend fun loadReviewedList() {
+    suspend fun loadReviewedList() {
         // 서버에서 내 UUID로 내 후기 목록 가져오기
 
         // 서비스 아이디 없는거면 안띄움.

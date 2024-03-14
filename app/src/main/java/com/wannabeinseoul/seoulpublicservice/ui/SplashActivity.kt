@@ -49,13 +49,12 @@ class SplashActivity : AppCompatActivity() {
             }
             initialLoadingFinished = livedata.value!!
         }
-        CoroutineScope(Dispatchers.IO).launch {
-            Log.d("dkj", "${container.userFSRepository.getUserId("result")}")
-        }
+
         val loadedId = container.idPrefRepository.load()
         if (loadedId.isBlank()) {
             val id = UUID.randomUUID().toString()
             val user = UserEntity(
+                userId = id,
                 userName = "익명-${id.substring(0..5)}",
                 userProfileImage = "",
                 userColor = "#" + (1..6).map { id.replace("-", "").random() }.joinToString(""),

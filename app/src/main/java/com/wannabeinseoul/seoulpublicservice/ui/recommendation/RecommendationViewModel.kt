@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
