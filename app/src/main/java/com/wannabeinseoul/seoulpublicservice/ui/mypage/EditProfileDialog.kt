@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -25,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+private const val JJTAG = "jj-에딧프로필"
+
 class EditProfileDialog : DialogFragment() {
 
     companion object {
@@ -38,6 +41,8 @@ class EditProfileDialog : DialogFragment() {
     private val container by lazy { app.container }
     private val id by lazy { container.idPrefRepository.load() }
 
+    private var currentUri: Uri? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +51,10 @@ class EditProfileDialog : DialogFragment() {
 
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        binding.ivEditProfileImage.load(app.userProfileImageDrawable.value) {
+            error(app.userProfileImagePlaceholder)
+        }
+        binding.etEditProfileName.setText(app.userName.value)
 
         return binding.root
     }
@@ -65,11 +74,23 @@ class EditProfileDialog : DialogFragment() {
         b.btnEditProfileCancel.setOnClickListener { dismiss() }
 
         b.btnEditProfileOkay.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                container.userRepository.updateUserName(id, b.etEditProfileName.text.toString())
+            val newName = b.etEditProfileName.text.toString()
+            if (app.userName.value != newName) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    container.userRepository.updateUserName(id, newName)
+                }
+                app.userName.value = newName
             }
 
-            // TODO: 종료될 때 닉네임 넘겨주기, 프사 uri 넘겨주기
+            val newDrawable = b.ivEditProfileImage.drawable
+            if (currentUri != null && app.userProfileImageDrawable != newDrawable) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    app.userProfileImageDrawable.postValue(newDrawable)
+                    val newUrl =
+                        container.userProfileRepository.uploadProfileImage(id, currentUri!!)
+                    Log.d(JJTAG, "콜백:pickImageLauncher newUrl: $newUrl")
+                }
+            }
 
             dismiss()
         }
@@ -82,26 +103,21 @@ class EditProfileDialog : DialogFragment() {
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) openGalleryPermitted()
-            else Log.w("jj-에딧프로필", "콜백:requestPermissionLauncher not granted")
+            else Log.w(JJTAG, "콜백:requestPermissionLauncher not granted")
         }
 
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode != RESULT_OK) {
-                Log.e("jj-에딧프로필", "콜백:pickImageLauncher resultCode != RESULT_OK, result: $result")
+                Log.e(JJTAG, "콜백:pickImageLauncher resultCode != RESULT_OK, result: $result")
                 return@registerForActivityResult
             }
-            val uri = result.data?.data ?: return@registerForActivityResult Unit.apply {
-                Log.e("jj-에딧프로필", "콜백:pickImageLauncher result.data: ${result.data}")
+            currentUri = result.data?.data ?: return@registerForActivityResult Unit.apply {
+                Log.e(JJTAG, "콜백:pickImageLauncher result.data: ${result.data}")
             }
-            Log.d("jj-에딧프로필", "콜백:pickImageLauncher uri: $uri")
+            Log.d(JJTAG, "콜백:pickImageLauncher uri: $currentUri")
 
-            binding.ivEditProfileImage.load(uri)
-
-            // TODO: 확인 눌렀을 때로 옮겨야 함
-            CoroutineScope(Dispatchers.IO).launch {
-                container.userProfileRepository.uploadProfileImage(id, uri)
-            }
+            binding.ivEditProfileImage.setImageURI(currentUri)
         }
 
     private fun openGalleryPermitted() {
@@ -133,7 +149,7 @@ class EditProfileDialog : DialogFragment() {
 //    /* ActivityResultContracts.GetContent() 로 하는 것도 있더라 */
 //    private val getContentLauncher =
 //        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-//            Log.d("jj-에딧프로필", "콜백:getContentLauncher, uri: $uri")
+//            Log.d(JJTAG, "콜백:getContentLauncher, uri: $uri")
 //        }
 //
 //    private fun openGallery() {
