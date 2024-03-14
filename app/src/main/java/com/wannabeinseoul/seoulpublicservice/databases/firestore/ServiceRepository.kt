@@ -1,11 +1,15 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firestore
 
+import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.entity.ServiceEntity
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 interface ServiceRepository {
@@ -88,11 +92,19 @@ class ServiceRepositoryImpl : ServiceRepository {
         return service?.reviewIdList?.size ?: 0
     }
 
-    override suspend fun getServiceReviewsCount(svcIdList: List<String>): List<Int> =
-        fireStore.collection("service").whereIn("svcId", svcIdList).get().await()
-            .toObjects(ServiceEntity::class.java).map {
+    override suspend fun getServiceReviewsCount(svcIdList: List<String>): List<Int> {
+        svcIdList.forEach { svcId ->
+            if (!checkService(svcId)) fireStore.collection("service").document(svcId)
+                .set(ServiceEntity(svcId))
+        }
+
+        val count = fireStore.collection("service").whereIn("svcId", svcIdList).get().await()
+            .toObjects(ServiceEntity::class.java)
+
+        return count.map {
             it.reviewIdList?.size ?: 0
         }
+    }
 
     private suspend fun checkService(svcId: String): Boolean =
         fireStore.collection("service").document(svcId).get().await().exists()
