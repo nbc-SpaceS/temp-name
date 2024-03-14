@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +32,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
@@ -45,6 +47,8 @@ class HomeFragment : Fragment() {
     private val regionPrefRepository: RegionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
     private val searchPrefRepository: SearchPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.searchPrefRepository }
     private val reservationRepository: ReservationRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.reservationRepository }
+
+    private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
 
     private var backPressedOnce = false
 
