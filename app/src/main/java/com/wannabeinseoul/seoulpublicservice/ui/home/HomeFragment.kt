@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -18,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -42,20 +44,14 @@ class HomeFragment : Fragment() {
     private val regionPrefRepository: RegionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
     private val searchPrefRepository: SearchPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.searchPrefRepository }
     private val reservationRepository: ReservationRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.reservationRepository }
-    private var fragmentContext: Context? = null
 
     private var backPressedOnce = false
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
-            settingRegions(binding)
+            setupRegions(binding)
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        fragmentContext = context
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -70,7 +66,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUIComponents() {
-        settingRegions(binding)
+        setupRegions(binding)
         setupViewPager(binding)
         setupBackPress(binding)
         setupSearch(binding)
@@ -80,68 +76,65 @@ class HomeFragment : Fragment() {
         setupNotificationClick(binding)
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        fragmentContext = null
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun setupRegionSelection(binding: FragmentHomeBinding) {
         binding.clHomeSetRegion.setOnClickListener {
-            if (binding.clHomeRegionList.isVisible) {
-                binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
-                binding.viewControlSpinner.isVisible = false
-            } else {
-                binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_less)
-                binding.viewControlSpinner.isVisible = true
-            }
-            binding.clHomeRegionList.isVisible = !binding.clHomeRegionList.isVisible
+            toggleRegionListVisibility(binding)
         }
 
         binding.tvHomeReSelectRegionBtn.setOnClickListener {
-            binding.clHomeRegionList.isVisible = false
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
-            binding.viewControlSpinner.isVisible = false
-            val intent = Intent(context, InterestRegionSelectActivity::class.java)
-            resultLauncher.launch(intent)
+            reselectRegion(binding)
         }
 
-        binding.tvHomeSelectRegion1.setOnClickListener {
-            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion1.text
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.saveSelectedRegion(1)
-        }
+        val regionViews = listOf(
+            binding.tvHomeSelectRegion1,
+            binding.tvHomeSelectRegion2,
+            binding.tvHomeSelectRegion3
+        )
 
-        binding.tvHomeSelectRegion2.setOnClickListener {
-            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion2.text
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.point_color))
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.saveSelectedRegion(2)
-        }
-
-        binding.tvHomeSelectRegion3.setOnClickListener {
-            binding.tvHomeCurrentRegion.text = binding.tvHomeSelectRegion3.text
-            binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.point_color))
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
-            regionPrefRepository.saveSelectedRegion(3)
+        regionViews.forEachIndexed { index, regionView ->
+            regionView.setOnClickListener {
+                selectRegion(regionView, index + 1, binding, regionViews)
+            }
         }
 
         binding.viewControlSpinner.setOnClickListener {
-            binding.clHomeRegionList.isVisible = false
+            toggleRegionListVisibility(binding)
+        }
+    }
+
+    private fun toggleRegionListVisibility(binding: FragmentHomeBinding) {
+        if (binding.clHomeRegionList.isVisible) {
             binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
             binding.viewControlSpinner.isVisible = false
+        } else {
+            binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_less)
+            binding.viewControlSpinner.isVisible = true
         }
+        binding.clHomeRegionList.isVisible = !binding.clHomeRegionList.isVisible
+    }
+
+    private fun reselectRegion(binding: FragmentHomeBinding) {
+        binding.clHomeRegionList.isVisible = false
+        binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
+        binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
+        binding.tvHomeSelectRegion3.setTextColor(requireContext().getColor(R.color.unable_button_text))
+        binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
+        binding.viewControlSpinner.isVisible = false
+        val intent = Intent(context, InterestRegionSelectActivity::class.java)
+        resultLauncher.launch(intent)
+    }
+
+    private fun selectRegion(regionView: TextView, index: Int, binding: FragmentHomeBinding, regionViews: List<TextView>) {
+        regionViews.forEach { view ->
+            if (view == regionView) {
+                view.setTextColor(requireContext().getColor(R.color.point_color))
+            } else {
+                view.setTextColor(requireContext().getColor(R.color.unable_button_text))
+            }
+        }
+
+        binding.tvHomeCurrentRegion.text = regionView.text
+        regionPrefRepository.saveSelectedRegion(index)
     }
 
     private fun setupNotificationClick(binding: FragmentHomeBinding) {
@@ -209,46 +202,54 @@ class HomeFragment : Fragment() {
         }.attach()
     }
 
-    private fun settingRegions(binding: FragmentHomeBinding): String {
+    private fun setupRegions(binding: FragmentHomeBinding): String {
         val selectedRegions = regionPrefRepository.load().toMutableList()
 
         return if (selectedRegions.isNotEmpty()) {
             regionPrefRepository.saveSelectedRegion(1)
-            binding.tvHomeCurrentRegion.text = selectedRegions[0]
-            binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
-            when (selectedRegions.size) {
-                1 -> {
-                    binding.tvHomeSelectRegion1.text = selectedRegions[0]
-                    binding.tvHomeSelectRegion1.isVisible = true
-                    binding.tvHomeSelectRegion2.isVisible = false
-                    binding.tvHomeSelectRegion3.isVisible = false
-                }
-
-                2 -> {
-                    binding.tvHomeSelectRegion1.text = selectedRegions[0]
-                    binding.tvHomeSelectRegion2.text = selectedRegions[1]
-                    binding.tvHomeSelectRegion1.isVisible = true
-                    binding.tvHomeSelectRegion2.isVisible = true
-                    binding.tvHomeSelectRegion3.isVisible = false
-                }
-
-                3 -> {
-                    binding.tvHomeSelectRegion1.text = selectedRegions[0]
-                    binding.tvHomeSelectRegion2.text = selectedRegions[1]
-                    binding.tvHomeSelectRegion3.text = selectedRegions[2]
-                    binding.tvHomeSelectRegion1.isVisible = true
-                    binding.tvHomeSelectRegion2.isVisible = true
-                    binding.tvHomeSelectRegion3.isVisible = true
-                }
-            }
-            selectedRegions[0]
+            updateUIWithSelectedRegions(binding, selectedRegions)
         } else {
-            binding.tvHomeCurrentRegion.text = "지역선택"
-            binding.tvHomeSelectRegion1.isVisible = false
-            binding.tvHomeSelectRegion2.isVisible = false
-            binding.tvHomeSelectRegion3.isVisible = false
-            "지역선택"
+            updateUIWithNoSelectedRegions(binding)
         }
+    }
+
+    private fun updateUIWithSelectedRegions(binding: FragmentHomeBinding, selectedRegions: List<String>): String {
+        binding.tvHomeCurrentRegion.text = selectedRegions[0]
+        binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
+        when (selectedRegions.size) {
+            1 -> {
+                binding.tvHomeSelectRegion1.text = selectedRegions[0]
+                binding.tvHomeSelectRegion1.isVisible = true
+                binding.tvHomeSelectRegion2.isVisible = false
+                binding.tvHomeSelectRegion3.isVisible = false
+            }
+
+            2 -> {
+                binding.tvHomeSelectRegion1.text = selectedRegions[0]
+                binding.tvHomeSelectRegion2.text = selectedRegions[1]
+                binding.tvHomeSelectRegion1.isVisible = true
+                binding.tvHomeSelectRegion2.isVisible = true
+                binding.tvHomeSelectRegion3.isVisible = false
+            }
+
+            3 -> {
+                binding.tvHomeSelectRegion1.text = selectedRegions[0]
+                binding.tvHomeSelectRegion2.text = selectedRegions[1]
+                binding.tvHomeSelectRegion3.text = selectedRegions[2]
+                binding.tvHomeSelectRegion1.isVisible = true
+                binding.tvHomeSelectRegion2.isVisible = true
+                binding.tvHomeSelectRegion3.isVisible = true
+            }
+        }
+        return selectedRegions[0]
+    }
+
+    private fun updateUIWithNoSelectedRegions(binding: FragmentHomeBinding): String {
+        binding.tvHomeCurrentRegion.text = "지역선택"
+        binding.tvHomeSelectRegion1.isVisible = false
+        binding.tvHomeSelectRegion2.isVisible = false
+        binding.tvHomeSelectRegion3.isVisible = false
+        return "지역선택"
     }
 
     private fun performSearch(query: String) = lifecycleScope.launch{
@@ -258,31 +259,6 @@ class HomeFragment : Fragment() {
         }
 
         displaySearchResults(query)
-    }
-
-    private suspend fun displaySearchResults(query: String) {
-        // searchText 메소드를 호출하여 검색 결과를 가져옴
-        val searchResults = reservationRepository.searchText(query)
-
-        // 검색 결과를 HomeSearchAdapter에 전달하여 RecyclerView에 표시
-        val adapter = HomeSearchAdapter(searchResults)
-        binding.rvSearchResults.adapter = adapter
-        binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
-
-        // 검색을 수행할 때 cl_home_region_list를 숨깁니다.
-        binding.clHomeRegionList.isVisible = false
-
-        // tv_service_list, tab_layout, view_pager를 숨김
-        binding.tvServiceList.visibility = View.GONE
-        binding.tabLayout.visibility = View.GONE
-        binding.viewPager.visibility = View.GONE
-
-        // 검색 결과를 표시하는 RecyclerView를 보이게 함
-        binding.rvSearchResults.visibility = View.VISIBLE
-
-        // 키보드 숨기기
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
     private fun saveSearchQuery(query: String) {
@@ -296,6 +272,29 @@ class HomeFragment : Fragment() {
         binding.etSearch.clearFocus()
     }
 
+    private suspend fun displaySearchResults(query: String) {
+        // searchText 메소드를 호출하여 검색 결과를 가져옴
+        val searchResults = reservationRepository.searchText(query)
+
+        // 검색 결과를 HomeSearchAdapter에 전달하여 RecyclerView에 표시
+        val adapter = HomeSearchAdapter(searchResults)
+        binding.rvSearchResults.adapter = adapter
+        binding.rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
+
+        // 검색을 수행할 때 cl_home_region_list를 숨김
+        binding.clHomeRegionList.isVisible = false
+
+        // tv_service_list, tab_layout, view_pager를 숨김
+        binding.tvServiceList.visibility = View.GONE
+        binding.tabLayout.visibility = View.GONE
+        binding.viewPager.visibility = View.GONE
+
+        // 검색 결과를 표시하는 RecyclerView를 보이게 함
+        binding.rvSearchResults.visibility = View.VISIBLE
+
+        // 키보드 숨기기
+        hideKeyboard(binding)
+    }
     private fun setupSearch(binding: FragmentHomeBinding) {
         binding.ivSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
