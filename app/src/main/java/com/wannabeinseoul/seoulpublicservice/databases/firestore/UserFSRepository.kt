@@ -78,8 +78,7 @@ class UserFSRepositoryImpl : UserFSRepository {
     override suspend fun getUserId(name: String): String {
         val user =
             fireStore.collection("user").whereEqualTo("userName", name).limit(1).get().await()
-                .toObjects(UserEntity::class.java)
-        return user[0]. ?: ""
+        return user.documents[0].id
     }
 
     override suspend fun getReview(id: String): List<ReviewEntity> =

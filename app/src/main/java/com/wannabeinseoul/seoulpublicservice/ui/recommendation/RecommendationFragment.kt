@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
-import com.wannabeinseoul.seoulpublicservice.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
 import kotlinx.coroutines.runBlocking
 
@@ -47,41 +48,19 @@ class RecommendationFragment : Fragment() {
         )
     }
 
+
+//    private val horizontals = List(4) { index ->
+//        val region = regionRepository.loadSelectedRegion()
+//        RecommendationAdapter.MultiView.Horizontal(
+//            region.toString(), horizontalAdapters[index]
+//        )
+//    }
+
     private val horizontals = List(4) {
         RecommendationAdapter.MultiView.Horizontal(
             "1234", horizontalAdapters[it]
         )
     }
-
-//    private val mainList2 by lazy {
-//        val selectedAreas = regionRepository.load() // 선택된 지역 목록 가져오기
-//        val recommendationViews = mutableListOf<RecommendationAdapter.MultiView>()
-//
-//        selectedAreas.forEach { area ->
-//            val recommendationDataList =
-//                dbMemoryRepository.getFiltered(areanm = listOf(area)).take(5).map { row ->
-//                    row.convertToRecommendationData().apply {
-//                        runBlocking {
-//                            reviewCount =
-//                                serviceRepository.getServiceReviewsCount(row.svcid) + 3
-//                        }
-//                    }
-//                }.toMutableList()
-//
-//            val horizontalAdapter =
-//                RecommendationHorizontalAdapter(recommendationDataList, showDetailFragment)
-//            val horizontalView =
-//                RecommendationAdapter.MultiView.Horizontal("$area 에 있는 추천 서비스", horizontalAdapter)
-//            recommendationViews.add(horizontalView)
-//        }
-//
-//        recommendationViews.apply {
-//            // recommendationViews에 새로운 요소를 추가
-//            add(RecommendationAdapter.MultiView.Tip("그거 아시나요?", "레몬 한개에는 레몬 한개의 비타민이 있습니다."))
-//
-//        }
-//    }
-
 
     private val recommendationAdapter by lazy {
         RecommendationAdapter().apply {
@@ -102,32 +81,28 @@ class RecommendationFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentRecommendationBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        viewModel = ViewModelProvider(this, factory).get(RecommendationViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[RecommendationViewModel::class.java]
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        regionRepository = RegionPrefRepositoryImpl(requireContext())
         initView()
         initViewModel()
-
 
     }
 
     private fun initView() = binding.let { binding ->
-
+        regionRepository = RegionPrefRepositoryImpl(requireContext())
         binding.reScroll.adapter = recommendationAdapter
         binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
     }
 
 
     private fun initViewModel() {
-
         for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
             liveData.observe(viewLifecycleOwner) {
                 horizontalAdapters.getOrNull(index)?.submitList(it)

@@ -49,9 +49,7 @@ class SplashActivity : AppCompatActivity() {
             }
             initialLoadingFinished = livedata.value!!
         }
-        CoroutineScope(Dispatchers.IO).launch {
-            Log.d("dkj", "${container.userFSRepository.getUserId("result")}")
-        }
+
         val loadedId = container.idPrefRepository.load()
         if (loadedId.isBlank()) {
             val id = UUID.randomUUID().toString()
