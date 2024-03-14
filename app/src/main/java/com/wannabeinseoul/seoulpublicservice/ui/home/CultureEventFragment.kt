@@ -1,10 +1,12 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,6 +17,7 @@ import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentCultureEventBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class CultureEventFragment : Fragment() {
     private var _binding: FragmentCultureEventBinding? = null
@@ -22,6 +25,12 @@ class CultureEventFragment : Fragment() {
 
     private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
     private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
+
+    private val dbMemoryRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.dbMemoryRepository }
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val adapter by lazy {
+        ItemAdapter(regionPrefRepository)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -32,7 +41,7 @@ class CultureEventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val cultureEventItems = listOf(
+        var cultureEventItems = listOf(
             Item(R.drawable.ic_exhibition, "전시/관람"),
             Item(R.drawable.ic_experience, "교육체험"),
             Item(R.drawable.ic_event, "문화행사"),
@@ -43,15 +52,33 @@ class CultureEventFragment : Fragment() {
         )
         ItemRepository.setItems("CultureEvent", cultureEventItems)
 
-        val items = ItemRepository.getItems("CultureEvent")
-        val adapter = ItemAdapter(items, regionPrefRepository, categoryViewModel, viewLifecycleOwner.lifecycleScope)
         binding.rvCultureEvent.adapter = adapter
         binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
+        adapter.submitList(cultureEventItems)
+
+//        val items = ItemRepository.getItems("CultureEvent")
+//        val adapter = ItemAdapter(regionPrefRepository)
+//        binding.rvCultureEvent.adapter = adapter
+//        binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
+
 //         regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
 //            Log.d("CultureEventFragment", "Loaded selected region: $selectedRegion")
 //            val adapter = ItemAdapter(items, selectedRegion)
 //            binding.rvCultureEvent.adapter = adapter
 //            binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
 //        }
+
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
+            if (it != "지역선택") {
+                cultureEventItems = cultureEventItems.map { item ->
+                    val size = dbMemoryRepository.getFiltered(
+                        areanm = listOf(it.toString()),
+                        minclassnm = listOf(item.name)
+                    ).size
+                    item.copy(count = size)
+                }
+                adapter.submitList(cultureEventItems)
+            }
+        }
     }
 }

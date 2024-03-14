@@ -21,13 +21,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.gson.Gson
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
@@ -36,6 +35,7 @@ import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
@@ -51,13 +51,14 @@ class HomeFragment : Fragment() {
     private val reservationRepository: ReservationRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.reservationRepository }
 
     private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private var backPressedOnce = false
 
     private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
-            setupRegions(binding)
+            setupRegions()
         }
     }
 
@@ -73,23 +74,23 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUIComponents() {
-        setupRegions(binding)
-        setupViewPager(binding)
-        setupBackPress(binding)
-        setupSearch(binding)
-        setupSearchHistory(binding)
-        setupRootClickListener(binding)
-        setupRegionSelection(binding)
-        setupNotificationClick(binding)
+        setupRegions()
+        setupViewPager()
+        setupBackPress()
+        setupSearch()
+        setupSearchHistory()
+        setupRootClickListener()
+        setupRegionSelection()
+        setupNotificationClick()
     }
 
-    private fun setupRegionSelection(binding: FragmentHomeBinding) {
+    private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
-            toggleRegionListVisibility(binding)
+            toggleRegionListVisibility()
         }
 
         binding.tvHomeReSelectRegionBtn.setOnClickListener {
-            reselectRegion(binding)
+            reselectRegion()
         }
 
         val regionViews = listOf(
@@ -100,16 +101,16 @@ class HomeFragment : Fragment() {
 
         regionViews.forEachIndexed { index, regionView ->
             regionView.setOnClickListener {
-                selectRegion(regionView, index + 1, binding, regionViews)
+                selectRegion(regionView, index + 1, regionViews)
             }
         }
 
         binding.viewControlSpinner.setOnClickListener {
-            toggleRegionListVisibility(binding)
+            toggleRegionListVisibility()
         }
     }
 
-    private fun toggleRegionListVisibility(binding: FragmentHomeBinding) {
+    private fun toggleRegionListVisibility() {
         if (binding.clHomeRegionList.isVisible) {
             binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
             binding.viewControlSpinner.isVisible = false
@@ -120,7 +121,7 @@ class HomeFragment : Fragment() {
         binding.clHomeRegionList.isVisible = !binding.clHomeRegionList.isVisible
     }
 
-    private fun reselectRegion(binding: FragmentHomeBinding) {
+    private fun reselectRegion() {
         binding.clHomeRegionList.isVisible = false
         binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
         binding.tvHomeSelectRegion2.setTextColor(requireContext().getColor(R.color.unable_button_text))
@@ -131,10 +132,11 @@ class HomeFragment : Fragment() {
         resultLauncher.launch(intent)
     }
 
-    private fun selectRegion(regionView: TextView, index: Int, binding: FragmentHomeBinding, regionViews: List<TextView>) {
+    private fun selectRegion(regionView: TextView, index: Int, regionViews: List<TextView>) {
         regionViews.forEach { view ->
             if (view == regionView) {
-                view.setTextColor(requireContext().getColor(R.color.point_color))
+                view.setTextColor(requireContext().getColor(R.color.total_text_color))
+                mainViewModel.setRegion(regionView.text.toString())
             } else {
                 view.setTextColor(requireContext().getColor(R.color.unable_button_text))
             }
@@ -144,7 +146,7 @@ class HomeFragment : Fragment() {
         regionPrefRepository.saveSelectedRegion(index)
     }
 
-    private fun setupNotificationClick(binding: FragmentHomeBinding) {
+    private fun setupNotificationClick() {
         binding.ivNotification.setOnClickListener {
             // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
             val notificationFragment = NotificationsFragment.newInstance()
@@ -152,7 +154,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupBackPress(binding: FragmentHomeBinding) {
+    private fun setupBackPress() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // RecyclerView가 보일 때만 ViewPager, TabLayout을 보이게 하고, RecyclerView를 숨김
@@ -179,10 +181,11 @@ class HomeFragment : Fragment() {
         })
     }
 
-    private fun setupViewPager(binding: FragmentHomeBinding) {
+    private fun setupViewPager() {
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
 
+        viewPager.offscreenPageLimit = 2
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 5
 
@@ -209,20 +212,21 @@ class HomeFragment : Fragment() {
         }.attach()
     }
 
-    private fun setupRegions(binding: FragmentHomeBinding): String {
+    private fun setupRegions(): String {
         val selectedRegions = regionPrefRepository.load().toMutableList()
 
         return if (selectedRegions.isNotEmpty()) {
             regionPrefRepository.saveSelectedRegion(1)
-            updateUIWithSelectedRegions(binding, selectedRegions)
+            updateUIWithSelectedRegions(selectedRegions)
         } else {
-            updateUIWithNoSelectedRegions(binding)
+            updateUIWithNoSelectedRegions()
         }
     }
 
-    private fun updateUIWithSelectedRegions(binding: FragmentHomeBinding, selectedRegions: List<String>): String {
+    private fun updateUIWithSelectedRegions(selectedRegions: List<String>): String {
         binding.tvHomeCurrentRegion.text = selectedRegions[0]
-        binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
+        binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
+        mainViewModel.setRegion(selectedRegions[0])
         when (selectedRegions.size) {
             1 -> {
                 binding.tvHomeSelectRegion1.text = selectedRegions[0]
@@ -251,11 +255,12 @@ class HomeFragment : Fragment() {
         return selectedRegions[0]
     }
 
-    private fun updateUIWithNoSelectedRegions(binding: FragmentHomeBinding): String {
+    private fun updateUIWithNoSelectedRegions(): String {
         binding.tvHomeCurrentRegion.text = "지역선택"
         binding.tvHomeSelectRegion1.isVisible = false
         binding.tvHomeSelectRegion2.isVisible = false
         binding.tvHomeSelectRegion3.isVisible = false
+        mainViewModel.setRegion("지역선택")
         return "지역선택"
     }
 
@@ -273,7 +278,7 @@ class HomeFragment : Fragment() {
         Log.d("Search", "Saved search query: $query") // 로그 찍기
 
         // 키보드 숨기기
-        hideKeyboard(binding)
+        hideKeyboard()
 
         // EditText의 포커스 제거
         binding.etSearch.clearFocus()
@@ -300,9 +305,9 @@ class HomeFragment : Fragment() {
         binding.rvSearchResults.visibility = View.VISIBLE
 
         // 키보드 숨기기
-        hideKeyboard(binding)
+        hideKeyboard()
     }
-    private fun setupSearch(binding: FragmentHomeBinding) {
+    private fun setupSearch() {
         binding.ivSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
             performSearch(searchText)
@@ -319,18 +324,18 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupSearchHistory(binding: FragmentHomeBinding) {
+    private fun setupSearchHistory() {
         binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                showSearchHistory(binding)
+                showSearchHistory()
             } else {
-                hideSearchHistory(binding)
+                hideSearchHistory()
             }
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupRootClickListener(binding: FragmentHomeBinding) {
+    private fun setupRootClickListener() {
         binding.root.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 // 터치 이벤트가 발생하면 포커스를 해제
@@ -340,7 +345,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showSearchHistory(binding: FragmentHomeBinding) {
+    private fun showSearchHistory() {
         // 포커스가 EditText에 있을 때
         // 저장된 검색어를 불러옴
         val searchHistory = searchPrefRepository.load().toMutableList()
@@ -361,13 +366,13 @@ class HomeFragment : Fragment() {
         binding.rvSearchHistory.visibility = View.VISIBLE
     }
 
-    private fun hideSearchHistory(binding: FragmentHomeBinding) {
+    private fun hideSearchHistory() {
         // 포커스가 EditText에서 벗어났을 때
         // 검색어 저장 목록을 표시하는 RecyclerView를 숨김
         binding.rvSearchHistory.visibility = View.GONE
     }
 
-    private fun hideKeyboard(binding: FragmentHomeBinding) {
+    private fun hideKeyboard() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
