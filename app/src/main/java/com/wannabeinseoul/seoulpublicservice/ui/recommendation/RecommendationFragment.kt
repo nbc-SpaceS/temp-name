@@ -20,13 +20,13 @@ class RecommendationFragment : Fragment() {
 
     private lateinit var binding: FragmentRecommendationBinding
     private lateinit var viewModel: RecommendationViewModel
-    private lateinit var reservationRepository: ReservationRepository
-    private lateinit var regionRepository: RegionPrefRepository
 
 
     private val app by lazy { requireActivity().application as SeoulPublicServiceApplication }
     private val dbMemoryRepository by lazy { app.container.dbMemoryRepository }
     private val serviceRepository by lazy { app.container.serviceRepository }
+    private val regionPrefRepository by lazy { app.container.regionPrefRepository }
+    private val reservationRepository by lazy { app.container.reservationRepository }
 
 
     private val showDetailFragment: (RecommendationData) -> Unit =
@@ -48,18 +48,20 @@ class RecommendationFragment : Fragment() {
     }
 
 
-//    private val horizontals = List(4) { index ->
-//        val region = regionRepository.loadSelectedRegion()
+
+    private val horizontals by lazy {
+        List(4) {
+            val region = regionPrefRepository.loadSelectedRegion()
+            RecommendationAdapter.MultiView.Horizontal(
+                "$region", horizontalAdapters[it]
+            )
+        }
+    }
+//    private val horizontals = List(4) {
 //        RecommendationAdapter.MultiView.Horizontal(
-//            region.toString(), horizontalAdapters[index]
+//            "1234", horizontalAdapters[it]
 //        )
 //    }
-
-    private val horizontals = List(4) {
-        RecommendationAdapter.MultiView.Horizontal(
-            "1234", horizontalAdapters[it]
-        )
-    }
 
     private val recommendationAdapter by lazy {
         RecommendationAdapter().apply {
@@ -95,7 +97,6 @@ class RecommendationFragment : Fragment() {
     }
 
     private fun initView() = binding.let { binding ->
-        regionRepository = RegionPrefRepositoryImpl(requireContext())
         binding.reScroll.adapter = recommendationAdapter
         binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
     }
