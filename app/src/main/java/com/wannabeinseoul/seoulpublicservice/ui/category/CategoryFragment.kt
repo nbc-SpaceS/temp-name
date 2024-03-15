@@ -39,15 +39,14 @@ class CategoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCategoryBinding.inflate(inflater, container, false)
-        binding.root.setOnClickListener {
-            hideKeyboard()
-        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.root.setOnClickListener {
+            hideKeyboard()
+        }
         initView()
         initViewModel()
 
