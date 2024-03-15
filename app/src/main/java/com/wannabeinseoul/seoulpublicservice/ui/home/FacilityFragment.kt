@@ -1,10 +1,15 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -12,12 +17,21 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.ItemAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentFacilityBinding
+import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class FacilityFragment : Fragment() {
     private var _binding: FragmentFacilityBinding? = null
     private val binding get() = _binding!!
 
     private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
+    private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
+
+    private val dbMemoryRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.dbMemoryRepository }
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val adapter by lazy {
+        ItemAdapter(regionPrefRepository)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -28,7 +42,7 @@ class FacilityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val facilityItems = listOf(
+        var facilityItems = listOf(
             Item(R.drawable.ic_soccer, "축구장"),
             Item(R.drawable.ic_tennis, "테니스장"),
             Item(R.drawable.ic_pingpong, "탁구장"),
@@ -44,16 +58,30 @@ class FacilityFragment : Fragment() {
         )
         ItemRepository.setItems("Facility", facilityItems)
 
-        val items = ItemRepository.getItems("Facility")
-        val adapter = ItemAdapter(items, regionPrefRepository)
         binding.rvFacility.adapter = adapter
         binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
+        adapter.submitList(facilityItems)
+//        var items = ItemRepository.getItems("Facility")
+//        val adapter = ItemAdapter(items, regionPrefRepository, categoryViewModel, viewLifecycleOwner.lifecycleScope)
+//        binding.rvFacility.adapter = adapter
+//        binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
+
 //        homeViewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
 //            val selectedRegion = region
 //            val adapter = ItemAdapter(items, selectedRegion)
 //            binding.rvFacility.adapter = adapter
 //            binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
 //        }
+
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
+            if (it != "지역선택") {
+                facilityItems = facilityItems.map { item ->
+                    val size = dbMemoryRepository.getFiltered(areanm = listOf(it.toString()), minclassnm = listOf(item.name)).size
+                    item.copy(count = size)
+                }
+                adapter.submitList(facilityItems)
+            }
+        }
     }
 
 }

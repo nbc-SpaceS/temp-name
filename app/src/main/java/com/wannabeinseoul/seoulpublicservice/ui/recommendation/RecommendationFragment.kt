@@ -66,6 +66,7 @@ class RecommendationFragment : Fragment() {
 //            "1234", horizontalAdapters[it]
 //        )
 //    }
+
     private val recommendationAdapter = RecommendationAdapter()
 
     override fun onCreateView(
@@ -86,9 +87,8 @@ class RecommendationFragment : Fragment() {
         binding.reScroll.adapter = recommendationAdapter
         binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
     }
-    private val tipsHeader = listOf(
-        "서울시 관련 Tip!", "앱 관련 문제 Tip!", "생활 관련 Tip!"
-    )
+
+
     private val tipsMap = mapOf(
         "서울시 관련 Tip!" to listOf(
             "추천 서비스에서는 지역 설정에 따라 추천항목이 달라집니다.",
@@ -136,17 +136,22 @@ class RecommendationFragment : Fragment() {
             "남은 떡국떡을 물에 잠시 불린 뒤 180도로 설정한 에어프라이어에 10분 정도 조리하면 바삭한 간식이 됩니다."
         ),
     )
-    private val randomTipHeader: String = tipsHeader.random()
+    private val randomTipHeader: String = tipsMap.keys.random()
     private val randomTip: String = tipsMap[randomTipHeader]?.random() ?: ""
 
+
     private fun initViewModel() = viewModel.let { vm ->
+//        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
+//            liveData.observe(viewLifecycleOwner) {
+//                horizontalAdapters.getOrNull(index)?.submitList(it)
+//            }
+//        }
+
         vm.horizontalDataList.observe(viewLifecycleOwner) { horizontalDataList ->
             val multiViews: MutableList<RecommendationAdapter.MultiView> = horizontalDataList.map {
                 RecommendationAdapter.MultiView.Horizontal(it.title,
-                    RecommendationHorizontalAdapter(
-                        mutableListOf(),
-                        showDetailFragment
-                    ).apply { submitList(it.list) })
+                    RecommendationHorizontalAdapter(showDetailFragment)
+                        .apply { submitList(it.list) })
             }.toMutableList()
             if (multiViews.size >= 1) {
                 multiViews.add(1, RecommendationAdapter.MultiView.Tip(randomTipHeader, randomTip))

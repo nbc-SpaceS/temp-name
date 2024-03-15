@@ -23,7 +23,7 @@ fun Row.convertToRecommendationData() = RecommendationData(
     svcid = this.svcid,
     usetgtinfo = this.usetgtinfo,
     reviewCount = 0,
-    serviceName = svcnm,
+    serviceName = this.svcnm,
 )
 //플레이스네ㅐ임을 서비스스텟으로
 

@@ -1,23 +1,25 @@
 package com.wannabeinseoul.seoulpublicservice.ui.mypage
 
-import android.util.Log
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
+import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemProfileBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedNothingBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemSavedBinding
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
-import com.wannabeinseoul.seoulpublicservice.util.parseColor
 
 class MyPageAdapter(
+    private val lifecycleOwner: LifecycleOwner,
     private val onClearClick: () -> Unit,
     private val onReviewedClick: (svcid: String) -> Unit,
 ) : ListAdapter<MyPageAdapter.MultiView, MyPageAdapter.CommonViewHolder>(
@@ -48,7 +50,10 @@ class MyPageAdapter(
         val viewType: Type
 
         data class Profile(
-            val userEntity: UserEntity?,
+//            val userId: String?,
+            val userColor: Int,
+            val userDrawable: LiveData<Drawable?>,
+            val userName: LiveData<String?>,
             val onEditButtonClick: () -> Unit,
         ) : MultiView {
             override val viewType: Type = Type.PROFILE
@@ -97,25 +102,10 @@ class MyPageAdapter(
                 b.clProfileEdit.setOnClickListener {
                     item.onEditButtonClick()
                 }
-                item.userEntity?.let { user ->
-                    b.tvProfileNickname.text = user.userName
-                    b.ivProfileProfile.drawable.setTint(user.userColor?.parseColor() ?: 0
-                        .apply {
-                            Log.e(
-                                "jj-마이페이지 어댑터",
-                                "parseColor == null. userColor: ${user.userColor}"
-                            )
-                        }
-                    )
-                    if (user.userProfileImage.isNullOrBlank().not())
-                        b.ivProfileProfile.loadWithHolder(user.userProfileImage)
-                }
-                    ?: {
-                        Log.e(
-                            "jj-마이페이지 어댑터",
-                            "ProfileHolder - item.userEntity == null"
-                        )
-                    }
+
+                b.ivProfileProfile.drawable.setTint(item.userColor)
+                item.userName.observe(lifecycleOwner) { b.tvProfileNickname.text = it }
+                item.userDrawable.observe(lifecycleOwner) { it?.let { b.ivProfileProfile.load(it) } }
                 isNotInitialized = false
             }
         }
