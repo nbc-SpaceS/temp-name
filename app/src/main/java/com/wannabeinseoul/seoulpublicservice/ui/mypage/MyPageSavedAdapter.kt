@@ -7,20 +7,25 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
-import com.wannabeinseoul.seoulpublicservice.databinding.CategoryItemBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationData
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MyPageSavedAdapter(
     private val onSavedClick: (svcid: String) -> Unit,
-) : ListAdapter<Row?, MyPageSavedAdapter.VH>(
-    object : DiffUtil.ItemCallback<Row?>() {
+) : ListAdapter<RecommendationData?, MyPageSavedAdapter.VH>(
+    object : DiffUtil.ItemCallback<RecommendationData?>() {
         // TODO: null로 하려니까 변경 시 애니메이션이 이상해진다. 따로 데이터 클래스 만들어서 써야할듯. 서비스아이디랑 같이.
-        override fun areItemsTheSame(oldItem: Row, newItem: Row): Boolean =
+        override fun areItemsTheSame(
+            oldItem: RecommendationData,
+            newItem: RecommendationData
+        ): Boolean =
             oldItem.svcid == newItem.svcid
 
-        override fun areContentsTheSame(oldItem: Row, newItem: Row): Boolean =
+        override fun areContentsTheSame(
+            oldItem: RecommendationData,
+            newItem: RecommendationData
+        ): Boolean =
             oldItem == newItem
     }
 ) {
@@ -32,7 +37,7 @@ class MyPageSavedAdapter(
             b.root.setOnClickListener {}
         }
 
-        fun onBind(item: Row?) {
+        fun onBind(item: RecommendationData?) {
             if (item == null) {
                 // TODO: 레이아웃에서 '삭제된 서비스입니다' 띄우는거 겹쳐놓고 gone으로 놨다가 띄워야 할 듯.
 
@@ -42,11 +47,12 @@ class MyPageSavedAdapter(
                 b.tvRcAreaName.text = null
                 b.tvRcIsReservationAvailable.text = null
             } else {
-                b.ivRcSmallImage.loadWithHolder(item.imgurl)
-                b.tvRcPlaceName.text = item.svcnm
-                b.tvRcPayType.text = item.payatnm
-                b.tvRcAreaName.text = item.areanm
+                b.ivRcSmallImage.loadWithHolder(item.imageUrl)
+                b.tvRcPlaceName.text = item.serviceName
+                b.tvRcPayType.text = item.payType
+                b.tvRcAreaName.text = item.areaName
                 b.tvRcIsReservationAvailable.text = item.svcstatnm
+                b.tvRcReview.text = "후기 ${item.reviewCount}개"
 
                 b.root.setOnClickListener { onSavedClick(item.svcid) }
             }

@@ -10,11 +10,13 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationData
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.convertToRecommendationData
 import com.wannabeinseoul.seoulpublicservice.usecase.GetDetailSeoulUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,10 +28,12 @@ class MyPageViewModel(
     private val idPrefRepository: IdPrefRepository,
     private val userRepository: UserRepository,
     private val reviewRepository: ReviewRepository,
+    private val serviceRepository: ServiceRepository,
 ) : ViewModel() {
 
-    private var _savedList: MutableLiveData<List<Row?>> = MutableLiveData(emptyList())
-    val savedList: LiveData<List<Row?>> get() = _savedList
+    private var _savedList: MutableLiveData<List<RecommendationData?>> =
+        MutableLiveData(emptyList())
+    val savedList: LiveData<List<RecommendationData?>> get() = _savedList
 
     private var _reviewedList: MutableLiveData<List<ReviewedData>> = MutableLiveData(emptyList())
     val reviewedList: LiveData<List<ReviewedData>> get() = _reviewedList
@@ -46,7 +50,15 @@ class MyPageViewModel(
 //    }
 
     fun loadSavedList(svcidList: List<String>) {
-        _savedList.value = svcidList.map { dbMemoryRepository.findBySvcid(it) }
+        viewModelScope.launch(Dispatchers.IO) {
+            val counts = serviceRepository.getServiceReviewsCount(svcidList)
+            _savedList.postValue(
+                svcidList.mapIndexedNotNull { index, svcId ->
+                    dbMemoryRepository.findBySvcid(svcId)?.convertToRecommendationData()
+                        .also { it?.reviewCount = counts[index] }
+                }
+            )
+        }
     }
 
     fun clearSavedList() {
@@ -97,6 +109,7 @@ class MyPageViewModel(
                     idPrefRepository = container.idPrefRepository,
                     userRepository = container.userRepository,
                     reviewRepository = container.reviewRepository,
+                    serviceRepository = container.serviceRepository,
                 )
             }
         }
