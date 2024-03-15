@@ -9,6 +9,7 @@ import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationData
+import com.wannabeinseoul.seoulpublicservice.util.fromHtml
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MyPageSavedAdapter(
@@ -48,8 +49,8 @@ class MyPageSavedAdapter(
                 b.tvRcIsReservationAvailable.text = null
             } else {
                 b.ivRcSmallImage.loadWithHolder(item.imageUrl)
-                b.tvRcPlaceName.text = item.serviceName
-                b.tvRcPayType.text = item.payType
+                b.tvRcPlaceName.text = item.serviceName.fromHtml()
+                b.tvRcPayType.text = item.payType.take(2)
                 b.tvRcAreaName.text = item.areaName
                 b.tvRcIsReservationAvailable.text = item.svcstatnm
                 b.tvRcReview.text = "후기 ${item.reviewCount}개"
