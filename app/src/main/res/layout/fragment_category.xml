@@ -15,7 +15,7 @@
         android:background="@drawable/background_radius_12dp_edittext"
         android:drawableStart="@drawable/ic_search"
         android:drawablePadding="5dp"
-        android:enabled="false"
+        android:enabled="true"
         android:hint="검색어를 입력하세요."
         android:paddingStart="8dp"
         android:textSize="14sp"

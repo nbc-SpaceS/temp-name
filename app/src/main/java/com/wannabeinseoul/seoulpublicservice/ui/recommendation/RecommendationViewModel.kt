@@ -15,6 +15,8 @@ import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 
@@ -26,33 +28,35 @@ class RecommendationViewModel(
     private val serviceRepository: ServiceRepository
 ) : ViewModel() {
 
+    private val _horizontalDataList = MutableLiveData<List<RecommendationHorizontalData>>()
+    val horizontalDataList: LiveData<List<RecommendationHorizontalData>> get() = _horizontalDataList
 
-    private val _recommendations = MutableLiveData<List<RecommendationAdapter.MultiView>>()
-    val recommendations: LiveData<List<RecommendationAdapter.MultiView>> get() = _recommendations
-
-
-
-    private val _recommendationListLivedataList = List(4) {
-        MutableLiveData<List<RecommendationData>>()
-    }
-
-    val recommendationListLivedataList get() = List<LiveData<List<RecommendationData>>>(4) {
-        _recommendationListLivedataList[it]
+    private val _multiViews = MutableLiveData<List<RecommendationAdapter.MultiView>>()
+    val multiViews: LiveData<List<RecommendationAdapter.MultiView>> get() = _multiViews
+    fun setMultiViews(list: List<RecommendationAdapter.MultiView>) {
+        _multiViews.value = list
     }
 
 
     init {
-        viewModelScope.launch {
-            _recommendationListLivedataList[0].postValue(getQuery("송파구"))
-        }
-        viewModelScope.launch {
-            _recommendationListLivedataList[1].postValue(getQuery("청소년"))
-        }
-        viewModelScope.launch {
-            _recommendationListLivedataList[2].postValue(getQuery("장애인"))
-        }
-        viewModelScope.launch {
-            _recommendationListLivedataList[3].postValue(getQuery("풋살"))
+        viewModelScope.launch(Dispatchers.IO) {
+            val items = listOf(
+                Pair("송파구", "송파구에 있는 추천 서비스"),
+                Pair("청소년", "청소년을 위한 서비스"),
+                Pair("장애인", "장애인을 위한 서비스"),
+                Pair("풋살", "풋살에 관한 서비스"),
+            )
+
+            // 일단 제목부터 띄워놓기 위함. 이거 대신에 로딩 처리를 해야 할 듯.
+            _horizontalDataList.postValue(
+                items.map { RecommendationHorizontalData(it.second, emptyList()) })
+
+            val queryResults = items.map { async { getQuery(it.first) } }.awaitAll()
+            val recommendationHorizontalDataList =
+                queryResults.mapIndexed { index, recommendationDataList ->
+                    RecommendationHorizontalData(items[index].second, recommendationDataList)
+                }
+            _horizontalDataList.postValue(recommendationHorizontalDataList)
         }
     }
 
@@ -86,19 +90,21 @@ class RecommendationViewModel(
             require(minSize >= 5) { "entity 또는 count의 크기가 충분하지 않습니다." }
 
             for (i in 0 until minSize) {
-                itemList.add(RecommendationData(
-                    payType = entity[i].PAYATNM,
-                    areaName = entity[i].AREANM,
-                    placeName = entity[i].PLACENM,
-                    svcstatnm = entity[i].SVCSTATNM,
-                    imageUrl = entity[i].IMGURL,
-                    svcid = entity[i].SVCID,
-                    usetgtinfo = entity[i].USETGTINFO,
-                    reviewCount = count[i]
-                ))
+                itemList.add(
+                    RecommendationData(
+                        payType = entity[i].PAYATNM,
+                        areaName = entity[i].AREANM,
+                        placeName = entity[i].PLACENM,
+                        svcstatnm = entity[i].SVCSTATNM,
+                        imageUrl = entity[i].IMGURL,
+                        svcid = entity[i].SVCID,
+                        usetgtinfo = entity[i].USETGTINFO,
+                        reviewCount = count[i]
+                    )
+                )
             }
 
-            _recommendationListLivedataList.forEach { it.postValue(itemList) }
+//            _recommendationListLivedataList.forEach { it.postValue(itemList) }
 
 //            when(position) {
 //                0 -> _firstRecommendation.postValue(itemList)

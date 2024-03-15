@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,11 +21,14 @@ class CategoryFragment : Fragment() {
     private val showDetailFragment = { svcid: String ->
         DetailFragment.newInstance(svcid)
             .show(requireActivity().supportFragmentManager, "Detail")
-            }
+            }    // 하단에 categoryClick 함수를 만들어서 필요 없을 듯 합니다...
 
     private val adapter by lazy {
         CategoryAdapter{}
     }
+
+    private var payment: String = ""    // 요금이 무료인지 또는 ""인지
+    private var serviceState: List<String> = listOf() // 서비스 상태가 가능인지 아니면 불가능인지
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +44,8 @@ class CategoryFragment : Fragment() {
 
         initView()
         initViewModel()
+
+        categoryClick()
     }
 
     private fun initView() {
@@ -51,6 +57,15 @@ class CategoryFragment : Fragment() {
         binding.ivCategoryBack.setOnClickListener {
             requireActivity().finish()
         }
+
+        // 무료 버튼 클릭 시
+        binding.tvCtFree.setOnClickListener {
+            categoryFilter("pay")
+        }
+        // 예약가능 버튼 클릭 시
+        binding.tvCtIsReservationAvailable.setOnClickListener {
+            categoryFilter("svc")
+        }
     }
 
     private fun initViewModel() {
@@ -61,5 +76,41 @@ class CategoryFragment : Fragment() {
         }
     }
 
+    private fun categoryClick() {  // 인터페이스로 받은 svcid를 상세 페이지로 넘기기
+        adapter.categoryItemClick = object : CategoryItemClick {
+            override fun onClick(svcID: String) {
+                val dialog = DetailFragment.newInstance(svcID)
+                dialog.show(requireActivity().supportFragmentManager, "CategoryFrag")
+            }
+        }
+    }
 
+    private fun categoryFilter(text: String) {
+        when(text) {
+            "pay" -> {
+                payment = if(payment.isEmpty()) {
+                    binding.tvCtFree.setTextColor(Color.parseColor("#F8496C"))
+                    "무료"
+                } else {
+                    binding.tvCtFree.setTextColor(Color.parseColor("#8E8E8E"))
+                    ""
+                }
+            }
+            "svc" -> {
+                serviceState = if(serviceState.isEmpty()) {
+                    binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#F8496C"))
+                    listOf("접수중","안내중")
+                } else {
+                    binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#8E8E8E"))
+                    listOf()
+                }
+            }
+        }
+        viewModel.updateListWithSvcstatnmPay(
+            areanm = arguments?.getString("region") ?: "",
+            minclassnm = arguments?.getString("category") ?: "",
+            pay = payment,
+            svcstatnm = serviceState
+        )
+    }
 }
