@@ -93,6 +93,8 @@ class ServiceRepositoryImpl : ServiceRepository {
     }
 
     override suspend fun getServiceReviewsCount(svcIdList: List<String>): List<Int> {
+        if (svcIdList.isEmpty()) return emptyList()
+
         svcIdList.forEach { svcId ->
             if (!checkService(svcId)) fireStore.collection("service").document(svcId)
                 .set(ServiceEntity(svcId))
