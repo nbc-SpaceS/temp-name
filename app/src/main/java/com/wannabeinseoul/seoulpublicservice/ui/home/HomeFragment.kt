@@ -27,6 +27,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
@@ -156,6 +157,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUIComponents() {
+        viewModel.setRandomService()
         viewModel.setupRegions()
 
         setupViewPager()
@@ -165,6 +167,7 @@ class HomeFragment : Fragment() {
         setupRootTouchListener()
         setupRegionSelection()
         setupNotificationClick()
+        setupBannerClick()
     }
 
     private fun setupViewPager() {
@@ -304,6 +307,17 @@ class HomeFragment : Fragment() {
                 requireActivity().supportFragmentManager,
                 "NotificationFragment"
             )
+        }
+    }
+
+    private fun setupBannerClick() {
+        binding.ivHomeMainBanner.setOnClickListener {
+            if (viewModel.randomService.isEmpty()) {
+                Toast.makeText(requireContext(), "최근에 나온 서비스가 없습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                val dialog = DetailFragment.newInstance(viewModel.randomService.random())
+                dialog.show(requireActivity().supportFragmentManager, "Detail")
+            }
         }
     }
 
