@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,11 +21,14 @@ class CategoryFragment : Fragment() {
     private val showDetailFragment = { svcid: String ->
         DetailFragment.newInstance(svcid)
             .show(requireActivity().supportFragmentManager, "Detail")
-            }
+            }    // 하단에 categoryClick 함수를 만들어서 필요 없을 듯 합니다...
 
     private val adapter by lazy {
         CategoryAdapter{}
     }
+
+    private var payment: String = ""    // 요금이 무료인지 또는 ""인지
+    private var serviceState: List<String> = listOf() // 서비스 상태가 가능인지 아니면 불가능인지
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +56,29 @@ class CategoryFragment : Fragment() {
 
         binding.ivCategoryBack.setOnClickListener {
             requireActivity().finish()
+        }
+
+        // 무료 버튼 클릭 시
+        binding.tvCtFree.setOnClickListener {
+            if(payment.isEmpty()) {
+                binding.tvCtFree.setTextColor(Color.parseColor("#F8496C"))
+                payment = "무료"
+            } else {
+                binding.tvCtFree.setTextColor(Color.parseColor("#8E8E8E"))
+                payment = ""
+            }
+            viewModel.updateListWithSvcstatnmPay(areanm = arguments?.getString("region") ?: "", minclassnm = arguments?.getString("category") ?: "", pay = payment, svcstatnm = serviceState)
+        }
+        // 예약가능 버튼 클릭 시
+        binding.tvCtIsReservationAvailable.setOnClickListener {
+            if(serviceState.isEmpty()) {
+                binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#F8496C"))
+                serviceState = listOf("접수중","안내중")
+            } else {
+                binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#8E8E8E"))
+                serviceState = listOf()
+            }
+            viewModel.updateListWithSvcstatnmPay(areanm = arguments?.getString("region") ?: "", minclassnm = arguments?.getString("category") ?: "", pay = payment, svcstatnm = serviceState)
         }
     }
 

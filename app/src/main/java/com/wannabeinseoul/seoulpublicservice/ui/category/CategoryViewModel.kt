@@ -8,17 +8,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
-import com.wannabeinseoul.seoulpublicservice.ui.recommendation.convertToRecommendationDataList
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
+import com.wannabeinseoul.seoulpublicservice.util.RoomRowMapper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CategoryViewModel(
     private val categoryPrefRepository: CategoryPrefRepository,
@@ -26,6 +26,7 @@ class CategoryViewModel(
     private val getAll2000UseCase: GetAll2000UseCase,
     private val seoulPublicRepository: SeoulPublicRepository,
     private val dbMemoryRepository: DbMemoryRepository,
+    private val reservationRepository: ReservationRepository
 ) : ViewModel() {
 
     private val _categories = MutableLiveData<List<CategoryData>>(emptyList())
@@ -53,6 +54,16 @@ class CategoryViewModel(
         //minclassnm은 소분류명
     }
 
+    fun updateListWithSvcstatnmPay (areanm: String, minclassnm: String, pay: String, svcstatnm: List<String>) {
+        viewModelScope.launch {
+            val filteredList = withContext(Dispatchers.IO) {
+                RoomRowMapper.mappingRoomToRow(reservationRepository.searchFilter(text = "", typeSub = listOf(minclassnm), typeLoc = listOf(areanm), typePay = listOf(pay), typeSvc = svcstatnm)).convertToCategoryDataList()
+            }
+            _categories.value = filteredList
+            _isListEmpty.value = filteredList.isEmpty()
+        }
+    }
+
     private fun isReservationAvailableAbsence(row: Row): Boolean {
         val currentTimeMillis = System.currentTimeMillis()
         val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
@@ -71,6 +82,7 @@ class CategoryViewModel(
                     regionPrefRepository = container.regionPrefRepository,
                     getAll2000UseCase = container.getAll2000UseCase,
                     dbMemoryRepository = container.dbMemoryRepository,
+                    reservationRepository = container.reservationRepository
                 )
             }
         }
