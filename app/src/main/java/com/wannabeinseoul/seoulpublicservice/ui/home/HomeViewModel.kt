@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
+import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 import kotlinx.coroutines.Dispatchers
@@ -19,10 +20,14 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val regionPrefRepository: RegionPrefRepository,
     private val searchPrefRepository: SearchPrefRepository,
-    private val reservationRepository: ReservationRepository
+    private val reservationRepository: ReservationRepository,
+    private val dbMemoryRepository: DbMemoryRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
+
+    private var _randomService: List<String> = emptyList()
+    val randomService: List<String> get() = _randomService
 
     private val _updateSelectedRegions: MutableLiveData<List<String>> = MutableLiveData()
     val updateSelectedRegions: LiveData<List<String>> get() = _updateSelectedRegions
@@ -33,6 +38,10 @@ class HomeViewModel(
     private val _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
         MutableLiveData()
     val displaySearchHistory: LiveData<Pair<List<String>, SearchPrefRepository>> get() = _displaySearchHistory
+
+    fun setRandomService() {
+        _randomService = dbMemoryRepository.getFilteredByDate()
+    }
 
     fun setupRegions() {
         selectedRegions = regionPrefRepository.load().toMutableList()
@@ -90,7 +99,8 @@ class HomeViewModel(
                 HomeViewModel(
                     regionPrefRepository = container.regionPrefRepository,
                     searchPrefRepository = container.searchPrefRepository,
-                    reservationRepository = container.reservationRepository
+                    reservationRepository = container.reservationRepository,
+                    dbMemoryRepository = container.dbMemoryRepository
                 )
             }
         }
