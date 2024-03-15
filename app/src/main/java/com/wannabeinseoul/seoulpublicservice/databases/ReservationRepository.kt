@@ -152,7 +152,7 @@ class ReservationRepositoryImpl(
     override fun getService(serviceID: String) = reservationDAO.getService(serviceID)
 
     override suspend fun searchText(text: String): List<ReservationEntity> {
-        val queryStr = "SELECT * FROM ReservationEntity WHERE (SVCNM LIKE '%${text.trim()}%' OR PLACENM LIKE '%${text.trim()}%' OR AREANM LIKE '%${text.trim()}%' OR TELNO LIKE '%${text.trim()}%' OR MINCLASSNM LIKE '%${text.trim()}%' OR USETGTINFO LIKE '%${text.trim()}%')"
+        val queryStr = "SELECT * FROM ReservationEntity WHERE SVCNM LIKE '%$text%' OR PLACENM LIKE '%$text%' OR AREANM LIKE '%$text%' OR TELNO LIKE '%$text%' OR MINCLASSNM LIKE '%$text%' OR USETGTINFO LIKE '%$text%'"
         val query = SimpleSQLiteQuery(queryStr)
         return reservationDAO.rawQuery(query)
     }

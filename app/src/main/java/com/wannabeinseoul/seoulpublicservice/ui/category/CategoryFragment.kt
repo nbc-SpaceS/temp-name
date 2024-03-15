@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,6 +30,7 @@ class CategoryFragment : Fragment() {
 
     private var payment: String = ""    // 요금이 무료인지 또는 ""인지
     private var serviceState: List<String> = listOf() // 서비스 상태가 가능인지 아니면 불가능인지
+    private var search = "" // 검색어
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,6 +67,30 @@ class CategoryFragment : Fragment() {
         // 예약가능 버튼 클릭 시
         binding.tvCtIsReservationAvailable.setOnClickListener {
             categoryFilter("svc")
+        }
+        // 검색기능 추가
+        binding.etCategorySearch.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                performSearch()
+                true
+            } else {
+                false
+            }
+        }
+    }
+    private fun performSearch() {
+        if(binding.etCategorySearch.text.isNotBlank()) {
+            search = binding.etCategorySearch.text.toString()
+            viewModel.updateListWithSvcstatnmPay(
+                text = search,
+                areanm = arguments?.getString("region") ?: "",
+                minclassnm = arguments?.getString("category") ?: "",
+                pay = payment,
+                svcstatnm = serviceState
+            )
+        } else {
+            search = ""
+            viewModel.updateList(arguments?.getString("region") ?: "", arguments?.getString("category") ?: "")
         }
     }
 
@@ -107,6 +133,7 @@ class CategoryFragment : Fragment() {
             }
         }
         viewModel.updateListWithSvcstatnmPay(
+            text = search,
             areanm = arguments?.getString("region") ?: "",
             minclassnm = arguments?.getString("category") ?: "",
             pay = payment,
