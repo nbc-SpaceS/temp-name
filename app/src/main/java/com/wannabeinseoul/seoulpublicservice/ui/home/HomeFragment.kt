@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -33,7 +32,6 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
-import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
@@ -49,8 +47,6 @@ class HomeFragment : Fragment() {
     private val regionPrefRepository: RegionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
     private val searchPrefRepository: SearchPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.searchPrefRepository }
     private val reservationRepository: ReservationRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.reservationRepository }
-
-    private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private var backPressedOnce = false
@@ -79,7 +75,7 @@ class HomeFragment : Fragment() {
         setupBackPress()
         setupSearch()
         setupSearchHistory()
-        setupRootClickListener()
+        setupRootTouchListener()
         setupRegionSelection()
         setupNotificationClick()
     }
@@ -190,7 +186,7 @@ class HomeFragment : Fragment() {
             override fun getItemCount(): Int = 5
 
             override fun createFragment(position: Int): Fragment {
-                return when (position) {
+                val fragment = when (position) {
                     0 -> FacilityFragment()
                     1 -> EducationFragment()
                     2 -> CultureEventFragment()
@@ -198,6 +194,7 @@ class HomeFragment : Fragment() {
                     4 -> MedicalFragment()
                     else -> Fragment()
                 }
+                return fragment
             }
         }
 
@@ -215,12 +212,14 @@ class HomeFragment : Fragment() {
     private fun setupRegions(): String {
         val selectedRegions = regionPrefRepository.load().toMutableList()
 
-        return if (selectedRegions.isNotEmpty()) {
-            regionPrefRepository.saveSelectedRegion(1)
-            updateUIWithSelectedRegions(selectedRegions)
-        } else {
-            updateUIWithNoSelectedRegions()
+        val region = when {
+            selectedRegions.isNotEmpty() -> {
+                regionPrefRepository.saveSelectedRegion(1)
+                updateUIWithSelectedRegions(selectedRegions)
+            }
+            else -> updateUIWithNoSelectedRegions()
         }
+        return region
     }
 
     private fun updateUIWithSelectedRegions(selectedRegions: List<String>): String {
@@ -275,12 +274,12 @@ class HomeFragment : Fragment() {
 
     private fun saveSearchQuery(query: String) {
         searchPrefRepository.save(query)
-        Log.d("Search", "Saved search query: $query") // 로그 찍기
+        Log.d("Search", "Saved search query: $query")
 
         // 키보드 숨기기
         hideKeyboard()
 
-        // EditText의 포커스 제거
+        // et_search 포커스 제거
         binding.etSearch.clearFocus()
     }
 
@@ -325,7 +324,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupSearchHistory() {
-        binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
+        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 showSearchHistory()
             } else {
@@ -335,10 +334,10 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupRootClickListener() {
+    private fun setupRootTouchListener() {
         binding.root.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
-                // 터치 이벤트가 발생하면 포커스를 해제
+                // 검색창 밖 영역을 터치하면 키보드를 숨김
                 binding.etSearch.clearFocus()
             }
             true
@@ -346,8 +345,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showSearchHistory() {
-        // 포커스가 EditText에 있을 때
-        // 저장된 검색어를 불러옴
+        // 포커스가 EditText에 있을 때 저장된 검색어를 불러옴
         val searchHistory = searchPrefRepository.load().toMutableList()
 
         // 검색어를 SearchHistoryAdapter에 전달하여 RecyclerView에 표시
@@ -367,8 +365,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun hideSearchHistory() {
-        // 포커스가 EditText에서 벗어났을 때
-        // 검색어 저장 목록을 표시하는 RecyclerView를 숨김
+        // 포커스가 EditText에서 벗어났을 때 검색어 저장 목록을 표시하는 RecyclerView를 숨김
         binding.rvSearchHistory.visibility = View.GONE
     }
 
