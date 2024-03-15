@@ -60,25 +60,11 @@ class CategoryFragment : Fragment() {
 
         // 무료 버튼 클릭 시
         binding.tvCtFree.setOnClickListener {
-            if(payment.isEmpty()) {
-                binding.tvCtFree.setTextColor(Color.parseColor("#F8496C"))
-                payment = "무료"
-            } else {
-                binding.tvCtFree.setTextColor(Color.parseColor("#8E8E8E"))
-                payment = ""
-            }
-            viewModel.updateListWithSvcstatnmPay(areanm = arguments?.getString("region") ?: "", minclassnm = arguments?.getString("category") ?: "", pay = payment, svcstatnm = serviceState)
+            categoryFilter("pay")
         }
         // 예약가능 버튼 클릭 시
         binding.tvCtIsReservationAvailable.setOnClickListener {
-            if(serviceState.isEmpty()) {
-                binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#F8496C"))
-                serviceState = listOf("접수중","안내중")
-            } else {
-                binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#8E8E8E"))
-                serviceState = listOf()
-            }
-            viewModel.updateListWithSvcstatnmPay(areanm = arguments?.getString("region") ?: "", minclassnm = arguments?.getString("category") ?: "", pay = payment, svcstatnm = serviceState)
+            categoryFilter("svc")
         }
     }
 
@@ -97,5 +83,34 @@ class CategoryFragment : Fragment() {
                 dialog.show(requireActivity().supportFragmentManager, "CategoryFrag")
             }
         }
+    }
+
+    private fun categoryFilter(text: String) {
+        when(text) {
+            "pay" -> {
+                payment = if(payment.isEmpty()) {
+                    binding.tvCtFree.setTextColor(Color.parseColor("#F8496C"))
+                    "무료"
+                } else {
+                    binding.tvCtFree.setTextColor(Color.parseColor("#8E8E8E"))
+                    ""
+                }
+            }
+            "svc" -> {
+                serviceState = if(serviceState.isEmpty()) {
+                    binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#F8496C"))
+                    listOf("접수중","안내중")
+                } else {
+                    binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#8E8E8E"))
+                    listOf()
+                }
+            }
+        }
+        viewModel.updateListWithSvcstatnmPay(
+            areanm = arguments?.getString("region") ?: "",
+            minclassnm = arguments?.getString("category") ?: "",
+            pay = payment,
+            svcstatnm = serviceState
+        )
     }
 }
