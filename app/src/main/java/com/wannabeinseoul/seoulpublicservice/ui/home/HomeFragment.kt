@@ -169,9 +169,9 @@ class HomeFragment : Fragment() {
         setupBackPress()
         setupSearch()
         setupSearchHistory()
-        setupOverlayTouchListener()
+        /*setupOverlayTouchListener()
         setupSearchResultsTouchListener()
-        setupSearchHistoryTouchListener()
+        setupSearchHistoryTouchListener()*/
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
@@ -269,7 +269,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    /*@SuppressLint("ClickableViewAccessibility")
     private fun setupOverlayTouchListener() {
         binding.viewOverlay.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
@@ -298,7 +298,7 @@ class HomeFragment : Fragment() {
         binding.rvSearchHistory.setOnTouchListener { v, event ->
             true
         }
-    }
+    }*/
 
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
@@ -331,8 +331,7 @@ class HomeFragment : Fragment() {
             // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
             val notificationFragment = NotificationsFragment.newInstance()
             notificationFragment.show(
-                requireActivity().supportFragmentManager,
-                "NotificationFragment"
+                requireActivity().supportFragmentManager, "NotificationFragment"
             )
         }
     }
@@ -390,8 +389,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun hideKeyboard() {
-        val imm =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
