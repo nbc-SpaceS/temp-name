@@ -5,17 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMyPageBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class MyPageFragment : Fragment() {
@@ -59,7 +59,7 @@ class MyPageFragment : Fragment() {
     private val myPageAdapter by lazy {
         MyPageAdapter(
             lifecycleOwner = viewLifecycleOwner,
-            onClearClick = { viewModel.clearSavedList() },
+            onClearClick = ::basicDialog,
             onReviewedClick = showDetailFragment,
         )
 //            .apply {
@@ -158,5 +158,14 @@ class MyPageFragment : Fragment() {
         }
         myPageAdapter.setSavedNothingVisible?.invoke(myPageSavedAdapter.itemCount == 0)
     }
+
+    private fun basicDialog() = AlertDialog.Builder(requireContext()).apply {
+        setTitle("저장한 공공서비스 전체 삭제")
+        setMessage("정말로 전체 삭제하시겠습니까?")
+        setIcon(R.mipmap.ic_launcher)
+
+        setNegativeButton("취소", null)
+        setPositiveButton("확인") { _, _ -> viewModel.clearSavedList() }
+    }.show()
 
 }
