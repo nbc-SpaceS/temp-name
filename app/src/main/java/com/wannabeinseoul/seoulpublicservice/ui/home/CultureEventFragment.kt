@@ -1,36 +1,28 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.ItemAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentCultureEventBinding
-import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.ItemAdapter
 
 class CultureEventFragment : Fragment() {
     private var _binding: FragmentCultureEventBinding? = null
     private val binding get() = _binding!!
 
     private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
-    private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
-
     private val dbMemoryRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.dbMemoryRepository }
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val adapter by lazy {
-        ItemAdapter(regionPrefRepository)
-    }
+    private val adapter by lazy { ItemAdapter(regionPrefRepository) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -55,18 +47,6 @@ class CultureEventFragment : Fragment() {
         binding.rvCultureEvent.adapter = adapter
         binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter.submitList(cultureEventItems)
-
-//        val items = ItemRepository.getItems("CultureEvent")
-//        val adapter = ItemAdapter(regionPrefRepository)
-//        binding.rvCultureEvent.adapter = adapter
-//        binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
-
-//         regionPrefRepository.selectedRegion().observe(viewLifecycleOwner) { selectedRegion ->
-//            Log.d("CultureEventFragment", "Loaded selected region: $selectedRegion")
-//            val adapter = ItemAdapter(items, selectedRegion)
-//            binding.rvCultureEvent.adapter = adapter
-//            binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
-//        }
 
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
             if (it != "지역선택") {

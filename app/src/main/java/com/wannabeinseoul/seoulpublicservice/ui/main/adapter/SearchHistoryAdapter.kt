@@ -1,12 +1,10 @@
 package com.wannabeinseoul.seoulpublicservice.ui.main.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemSearchHistoryBinding
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 
