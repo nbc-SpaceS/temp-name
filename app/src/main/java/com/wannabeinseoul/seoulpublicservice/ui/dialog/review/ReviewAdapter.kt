@@ -1,11 +1,14 @@
 package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
 
 class ReviewAdapter(
@@ -29,7 +32,12 @@ class ReviewAdapter(
         fun bind(item: ReviewItem) = with(binding) {
             tvCommentText.text = item.content
             tvCommentUser.text = item.userName
-            ivCommentProfile.drawable.setTint(Color.parseColor(item.userColor))
+            if (item.userProfileImage.isEmpty()) {
+                ivCommentProfile.drawable.setTint(Color.parseColor(item.userColor))
+            } else {
+                ivCommentProfile.load(item.userProfileImage)
+            }
+
             clItemDetailComment.setOnLongClickListener {
                 complaintUser(item.userId)
                 true

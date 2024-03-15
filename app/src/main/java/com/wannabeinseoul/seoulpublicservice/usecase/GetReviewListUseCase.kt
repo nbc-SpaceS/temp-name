@@ -16,6 +16,6 @@ class GetReviewListUseCase(
             remove(idPrefRepository.load())
         }
 
-        return data.filter { it.userId !in banList }
+        return data.filter { it.userId !in banList }.sortedByDescending { it.uploadTime }
     }
 }
