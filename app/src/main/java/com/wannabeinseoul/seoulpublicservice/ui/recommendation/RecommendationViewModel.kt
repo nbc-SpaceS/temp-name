@@ -38,7 +38,6 @@ class RecommendationViewModel(
     }
 
 
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val items = listOf(
@@ -91,16 +90,18 @@ class RecommendationViewModel(
             require(minSize >= 5) { "entity 또는 count의 크기가 충분하지 않습니다." }
 
             for (i in 0 until minSize) {
-                itemList.add(RecommendationData(
-                    payType = entity[i].PAYATNM,
-                    areaName = entity[i].AREANM,
-                    placeName = entity[i].PLACENM,
-                    svcstatnm = entity[i].SVCSTATNM,
-                    imageUrl = entity[i].IMGURL,
-                    svcid = entity[i].SVCID,
-                    usetgtinfo = entity[i].USETGTINFO,
-                    reviewCount = count[i]
-                ))
+                itemList.add(
+                    RecommendationData(
+                        payType = entity[i].PAYATNM,
+                        areaName = entity[i].AREANM,
+                        placeName = entity[i].PLACENM,
+                        svcstatnm = entity[i].SVCSTATNM,
+                        imageUrl = entity[i].IMGURL,
+                        svcid = entity[i].SVCID,
+                        usetgtinfo = entity[i].USETGTINFO,
+                        reviewCount = count[i]
+                    )
+                )
             }
 
 //            _recommendationListLivedataList.forEach { it.postValue(itemList) }

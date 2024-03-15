@@ -90,9 +90,7 @@ class RecommendationFragment : Fragment() {
 
 
     private val tipsHeader = listOf(
-        "서울시 관련 Tip!",
-        "앱 관련 문제 Tip!",
-        "생활 관련 Tip!"
+        "서울시 관련 Tip!", "앱 관련 문제 Tip!", "생활 관련 Tip!"
     )
     private val tipsMap = mapOf(
         "서울시 관련 Tip!" to listOf(
@@ -154,11 +152,11 @@ class RecommendationFragment : Fragment() {
 
         vm.horizontalDataList.observe(viewLifecycleOwner) { horizontalDataList ->
             val multiViews: MutableList<RecommendationAdapter.MultiView> = horizontalDataList.map {
-                RecommendationAdapter.MultiView.Horizontal(
-                    it.title,
-                    RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
-                        .apply { submitList(it.list) }
-                )
+                RecommendationAdapter.MultiView.Horizontal(it.title,
+                    RecommendationHorizontalAdapter(
+                        mutableListOf(),
+                        showDetailFragment
+                    ).apply { submitList(it.list) })
             }.toMutableList()
             multiViews.add(1, RecommendationAdapter.MultiView.Tip(randomTipHeader, randomTip))
 //            if (multiViews.size >= 2) multiViews.add(
@@ -173,5 +171,4 @@ class RecommendationFragment : Fragment() {
             recommendationAdapter.submitList(it)
         }
     }
-
 }
