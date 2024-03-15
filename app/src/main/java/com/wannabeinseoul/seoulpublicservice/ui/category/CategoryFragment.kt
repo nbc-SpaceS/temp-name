@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,12 +40,13 @@ class CategoryFragment : Fragment() {
     ): View {
         binding = FragmentCategoryBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.root.setOnClickListener {
+            hideKeyboard()
+        }
         initView()
         initViewModel()
 
@@ -72,6 +75,7 @@ class CategoryFragment : Fragment() {
         binding.etCategorySearch.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performSearch()
+                hideKeyboard()
                 true
             } else {
                 false
@@ -139,5 +143,11 @@ class CategoryFragment : Fragment() {
             pay = payment,
             svcstatnm = serviceState
         )
+    }
+
+    // 키보드 숨기기
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etCategorySearch.windowToken, 0)
     }
 }
