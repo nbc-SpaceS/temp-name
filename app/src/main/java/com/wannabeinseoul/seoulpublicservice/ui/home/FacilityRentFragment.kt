@@ -51,6 +51,7 @@ class FacilityRentFragment : Fragment() {
         binding.rvFacilityRent.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter.submitList(facilityRentItems)
 
+        // 지역 선택 시 해당 지역에 있는 시설물의 개수를 가져와서 갱신
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
             if (it != "지역선택") {
                 facilityRentItems = facilityRentItems.map { item ->
