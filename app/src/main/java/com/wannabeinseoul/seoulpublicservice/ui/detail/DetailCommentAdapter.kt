@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 
@@ -25,7 +26,11 @@ class DetailCommentAdapter:ListAdapter<ReviewItem, DetailCommentAdapter.Holder>(
         fun bind(detailCommentType: ReviewItem) {
             binding.tvCommentUser.text = detailCommentType.userName
             binding.tvCommentText.text = detailCommentType.content
-            binding.ivCommentProfile.drawable.setTint(Color.parseColor(detailCommentType.userColor))
+            if (detailCommentType.userProfileImage.isEmpty()) {
+                binding.ivCommentProfile.drawable.setTint(Color.parseColor(detailCommentType.userColor))
+            } else {
+                binding.ivCommentProfile.load(detailCommentType.userProfileImage)
+            }
         }
     }
 

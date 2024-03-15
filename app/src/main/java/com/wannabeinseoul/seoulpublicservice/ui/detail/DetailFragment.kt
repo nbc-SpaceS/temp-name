@@ -159,7 +159,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
         vm.closeEvent.observe(viewLifecycleOwner) { close -> if(close) dismiss() }
         vm.reviewUiState.observe(viewLifecycleOwner) {
-            commentAdapter.submitList(it)
+            commentAdapter.submitList(it.take(5))
             binding.tvDetailEmptyDescription.isVisible = it.isEmpty()
             mainViewModel.setCurrentReviewList(it)
         }
