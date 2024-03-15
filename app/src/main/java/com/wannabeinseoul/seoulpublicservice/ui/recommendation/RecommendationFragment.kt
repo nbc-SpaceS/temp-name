@@ -158,12 +158,9 @@ class RecommendationFragment : Fragment() {
                         showDetailFragment
                     ).apply { submitList(it.list) })
             }.toMutableList()
-            multiViews.add(1, RecommendationAdapter.MultiView.Tip(randomTipHeader, randomTip))
-//            if (multiViews.size >= 2) multiViews.add(
-//                2,
-//
-//                RecommendationAdapter.MultiView.Tip("팁 제목입니다", "팁 내용입니다")
-
+            if (multiViews.size >= 1) {
+                multiViews.add(1, RecommendationAdapter.MultiView.Tip(randomTipHeader, randomTip))
+            }
             viewModel.setMultiViews(multiViews)
         }
 
