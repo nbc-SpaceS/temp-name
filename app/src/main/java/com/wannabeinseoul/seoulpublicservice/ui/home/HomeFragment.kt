@@ -27,6 +27,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
+import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
@@ -135,6 +136,9 @@ class HomeFragment : Fragment() {
 
                 // et_search 포커스 제거
                 etSearch.clearFocus()
+
+                // 클릭된 결과 아이템의 SVCID를 상세 페이지에 전달
+                searchClick(adapter)
             }
         }
 
@@ -368,5 +372,14 @@ class HomeFragment : Fragment() {
         val imm =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+    }
+
+    private fun searchClick(adapter: HomeSearchAdapter) {
+        adapter.categoryItemClick = object : CategoryItemClick {
+            override fun onClick(svcID: String) {
+                val dialog = DetailFragment.newInstance(svcID)
+                dialog.show(requireActivity().supportFragmentManager, "CategoryFrag")
+            }
+        }
     }
 }
