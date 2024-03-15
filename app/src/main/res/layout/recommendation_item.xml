@@ -9,8 +9,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/iv_recommendSmallVideoItems"
         android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="4dp"
+        android:layout_height="205dp"
+        android:layout_marginStart="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -71,7 +72,7 @@
             android:id="@+id/tv_rcPayType"
             android:layout_width="wrap_content"
             android:layout_height="18dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="2dp"
             android:background="@drawable/background_pointcolor_with_rounded"
             android:gravity="center|top"
             android:paddingHorizontal="6dp"
@@ -79,13 +80,14 @@
             android:textColor="@color/white"
             android:textSize="12dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imageView"/>
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="16dp"
             android:layout_height="16dp"
+            android:layout_marginStart="-2dp"
             android:layout_marginTop="2dp"
             android:src="@drawable/ic_service_position"
             app:layout_constraintStart_toStartOf="@+id/tv_rcPlaceName"

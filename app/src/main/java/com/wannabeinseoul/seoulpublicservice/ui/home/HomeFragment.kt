@@ -21,13 +21,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.gson.Gson
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
@@ -36,6 +35,7 @@ import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
@@ -51,6 +51,7 @@ class HomeFragment : Fragment() {
     private val reservationRepository: ReservationRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.reservationRepository }
 
     private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     private var backPressedOnce = false
 
@@ -100,7 +101,7 @@ class HomeFragment : Fragment() {
 
         regionViews.forEachIndexed { index, regionView ->
             regionView.setOnClickListener {
-                selectRegion(regionView, index + 1, binding, regionViews)
+                selectRegion(regionView, index + 1, regionViews)
             }
         }
 
@@ -131,10 +132,11 @@ class HomeFragment : Fragment() {
         resultLauncher.launch(intent)
     }
 
-    private fun selectRegion(regionView: TextView, index: Int, binding: FragmentHomeBinding, regionViews: List<TextView>) {
+    private fun selectRegion(regionView: TextView, index: Int, regionViews: List<TextView>) {
         regionViews.forEach { view ->
             if (view == regionView) {
-                view.setTextColor(requireContext().getColor(R.color.point_color))
+                view.setTextColor(requireContext().getColor(R.color.total_text_color))
+                mainViewModel.setRegion(regionView.text.toString())
             } else {
                 view.setTextColor(requireContext().getColor(R.color.unable_button_text))
             }
@@ -183,6 +185,7 @@ class HomeFragment : Fragment() {
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
 
+        viewPager.offscreenPageLimit = 2
         viewPager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int = 5
 
@@ -214,15 +217,16 @@ class HomeFragment : Fragment() {
 
         return if (selectedRegions.isNotEmpty()) {
             regionPrefRepository.saveSelectedRegion(1)
-            updateUIWithSelectedRegions(binding, selectedRegions)
+            updateUIWithSelectedRegions(selectedRegions)
         } else {
             updateUIWithNoSelectedRegions()
         }
     }
 
-    private fun updateUIWithSelectedRegions(binding: FragmentHomeBinding, selectedRegions: List<String>): String {
+    private fun updateUIWithSelectedRegions(selectedRegions: List<String>): String {
         binding.tvHomeCurrentRegion.text = selectedRegions[0]
-        binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.point_color))
+        binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
+        mainViewModel.setRegion(selectedRegions[0])
         when (selectedRegions.size) {
             1 -> {
                 binding.tvHomeSelectRegion1.text = selectedRegions[0]
@@ -256,6 +260,7 @@ class HomeFragment : Fragment() {
         binding.tvHomeSelectRegion1.isVisible = false
         binding.tvHomeSelectRegion2.isVisible = false
         binding.tvHomeSelectRegion3.isVisible = false
+        mainViewModel.setRegion("지역선택")
         return "지역선택"
     }
 
