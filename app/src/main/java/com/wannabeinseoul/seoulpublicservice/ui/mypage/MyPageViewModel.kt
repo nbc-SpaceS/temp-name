@@ -31,11 +31,12 @@ class MyPageViewModel(
     private val serviceRepository: ServiceRepository,
 ) : ViewModel() {
 
-    private var _savedList: MutableLiveData<List<RecommendationData?>> =
-        MutableLiveData(emptyList())
+    private var _savedList: MutableLiveData<List<RecommendationData?>> = MutableLiveData()
     val savedList: LiveData<List<RecommendationData?>> get() = _savedList
 
-    private var _reviewedList: MutableLiveData<List<ReviewedData>> = MutableLiveData(emptyList())
+    // TODO: _reviewedList에 초기값 emptylist 지우니까 마이페이지 로딩이 느려짐?? 다른 사람도 그런지 확인 후 결정
+//    private var _reviewedList: MutableLiveData<List<ReviewedData>> = MutableLiveData(emptyList())
+    private var _reviewedList: MutableLiveData<List<ReviewedData>> = MutableLiveData()
     val reviewedList: LiveData<List<ReviewedData>> get() = _reviewedList
 
     init {

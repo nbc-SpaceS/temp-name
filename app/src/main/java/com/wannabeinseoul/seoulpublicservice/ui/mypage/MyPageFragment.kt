@@ -156,7 +156,9 @@ class MyPageFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.loadReviewedList()
         }
-        myPageAdapter.setSavedNothingVisible?.invoke(myPageSavedAdapter.itemCount == 0)
+
+        // 이거 왜 해놨던 거였지...? 이거 있으니까 로딩 되기 전에 저장한 서비스가 없다고 먼저 떠있음
+//        myPageAdapter.setSavedNothingVisible?.invoke(myPageSavedAdapter.itemCount == 0)
     }
 
     private fun basicDialog() = AlertDialog.Builder(requireContext()).apply {
