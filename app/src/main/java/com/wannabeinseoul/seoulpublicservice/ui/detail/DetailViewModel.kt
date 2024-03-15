@@ -103,7 +103,7 @@ class DetailViewModel(
                 remove(idPrefRepository.load())
             }
 
-            _reviewUiState.postValue(data.filter { it.userId !in banList })
+            _reviewUiState.postValue(data.filter { it.userId !in banList }.sortedByDescending { it.uploadTime })
         }
     }
 

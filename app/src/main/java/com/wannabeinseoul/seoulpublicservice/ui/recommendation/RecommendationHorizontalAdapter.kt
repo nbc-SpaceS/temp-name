@@ -19,7 +19,7 @@ class RecommendationHorizontalAdapter(
         fun bind(item: RecommendationData) {
             binding.ivRcSmallImage.load(item.imageUrl)
             binding.tvRcPlaceName.text = item.placeName
-            binding.tvRcPayType.text = item.payType
+            binding.tvRcPayType.text = item.payType.take(2)
             binding.tvRcAreaName.text = item.areaName
             binding.tvRcReview.text = "후기 ${item.reviewCount}개"
             binding.root.setOnClickListener { onItemClick(item) }
