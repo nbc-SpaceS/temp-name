@@ -41,7 +41,7 @@ class RecommendationViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val items = listOf(
-                Pair("송파구", "송파구에 있는 추천 서비스"),
+                Pair("자전거", "자전거와 관련된 서비스"),
                 Pair("청소년", "청소년을 위한 서비스"),
                 Pair("장애인", "장애인을 위한 서비스"),
                 Pair("풋살", "풋살에 관한 서비스"),
@@ -56,12 +56,13 @@ class RecommendationViewModel(
                 queryResults.mapIndexed { index, recommendationDataList ->
                     RecommendationHorizontalData(items[index].second, recommendationDataList)
                 }
+
             _horizontalDataList.postValue(recommendationHorizontalDataList)
         }
     }
 
     private suspend fun getQuery(query: String): List<RecommendationData> {
-        val reservationEntities = reservationRepository.searchText(query).take(5)
+        val reservationEntities = reservationRepository.searchText(query).shuffled().take(5)
         val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
         return List(reservationEntities.size) {
             RecommendationData(
@@ -72,58 +73,9 @@ class RecommendationViewModel(
                 imageUrl = reservationEntities[it].IMGURL,
                 svcid = reservationEntities[it].SVCID,
                 usetgtinfo = reservationEntities[it].USETGTINFO,
-                reviewCount = counts[it]
+                reviewCount = counts[it],
+                serviceName = reservationEntities[it].SVCNM,
             )
-        }
-    }
-
-    fun getList(query: String, position: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val entity = reservationRepository.searchText(query)
-//            val entity = reservationRepository.getFilter(emptyList(), listOf(query), emptyList(), emptyList())
-            val count = serviceRepository.getServiceReviewsCount(entity.take(5).map { it.SVCID })
-
-            val itemList = mutableListOf<RecommendationData>()
-
-            val minSize = minOf(entity.size, count.size)
-
-            require(minSize >= 5) { "entity 또는 count의 크기가 충분하지 않습니다." }
-
-            for (i in 0 until minSize) {
-                itemList.add(
-                    RecommendationData(
-                        payType = entity[i].PAYATNM,
-                        areaName = entity[i].AREANM,
-                        placeName = entity[i].PLACENM,
-                        svcstatnm = entity[i].SVCSTATNM,
-                        imageUrl = entity[i].IMGURL,
-                        svcid = entity[i].SVCID,
-                        usetgtinfo = entity[i].USETGTINFO,
-                        reviewCount = count[i]
-                    )
-                )
-            }
-
-//            _recommendationListLivedataList.forEach { it.postValue(itemList) }
-
-//            when(position) {
-//                0 -> _firstRecommendation.postValue(itemList)
-//                1 -> _secondRecommendation.postValue(itemList)
-//                2 -> _thirdRecommendation.postValue(itemList)
-//                3 -> _forthRecommendation.postValue(itemList)
-//            }
-        }
-    }
-
-    fun fetchRecommendations() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val rowList = getAll2000UseCase()
-                val recommendations = rowList.convertToRecommendationDataList()
-//                _recommendations.postValue(recommendations)
-            } catch (e: Exception) {
-                // Handle error
-            }
         }
     }
 
