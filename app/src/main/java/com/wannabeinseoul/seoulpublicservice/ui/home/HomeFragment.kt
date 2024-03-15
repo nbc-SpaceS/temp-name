@@ -24,6 +24,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
@@ -164,7 +165,9 @@ class HomeFragment : Fragment() {
         setupBackPress()
         setupSearch()
         setupSearchHistory()
-        setupRootTouchListener()
+        setupOverlayTouchListener()
+        setupSearchResultsTouchListener()
+        setupSearchHistoryTouchListener()
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
@@ -263,12 +266,32 @@ class HomeFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun setupRootTouchListener() {
-        binding.root.setOnTouchListener { v, event ->
+    private fun setupOverlayTouchListener() {
+        binding.viewOverlay.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 // 검색창 밖 영역을 터치하면 키보드를 숨김
                 binding.etSearch.clearFocus()
+                hideSearchHistory()
             }
+            true
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSearchResultsTouchListener() {
+        binding.rvSearchResults.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                // 검색창 밖 영역을 터치하면 키보드를 숨김
+                binding.etSearch.clearFocus()
+                hideSearchHistory()
+            }
+            true
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSearchHistoryTouchListener() {
+        binding.rvSearchHistory.setOnTouchListener { v, event ->
             true
         }
     }
