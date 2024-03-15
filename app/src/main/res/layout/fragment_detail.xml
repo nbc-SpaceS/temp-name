@@ -120,6 +120,7 @@
                 android:ellipsize="marquee"
                 android:maxLines="1"
                 android:text="장소"
+                android:textColor="@color/gray"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/tv_detail_name"
