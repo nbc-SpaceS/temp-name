@@ -103,10 +103,9 @@ class ServiceRepositoryImpl : ServiceRepository {
         val count = fireStore.collection("service").whereIn("svcId", svcIdList).get().await()
             .toObjects(ServiceEntity::class.java)
 
-        return count.map {
-            it.reviewIdList?.size ?: 0
-        }
+        return svcIdList.map { svcId -> count.find { it.svcId == svcId }?.reviewIdList?.size ?: 0 }
     }
+
 
     private suspend fun checkService(svcId: String): Boolean =
         fireStore.collection("service").document(svcId).get().await().exists()

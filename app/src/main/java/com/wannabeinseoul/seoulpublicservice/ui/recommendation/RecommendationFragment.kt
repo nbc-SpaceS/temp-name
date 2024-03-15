@@ -31,41 +31,6 @@ class RecommendationFragment : Fragment() {
             DetailFragment.newInstance(recommendationData.svcid)
                 .show(requireActivity().supportFragmentManager, "Detail")
         }
-    private val onItemClick: (RecommendationData) -> Unit =
-        { recommendationData: RecommendationData ->
-            showDetailFragment(recommendationData)
-        }
-//눌렀을때 쇼디테일 가도록 할 예정.
-
-//    private val horizontalAdapters = List(4) {
-//        RecommendationHorizontalAdapter(
-//            emptyList<RecommendationData>().toMutableList(), showDetailFragment
-//        )
-//    }
-
-//    private val horizontalAdapters by lazy {
-//        viewModel.recommendationListLivedataList.map { liveData ->
-//            RecommendationHorizontalAdapter(mutableListOf(), showDetailFragment)
-//                .also { adapter ->
-//                    liveData.observe(viewLifecycleOwner) { adapter.submitList(it) }
-//                }
-//        }
-//    }
-
-
-//    private val horizontals by lazy {
-//        List(4) {
-//            val region = regionPrefRepository.loadSelectedRegion()
-//            RecommendationAdapter.MultiView.Horizontal(
-//                "$region", horizontalAdapters[it]
-//            )
-//        }
-//    }
-//    private val horizontals = List(4) {
-//        RecommendationAdapter.MultiView.Horizontal(
-//            "1234", horizontalAdapters[it]
-//        )
-//    }
 
     private val recommendationAdapter = RecommendationAdapter()
 
@@ -141,17 +106,11 @@ class RecommendationFragment : Fragment() {
 
 
     private fun initViewModel() = viewModel.let { vm ->
-//        for ((index, liveData) in viewModel.recommendationListLivedataList.withIndex()) {
-//            liveData.observe(viewLifecycleOwner) {
-//                horizontalAdapters.getOrNull(index)?.submitList(it)
-//            }
-//        }
 
         vm.horizontalDataList.observe(viewLifecycleOwner) { horizontalDataList ->
             val multiViews: MutableList<RecommendationAdapter.MultiView> = horizontalDataList.map {
                 RecommendationAdapter.MultiView.Horizontal(it.title,
-                    RecommendationHorizontalAdapter(showDetailFragment)
-                        .apply { submitList(it.list) })
+                    RecommendationHorizontalAdapter(showDetailFragment).apply { submitList(it.list) })
             }.toMutableList()
             if (multiViews.size >= 1) {
                 multiViews.add(1, RecommendationAdapter.MultiView.Tip(randomTipHeader, randomTip))
