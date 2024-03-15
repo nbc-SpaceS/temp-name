@@ -11,6 +11,7 @@ import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.CategoryItemBinding
+import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
 
 class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapter<HomeSearchAdapter.ViewHolder>() {
 
@@ -20,6 +21,7 @@ class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapt
         val tvPlaceName: TextView = binding.tvCategoryItemPlace
         val tvIsFree: TextView = binding.tvCtNotFree
         val tvReservationStatus: TextView = binding.tvCtReservationEnd
+        val ivSmallVideoItems = binding.ivSmallVideoItems
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -55,7 +57,14 @@ class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapt
                 holder.tvReservationStatus.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
             }
         }
+
+        // 카테고리 아이템 레이아웃 클릭 시 인터페이스에 SVCID를 담기
+        holder.ivSmallVideoItems.setOnClickListener {
+            categoryItemClick?.onClick(item.SVCID)
+        }
     }
+    // Category Adapter 페이지에 있는 CategoryItemClick 인터페이스를 호출해 클릭된 아이템의 SVCID를 HomeFragment로 전달함
+    var categoryItemClick: CategoryItemClick? = null
 
     override fun getItemCount() = items.size
 }
