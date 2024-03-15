@@ -10,7 +10,8 @@ data class RecommendationData(
     val imageUrl: String,
     val svcid: String,
     val usetgtinfo: String,
-    var reviewCount: Int
+    var reviewCount: Int,
+    val serviceName: String,
 )
 
 fun Row.convertToRecommendationData() = RecommendationData(
@@ -21,7 +22,8 @@ fun Row.convertToRecommendationData() = RecommendationData(
     imageUrl = this.imgurl,
     svcid = this.svcid,
     usetgtinfo = this.usetgtinfo,
-    reviewCount = 0
+    reviewCount = 0,
+    serviceName = svcnm,
 )
 //플레이스네ㅐ임을 서비스스텟으로
 
