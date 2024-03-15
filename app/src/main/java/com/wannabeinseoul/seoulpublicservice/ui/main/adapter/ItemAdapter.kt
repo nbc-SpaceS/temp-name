@@ -60,7 +60,7 @@ class ItemAdapter(
                 ivIcon.setColorFilter(Color.WHITE)
                 itemView.setOnClickListener {
                     if (regionPrefRepository.loadSelectedRegion() == "지역선택") {
-                        Toast.makeText(it.context, "선호지역을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(it.context, "관심지역을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show()
                     } else {
                         // 아이콘의 배경색과 색상을 변경
                         ivIcon.setBackgroundResource(R.drawable.background_radius_10dp_e95a77)

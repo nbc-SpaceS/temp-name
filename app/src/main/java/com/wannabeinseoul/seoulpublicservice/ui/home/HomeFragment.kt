@@ -76,10 +76,12 @@ class HomeFragment : Fragment() {
                     tvHomeSelectRegion1.isVisible = false
                     tvHomeSelectRegion2.isVisible = false
                     tvHomeSelectRegion3.isVisible = false
+                    mdHomeRegionList.isVisible = false
                     mainViewModel.setRegion("지역선택")
                 } else {
                     tvHomeCurrentRegion.text = selectedRegions[0]
                     tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
+                    mdHomeRegionList.isVisible = true
                     mainViewModel.setRegion(selectedRegions[0])
                     when (selectedRegions.size) {
                         1 -> {
