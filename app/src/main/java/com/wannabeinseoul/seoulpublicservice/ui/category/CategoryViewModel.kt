@@ -54,10 +54,10 @@ class CategoryViewModel(
         //minclassnm은 소분류명
     }
 
-    fun updateListWithSvcstatnmPay (areanm: String, minclassnm: String, pay: String, svcstatnm: List<String>) {
+    fun updateListWithSvcstatnmPay (text: String, areanm: String, minclassnm: String, pay: String, svcstatnm: List<String>) {
         viewModelScope.launch {
             val filteredList = withContext(Dispatchers.IO) {
-                RoomRowMapper.mappingRoomToRow(reservationRepository.searchFilter(text = "", typeSub = listOf(minclassnm), typeLoc = listOf(areanm), typePay = listOf(pay), typeSvc = svcstatnm)).convertToCategoryDataList()
+                RoomRowMapper.mappingRoomToRow(reservationRepository.searchFilter(text = text, typeSub = listOf(minclassnm), typeLoc = listOf(areanm), typePay = listOf(pay), typeSvc = svcstatnm)).convertToCategoryDataList()
             }
             _categories.value = filteredList
             _isListEmpty.value = filteredList.isEmpty()
