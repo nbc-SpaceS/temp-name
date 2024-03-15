@@ -9,7 +9,6 @@ import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
 
 class RecommendationHorizontalAdapter(
-    private val recommendationDataList: MutableList<RecommendationData>, // 변경된 부분
     private val onItemClick: (RecommendationData) -> Unit
 ) : ListAdapter<RecommendationData, RecommendationHorizontalAdapter.VH>(DiffCallback()) {
 
@@ -18,7 +17,7 @@ class RecommendationHorizontalAdapter(
 
         fun bind(item: RecommendationData) {
             binding.ivRcSmallImage.load(item.imageUrl)
-            binding.tvRcPlaceName.text = item.placeName
+            binding.tvRcPlaceName.text = item.serviceName
             binding.tvRcPayType.text = item.payType.take(2)
             binding.tvRcAreaName.text = item.areaName
             binding.tvRcReview.text = "후기 ${item.reviewCount}개"
