@@ -179,7 +179,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         binding.let {
             it.ivDetailImg.loadWithHolder(data.IMGURL)
             it.tvDetailTypeSmall.text = data.MINCLASSNM
-            it.tvDetailName.text = data.SVCNM
+            it.tvDetailName.text = Html.fromHtml(data.SVCNM, Html.FROM_HTML_MODE_LEGACY)
             it.tvDetailLocation.text = "${data.AREANM} - ${Html.fromHtml(data.PLACENM, Html.FROM_HTML_MODE_LEGACY)}"
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailUsetgtinfo.text = data.USETGTINFO.trim()
