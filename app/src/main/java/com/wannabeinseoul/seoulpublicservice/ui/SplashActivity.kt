@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.animation.AlphaAnimation
 import androidx.appcompat.app.AppCompatActivity
-import com.wannabeinseoul.seoulpublicservice.ui.main.MainActivity
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,11 +62,11 @@ class SplashActivity : AppCompatActivity() {
             )
             container.idPrefRepository.save(id)
             container.userRepository.addUser(id, user)
-            app.user = user
+            app.setUser(user)
         } else {
             try {
                 CoroutineScope(Dispatchers.IO).launch {
-                    app.user = container.userRepository.getUser(loadedId)
+                    container.userRepository.getUser(loadedId)?.let { app.setUser(it) }
                 }
             } catch (e: Throwable) {
                 Log.e("jj-스플래시", "userRepository.getUser 과정에서 에러. loadedId: $loadedId, e: $e")

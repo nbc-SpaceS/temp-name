@@ -16,6 +16,8 @@ import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.convertToRecommendationDataList
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(
@@ -29,6 +31,9 @@ class CategoryViewModel(
     private val _categories = MutableLiveData<List<CategoryData>>(emptyList())
     val categories: LiveData<List<CategoryData>> get() = _categories
 
+    private val _isListEmpty = MutableLiveData<Boolean>()
+    val isListEmpty: LiveData<Boolean> get() = _isListEmpty
+
     fun fetchCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -41,8 +46,10 @@ class CategoryViewModel(
         }
     }
 
-    fun updateList (areanm: String, minclassnm:String) {
-        _categories.value = dbMemoryRepository.getFiltered(areanm = listOf(areanm), minclassnm = listOf(minclassnm)).convertToCategoryDataList()
+    fun updateList (areanm: String, minclassnm: String) {
+        val filteredList = dbMemoryRepository.getFiltered(areanm = listOf(areanm), minclassnm = listOf(minclassnm)).convertToCategoryDataList()
+        _categories.value = filteredList
+        _isListEmpty.value = filteredList.isEmpty()
         //minclassnm은 소분류명
     }
 

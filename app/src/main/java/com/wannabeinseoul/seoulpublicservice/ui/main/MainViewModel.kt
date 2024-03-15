@@ -23,6 +23,9 @@ class MainViewModel: ViewModel() {
     private val _refreshReviewListState: MutableLiveData<Boolean> = MutableLiveData()
     val refreshReviewListState: LiveData<Boolean> get() = _refreshReviewListState
 
+    private val _selectRegion: MutableLiveData<String> = MutableLiveData()
+    val selectRegion: LiveData<String> get() = _selectRegion
+
     fun setFilterState(flag: Boolean) {
         _applyFilter.value = flag
     }
@@ -45,5 +48,9 @@ class MainViewModel: ViewModel() {
 
     fun setComplaintUserInfo(userInfo: ComplaintUserInfo) {
         _complaintUserInfo = userInfo.copy(svcId = selectedServiceId)
+    }
+
+    fun setRegion(region: String) {
+        _selectRegion.value = region
     }
 }
