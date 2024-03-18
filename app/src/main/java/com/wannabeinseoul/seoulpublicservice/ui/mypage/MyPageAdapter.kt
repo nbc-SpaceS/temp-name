@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.mypage
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,11 @@ import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBindi
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedNothingBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemSavedBinding
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationData
 import com.wannabeinseoul.seoulpublicservice.util.fromHtml
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
+
+private const val JJTAG = "jj-MyPageAdapter"
 
 class MyPageAdapter(
     private val lifecycleOwner: LifecycleOwner,
@@ -33,8 +37,9 @@ class MyPageAdapter(
     }
 ) {
 
-    /** 프래그먼트에서 멀티뷰 아이템의 isVisible을 변경하기 위한 람다식 */
-    var setSavedNothingVisible: ((boolean: Boolean) -> Unit)? = null
+//    /** 프래그먼트에서 멀티뷰 아이템의 isVisible을 변경하기 위한 람다식 */
+//    /** 라이브데이터 직접 넘겨주면서 안씀 */
+//    var setSavedNothingVisible: ((boolean: Boolean) -> Unit)? = null
 
     /** 멀티뷰 sealed interface */
     sealed interface MultiView {
@@ -61,7 +66,8 @@ class MyPageAdapter(
         }
 
         data class Saved(
-            val myPageSavedAdapter: MyPageSavedAdapter
+            val myPageSavedAdapter: MyPageSavedAdapter,
+            val savedList: LiveData<List<RecommendationData?>>,
         ) : MultiView {
             override val viewType: Type = Type.SAVED
         }
@@ -117,7 +123,6 @@ class MyPageAdapter(
 
         init {
             b.tvSavedClear.setOnClickListener { onClearClick() }
-            setSavedNothingVisible = { b.tvSavedNothing.isVisible = it }
         }
 
         private var isAdapterNotBound = true
@@ -127,6 +132,12 @@ class MyPageAdapter(
             if (isAdapterNotBound) {
                 b.rvSaved.adapter = item.myPageSavedAdapter
                 isAdapterNotBound = false
+                item.savedList.observe(lifecycleOwner) {
+                    Log.d(JJTAG, "옵저버:savedList ${it.toString().take(255)}")
+                    item.myPageSavedAdapter.submitList(it) {
+                        b.tvSavedNothing.isVisible = it.isEmpty()
+                    }
+                }
             }
         }
     }
@@ -163,7 +174,7 @@ class MyPageAdapter(
 //    inner class LoadingHolder(private val b: ItemLoadingProgressBinding) :
 //        CommonViewHolder(b.root) {
 //        override fun onBind(item: MultiView) {
-////            Log.d("jj-LoadingHolder onBind", "${b.root}")
+////            Log.d(JJTAG, "LoadingHolder onBind ${b.root}")
 //            b.root.isVisible = itemCount > 4
 //        }
 //    }
