@@ -21,6 +21,8 @@ import com.wannabeinseoul.seoulpublicservice.usecase.GetDetailSeoulUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+private const val JJTAG = "jj-마이페이지 뷰모델"
+
 class MyPageViewModel(
     private val savedPrefRepository: SavedPrefRepository,
     private val getDetailSeoulUseCase: GetDetailSeoulUseCase,
@@ -83,7 +85,7 @@ class MyPageViewModel(
         _reviewedList.postValue(reviewEntities.mapNotNull { reviewEntity ->
             if (reviewEntity.svcId == null) {
                 Log.e(
-                    "jj-마이페이지 뷰모델",
+                    JJTAG,
                     "loadReviewedList - reviewEntity.svcId == null. uuid: $id"
                 )
                 return@mapNotNull null
@@ -91,7 +93,7 @@ class MyPageViewModel(
             val row = dbMemoryRepository.findBySvcid(reviewEntity.svcId)
                 ?: return@mapNotNull null.apply {
                     Log.e(
-                        "jj-마이페이지 뷰모델",
+                        JJTAG,
                         "loadReviewedList - dbMemoryRepository.findBySvcid == null. svcId: ${reviewEntity.svcId}"
                     )
                 }
