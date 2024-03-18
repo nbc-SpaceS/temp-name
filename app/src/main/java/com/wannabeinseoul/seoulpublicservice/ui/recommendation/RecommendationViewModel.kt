@@ -39,12 +39,16 @@ class RecommendationViewModel(
         _multiViews.value = list
     }
 
-
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     init {
+
+        _isLoading.value = true // 로딩 상태로 초기화
+
         viewModelScope.launch(Dispatchers.IO) {
-            val selectedRegion = regionPrefRepository.loadSelectedRegion()
-            val otherRegions = selectedRegion.filter { it.toString() != selectedRegion }
+            val selectedRegion = regionPrefRepository.loadSelectedRegion().toString()
+//            val otherRegions = selectedRegion.filter { it.toString() != selectedRegion }
             val items = listOf(
                 Pair("자전거", "자전거와 관련된 서비스"),
                 Pair("청소년", "청소년을 위한 서비스"),
@@ -53,9 +57,9 @@ class RecommendationViewModel(
                 Pair(selectedRegion, "${selectedRegion}에 관한 서비스"),
             )
 
-            // 일단 제목부터 띄워놓기 위함. 이거 대신에 로딩 처리를 해야 할 듯.
-            _horizontalDataList.postValue(
-                items.map { RecommendationHorizontalData(it.second, emptyList()) })
+
+//            _horizontalDataList.postValue(
+//                items.map { RecommendationHorizontalData(it.second, emptyList()) })
 
             val queryResults = items.map { async { getQuery(it.first) } }.awaitAll()
             val recommendationHorizontalDataList =
@@ -64,6 +68,7 @@ class RecommendationViewModel(
                 }
 
             _horizontalDataList.postValue(recommendationHorizontalDataList)
+            _isLoading.postValue(false)
         }
     }
 
