@@ -39,6 +39,10 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -182,12 +186,12 @@ class HomeFragment : Fragment() {
 
             updateViewPagerCategory.observe(viewLifecycleOwner) {
                 binding.tvHomeDescription.text = when (it.size) {
-                    0 -> "${mainViewModel.selectRegion.value}에는 모든 서비스가 최소 1개 이상 있습니다."
-                    1 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first} 서비스가 없습니다."
-                    2 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first} 서비스가 없습니다."
-                    3 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first} 서비스가 없습니다."
-                    4 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first}, ${it[3].first} 서비스가 없습니다."
-                    else -> "${mainViewModel.selectRegion.value}에는 사용할 수 있는 서비스가 없습니다."
+                    0 -> "${mainViewModel.selectRegion.value}에는 사용할 수 있는 서비스가 없습니다."
+                    1 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first} 서비스가 있습니다."
+                    2 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first} 서비스가 있습니다."
+                    3 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first} 서비스가 있습니다."
+                    4 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first}, ${it[3].first} 서비스가 있습니다."
+                    else -> "${mainViewModel.selectRegion.value}에서 모든 서비스를 사용할 수 있습니다."
                 }
                 binding.tvHomeDescription.text = when (it.size) {
                     1 -> setSpannableString(6, 11)
@@ -197,11 +201,16 @@ class HomeFragment : Fragment() {
                     else -> binding.tvHomeDescription.text
                 }
             }
+
+            notificationSign.observe(viewLifecycleOwner) {
+                binding.ivHomeNotificationCountBackground.isVisible = it
+            }
         }
     }
 
     private fun setupUIComponents() {
         viewModel.setupRegions()
+        viewModel.updateNotificationSign()
         viewModel.setRandomService()
 
         setupViewPager()
@@ -351,6 +360,7 @@ class HomeFragment : Fragment() {
             notificationFragment.show(
                 requireActivity().supportFragmentManager, "NotificationFragment"
             )
+            viewModel.hideNotificationSign()
         }
     }
 

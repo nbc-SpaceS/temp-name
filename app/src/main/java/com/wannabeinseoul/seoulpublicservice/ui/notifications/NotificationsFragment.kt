@@ -3,6 +3,7 @@ package com.wannabeinseoul.seoulpublicservice.ui.notifications
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentNotificationsBinding
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.filter.FilterFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
@@ -25,6 +27,16 @@ class NotificationsFragment : DialogFragment() {
 
     private val viewModel: NotificationsViewModel by viewModels { NotificationsViewModel.factory }
     private val mainViewModel: MainViewModel by activityViewModels()
+
+    private val adapter: NotificationAdapter by lazy {
+        NotificationAdapter(
+            moveDetail = { svcId ->
+                val dialog = DetailFragment.newInstance(svcId)
+                dialog.show(requireActivity().supportFragmentManager, "Detail")
+                dismiss()
+            }
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,10 +61,16 @@ class NotificationsFragment : DialogFragment() {
         ivNotificationBackBtn.setOnClickListener {
             dismiss()
         }
+
+        rvNotification.adapter = adapter
+
+        viewModel.updateUiState()
     }
 
     private fun initViewModel() = with(viewModel) {
-
+        uiState.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
     }
 
     override fun onDestroyView() {
