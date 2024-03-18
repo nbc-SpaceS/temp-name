@@ -178,16 +178,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/view_overlay"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_search" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search_results"
         android:layout_width="match_parent"
@@ -199,6 +189,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_search" />
+
+    <View
+        android:id="@+id/view_control_rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_search_history"
@@ -214,7 +210,6 @@
         app:layout_constraintEnd_toEndOf="@+id/layout_search"
         app:layout_constraintStart_toStartOf="@+id/layout_search"
         app:layout_constraintTop_toBottomOf="@+id/layout_search" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_home_region_list"
