@@ -8,6 +8,7 @@ import kotlinx.coroutines.tasks.await
 
 interface UserProfileRepository {
     suspend fun uploadProfileImage(userId: String, uri: Uri): String
+    suspend fun uploadProfileImage(userId: String, byteArray: ByteArray): String
 }
 
 class UserProfileRepositoryImpl(
@@ -30,4 +31,18 @@ class UserProfileRepositoryImpl(
             ""
         }
     }
+
+    override suspend fun uploadProfileImage(userId: String, byteArray: ByteArray): String {
+        return try {
+            val uploadTask = userProfileRef.child("${userId}.png").putBytes(byteArray)
+            uploadTask.await()
+            val uploadedUrl = ref.child("userProfile/${userId}.png").downloadUrl.await().toString()
+            userRepository.updateUserProfileImage(userId, uploadedUrl)
+            uploadedUrl
+        } catch (e: Exception) {
+            Log.e("jj-UserProfileRepository", "uploadProfileImage fail: $e")
+            ""
+        }
+    }
+
 }
