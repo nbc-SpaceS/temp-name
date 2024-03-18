@@ -1,17 +1,15 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +19,8 @@ class HomeViewModel(
     private val regionPrefRepository: RegionPrefRepository,
     private val searchPrefRepository: SearchPrefRepository,
     private val reservationRepository: ReservationRepository,
-    private val dbMemoryRepository: DbMemoryRepository
+    private val dbMemoryRepository: DbMemoryRepository,
+    private val recentPrefRepository: RecentPrefRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -38,6 +37,9 @@ class HomeViewModel(
     private val _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
         MutableLiveData()
     val displaySearchHistory: LiveData<Pair<List<String>, SearchPrefRepository>> get() = _displaySearchHistory
+
+    private val _recentData: MutableLiveData<List<RecentEntity>> = MutableLiveData()
+    val recentData: LiveData<List<RecentEntity>> get() = _recentData
 
     fun setRandomService() {
         _randomService = dbMemoryRepository.getFilteredByDate()
@@ -90,6 +92,10 @@ class HomeViewModel(
         regionPrefRepository.saveSelectedRegion(index)
     }
 
+    fun loadRecentData() {
+        _recentData.value = recentPrefRepository.getRecent()
+    }
+
     companion object {
         val factory = viewModelFactory {
             initializer {
@@ -100,7 +106,8 @@ class HomeViewModel(
                     regionPrefRepository = container.regionPrefRepository,
                     searchPrefRepository = container.searchPrefRepository,
                     reservationRepository = container.reservationRepository,
-                    dbMemoryRepository = container.dbMemoryRepository
+                    dbMemoryRepository = container.dbMemoryRepository,
+                    recentPrefRepository = container.recentPrefRepository
                 )
             }
         }

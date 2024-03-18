@@ -1,13 +1,11 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -24,9 +22,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.internal.ViewUtils.hideKeyboard
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
@@ -159,6 +158,10 @@ class HomeFragment : Fragment() {
                 rvSearchHistory.visibility = View.VISIBLE
             }
         }
+
+        recentData.observe(viewLifecycleOwner) {
+            recentViewPager(it)
+        }
     }
 
     private fun setupUIComponents() {
@@ -175,6 +178,7 @@ class HomeFragment : Fragment() {
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
+        setupRecentData()
     }
 
     private fun setupViewPager() {
@@ -400,5 +404,23 @@ class HomeFragment : Fragment() {
                 dialog.show(requireActivity().supportFragmentManager, "CategoryFrag")
             }
         }
+    }
+
+    private fun setupRecentData() {
+        if(viewModel.recentData.value.isNullOrEmpty()) {
+            binding.ivHomeMainBanner.isVisible = true
+            binding.vpHomeRecent.isVisible = false
+        }
+        viewModel.loadRecentData()
+    }
+
+    private fun recentViewPager(data: List<RecentEntity>) {
+        val viewPage = binding.vpHomeRecent
+        val adapter = RecentAdapter()
+
+        viewPage.adapter = adapter
+        viewPage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        adapter.submitList(data)
+        viewPage.offscreenPageLimit = 1
     }
 }
