@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -48,15 +49,17 @@ class CultureEventFragment : Fragment() {
         binding.rvCultureEvent.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter.submitList(cultureEventItems)
 
-        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
-            if (it != "지역선택") {
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) { region ->
+            if (region != "지역선택") {
                 cultureEventItems = cultureEventItems.map { item ->
                     val size = dbMemoryRepository.getFiltered(
-                        areanm = listOf(it.toString()),
+                        areanm = listOf(region.toString()),
                         minclassnm = listOf(item.name)
                     ).size
                     item.copy(count = size)
                 }
+
+                binding.clCultureEventNothing.isVisible = cultureEventItems.all { it.count == 0 }
                 adapter.submitList(cultureEventItems)
             }
         }

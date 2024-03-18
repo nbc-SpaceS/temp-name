@@ -1,9 +1,11 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -37,7 +39,7 @@ class EducationFragment : Fragment() {
             Item(R.drawable.ic_book, "교양/어학"),
             Item(R.drawable.ic_information, "정보통신"),
             Item(R.drawable.ic_history, "역사"),
-            Item(R.drawable.ic_science, "자연과학"),
+            Item(R.drawable.ic_science, "자연/과학"),
             Item(R.drawable.ic_village, "도시농업"),
             Item(R.drawable.ic_contact, "청년정보"),
             Item(R.drawable.ic_sports, "스포츠"),
@@ -52,15 +54,20 @@ class EducationFragment : Fragment() {
         binding.rvEducation.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter.submitList(educationItems)
 
-        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
-            if (it != "지역선택") {
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) { region ->
+            if (region != "지역선택") {
                 educationItems = educationItems.map { item ->
                     val size = dbMemoryRepository.getFiltered(
-                        areanm = listOf(it.toString()),
+                        areanm = listOf(region.toString()),
                         minclassnm = listOf(item.name)
                     ).size
                     item.copy(count = size)
                 }
+                Log.d("dkj", "${dbMemoryRepository.getFiltered(
+                    areanm = listOf("동작구"),
+                    minclassnm = listOf("자연/과학")
+                )}")
+                binding.clEducationNothing.isVisible = educationItems.all { it.count == 0 }
                 adapter.submitList(educationItems)
             }
         }
