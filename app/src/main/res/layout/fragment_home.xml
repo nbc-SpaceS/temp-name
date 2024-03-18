@@ -81,12 +81,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/tv_home_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="관악구에는 체육시설, 진료복지 서비스가 없습니다."
+                android:textColor="@color/gray"
+                android:textSize="11sp"
+                app:layout_constraintTop_toBottomOf="@+id/tv_service_list"
+                app:layout_constraintStart_toStartOf="@+id/tv_service_list"/>
+
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_service_list"
+                app:layout_constraintTop_toBottomOf="@+id/tv_home_description"
                 app:tabGravity="fill"
                 app:tabMode="auto"
                 app:tabRippleColor="@null"

@@ -53,6 +53,11 @@ interface DbMemoryRepository {
 
     fun getFilteredByDate(): List<String>
 
+    fun getFilteredCountWithMaxClass(
+        maxclassnm: List<String>,
+        areanm: String
+    ): List<Pair<String, Int>>
+
     fun findBySvcid(svcid: String): Row?
 }
 
@@ -84,6 +89,13 @@ class DbMemoryRepositoryImpl(private val getAppRowList: () -> List<Row>) : DbMem
 
     override fun getFilteredByDate(): List<String> {
         return getHaveLocation().getFilteredByDate()
+    }
+
+    override fun getFilteredCountWithMaxClass(
+        maxclassnm: List<String>,
+        areanm: String
+    ): List<Pair<String, Int>> {
+        return getHaveLocation().getFilteredCountWithMaxClass(maxclassnm, areanm)
     }
 
     override fun findBySvcid(svcid: String) = getAppRowList().find { it.svcid == svcid }
@@ -180,3 +192,14 @@ fun List<Row>.getFilteredByDate(): List<String> {
     }.map { it.svcid }
 }
 
+fun List<Row>.getFilteredCountWithMaxClass(
+    maxclassnm: List<String>,
+    areanm: String
+): List<Pair<String, Int>> {
+    return maxclassnm.map { maxClass ->
+        Pair(maxClass, getHaveLocation().count { data ->
+            (data.maxclassnm == maxClass) &&
+                    (data.areanm == areanm)
+        })
+    }
+}

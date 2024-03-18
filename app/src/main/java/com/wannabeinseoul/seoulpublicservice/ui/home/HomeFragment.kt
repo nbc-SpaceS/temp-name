@@ -3,9 +3,15 @@ package com.wannabeinseoul.seoulpublicservice.ui.home
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -18,6 +24,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -115,49 +122,73 @@ class HomeFragment : Fragment() {
 
         displaySearchResult.observe(viewLifecycleOwner) { searchResult ->
             with(binding) {
-                // 검색 결과를 HomeSearchAdapter에 전달하여 RecyclerView에 표시
-                val adapter = HomeSearchAdapter(searchResult)
-                rvSearchResults.adapter = adapter
-                rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
+                if (searchResult.isNotEmpty()) {
+                    // 검색 결과를 HomeSearchAdapter에 전달하여 RecyclerView에 표시
+                    val adapter = HomeSearchAdapter(searchResult)
+                    rvSearchResults.adapter = adapter
+                    rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
 
-                // 검색을 수행할 때 cl_home_region_list를 숨김
-                clHomeRegionList.isVisible = false
+                    // 검색을 수행할 때 cl_home_region_list를 숨김
+                    clHomeRegionList.isVisible = false
 
-                // tv_service_list, tab_layout, view_pager를 숨김
-                tvServiceList.visibility = View.GONE
-                tabLayout.visibility = View.GONE
-                viewPager.visibility = View.GONE
+                    // tv_service_list, tab_layout, view_pager를 숨김
+                    tvServiceList.visibility = View.GONE
+                    tabLayout.visibility = View.GONE
+                    viewPager.visibility = View.GONE
 
-                // 검색 결과를 표시하는 RecyclerView를 보이게 함
-                rvSearchResults.visibility = View.VISIBLE
+                    // 검색 결과를 표시하는 RecyclerView를 보이게 함
+                    rvSearchResults.visibility = View.VISIBLE
 
-                // 키보드 숨기기
-                hideKeyboard()
+                    // 키보드 숨기기
+                    hideKeyboard()
 
-                // et_search 포커스 제거
-                etSearch.clearFocus()
+                    // et_search 포커스 제거
+                    etSearch.clearFocus()
 
-                // 클릭된 결과 아이템의 SVCID를 상세 페이지에 전달
-                searchClick(adapter)
+                    // 클릭된 결과 아이템의 SVCID를 상세 페이지에 전달
+                    searchClick(adapter)
+                }
             }
         }
 
         displaySearchHistory.observe(viewLifecycleOwner) { searchHistory ->
             with(binding) {
-                // 검색어를 SearchHistoryAdapter에 전달하여 RecyclerView에 표시
-                val adapter = SearchHistoryAdapter(searchHistory.first.toMutableList(), searchHistory.second).apply {
-                    onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
-                        override fun onItemClick(item: String) {
-                            etSearch.setText(item)
-                            viewModel.performSearch(item)
+                if (searchHistory.first.isNotEmpty()) {
+                    // 검색어를 SearchHistoryAdapter에 전달하여 RecyclerView에 표시
+                    val adapter = SearchHistoryAdapter(
+                        searchHistory.first.toMutableList(),
+                        searchHistory.second
+                    ).apply {
+                        onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
+                            override fun onItemClick(item: String) {
+                                etSearch.setText(item)
+                                viewModel.performSearch(item)
+                            }
                         }
                     }
-                }
-                rvSearchHistory.adapter = adapter
-                rvSearchHistory.layoutManager = LinearLayoutManager(requireContext())
+                    rvSearchHistory.adapter = adapter
+                    rvSearchHistory.layoutManager = LinearLayoutManager(requireContext())
 
-                // 검색어 저장 목록을 표시하는 RecyclerView를 보이게 함
-                rvSearchHistory.visibility = View.VISIBLE
+                    // 검색어 저장 목록을 표시하는 RecyclerView를 보이게 함
+                    rvSearchHistory.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        updateViewPagerCategory.observe(viewLifecycleOwner) {
+            binding.tvHomeDescription.text = when (it.size) {
+                1 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first} 서비스가 없습니다."
+                2 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first} 서비스가 없습니다."
+                3 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first} 서비스가 없습니다."
+                4 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first}, ${it[3].first} 서비스가 없습니다."
+                else -> "${mainViewModel.selectRegion.value}에는 사용할 수 있는 서비스가 없습니다."
+            }
+            binding.tvHomeDescription.text = when (it.size) {
+                1 -> setSpannableString(6, 11)
+                2 -> setSpannableString(6, 17)
+                3 -> setSpannableString(6, 23)
+                4 -> setSpannableString(6, 29)
+                else -> binding.tvHomeDescription.text
             }
         }
     }
@@ -174,6 +205,14 @@ class HomeFragment : Fragment() {
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
+
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
+            if (it != "지역선택") {
+                viewModel.setViewPagerCategory(it)
+            } else {
+                binding.tvHomeDescription.text = "아직 관심지역이 선택되지 않았습니다."
+            }
+        }
     }
 
     private fun setupViewPager() {
@@ -201,7 +240,7 @@ class HomeFragment : Fragment() {
             when (position) {
                 0 -> tab.text = "체육시설"
                 1 -> tab.text = "교육강좌"
-                2 -> tab.text = "문화행사"
+                2 -> tab.text = "문화체험"
                 3 -> tab.text = "시설대관"
                 4 -> tab.text = "진료복지"
             }
@@ -381,5 +420,31 @@ class HomeFragment : Fragment() {
                 dialog.show(requireActivity().supportFragmentManager, "CategoryFrag")
             }
         }
+    }
+
+    private fun setSpannableString(start: Int, end: Int): SpannableString {
+        val spannableString = SpannableString(binding.tvHomeDescription.text)
+
+        spannableString.setSpan(
+            ForegroundColorSpan(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.total_text_color
+                )
+            ),
+            start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        spannableString.setSpan(
+            StyleSpan(Typeface.BOLD),
+            start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        return spannableString
+    }
+
+    override fun onStop() {
+        viewModel.clearSearchResult()
+        super.onStop()
     }
 }

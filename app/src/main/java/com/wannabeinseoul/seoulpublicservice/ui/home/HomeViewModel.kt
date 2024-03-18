@@ -32,12 +32,40 @@ class HomeViewModel(
     private val _updateSelectedRegions: MutableLiveData<List<String>> = MutableLiveData()
     val updateSelectedRegions: LiveData<List<String>> get() = _updateSelectedRegions
 
-    private val _displaySearchResult: MutableLiveData<List<ReservationEntity>> = MutableLiveData()
+    private var _displaySearchResult: MutableLiveData<List<ReservationEntity>> = MutableLiveData()
     val displaySearchResult: LiveData<List<ReservationEntity>> get() = _displaySearchResult
 
-    private val _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
+    private var _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
         MutableLiveData()
     val displaySearchHistory: LiveData<Pair<List<String>, SearchPrefRepository>> get() = _displaySearchHistory
+
+    private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> =
+        MutableLiveData()
+    val updateViewPagerCategory: LiveData<List<Pair<String, Int>>> get() = _updateViewPagerCategory
+
+    fun clearSearchResult() {
+        if (_displaySearchResult.value?.isNotEmpty() == true) _displaySearchResult.value =
+            emptyList()
+        if (_displaySearchHistory.value?.first?.isNotEmpty() == true) _displaySearchHistory.value =
+            Pair(
+                emptyList(), searchPrefRepository
+            )
+    }
+
+    fun setViewPagerCategory(area: String) {
+        _updateViewPagerCategory.value = dbMemoryRepository.getFilteredCountWithMaxClass(
+            listOf(
+                "체육시설",
+                "교육강좌",
+                "문화체험",
+                "공간시설",
+                "진료복지"
+            ), area
+        ).filter { it.second == 0 }.map {
+            if (it.first == "공간시설") Pair("시설대관", it.second)
+            else it
+        }
+    }
 
     fun setRandomService() {
         _randomService = dbMemoryRepository.getFilteredByDate()
