@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,7 @@ class EducationFragment : Fragment() {
             Item(R.drawable.ic_book, "교양/어학"),
             Item(R.drawable.ic_information, "정보통신"),
             Item(R.drawable.ic_history, "역사"),
-            Item(R.drawable.ic_science, "자연과학"),
+            Item(R.drawable.ic_science, "자연/과학"),
             Item(R.drawable.ic_village, "도시농업"),
             Item(R.drawable.ic_contact, "청년정보"),
             Item(R.drawable.ic_sports, "스포츠"),
@@ -62,7 +63,10 @@ class EducationFragment : Fragment() {
                     ).size
                     item.copy(count = size)
                 }
-
+                Log.d("dkj", "${dbMemoryRepository.getFiltered(
+                    areanm = listOf("동작구"),
+                    minclassnm = listOf("자연/과학")
+                )}")
                 binding.clEducationNothing.isVisible = educationItems.all { it.count == 0 }
                 adapter.submitList(educationItems)
             }

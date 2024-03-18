@@ -66,7 +66,12 @@ class ItemAdapter(
                         ivIcon.setBackgroundResource(R.drawable.background_radius_10dp_e95a77)
                         // 선택된 항목의 데이터와 지역을 가지고 카테고리 페이지로 이동
                         val intent = Intent(it.context, CategoryActivity::class.java).apply {
-                            putExtra("category", item.name)
+                            if (item.name == "병원") {
+                                putExtra("category", "서북병원")
+                            } else {
+                                putExtra("category", item.name)
+                            }
+
                             putExtra("region", regionPrefRepository.loadSelectedRegion())
                         }
                         Log.d(

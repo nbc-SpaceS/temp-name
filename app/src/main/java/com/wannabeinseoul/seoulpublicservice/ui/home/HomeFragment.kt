@@ -174,6 +174,7 @@ class HomeFragment : Fragment() {
 
         updateViewPagerCategory.observe(viewLifecycleOwner) {
             binding.tvHomeDescription.text = when (it.size) {
+                0 -> "${mainViewModel.selectRegion.value}에는 모든 서비스가 최소 1개 이상 있습니다."
                 1 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first} 서비스가 없습니다."
                 2 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first} 서비스가 없습니다."
                 3 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first} 서비스가 없습니다."

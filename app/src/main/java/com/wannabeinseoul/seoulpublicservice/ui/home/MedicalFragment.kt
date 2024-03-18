@@ -50,7 +50,7 @@ class MedicalFragment : Fragment() {
                 medicalItems = medicalItems.map { item ->
                     val size = dbMemoryRepository.getFiltered(
                         areanm = listOf(region.toString()),
-                        minclassnm = listOf(item.name)
+                        minclassnm = if (item.name == "병원") listOf("서북병원") else listOf(item.name)
                     ).size
                     item.copy(count = size)
                 }
