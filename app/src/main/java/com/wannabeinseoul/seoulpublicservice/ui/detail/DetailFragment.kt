@@ -159,7 +159,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
         vm.closeEvent.observe(viewLifecycleOwner) { close -> if(close) dismiss() }
         vm.reviewUiState.observe(viewLifecycleOwner) {
-            commentAdapter.submitList(it)
+            commentAdapter.submitList(it.take(5))
             binding.tvDetailEmptyDescription.isVisible = it.isEmpty()
             mainViewModel.setCurrentReviewList(it)
         }
@@ -179,7 +179,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         binding.let {
             it.ivDetailImg.loadWithHolder(data.IMGURL)
             it.tvDetailTypeSmall.text = data.MINCLASSNM
-            it.tvDetailName.text = data.SVCNM
+            it.tvDetailName.text = Html.fromHtml(data.SVCNM, Html.FROM_HTML_MODE_LEGACY)
             it.tvDetailLocation.text = "${data.AREANM} - ${Html.fromHtml(data.PLACENM, Html.FROM_HTML_MODE_LEGACY)}"
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailUsetgtinfo.text = data.USETGTINFO.trim()

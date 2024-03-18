@@ -1,6 +1,8 @@
 package com.wannabeinseoul.seoulpublicservice.db_by_memory
 
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 private val areasInSeoul = listOf(
     "강남구",
@@ -38,7 +40,7 @@ interface DbMemoryRepository {
         areanm: List<String>? = null,
         svcstatnm: List<String>? = null,
         payatnm: List<String>? = null,
-        ugtGetInfo : List < String >? = null
+        ugtGetInfo: List<String>? = null
     ): List<Row>
 
     fun getFilteredPlusWord(
@@ -48,6 +50,8 @@ interface DbMemoryRepository {
         svcstatnm: List<String>? = null,
         payatnm: List<String>? = null
     ): List<Row>
+
+    fun getFilteredByDate(): List<String>
 
     fun findBySvcid(svcid: String): Row?
 }
@@ -76,6 +80,10 @@ class DbMemoryRepositoryImpl(private val getAppRowList: () -> List<Row>) : DbMem
         payatnm: List<String>?
     ): List<Row> {
         return getHaveLocation().getFilteredPlusWord(word, minclassnm, areanm, svcstatnm, payatnm)
+    }
+
+    override fun getFilteredByDate(): List<String> {
+        return getHaveLocation().getFilteredByDate()
     }
 
     override fun findBySvcid(svcid: String) = getAppRowList().find { it.svcid == svcid }
@@ -131,7 +139,9 @@ fun List<Row>.getFilteredPlusWord(
     return if (areanm?.any { it == "시외" || it == "서울제외지역" } == true) {
         getHaveLocation().filter {
             (it.svcnm.contains(word) || it.placenm.contains(word) || it.areanm.contains(word)
-                    || it.telno.contains(word) || it.minclassnm.contains(word) || it.usetgtinfo.contains(word)) &&
+                    || it.telno.contains(word) || it.minclassnm.contains(word) || it.usetgtinfo.contains(
+                word
+            )) &&
                     (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
                     (areanm.isEmpty() || it.areanm.isNotBlank() && (it.areanm in areanm || it.isNotInSeoul())) &&
                     (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
@@ -140,12 +150,33 @@ fun List<Row>.getFilteredPlusWord(
     } else {
         getHaveLocation().filter {
             (it.svcnm.contains(word) || it.placenm.contains(word) || it.areanm.contains(word)
-                    || it.telno.contains(word) || it.minclassnm.contains(word) || it.usetgtinfo.contains(word)) &&
+                    || it.telno.contains(word) || it.minclassnm.contains(word) || it.usetgtinfo.contains(
+                word
+            )) &&
                     (minclassnm.isNullOrEmpty() || it.minclassnm in minclassnm) &&
                     (areanm.isNullOrEmpty() || it.areanm in areanm) &&
                     (svcstatnm.isNullOrEmpty() || it.svcstatnm in svcstatnm) &&
                     (payatnm.isNullOrEmpty() || it.payatnm in payatnm)
         }
     }
+}
+
+fun List<Row>.getFilteredByDate(): List<String> {
+    val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+    return getHaveLocation().filter {
+        (it.svcstatnm == "접수중") &&
+                (datePattern.format(
+                    LocalDateTime.parse(
+                        it.rcptbgndt,
+                        formatter
+                    )
+                ) >= LocalDateTime.now().minusDays(3).format(datePattern) && datePattern.format(
+                    LocalDateTime.parse(
+                        it.rcptbgndt,
+                        formatter
+                    )
+                ) <= LocalDateTime.now().plusDays(3).format(datePattern))
+    }.map { it.svcid }
 }
 

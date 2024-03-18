@@ -16,6 +16,7 @@ import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedBindi
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedHeaderBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemReviewedNothingBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.MyPageItemSavedBinding
+import com.wannabeinseoul.seoulpublicservice.util.fromHtml
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MyPageAdapter(
@@ -143,9 +144,12 @@ class MyPageAdapter(
             val row = item.reviewedData.row
             b.ivReviewedThumbnail.loadWithHolder(row.imgurl)
             b.tvReviewedArea.text = row.areanm
-            b.tvReviewedTitle.text = row.svcnm
+            b.tvReviewedTitle.text = row.svcnm.fromHtml()
             b.tvReviewedReviewContent.text = reviewedData.content
-            b.tvReviewedDate.text = reviewedData.uploadTime.substring(2..15)
+            b.tvReviewedDate.text = reviewedData.uploadTime.let {
+                if (it.length > 15) it.substring(2..15)
+                else it
+            }
 
             b.root.setOnClickListener { onReviewedClick(row.svcid) }
         }

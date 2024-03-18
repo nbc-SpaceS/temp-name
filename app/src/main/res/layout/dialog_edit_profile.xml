@@ -42,7 +42,7 @@
         android:src="@drawable/place_holder_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout2" />
 
     <TextView
         android:id="@+id/textView3"
@@ -50,8 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="이름"
-        app:layout_constraintStart_toStartOf="@+id/et_edit_profile_name"
-        app:layout_constraintTop_toBottomOf="@+id/iv_edit_profile_image" />
+        app:layout_constraintStart_toStartOf="@id/et_edit_profile_name"
+        app:layout_constraintTop_toBottomOf="@id/iv_edit_profile_image" />
 
     <EditText
         android:id="@+id/et_edit_profile_name"
@@ -62,10 +62,11 @@
         android:background="@drawable/background_radius_10dp_dfdfdd"
         android:hint="이름을 입력해주세요."
         android:paddingStart="8dp"
+        android:singleLine="true"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@id/textView3" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_edit_profile_cancel"
@@ -80,10 +81,10 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_edit_profile_okay"
+        app:layout_constraintEnd_toStartOf="@id/btn_edit_profile_okay"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/et_edit_profile_name"
-        app:layout_constraintTop_toBottomOf="@+id/et_edit_profile_name" />
+        app:layout_constraintStart_toStartOf="@id/et_edit_profile_name"
+        app:layout_constraintTop_toBottomOf="@id/et_edit_profile_name" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_edit_profile_okay"
@@ -95,9 +96,30 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_edit_profile_cancel"
-        app:layout_constraintEnd_toEndOf="@+id/et_edit_profile_name"
+        app:layout_constraintBottom_toBottomOf="@id/btn_edit_profile_cancel"
+        app:layout_constraintEnd_toEndOf="@id/et_edit_profile_name"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_edit_profile_cancel"
-        app:layout_constraintTop_toTopOf="@+id/btn_edit_profile_cancel" />
+        app:layout_constraintStart_toEndOf="@id/btn_edit_profile_cancel"
+        app:layout_constraintTop_toTopOf="@id/btn_edit_profile_cancel" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_edit_profile_cam_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/corners_round"
+        android:backgroundTint="@color/white"
+        android:hapticFeedbackEnabled="true"
+        app:layout_constraintBottom_toBottomOf="@id/iv_edit_profile_image"
+        app:layout_constraintEnd_toEndOf="@id/iv_edit_profile_image">
+
+        <ImageView
+            android:id="@+id/iv_edit_profile_cam"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_edit_image" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

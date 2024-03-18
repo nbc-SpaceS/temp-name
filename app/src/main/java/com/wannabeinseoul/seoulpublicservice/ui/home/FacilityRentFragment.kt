@@ -6,30 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.ItemAdapter
 import com.wannabeinseoul.seoulpublicservice.data.Item
 import com.wannabeinseoul.seoulpublicservice.data.ItemRepository
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentFacilityRentBinding
-import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.ItemAdapter
 
 class FacilityRentFragment : Fragment() {
     private var _binding: FragmentFacilityRentBinding? = null
     private val binding get() = _binding!!
 
     private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
-    private val categoryViewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
-
     private val dbMemoryRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.dbMemoryRepository }
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val adapter by lazy {
-        ItemAdapter(regionPrefRepository)
-    }
+    private val adapter by lazy { ItemAdapter(regionPrefRepository) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -58,18 +51,7 @@ class FacilityRentFragment : Fragment() {
         binding.rvFacilityRent.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter.submitList(facilityRentItems)
 
-//        val items = ItemRepository.getItems("FacilityRent")
-//        val adapter = ItemAdapter(regionPrefRepository)
-//        binding.rvFacilityRent.adapter = adapter
-//        binding.rvFacilityRent.layoutManager = GridLayoutManager(requireContext(), 4)
-
-//        homeViewModel.selectedRegion.observe(viewLifecycleOwner) { region ->
-//            val selectedRegion = region
-//            val adapter = ItemAdapter(items, selectedRegion)
-//            binding.rvFacilityRent.adapter = adapter
-//            binding.rvFacilityRent.layoutManager = GridLayoutManager(requireContext(), 4)
-//        }
-
+        // 지역 선택 시 해당 지역에 있는 시설물의 개수를 가져와서 갱신
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
             if (it != "지역선택") {
                 facilityRentItems = facilityRentItems.map { item ->
