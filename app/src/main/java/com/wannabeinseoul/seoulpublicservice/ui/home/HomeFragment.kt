@@ -54,11 +54,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -169,9 +165,6 @@ class HomeFragment : Fragment() {
         setupBackPress()
         setupSearch()
         setupSearchHistory()
-        /*setupOverlayTouchListener()
-        setupSearchResultsTouchListener()
-        setupSearchHistoryTouchListener()*/
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
@@ -259,46 +252,28 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupSearchHistory() {
         binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 viewModel.showSearchHistory()
+                binding.viewControlRvSearchResults.visibility = View.VISIBLE
             } else {
                 hideSearchHistory()
+                binding.viewControlRvSearchResults.visibility = View.GONE
             }
         }
-    }
 
-    /*@SuppressLint("ClickableViewAccessibility")
-    private fun setupOverlayTouchListener() {
-        binding.viewOverlay.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                // 검색창 밖 영역을 터치하면 키보드를 숨김
-                binding.etSearch.clearFocus()
-                hideSearchHistory()
-            }
+        // viewControlRvSearchResults가 터치될 때 호출되는 리스너 설정
+        binding.viewControlRvSearchResults.setOnTouchListener { _, _ ->
+            // viewControlRvSearchResults가 터치되면 EditText의 포커스를 해제, 키보드 숨기기
+            binding.etSearch.clearFocus()
+            hideKeyboard()
             true
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupSearchResultsTouchListener() {
-        binding.rvSearchResults.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                // 검색창 밖 영역을 터치하면 키보드를 숨김
-                binding.etSearch.clearFocus()
-                hideSearchHistory()
-            }
-            true
-        }
-    }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupSearchHistoryTouchListener() {
-        binding.rvSearchHistory.setOnTouchListener { v, event ->
-            true
-        }
-    }*/
 
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
