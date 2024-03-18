@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -52,15 +53,17 @@ class FacilityRentFragment : Fragment() {
         adapter.submitList(facilityRentItems)
 
         // 지역 선택 시 해당 지역에 있는 시설물의 개수를 가져와서 갱신
-        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
-            if (it != "지역선택") {
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) { region ->
+            if (region != "지역선택") {
                 facilityRentItems = facilityRentItems.map { item ->
                     val size = dbMemoryRepository.getFiltered(
-                        areanm = listOf(it.toString()),
+                        areanm = listOf(region.toString()),
                         minclassnm = listOf(item.name)
                     ).size
                     item.copy(count = size)
                 }
+
+                binding.clFacilityRentNothing.isVisible = facilityRentItems.all { it.count == 0 }
                 adapter.submitList(facilityRentItems)
             }
         }
