@@ -1,14 +1,16 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firestore
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import com.wannabeinseoul.seoulpublicservice.util.toPngByteArray
 import kotlinx.coroutines.tasks.await
 
 interface UserProfileRepository {
     suspend fun uploadProfileImage(userId: String, uri: Uri): String
-    suspend fun uploadProfileImage(userId: String, byteArray: ByteArray): String
+    suspend fun uploadProfileImage(userId: String, bitmap: Bitmap): String
 }
 
 class UserProfileRepositoryImpl(
@@ -32,7 +34,7 @@ class UserProfileRepositoryImpl(
         }
     }
 
-    override suspend fun uploadProfileImage(userId: String, byteArray: ByteArray): String {
+    private suspend fun uploadProfileImage(userId: String, byteArray: ByteArray): String {
         return try {
             val uploadTask = userProfileRef.child("${userId}.png").putBytes(byteArray)
             uploadTask.await()
@@ -44,5 +46,8 @@ class UserProfileRepositoryImpl(
             ""
         }
     }
+
+    override suspend fun uploadProfileImage(userId: String, bitmap: Bitmap): String =
+        uploadProfileImage(userId, bitmap.toPngByteArray())
 
 }
