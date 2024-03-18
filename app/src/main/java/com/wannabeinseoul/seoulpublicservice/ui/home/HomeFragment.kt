@@ -31,6 +31,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
@@ -201,7 +202,9 @@ class HomeFragment : Fragment() {
         setupBackPress()
         setupSearch()
         setupSearchHistory()
-        setupRootTouchListener()
+        /*setupOverlayTouchListener()
+        setupSearchResultsTouchListener()
+        setupSearchHistoryTouchListener()*/
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
@@ -307,16 +310,36 @@ class HomeFragment : Fragment() {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupRootTouchListener() {
-        binding.root.setOnTouchListener { v, event ->
+    /*@SuppressLint("ClickableViewAccessibility")
+    private fun setupOverlayTouchListener() {
+        binding.viewOverlay.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 // 검색창 밖 영역을 터치하면 키보드를 숨김
                 binding.etSearch.clearFocus()
+                hideSearchHistory()
             }
             true
         }
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSearchResultsTouchListener() {
+        binding.rvSearchResults.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                // 검색창 밖 영역을 터치하면 키보드를 숨김
+                binding.etSearch.clearFocus()
+                hideSearchHistory()
+            }
+            true
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSearchHistoryTouchListener() {
+        binding.rvSearchHistory.setOnTouchListener { v, event ->
+            true
+        }
+    }*/
 
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
@@ -349,8 +372,7 @@ class HomeFragment : Fragment() {
             // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
             val notificationFragment = NotificationsFragment.newInstance()
             notificationFragment.show(
-                requireActivity().supportFragmentManager,
-                "NotificationFragment"
+                requireActivity().supportFragmentManager, "NotificationFragment"
             )
         }
     }
@@ -408,8 +430,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun hideKeyboard() {
-        val imm =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
