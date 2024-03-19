@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.LoadSavedFilterOptionsUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.SaveFilterOptionsUseCase
 

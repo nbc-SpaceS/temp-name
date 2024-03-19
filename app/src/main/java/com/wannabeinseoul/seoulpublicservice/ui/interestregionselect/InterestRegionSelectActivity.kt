@@ -1,10 +1,10 @@
 package com.wannabeinseoul.seoulpublicservice.ui.interestregionselect
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivityInterestRegionSelectBinding
 
 
