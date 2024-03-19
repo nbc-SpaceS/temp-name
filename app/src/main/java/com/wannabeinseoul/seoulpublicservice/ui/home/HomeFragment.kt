@@ -29,6 +29,7 @@ import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailCloseInterface
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
@@ -434,6 +435,11 @@ class HomeFragment : Fragment() {
         adapter.itemClick = object : CategoryItemClick {
             override fun onClick(svcID: String) {
                 val dialog = DetailFragment.newInstance(svcID)
+                dialog.setCloseListener(object : DetailCloseInterface {
+                    override fun onDialogClosed() {
+                        onResume()
+                    }
+                })
                 dialog.show(requireActivity().supportFragmentManager, "HomeRecent")
             }
         }

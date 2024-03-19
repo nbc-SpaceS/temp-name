@@ -59,6 +59,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     private lateinit var myLocation: LatLng  // 내 위치
     private lateinit var itemLocation: LatLng // 아이템 위치
 
+    private var closeListener: DetailCloseInterface? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -291,8 +293,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
     }
 
+    fun setCloseListener(listener: DetailCloseInterface) {
+        closeListener = listener
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         viewModel.close(false)
+        closeListener?.onDialogClosed() // 다이얼로그 닫을 때 인터페이스 메서드 호출
         super.onDismiss(dialog)
     }
 
