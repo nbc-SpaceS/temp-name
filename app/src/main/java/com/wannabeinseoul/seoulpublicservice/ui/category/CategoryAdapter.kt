@@ -26,19 +26,19 @@ class CategoryAdapter(private val onItemClick: (svcid: String) -> Unit) :
                 binding.tvCtReservationEnd.text = item.isReservationAvailable
                 when (item.isReservationAvailable) {
                     "접수중", "안내중" -> {
-                        binding.tvCtReservationEnd.setTextColor(Color.parseColor("#F8496C"))
-                        binding.tvCtReservationEnd.setBackgroundResource(R.drawable.background_white_with_f8496c_stroke)
+                        binding.tvCtReservationEnd.setTextColor(Color.parseColor("#FFFFFF"))
+                        binding.tvCtReservationEnd.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
                     }
 
                     else -> {
-                        binding.tvCtReservationEnd.setTextColor(Color.parseColor("#5E5E5E"))
-                        binding.tvCtReservationEnd.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
+                        binding.tvCtReservationEnd.setTextColor(Color.parseColor("#000000"))
+                        binding.tvCtReservationEnd.setBackgroundResource(R.drawable.background_badge_pay_type)
                     }
                 }
                 binding.tvCtNotFree.text = item.payType.take(2)
                 if (item.payType.take(2) == "유료") {
-                    binding.tvCtNotFree.setTextColor(Color.parseColor("#5E5E5E"))
-                    binding.tvCtNotFree.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
+                    binding.tvCtNotFree.setTextColor(Color.parseColor("#000000"))
+                    binding.tvCtNotFree.setBackgroundResource(R.drawable.background_badge_pay_type)
                 } else {
                     binding.tvCtNotFree.setTextColor(Color.parseColor("#FFFFFF"))
                     binding.tvCtNotFree.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
