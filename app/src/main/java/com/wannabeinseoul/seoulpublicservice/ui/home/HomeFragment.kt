@@ -11,6 +11,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,10 +30,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailCloseInterface
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
@@ -201,6 +205,14 @@ class HomeFragment : Fragment() {
             notificationSign.observe(viewLifecycleOwner) {
                 binding.ivHomeNotificationCountBackground.isVisible = it
             }
+
+            loadRecentData()
+            recentData.observe(viewLifecycleOwner) {
+                Log.i("This is HomeFragment","recent data observe :\nList : ${it}")
+                // take는 모르겠으나 어쨌든 잘 나오는 거 같음
+                setupRecentData()
+                recentViewPager(it)
+            }
         }
     }
 
@@ -366,6 +378,11 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), "최근에 나온 서비스가 없습니다.", Toast.LENGTH_SHORT).show()
             } else {
                 val dialog = DetailFragment.newInstance(homeViewModel.randomService.random())
+                dialog.setCloseListener(object : DetailCloseInterface { // 다이얼로그 종료 리스너를 받아 onResume으로 갱신하기
+                    override fun onDialogClosed() {
+                        onResume()
+                    }
+                })
                 dialog.show(requireActivity().supportFragmentManager, "Detail")
             }
         }
@@ -455,5 +472,46 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
+        if(homeViewModel.recentData.value.isNullOrEmpty()) {
+            binding.vpHomeRecent.visibility = View.GONE
+            binding.tvHomeRecentTitle.visibility = View.GONE
+        } else {
+            binding.vpHomeRecent.visibility = View.VISIBLE
+            binding.tvHomeRecentTitle.visibility = View.VISIBLE
+        }
+        Log.i("This is HomeFragment","setupRecentData\nmain banner / is visible : ${binding.ivHomeMainBanner.isVisible}\nrecent view pager / is visible : ${binding.vpHomeRecent.isVisible}")
+    }
+
+    private fun recentViewPager(data: List<RecentEntity>) {
+        Log.i("This is HomeFragment","recentViewPager / data : $data")
+        val viewPage = binding.vpHomeRecent
+        val adapter = RecentAdapter()
+
+        viewPage.adapter = adapter
+        viewPage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        adapter.submitList(data)
+        viewPage.offscreenPageLimit = 1
+
+        adapter.itemClick = object : CategoryItemClick {
+            override fun onClick(svcID: String) {
+                val dialog = DetailFragment.newInstance(svcID)
+                dialog.setCloseListener(object : DetailCloseInterface {
+                    override fun onDialogClosed() {
+                        onResume()
+                    }
+                })
+                dialog.show(requireActivity().supportFragmentManager, "HomeRecent")
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.loadRecentData()
+        setupRecentData()
+        Log.i("This is HomeFragment","onResume")
     }
 }

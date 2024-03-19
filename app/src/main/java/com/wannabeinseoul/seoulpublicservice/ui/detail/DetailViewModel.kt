@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.naver.maps.geometry.LatLng
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
@@ -16,6 +17,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceReposito
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +37,8 @@ class DetailViewModel(
     private val userRepository: UserRepository,
     private val serviceRepository: ServiceRepository,
     private val savedPrefRepository: SavedPrefRepository,
-    private val userBanRepository: UserBanRepository
+    private val userBanRepository: UserBanRepository,
+    private val recentPrefRepository: RecentPrefRepository
 ) : ViewModel() {
     private val _serviceData = MutableLiveData<ReservationEntity>()
     val serviceData: LiveData<ReservationEntity> get() = _serviceData
@@ -123,7 +126,8 @@ class DetailViewModel(
                     userRepository = container.userRepository,
                     serviceRepository = container.serviceRepository,
                     savedPrefRepository = container.savedPrefRepository,
-                    userBanRepository = container.userBanRepository
+                    userBanRepository = container.userBanRepository,
+                    recentPrefRepository = container.recentPrefRepository
                 )
             }
         }
@@ -154,5 +158,13 @@ class DetailViewModel(
             distance/1000 >= 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
             else -> "현위치로부터 ?km"
         }
+    }
+
+    fun dateFormatRecent(date: LocalDateTime): String { // RecentEntity에서 사용할 날짜 타입 변경
+        return date.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
+    }
+
+    fun saveData(data: RecentEntity) {
+        recentPrefRepository.setRecent(data)
     }
 }
