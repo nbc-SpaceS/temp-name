@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Html
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -24,15 +26,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.*
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
+import java.time.LocalDateTime
 
 private const val DETAIL_PARAM = "detail_param1"
 
@@ -55,6 +63,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     private lateinit var myLocation: LatLng  // 내 위치
     private lateinit var itemLocation: LatLng // 아이템 위치
+
+    private var closeListener: DetailCloseInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,6 +122,21 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
     }
 
+    private fun saveRecent(data : ReservationEntity) {
+        val recentItem = RecentEntity(
+            DATETIME = viewModel.dateFormatRecent(LocalDateTime.now()),
+            SVCID = data.SVCID,
+            AREANM = data.AREANM,
+            IMGURL = data.IMGURL,
+            MINCLASSNM = data.MINCLASSNM,
+            SVCNM = data.SVCNM,
+            SVCSTATNM = data.SVCSTATNM,
+            PAYATNM = data.PAYATNM
+        )
+        viewModel.saveData(recentItem)
+        Log.i("This is DetailFragment","recent item : $recentItem")
+    }
+
     private fun mapViewSet() {
         binding.mvDetailMaps.visibility = View.VISIBLE
         binding.ivDetailMapsSnapshot.visibility = View.INVISIBLE
@@ -144,6 +169,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         vm.serviceData.observe(viewLifecycleOwner) { data ->
             checkLatLng(data)   // itemLocation은 여기서 검사해서 반환함
             bind(data)
+            saveRecent(data)
         }
         vm.myLocationCallback.observe(viewLifecycleOwner) {
             if(it) {
@@ -272,8 +298,13 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         }
     }
 
+    fun setCloseListener(listener: DetailCloseInterface) {
+        closeListener = listener
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
         viewModel.close(false)
+        closeListener?.onDialogClosed() // 다이얼로그 닫을 때 인터페이스 메서드 호출
         super.onDismiss(dialog)
     }
 
@@ -385,7 +416,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             data.TELNO.isNotBlank() -> telBtn.isEnabled = true
         }
         val payment = binding.tvDetailPrice
-        payment.text = data.PAYATNM
+        payment.text = data.PAYATNM.take(2)
+        if (data.PAYATNM.take(2) == "유료") {
+            payment.setTextColor(Color.parseColor("#000000"))
+            payment.setBackgroundResource(R.drawable.background_badge_pay_type)
+        } else {
+            payment.setTextColor(Color.parseColor("#FFFFFF"))
+            payment.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
+        }
     }
 
     companion object {

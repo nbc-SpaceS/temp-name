@@ -1,21 +1,18 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -26,7 +23,8 @@ class HomeViewModel(
     private val searchPrefRepository: SearchPrefRepository,
     private val reservationRepository: ReservationRepository,
     private val dbMemoryRepository: DbMemoryRepository,
-    private val savedPrefRepository: SavedPrefRepository
+    private val savedPrefRepository: SavedPrefRepository,
+    private val recentPrefRepository: RecentPrefRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -46,6 +44,9 @@ class HomeViewModel(
     private var _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
         MutableLiveData()
     val displaySearchHistory: LiveData<Pair<List<String>, SearchPrefRepository>> get() = _displaySearchHistory
+
+    private val _recentData: MutableLiveData<List<RecentEntity>> = MutableLiveData()
+    val recentData: LiveData<List<RecentEntity>> get() = _recentData
 
     private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> =
         MutableLiveData()
@@ -127,40 +128,47 @@ class HomeViewModel(
     }
 
     fun updateNotificationSign() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+        if (savedPrefRepository.getFlag().not()) {
+            savedPrefRepository.setFlag(true)
+            viewModelScope.launch(Dispatchers.IO) {
+                val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
 
-            val savedServiceList = savedPrefRepository.getSvcidList().map {
-                reservationRepository.getService(it)
+                val savedServiceList = savedPrefRepository.getSvcidList().map {
+                    reservationRepository.getService(it)
+                }
+
+                // 예약 시작까지 하루 남은 서비스의 개수
+                val list = savedServiceList.filter {
+                    datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) > datePattern.format(
+                        LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) < datePattern.format(
+                        LocalDateTime.now().plusDays(2))
+                }.size
+
+                // 예약 마감까지 하루 남은 서비스의 개수
+                val list2 = savedServiceList.filter {
+                    datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) < datePattern.format(
+                        LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) > datePattern.format(
+                        LocalDateTime.now().minusDays(2))
+                }.size
+
+                // 예약 가능한 서비스의 개수
+                val list3 = savedServiceList.filter {
+                    datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) == datePattern.format(
+                        LocalDateTime.now())
+                }.size
+
+                _notificationSign.postValue(list != 0 || list2 != 0 || list3 != 0)
             }
-
-            // 예약 시작까지 하루 남은 서비스의 개수
-            val list = savedServiceList.filter {
-                datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) > datePattern.format(
-                    LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) < datePattern.format(
-                    LocalDateTime.now().plusDays(2))
-            }.size
-
-            // 예약 마감까지 하루 남은 서비스의 개수
-            val list2 = savedServiceList.filter {
-                datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) < datePattern.format(
-                    LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) > datePattern.format(
-                    LocalDateTime.now().minusDays(2))
-            }.size
-
-            // 예약 가능한 서비스의 개수
-            val list3 = savedServiceList.filter {
-                datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) == datePattern.format(
-                    LocalDateTime.now())
-            }.size
-
-            _notificationSign.postValue(list != 0 || list2 != 0 || list3 != 0)
         }
     }
 
     fun hideNotificationSign() {
         _notificationSign.value = false
+    }
+
+    fun loadRecentData() {
+        _recentData.value = recentPrefRepository.getRecent()
     }
 
     companion object {
@@ -174,7 +182,8 @@ class HomeViewModel(
                     searchPrefRepository = container.searchPrefRepository,
                     reservationRepository = container.reservationRepository,
                     dbMemoryRepository = container.dbMemoryRepository,
-                    savedPrefRepository = container.savedPrefRepository
+                    savedPrefRepository = container.savedPrefRepository,
+                    recentPrefRepository = container.recentPrefRepository
                 )
             }
         }

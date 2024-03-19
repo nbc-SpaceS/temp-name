@@ -20,8 +20,8 @@ android {
         applicationId = "com.wannabeinseoul.seoulpublicservice"
         minSdk = 28
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -94,7 +94,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
 
-
+    implementation("androidx.core:core-splashscreen:1.0.1")
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
 //    ksp("com.google.dagger:hilt-android-compiler:2.50")

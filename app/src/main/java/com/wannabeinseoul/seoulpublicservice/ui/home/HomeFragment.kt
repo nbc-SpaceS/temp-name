@@ -11,6 +11,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,27 +30,26 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.wannabeinseoul.seoulpublicservice.R
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentHomeBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailCloseInterface
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.interestregionselect.InterestRegionSelectActivity
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels { HomeViewModel.factory }
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.factory }
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private var backPressedOnce = false
@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
-            viewModel.setupRegions()
+            homeViewModel.setupRegions()
         }
     }
 
@@ -78,14 +78,14 @@ class HomeFragment : Fragment() {
         // MainViewModel의 LiveData를 관찰하여 UI를 업데이트
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
             if (it != "지역선택") {
-                viewModel.setViewPagerCategory(it)
+                homeViewModel.setViewPagerCategory(it)
             } else {
                 binding.tvHomeDescription.text = "아직 관심지역이 선택되지 않았습니다."
             }
         }
 
         // HomeViewModel의 LiveData를 관찰하여 UI를 업데이트
-        with(viewModel) {
+        with(homeViewModel) {
             updateSelectedRegions.observe(viewLifecycleOwner) { selectedRegions ->
                 with(binding) {
                     if (selectedRegions.isEmpty()) {
@@ -171,7 +171,7 @@ class HomeFragment : Fragment() {
                             onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
                                 override fun onItemClick(item: String) {
                                     etSearch.setText(item)
-                                    viewModel.performSearch(item)
+                                    homeViewModel.performSearch(item)
                                 }
                             }
                         }
@@ -205,13 +205,21 @@ class HomeFragment : Fragment() {
             notificationSign.observe(viewLifecycleOwner) {
                 binding.ivHomeNotificationCountBackground.isVisible = it
             }
+
+            loadRecentData()
+            recentData.observe(viewLifecycleOwner) {
+                Log.i("This is HomeFragment","recent data observe :\nList : ${it}")
+                // take는 모르겠으나 어쨌든 잘 나오는 거 같음
+                setupRecentData()
+                recentViewPager(it)
+            }
         }
     }
 
     private fun setupUIComponents() {
-        viewModel.setupRegions()
-        viewModel.updateNotificationSign()
-        viewModel.setRandomService()
+        homeViewModel.setupRegions()
+        homeViewModel.updateNotificationSign()
+        homeViewModel.setRandomService()
 
         setupViewPager()
         setupBackPress()
@@ -287,13 +295,13 @@ class HomeFragment : Fragment() {
     private fun setupSearch() {
         binding.ivSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
-            viewModel.performSearch(searchText)
+            homeViewModel.performSearch(searchText)
         }
 
         binding.etSearch.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val searchText = v.text.toString()
-                viewModel.performSearch(searchText)
+                homeViewModel.performSearch(searchText)
 
                 // EditText의 포커스 제거
                 binding.etSearch.clearFocus()
@@ -308,7 +316,7 @@ class HomeFragment : Fragment() {
     private fun setupSearchHistory() {
         binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                viewModel.showSearchHistory()
+                homeViewModel.showSearchHistory()
                 binding.viewControlRvSearchResults.visibility = View.VISIBLE
             } else {
                 hideSearchHistory()
@@ -360,16 +368,21 @@ class HomeFragment : Fragment() {
             notificationFragment.show(
                 requireActivity().supportFragmentManager, "NotificationFragment"
             )
-            viewModel.hideNotificationSign()
+            homeViewModel.hideNotificationSign()
         }
     }
 
     private fun setupBannerClick() {
         binding.ivHomeMainBanner.setOnClickListener {
-            if (viewModel.randomService.isEmpty()) {
+            if (homeViewModel.randomService.isEmpty()) {
                 Toast.makeText(requireContext(), "최근에 나온 서비스가 없습니다.", Toast.LENGTH_SHORT).show()
             } else {
-                val dialog = DetailFragment.newInstance(viewModel.randomService.random())
+                val dialog = DetailFragment.newInstance(homeViewModel.randomService.random())
+                dialog.setCloseListener(object : DetailCloseInterface { // 다이얼로그 종료 리스너를 받아 onResume으로 갱신하기
+                    override fun onDialogClosed() {
+                        onResume()
+                    }
+                })
                 dialog.show(requireActivity().supportFragmentManager, "Detail")
             }
         }
@@ -408,7 +421,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.tvHomeCurrentRegion.text = regionView.text
-        viewModel.saveSelectedRegion(index)
+        homeViewModel.saveSelectedRegion(index)
     }
 
     private fun hideSearchHistory() {
@@ -452,12 +465,53 @@ class HomeFragment : Fragment() {
     }
 
     override fun onStop() {
-        viewModel.clearSearchResult()
+        homeViewModel.clearSearchResult()
         super.onStop()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
+        if(homeViewModel.recentData.value.isNullOrEmpty()) {
+            binding.vpHomeRecent.visibility = View.GONE
+            binding.tvHomeRecentTitle.visibility = View.GONE
+        } else {
+            binding.vpHomeRecent.visibility = View.VISIBLE
+            binding.tvHomeRecentTitle.visibility = View.VISIBLE
+        }
+        Log.i("This is HomeFragment","setupRecentData\nmain banner / is visible : ${binding.ivHomeMainBanner.isVisible}\nrecent view pager / is visible : ${binding.vpHomeRecent.isVisible}")
+    }
+
+    private fun recentViewPager(data: List<RecentEntity>) {
+        Log.i("This is HomeFragment","recentViewPager / data : $data")
+        val viewPage = binding.vpHomeRecent
+        val adapter = RecentAdapter()
+
+        viewPage.adapter = adapter
+        viewPage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        adapter.submitList(data)
+        viewPage.offscreenPageLimit = 1
+
+        adapter.itemClick = object : CategoryItemClick {
+            override fun onClick(svcID: String) {
+                val dialog = DetailFragment.newInstance(svcID)
+                dialog.setCloseListener(object : DetailCloseInterface {
+                    override fun onDialogClosed() {
+                        onResume()
+                    }
+                })
+                dialog.show(requireActivity().supportFragmentManager, "HomeRecent")
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.loadRecentData()
+        setupRecentData()
+        Log.i("This is HomeFragment","onResume")
     }
 }

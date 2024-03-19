@@ -1,10 +1,12 @@
 package com.wannabeinseoul.seoulpublicservice.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.AlphaAnimation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
@@ -14,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
 
     private val binding: ActivitySplashBinding by lazy {
@@ -22,6 +25,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContentView(binding.root)
 
         var initialLoadingFinished = false
@@ -74,6 +78,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
         container.filterPrefRepository.clearData()
+        container.savedPrefRepository.setFlag(false)
 
 //        Handler(Looper.getMainLooper()).postDelayed(Runnable {
 //            startActivity(Intent(this@SplashActivity, MainActivity::class.java))

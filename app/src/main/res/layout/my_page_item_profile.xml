@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:elevation="8dp"
-        android:text="익명 1237814672"
+        android:text="@string/my_page_item_profile_nickname"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/v_profile_card_background"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:elevation="12dp"
-            android:text="프로필 편집"
+            android:text="@string/my_page_item_profile_edit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_profile_pencil"
             app:layout_constraintTop_toTopOf="parent" />

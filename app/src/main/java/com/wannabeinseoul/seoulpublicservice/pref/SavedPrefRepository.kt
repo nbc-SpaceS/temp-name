@@ -14,6 +14,8 @@ interface SavedPrefRepository {
     fun addSvcid(svcid: String)
     fun remove(svcid: String)
     fun contains(svcid: String): Boolean
+    fun setFlag(flag: Boolean)
+    fun getFlag(): Boolean
     val savedSvcidListLiveData: LiveData<List<String>>
 }
 
@@ -67,4 +69,9 @@ class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
 
     override fun contains(svcid: String) = getSvcidList().contains(svcid)
 
+    override fun setFlag(flag: Boolean) {
+        pref.edit().putString("flag", flag.toString()).apply()
+    }
+
+    override fun getFlag(): Boolean = pref.getString("flag", "") == "true"
 }

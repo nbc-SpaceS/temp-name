@@ -37,6 +37,8 @@
     <color name="selected_option_stroke">#F8496C</color>
     <color name="selected_option_solid">#FFFFFF</color>
     <color name="selected_option_text">#F8496C</color>
+    <color name="badge_pay_type_solid">#FFFFFF</color>
+    <color name="badge_pay_type_stroke">#60000000</color>
 
     <color name="marker1_solid">#25B1FF</color>
     <color name="marker2_solid">#FFAC1C</color>

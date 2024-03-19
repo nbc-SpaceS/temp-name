@@ -12,8 +12,6 @@ import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemMapInfoWindowBinding
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
-import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MapDetailInfoAdapter(
     private val saveService: (String) -> Unit,

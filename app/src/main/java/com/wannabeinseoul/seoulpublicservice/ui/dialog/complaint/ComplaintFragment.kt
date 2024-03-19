@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentComplaintBinding
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class ComplaintFragment : DialogFragment() {
 
