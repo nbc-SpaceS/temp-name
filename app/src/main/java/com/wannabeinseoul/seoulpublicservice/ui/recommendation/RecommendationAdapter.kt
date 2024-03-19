@@ -11,6 +11,8 @@ import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecom
 class RecommendationAdapter :
     ListAdapter<RecommendationAdapter.MultiView, RecyclerView.ViewHolder>(DiffCallback()) {
 
+
+
     sealed interface MultiView {
 
         enum class Type {

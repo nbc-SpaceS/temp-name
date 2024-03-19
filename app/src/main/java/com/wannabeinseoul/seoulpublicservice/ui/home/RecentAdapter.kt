@@ -55,9 +55,6 @@ class RecentAdapter: ListAdapter<RecentEntity, RecentAdapter.Holder>(object : Di
                 itemClick?.onClick(data.SVCID)
             }
         }
-        fun page(pos: Int) {
-//            binding.tvHomeRecentPage.text = pos.toString()
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -67,7 +64,6 @@ class RecentAdapter: ListAdapter<RecentEntity, RecentAdapter.Holder>(object : Di
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.bind(getItem(position))
         holder.click(getItem(position))
-        holder.page(position + 1)
     }
 
     var itemClick: CategoryItemClick? = null
