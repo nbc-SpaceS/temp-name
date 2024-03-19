@@ -2,8 +2,8 @@ package com.wannabeinseoul.seoulpublicservice.usecase
 
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepository
-import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
 
 class GetReviewListUseCase(
     private val idPrefRepository: IdPrefRepository,

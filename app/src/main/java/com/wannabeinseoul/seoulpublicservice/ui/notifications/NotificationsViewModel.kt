@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.ui.notifications
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,20 +7,13 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.recyclerview.widget.SortedList
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
-import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
-import com.wannabeinseoul.seoulpublicservice.usecase.GetDetailSeoulUseCase
-import com.wannabeinseoul.seoulpublicservice.util.RoomRowMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 class NotificationsViewModel(
     private val savedPrefRepository: SavedPrefRepository,

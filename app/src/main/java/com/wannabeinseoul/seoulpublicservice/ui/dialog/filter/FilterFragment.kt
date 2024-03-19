@@ -12,9 +12,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.google.android.material.chip.Chip
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentFilterBinding
-import com.google.android.material.chip.Chip
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class FilterFragment : DialogFragment() {

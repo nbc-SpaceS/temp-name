@@ -1,8 +1,8 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
-import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo
 
 class CheckComplaintSelfUseCase(
     private val idPrefRepository: IdPrefRepository,

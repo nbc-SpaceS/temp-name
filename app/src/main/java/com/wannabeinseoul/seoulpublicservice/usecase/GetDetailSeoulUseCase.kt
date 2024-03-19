@@ -1,9 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
+import com.google.gson.Gson
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.DetailRow
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
-import com.google.gson.Gson
 
 class GetDetailSeoulUseCase(
     private val seoulPublicRepository: SeoulPublicRepository,
