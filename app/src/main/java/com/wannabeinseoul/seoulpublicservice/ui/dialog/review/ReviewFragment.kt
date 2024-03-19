@@ -17,10 +17,10 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentReviewBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintFragment
+import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class ReviewFragment: BottomSheetDialogFragment() {
 
