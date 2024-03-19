@@ -12,9 +12,7 @@ interface RecentPrefRepository {
 }
 
 class RecentPrefRepositoryImpl(context: Context): RecentPrefRepository {
-    val pref_key = "RecentPrefRepository"
-
-    private val pref = context.getSharedPreferences(pref_key, Context.MODE_PRIVATE)
+    private val pref = context.getSharedPreferences("RecentPrefRepository", Context.MODE_PRIVATE)
     private val gson = Gson()
 
     override fun setRecent(value: RecentEntity) {
@@ -35,8 +33,8 @@ class RecentPrefRepositoryImpl(context: Context): RecentPrefRepository {
         } else {
             if(recent.size >= 10) {
                 val oldItem = recent.minByOrNull { it.DATETIME }
-                Log.i("This is RecentPrefRepository","oldItem : $oldItem\nrecent size : ${recent.size}")
-                recent.remove(oldItem)
+                Log.i("This is RecentPrefRepository","oldItem : $oldItem\nrecent size : ${recent.size}\noldDateTime : ${oldItem?.DATETIME}")
+                editor.remove(oldItem!!.SVCID)
             }
         }
         temp.add(value)
