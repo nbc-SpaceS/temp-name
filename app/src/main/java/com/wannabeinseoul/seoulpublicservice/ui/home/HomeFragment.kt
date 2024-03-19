@@ -39,17 +39,13 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels { HomeViewModel.factory }
+    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.factory }
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private var backPressedOnce = false
@@ -58,7 +54,7 @@ class HomeFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
-            viewModel.setupRegions()
+            homeViewModel.setupRegions()
         }
     }
 
@@ -78,14 +74,14 @@ class HomeFragment : Fragment() {
         // MainViewModel의 LiveData를 관찰하여 UI를 업데이트
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
             if (it != "지역선택") {
-                viewModel.setViewPagerCategory(it)
+                homeViewModel.setViewPagerCategory(it)
             } else {
                 binding.tvHomeDescription.text = "아직 관심지역이 선택되지 않았습니다."
             }
         }
 
         // HomeViewModel의 LiveData를 관찰하여 UI를 업데이트
-        with(viewModel) {
+        with(homeViewModel) {
             updateSelectedRegions.observe(viewLifecycleOwner) { selectedRegions ->
                 with(binding) {
                     if (selectedRegions.isEmpty()) {
@@ -171,7 +167,7 @@ class HomeFragment : Fragment() {
                             onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
                                 override fun onItemClick(item: String) {
                                     etSearch.setText(item)
-                                    viewModel.performSearch(item)
+                                    homeViewModel.performSearch(item)
                                 }
                             }
                         }
@@ -209,9 +205,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUIComponents() {
-        viewModel.setupRegions()
-        viewModel.updateNotificationSign()
-        viewModel.setRandomService()
+        homeViewModel.setupRegions()
+        homeViewModel.updateNotificationSign()
+        homeViewModel.setRandomService()
 
         setupViewPager()
         setupBackPress()
@@ -287,13 +283,13 @@ class HomeFragment : Fragment() {
     private fun setupSearch() {
         binding.ivSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
-            viewModel.performSearch(searchText)
+            homeViewModel.performSearch(searchText)
         }
 
         binding.etSearch.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val searchText = v.text.toString()
-                viewModel.performSearch(searchText)
+                homeViewModel.performSearch(searchText)
 
                 // EditText의 포커스 제거
                 binding.etSearch.clearFocus()
@@ -308,7 +304,7 @@ class HomeFragment : Fragment() {
     private fun setupSearchHistory() {
         binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                viewModel.showSearchHistory()
+                homeViewModel.showSearchHistory()
                 binding.viewControlRvSearchResults.visibility = View.VISIBLE
             } else {
                 hideSearchHistory()
@@ -360,16 +356,16 @@ class HomeFragment : Fragment() {
             notificationFragment.show(
                 requireActivity().supportFragmentManager, "NotificationFragment"
             )
-            viewModel.hideNotificationSign()
+            homeViewModel.hideNotificationSign()
         }
     }
 
     private fun setupBannerClick() {
         binding.ivHomeMainBanner.setOnClickListener {
-            if (viewModel.randomService.isEmpty()) {
+            if (homeViewModel.randomService.isEmpty()) {
                 Toast.makeText(requireContext(), "최근에 나온 서비스가 없습니다.", Toast.LENGTH_SHORT).show()
             } else {
-                val dialog = DetailFragment.newInstance(viewModel.randomService.random())
+                val dialog = DetailFragment.newInstance(homeViewModel.randomService.random())
                 dialog.show(requireActivity().supportFragmentManager, "Detail")
             }
         }
@@ -408,7 +404,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.tvHomeCurrentRegion.text = regionView.text
-        viewModel.saveSelectedRegion(index)
+        homeViewModel.saveSelectedRegion(index)
     }
 
     private fun hideSearchHistory() {
@@ -452,7 +448,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onStop() {
-        viewModel.clearSearchResult()
+        homeViewModel.clearSearchResult()
         super.onStop()
     }
 
