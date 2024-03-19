@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -415,7 +416,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             data.TELNO.isNotBlank() -> telBtn.isEnabled = true
         }
         val payment = binding.tvDetailPrice
-        payment.text = data.PAYATNM
+        payment.text = data.PAYATNM.take(2)
+        if (data.PAYATNM.take(2) == "유료") {
+            payment.setTextColor(Color.parseColor("#000000"))
+            payment.setBackgroundResource(R.drawable.background_badge_pay_type)
+        } else {
+            payment.setTextColor(Color.parseColor("#FFFFFF"))
+            payment.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
+        }
     }
 
     companion object {

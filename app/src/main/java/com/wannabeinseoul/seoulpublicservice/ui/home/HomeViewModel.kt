@@ -128,35 +128,38 @@ class HomeViewModel(
     }
 
     fun updateNotificationSign() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+        if (savedPrefRepository.getFlag().not()) {
+            savedPrefRepository.setFlag(true)
+            viewModelScope.launch(Dispatchers.IO) {
+                val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
 
-            val savedServiceList = savedPrefRepository.getSvcidList().map {
-                reservationRepository.getService(it)
+                val savedServiceList = savedPrefRepository.getSvcidList().map {
+                    reservationRepository.getService(it)
+                }
+
+                // 예약 시작까지 하루 남은 서비스의 개수
+                val list = savedServiceList.filter {
+                    datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) > datePattern.format(
+                        LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) < datePattern.format(
+                        LocalDateTime.now().plusDays(2))
+                }.size
+
+                // 예약 마감까지 하루 남은 서비스의 개수
+                val list2 = savedServiceList.filter {
+                    datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) < datePattern.format(
+                        LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) > datePattern.format(
+                        LocalDateTime.now().minusDays(2))
+                }.size
+
+                // 예약 가능한 서비스의 개수
+                val list3 = savedServiceList.filter {
+                    datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) == datePattern.format(
+                        LocalDateTime.now())
+                }.size
+
+                _notificationSign.postValue(list != 0 || list2 != 0 || list3 != 0)
             }
-
-            // 예약 시작까지 하루 남은 서비스의 개수
-            val list = savedServiceList.filter {
-                datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) > datePattern.format(
-                    LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) < datePattern.format(
-                    LocalDateTime.now().plusDays(2))
-            }.size
-
-            // 예약 마감까지 하루 남은 서비스의 개수
-            val list2 = savedServiceList.filter {
-                datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) < datePattern.format(
-                    LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) > datePattern.format(
-                    LocalDateTime.now().minusDays(2))
-            }.size
-
-            // 예약 가능한 서비스의 개수
-            val list3 = savedServiceList.filter {
-                datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) == datePattern.format(
-                    LocalDateTime.now())
-            }.size
-
-            _notificationSign.postValue(list != 0 || list2 != 0 || list3 != 0)
         }
     }
 

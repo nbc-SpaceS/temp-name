@@ -121,6 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
                 android:adjustViewBounds="true"
                 android:background="@drawable/background_service_item_layout"
                 android:clipToOutline="true"
@@ -135,24 +136,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:text="최근에 검색한 서비스"
+                android:layout_marginTop="24dp"
+                android:text="최근에 들어갔던 서비스"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_home_main_banner" />
+
+            <TextView
+                android:id="@+id/tv_home_recent_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="최근에 들어갔던 서비스는 최대 10개까지 저장됩니다."
+                android:textColor="@color/gray"
+                android:textSize="11sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_home_recent_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_home_recent_title" />
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/vp_home_recent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_home_recent_title">
+                app:layout_constraintTop_toBottomOf="@+id/tv_home_recent_description">
 
             </androidx.viewpager2.widget.ViewPager2>
 

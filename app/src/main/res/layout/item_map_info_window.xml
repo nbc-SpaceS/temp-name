@@ -28,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="-2dp"
         android:text="@string/item_map_info_region"
         android:textSize="11sp"
         app:layout_constraintStart_toEndOf="@+id/iv_map_info_picture"
@@ -40,9 +41,10 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/item_map_info_place"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/btn_map_info_reservation"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="@+id/tv_map_info_region"
         app:layout_constraintTop_toBottomOf="@+id/tv_map_info_region" />
 
@@ -85,13 +87,12 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="15dp"
         android:background="@drawable/selector_okay_button"
         android:paddingHorizontal="20dp"
         android:text="@string/item_map_info_reservation"
         android:textColor="@color/selector_okay_button_text"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_map_info_picture"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

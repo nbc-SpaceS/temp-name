@@ -1,11 +1,14 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
+import android.graphics.Color
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColor
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemHomeRecentBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
@@ -26,8 +29,26 @@ class RecentAdapter: ListAdapter<RecentEntity, RecentAdapter.Holder>(object : Di
             binding.ivHomeRecentImg.loadWithHolder(data.IMGURL)
             binding.tvHomeRecentServiceName.text = Html.fromHtml(data.SVCNM, Html.FROM_HTML_MODE_LEGACY)
             binding.tvHomeRecentAreaMinclassnm.text = "${data.AREANM} - ${data.MINCLASSNM}"
-            binding.tvHomeRecentPay.text = data.PAYATNM
+            binding.tvHomeRecentPay.text = data.PAYATNM.take(2)
+            if (data.PAYATNM.take(2) == "유료") {
+                binding.tvHomeRecentPay.setTextColor(Color.parseColor("#000000"))
+                binding.tvHomeRecentPay.setBackgroundResource(R.drawable.background_badge_pay_type)
+            } else {
+                binding.tvHomeRecentPay.setTextColor(Color.parseColor("#FFFFFF"))
+                binding.tvHomeRecentPay.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
+            }
             binding.tvHomeRecentSvcstatnm.text = data.SVCSTATNM
+            when (data.SVCSTATNM) {
+                "접수중", "안내중" -> {
+                    binding.tvHomeRecentSvcstatnm.setTextColor(Color.parseColor("#FFFFFF"))
+                    binding.tvHomeRecentSvcstatnm.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
+                }
+
+                else -> {
+                    binding.tvHomeRecentSvcstatnm.setTextColor(Color.parseColor("#000000"))
+                    binding.tvHomeRecentSvcstatnm.setBackgroundResource(R.drawable.background_badge_pay_type)
+                }
+            }
         }
         fun click(data: RecentEntity) {
             binding.root.setOnClickListener {
@@ -35,7 +56,7 @@ class RecentAdapter: ListAdapter<RecentEntity, RecentAdapter.Holder>(object : Di
             }
         }
         fun page(pos: Int) {
-            binding.tvHomeRecentPage.text = pos.toString()
+//            binding.tvHomeRecentPage.text = pos.toString()
         }
     }
 
