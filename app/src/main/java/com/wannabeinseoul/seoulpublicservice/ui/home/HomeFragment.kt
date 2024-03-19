@@ -1,10 +1,16 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +23,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -36,6 +43,10 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -55,132 +66,169 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("This is HomeFragment","onViewCreated")
-        setupUIComponents()
+
         initViewModel()
+        setupUIComponents()
     }
 
-    private fun initViewModel() = with(viewModel) {
-        updateSelectedRegions.observe(viewLifecycleOwner) { selectedRegions ->
-            with(binding) {
-                if (selectedRegions.isEmpty()) {
-                    tvHomeCurrentRegion.text = "지역선택"
-                    tvHomeSelectRegion1.isVisible = false
-                    tvHomeSelectRegion2.isVisible = false
-                    tvHomeSelectRegion3.isVisible = false
-                    mainViewModel.setRegion("지역선택")
-                } else {
-                    tvHomeCurrentRegion.text = selectedRegions[0]
-                    tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
-                    mainViewModel.setRegion(selectedRegions[0])
-                    when (selectedRegions.size) {
-                        1 -> {
-                            tvHomeSelectRegion1.text = selectedRegions[0]
-                            tvHomeSelectRegion1.isVisible = true
-                            tvHomeSelectRegion2.isVisible = false
-                            tvHomeSelectRegion3.isVisible = false
-                        }
+    private fun initViewModel() {
+        // MainViewModel의 LiveData를 관찰하여 UI를 업데이트
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
+            if (it != "지역선택") {
+                viewModel.setViewPagerCategory(it)
+            } else {
+                binding.tvHomeDescription.text = "아직 관심지역이 선택되지 않았습니다."
+            }
+        }
 
-                        2 -> {
-                            tvHomeSelectRegion1.text = selectedRegions[0]
-                            tvHomeSelectRegion2.text = selectedRegions[1]
-                            tvHomeSelectRegion1.isVisible = true
-                            tvHomeSelectRegion2.isVisible = true
-                            tvHomeSelectRegion3.isVisible = false
-                        }
+        // HomeViewModel의 LiveData를 관찰하여 UI를 업데이트
+        with(viewModel) {
+            updateSelectedRegions.observe(viewLifecycleOwner) { selectedRegions ->
+                with(binding) {
+                    if (selectedRegions.isEmpty()) {
+                        tvHomeCurrentRegion.text = "지역선택"
+                        tvHomeSelectRegion1.isVisible = false
+                        tvHomeSelectRegion2.isVisible = false
+                        tvHomeSelectRegion3.isVisible = false
+                        mdHomeRegionList.isVisible = false
+                        mainViewModel.setRegion("지역선택")
+                    } else {
+                        tvHomeCurrentRegion.text = selectedRegions[0]
+                        tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
+                        mdHomeRegionList.isVisible = true
+                        mainViewModel.setRegion(selectedRegions[0])
+                        when (selectedRegions.size) {
+                            1 -> {
+                                tvHomeSelectRegion1.text = selectedRegions[0]
+                                tvHomeSelectRegion1.isVisible = true
+                                tvHomeSelectRegion2.isVisible = false
+                                tvHomeSelectRegion3.isVisible = false
+                            }
 
-                        3 -> {
-                            tvHomeSelectRegion1.text = selectedRegions[0]
-                            tvHomeSelectRegion2.text = selectedRegions[1]
-                            tvHomeSelectRegion3.text = selectedRegions[2]
-                            tvHomeSelectRegion1.isVisible = true
-                            tvHomeSelectRegion2.isVisible = true
-                            tvHomeSelectRegion3.isVisible = true
+                            2 -> {
+                                tvHomeSelectRegion1.text = selectedRegions[0]
+                                tvHomeSelectRegion2.text = selectedRegions[1]
+                                tvHomeSelectRegion1.isVisible = true
+                                tvHomeSelectRegion2.isVisible = true
+                                tvHomeSelectRegion3.isVisible = false
+                            }
+
+                            3 -> {
+                                tvHomeSelectRegion1.text = selectedRegions[0]
+                                tvHomeSelectRegion2.text = selectedRegions[1]
+                                tvHomeSelectRegion3.text = selectedRegions[2]
+                                tvHomeSelectRegion1.isVisible = true
+                                tvHomeSelectRegion2.isVisible = true
+                                tvHomeSelectRegion3.isVisible = true
+                            }
                         }
                     }
                 }
             }
-        }
 
-        displaySearchResult.observe(viewLifecycleOwner) { searchResult ->
-            with(binding) {
-                // 검색 결과를 HomeSearchAdapter에 전달하여 RecyclerView에 표시
-                val adapter = HomeSearchAdapter(searchResult)
-                rvSearchResults.adapter = adapter
-                rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
+            displaySearchResult.observe(viewLifecycleOwner) { searchResult ->
+                with(binding) {
+                    if (searchResult.isNotEmpty()) {
+                        // 검색 결과를 HomeSearchAdapter에 전달하여 RecyclerView에 표시
+                        val adapter = HomeSearchAdapter(searchResult)
+                        rvSearchResults.adapter = adapter
+                        rvSearchResults.layoutManager = LinearLayoutManager(requireContext())
 
-                // 검색을 수행할 때 cl_home_region_list를 숨김
-                clHomeRegionList.isVisible = false
+                        // 검색을 수행할 때 cl_home_region_list를 숨김
+                        clHomeRegionList.isVisible = false
 
-                // tv_service_list, tab_layout, view_pager를 숨김
-                tvServiceList.visibility = View.GONE
-                tabLayout.visibility = View.GONE
-                viewPager.visibility = View.GONE
+                        // tv_service_list, tab_layout, view_pager를 숨김
+                        tvServiceList.visibility = View.GONE
+                        tabLayout.visibility = View.GONE
+                        viewPager.visibility = View.GONE
 
-                // 검색 결과를 표시하는 RecyclerView를 보이게 함
-                rvSearchResults.visibility = View.VISIBLE
+                        // 검색 결과를 표시하는 RecyclerView를 보이게 함
+                        rvSearchResults.visibility = View.VISIBLE
 
-                // 키보드 숨기기
-                hideKeyboard()
+                        // 키보드 숨기기
+                        hideKeyboard()
 
-                // et_search 포커스 제거
-                etSearch.clearFocus()
+                        // et_search 포커스 제거
+                        etSearch.clearFocus()
 
-                // 클릭된 결과 아이템의 SVCID를 상세 페이지에 전달
-                searchClick(adapter)
-            }
-        }
-
-        displaySearchHistory.observe(viewLifecycleOwner) { searchHistory ->
-            with(binding) {
-                // 검색어를 SearchHistoryAdapter에 전달하여 RecyclerView에 표시
-                val adapter = SearchHistoryAdapter(searchHistory.first.toMutableList(), searchHistory.second).apply {
-                    onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
-                        override fun onItemClick(item: String) {
-                            etSearch.setText(item)
-                            viewModel.performSearch(item)
-                        }
+                        // 클릭된 결과 아이템의 SVCID를 상세 페이지에 전달
+                        searchClick(adapter)
                     }
                 }
-                rvSearchHistory.adapter = adapter
-                rvSearchHistory.layoutManager = LinearLayoutManager(requireContext())
-
-                // 검색어 저장 목록을 표시하는 RecyclerView를 보이게 함
-                rvSearchHistory.visibility = View.VISIBLE
             }
-        }
 
-        loadRecentData()
-        recentData.observe(viewLifecycleOwner) {
-            Log.i("This is HomeFragment","recent data observe :\nList : ${it}")
-            // take는 모르겠으나 어쨌든 잘 나오는 거 같음
-            setupRecentData()
-            recentViewPager(it)
+            displaySearchHistory.observe(viewLifecycleOwner) { searchHistory ->
+                with(binding) {
+                    if (searchHistory.first.isNotEmpty()) {
+                        // 검색어를 SearchHistoryAdapter에 전달하여 RecyclerView에 표시
+                        val adapter = SearchHistoryAdapter(
+                            searchHistory.first.toMutableList(),
+                            searchHistory.second
+                        ).apply {
+                            onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
+                                override fun onItemClick(item: String) {
+                                    etSearch.setText(item)
+                                    viewModel.performSearch(item)
+                                }
+                            }
+                        }
+                        rvSearchHistory.adapter = adapter
+                        rvSearchHistory.layoutManager = LinearLayoutManager(requireContext())
+
+                        // 검색어 저장 목록을 표시하는 RecyclerView를 보이게 함
+                        rvSearchHistory.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            updateViewPagerCategory.observe(viewLifecycleOwner) {
+                binding.tvHomeDescription.text = when (it.size) {
+                    0 -> "${mainViewModel.selectRegion.value}에는 사용할 수 있는 서비스가 없습니다."
+                    1 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first} 서비스가 있습니다."
+                    2 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first} 서비스가 있습니다."
+                    3 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first} 서비스가 있습니다."
+                    4 -> "${mainViewModel.selectRegion.value}에는 ${it[0].first}, ${it[1].first}, ${it[2].first}, ${it[3].first} 서비스가 있습니다."
+                    else -> "${mainViewModel.selectRegion.value}에서 모든 서비스를 사용할 수 있습니다."
+                }
+                binding.tvHomeDescription.text = when (it.size) {
+                    1 -> setSpannableString(6, 11)
+                    2 -> setSpannableString(6, 17)
+                    3 -> setSpannableString(6, 23)
+                    4 -> setSpannableString(6, 29)
+                    else -> binding.tvHomeDescription.text
+                }
+            }
+
+            notificationSign.observe(viewLifecycleOwner) {
+                binding.ivHomeNotificationCountBackground.isVisible = it
+            }
+
+            loadRecentData()
+            recentData.observe(viewLifecycleOwner) {
+                Log.i("This is HomeFragment","recent data observe :\nList : ${it}")
+                // take는 모르겠으나 어쨌든 잘 나오는 거 같음
+                setupRecentData()
+                recentViewPager(it)
+            }
         }
     }
 
     private fun setupUIComponents() {
-        viewModel.setRandomService()
         viewModel.setupRegions()
+        viewModel.updateNotificationSign()
+        viewModel.setRandomService()
 
         setupViewPager()
         setupBackPress()
         setupSearch()
         setupSearchHistory()
-        /*setupOverlayTouchListener()
-        setupSearchResultsTouchListener()
-        setupSearchHistoryTouchListener()*/
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
@@ -211,7 +259,7 @@ class HomeFragment : Fragment() {
             when (position) {
                 0 -> tab.text = "체육시설"
                 1 -> tab.text = "교육강좌"
-                2 -> tab.text = "문화행사"
+                2 -> tab.text = "문화체험"
                 3 -> tab.text = "시설대관"
                 4 -> tab.text = "진료복지"
             }
@@ -225,7 +273,6 @@ class HomeFragment : Fragment() {
                 override fun handleOnBackPressed() {
                     // RecyclerView가 보일 때만 ViewPager, TabLayout을 보이게 하고, RecyclerView를 숨김
                     if (binding.rvSearchResults.visibility == View.VISIBLE) {
-
                         // 뒤로 가기 버튼을 누를 때 cl_home_region_list를 숨깁니다.
                         binding.clHomeRegionList.isVisible = false
                         binding.tvServiceList.visibility = View.VISIBLE
@@ -245,7 +292,8 @@ class HomeFragment : Fragment() {
                         }, 2000)
                     }
                 }
-            })
+            }
+        )
     }
 
     private fun setupSearch() {
@@ -268,46 +316,28 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupSearchHistory() {
         binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 viewModel.showSearchHistory()
+                binding.viewControlRvSearchResults.visibility = View.VISIBLE
             } else {
                 hideSearchHistory()
+                binding.viewControlRvSearchResults.visibility = View.GONE
             }
         }
-    }
 
-    /*@SuppressLint("ClickableViewAccessibility")
-    private fun setupOverlayTouchListener() {
-        binding.viewOverlay.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                // 검색창 밖 영역을 터치하면 키보드를 숨김
-                binding.etSearch.clearFocus()
-                hideSearchHistory()
-            }
+        // viewControlRvSearchResults가 터치될 때 호출되는 리스너 설정
+        binding.viewControlRvSearchResults.setOnTouchListener { _, _ ->
+            // viewControlRvSearchResults가 터치되면 EditText의 포커스를 해제, 키보드 숨기기
+            binding.etSearch.clearFocus()
+            hideKeyboard()
             true
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupSearchResultsTouchListener() {
-        binding.rvSearchResults.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                // 검색창 밖 영역을 터치하면 키보드를 숨김
-                binding.etSearch.clearFocus()
-                hideSearchHistory()
-            }
-            true
-        }
-    }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupSearchHistoryTouchListener() {
-        binding.rvSearchHistory.setOnTouchListener { v, event ->
-            true
-        }
-    }*/
 
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
@@ -342,6 +372,7 @@ class HomeFragment : Fragment() {
             notificationFragment.show(
                 requireActivity().supportFragmentManager, "NotificationFragment"
             )
+            viewModel.hideNotificationSign()
         }
     }
 
@@ -409,6 +440,37 @@ class HomeFragment : Fragment() {
                 dialog.show(requireActivity().supportFragmentManager, "CategoryFrag")
             }
         }
+    }
+
+    private fun setSpannableString(start: Int, end: Int): SpannableString {
+        val spannableString = SpannableString(binding.tvHomeDescription.text)
+
+        spannableString.setSpan(
+            ForegroundColorSpan(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.total_text_color
+                )
+            ),
+            start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        spannableString.setSpan(
+            StyleSpan(Typeface.BOLD),
+            start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        return spannableString
+    }
+
+    override fun onStop() {
+        viewModel.clearSearchResult()
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupRecentData() { // 최근 검색어 존재할 때 배너 위치에 viewPager를 띄우는 부분

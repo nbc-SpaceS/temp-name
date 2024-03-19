@@ -28,14 +28,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_notification_back_btn" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_notification"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="12dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/tv_notification_description"
+        app:layout_constraintTop_toBottomOf="@+id/tv_notification_title" />
+
     <TextView
         android:id="@+id/tv_notification_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="추후에 추가될 알림 기능 페이지입니다."
-        android:textSize="12sp"
+        android:layout_marginBottom="20dp"
+        android:text="최대 50개의 알림만 노출됩니다."
+        android:textColor="@color/gray"
+        android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

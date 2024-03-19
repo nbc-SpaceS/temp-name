@@ -11,6 +11,7 @@ import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
@@ -25,7 +26,8 @@ class RecommendationViewModel(
     private val getAll2000UseCase: GetAll2000UseCase,
     private val seoulPublicRepository: SeoulPublicRepository,
     private val reservationRepository: ReservationRepository,
-    private val serviceRepository: ServiceRepository
+    private val serviceRepository: ServiceRepository,
+    private val regionPrefRepository: RegionPrefRepository
 ) : ViewModel() {
 
     private val _horizontalDataList = MutableLiveData<List<RecommendationHorizontalData>>()
@@ -38,13 +40,17 @@ class RecommendationViewModel(
     }
 
 
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
+            val selectedRegion = regionPrefRepository.loadSelectedRegion()
+            val otherRegions = selectedRegion.filter { it.toString() != selectedRegion }
             val items = listOf(
                 Pair("자전거", "자전거와 관련된 서비스"),
                 Pair("청소년", "청소년을 위한 서비스"),
                 Pair("장애인", "장애인을 위한 서비스"),
                 Pair("풋살", "풋살에 관한 서비스"),
+                Pair(selectedRegion, "${selectedRegion}에 관한 서비스"),
             )
 
             // 일단 제목부터 띄워놓기 위함. 이거 대신에 로딩 처리를 해야 할 듯.
@@ -88,7 +94,8 @@ class RecommendationViewModel(
                     recommendPrefRepository = container.recommendPrefRepository,
                     getAll2000UseCase = container.getAll2000UseCase,
                     reservationRepository = container.reservationRepository,
-                    serviceRepository = container.serviceRepository
+                    serviceRepository = container.serviceRepository,
+                    regionPrefRepository = container.regionPrefRepository
                 )
             }
         }

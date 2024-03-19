@@ -60,13 +60,18 @@ class ItemAdapter(
                 ivIcon.setColorFilter(Color.WHITE)
                 itemView.setOnClickListener {
                     if (regionPrefRepository.loadSelectedRegion() == "지역선택") {
-                        Toast.makeText(it.context, "선호지역을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(it.context, "관심지역을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show()
                     } else {
                         // 아이콘의 배경색과 색상을 변경
                         ivIcon.setBackgroundResource(R.drawable.background_radius_10dp_e95a77)
                         // 선택된 항목의 데이터와 지역을 가지고 카테고리 페이지로 이동
                         val intent = Intent(it.context, CategoryActivity::class.java).apply {
-                            putExtra("category", item.name)
+                            if (item.name == "병원") {
+                                putExtra("category", "서북병원")
+                            } else {
+                                putExtra("category", item.name)
+                            }
+
                             putExtra("region", regionPrefRepository.loadSelectedRegion())
                         }
                         Log.d(

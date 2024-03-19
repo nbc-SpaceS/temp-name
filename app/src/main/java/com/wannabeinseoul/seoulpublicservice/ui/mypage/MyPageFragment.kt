@@ -18,6 +18,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+private const val JJTAG = "jj-마이페이지 프래그먼트"
+
 class MyPageFragment : Fragment() {
 
     companion object {
@@ -51,7 +53,10 @@ class MyPageFragment : Fragment() {
                 EditProfileDialog.newInstance()
                     .show(requireActivity().supportFragmentManager, "EditProfileDialog")
             },
-            MyPageAdapter.MultiView.Saved(myPageSavedAdapter),
+            MyPageAdapter.MultiView.Saved(
+                myPageSavedAdapter,
+                viewModel.savedList,
+            ),
             MyPageAdapter.MultiView.ReviewedHeader
         )
     }
@@ -125,19 +130,13 @@ class MyPageFragment : Fragment() {
     private fun initViewModel() = viewModel.let { vm ->
         app.container.savedPrefRepository.savedSvcidListLiveData.observe(viewLifecycleOwner) {
             Log.d(
-                "jj-마이페이지 프래그먼트",
+                JJTAG,
                 "옵저버:savedPrefRepository.savedSvcidListLiveData ${it.toString().take(255)}"
             )
             vm.loadSavedList(it)
         }
-        vm.savedList.observe(viewLifecycleOwner) {
-            Log.d("jj-마이페이지 프래그먼트", "옵저버:savedList ${it.toString().take(255)}")
-            myPageSavedAdapter.submitList(it) {
-                myPageAdapter.setSavedNothingVisible?.invoke(it.isEmpty())
-            }
-        }
         vm.reviewedList.observe(viewLifecycleOwner) { reviewedDataList ->
-            Log.d("jj-마이페이지 프래그먼트", "옵저버:reviewedList ${reviewedDataList.toString().take(255)}")
+            Log.d(JJTAG, "옵저버:reviewedList ${reviewedDataList.toString().take(255)}")
             myPageAdapter.submitList(fixedItems +
                     if (reviewedDataList.isEmpty()) listOf(MyPageAdapter.MultiView.ReviewedNothing)
                     else reviewedDataList.map { MyPageAdapter.MultiView.Reviewed(it) }

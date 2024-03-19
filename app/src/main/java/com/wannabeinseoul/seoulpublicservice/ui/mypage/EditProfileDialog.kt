@@ -3,6 +3,7 @@ package com.wannabeinseoul.seoulpublicservice.ui.mypage
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -17,6 +18,7 @@ import android.view.Window
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.DialogFragment
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -83,13 +85,21 @@ class EditProfileDialog : DialogFragment() {
             }
 
             val newDrawable = b.ivEditProfileImage.drawable
-            if (currentUri != null && app.userProfileImageDrawable != newDrawable) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    app.userProfileImageDrawable.postValue(newDrawable)
-                    val newUrl =
-                        container.userProfileRepository.uploadProfileImage(id, currentUri!!)
-                    Log.d(JJTAG, "콜백:pickImageLauncher newUrl: $newUrl")
+            if (
+                currentUri != null && app.userProfileImageDrawable.value != newDrawable
+            ) CoroutineScope(Dispatchers.IO).launch {
+                val bitmap: Bitmap
+                try {
+                    bitmap = newDrawable.toBitmap()
+                } catch (e: Throwable) {
+                    Log.d(JJTAG, "btnEditProfileOkay newDrawable.toBitmap failed: $e")
+                    toastShort(requireContext(), "이미지 변환에 실패했습니다")
+                    return@launch
                 }
+
+                app.userProfileImageDrawable.postValue(newDrawable)
+                val uploadedUrl = container.userProfileRepository.uploadProfileImage(id, bitmap)
+                Log.d(JJTAG, "btnEditProfileOkay uploadedUrl: $uploadedUrl")
             }
 
             dismiss()
@@ -117,7 +127,7 @@ class EditProfileDialog : DialogFragment() {
             }
             Log.d(JJTAG, "콜백:pickImageLauncher uri: $currentUri")
 
-            binding.ivEditProfileImage.setImageURI(currentUri)
+            binding.ivEditProfileImage.load(currentUri)
         }
 
     private fun openGalleryPermitted() {

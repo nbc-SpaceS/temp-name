@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -53,12 +54,14 @@ class FacilityFragment : Fragment() {
         binding.rvFacility.layoutManager = GridLayoutManager(requireContext(), 4)
         adapter.submitList(facilityItems)
 
-        mainViewModel.selectRegion.observe(viewLifecycleOwner) {
-            if (it != "지역선택") {
+        mainViewModel.selectRegion.observe(viewLifecycleOwner) { region ->
+            if (region != "지역선택") {
                 facilityItems = facilityItems.map { item ->
-                    val size = dbMemoryRepository.getFiltered(areanm = listOf(it.toString()), minclassnm = listOf(item.name)).size
+                    val size = dbMemoryRepository.getFiltered(areanm = listOf(region.toString()), minclassnm = listOf(item.name)).size
                     item.copy(count = size)
                 }
+
+                binding.clFacilityNothing.isVisible = facilityItems.all { it.count == 0 }
                 adapter.submitList(facilityItems)
             }
         }
