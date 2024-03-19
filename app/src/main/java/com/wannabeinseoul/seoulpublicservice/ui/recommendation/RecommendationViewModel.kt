@@ -39,11 +39,10 @@ class RecommendationViewModel(
         _multiViews.value = list
     }
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
-
+    private val isLoading = MutableLiveData<Boolean>()
+    
     init {
-        _isLoading.value = true // 로딩 상태로 초기화
+        isLoading.value = true // 로딩 상태로 초기화
 
         viewModelScope.launch(Dispatchers.IO) {
             val selectedRegions = regionPrefRepository.load() // 선택한 모든 지역을 가져옴
@@ -72,7 +71,7 @@ class RecommendationViewModel(
                 }
 
             _horizontalDataList.postValue(recommendationHorizontalDataList)
-            _isLoading.postValue(false)
+            isLoading.postValue(false)
         }
     }
 
