@@ -1,17 +1,15 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
@@ -26,7 +24,8 @@ class HomeViewModel(
     private val searchPrefRepository: SearchPrefRepository,
     private val reservationRepository: ReservationRepository,
     private val dbMemoryRepository: DbMemoryRepository,
-    private val savedPrefRepository: SavedPrefRepository
+    private val savedPrefRepository: SavedPrefRepository,
+    private val recentPrefRepository: RecentPrefRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -46,6 +45,9 @@ class HomeViewModel(
     private var _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
         MutableLiveData()
     val displaySearchHistory: LiveData<Pair<List<String>, SearchPrefRepository>> get() = _displaySearchHistory
+
+    private val _recentData: MutableLiveData<List<RecentEntity>> = MutableLiveData()
+    val recentData: LiveData<List<RecentEntity>> get() = _recentData
 
     private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> =
         MutableLiveData()
@@ -163,6 +165,10 @@ class HomeViewModel(
         _notificationSign.value = false
     }
 
+    fun loadRecentData() {
+        _recentData.value = recentPrefRepository.getRecent()
+    }
+
     companion object {
         val factory = viewModelFactory {
             initializer {
@@ -174,7 +180,8 @@ class HomeViewModel(
                     searchPrefRepository = container.searchPrefRepository,
                     reservationRepository = container.reservationRepository,
                     dbMemoryRepository = container.dbMemoryRepository,
-                    savedPrefRepository = container.savedPrefRepository
+                    savedPrefRepository = container.savedPrefRepository,
+                    recentPrefRepository = container.recentPrefRepository
                 )
             }
         }
