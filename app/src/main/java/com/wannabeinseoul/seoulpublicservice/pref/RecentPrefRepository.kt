@@ -48,6 +48,7 @@ class RecentPrefRepositoryImpl(context: Context): RecentPrefRepository {
     override fun getRecent(): List<RecentEntity> {
         val recent = mutableListOf<RecentEntity>()
         pref.all.forEach{ (_, value) ->
+            Log.i("This is RecentPrefRepository","value : ${value}\nall value size : ${pref.all.values.size}")
             val json = value as String
             json.let {
                 val list = gson.fromJson<List<RecentEntity>>(json, object : TypeToken<List<RecentEntity>>() {}.type)

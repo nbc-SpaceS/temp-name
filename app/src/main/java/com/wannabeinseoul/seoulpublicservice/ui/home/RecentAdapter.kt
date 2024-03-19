@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemHomeRecentBinding
+import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 
@@ -28,6 +29,11 @@ class RecentAdapter: ListAdapter<RecentEntity, RecentAdapter.Holder>(object : Di
             binding.tvHomeRecentPay.text = data.PAYATNM
             binding.tvHomeRecentSvcstatnm.text = data.SVCSTATNM
         }
+        fun click(data: RecentEntity) {
+            binding.root.setOnClickListener {
+                itemClick?.onClick(data.SVCID)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -36,5 +42,8 @@ class RecentAdapter: ListAdapter<RecentEntity, RecentAdapter.Holder>(object : Di
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.bind(getItem(position))
+        holder.click(getItem(position))
     }
+
+    var itemClick: CategoryItemClick? = null
 }   // Interface로 클릭된 페이지로 이동 해야함

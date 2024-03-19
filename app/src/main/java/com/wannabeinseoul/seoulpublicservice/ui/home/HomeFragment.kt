@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +65,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.i("This is HomeFragment","onViewCreated")
         setupUIComponents()
         initViewModel()
     }
@@ -159,7 +160,11 @@ class HomeFragment : Fragment() {
             }
         }
 
+        loadRecentData()
         recentData.observe(viewLifecycleOwner) {
+            Log.i("This is HomeFragment","recent data observe :\nList : ${it}")
+            // take는 모르겠으나 어쨌든 잘 나오는 거 같음
+            setupRecentData()
             recentViewPager(it)
         }
     }
@@ -178,7 +183,6 @@ class HomeFragment : Fragment() {
         setupRegionSelection()
         setupNotificationClick()
         setupBannerClick()
-        setupRecentData()
     }
 
     private fun setupViewPager() {
@@ -406,15 +410,19 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupRecentData() {
+    private fun setupRecentData() { // 최근 검색어 존재할 때 배너 위치에 viewPager를 띄우는 부분
         if(viewModel.recentData.value.isNullOrEmpty()) {
-            binding.ivHomeMainBanner.isVisible = true
-            binding.vpHomeRecent.isVisible = false
+            binding.ivHomeMainBanner.visibility = View.VISIBLE
+            binding.vpHomeRecent.visibility = View.INVISIBLE
+        } else {
+            binding.ivHomeMainBanner.visibility = View.INVISIBLE
+            binding.vpHomeRecent.visibility = View.VISIBLE
         }
-        viewModel.loadRecentData()
+        Log.i("This is HomeFragment","setupRecentData\nmain banner / is visible : ${binding.ivHomeMainBanner.isVisible}\nrecent view pager / is visible : ${binding.vpHomeRecent.isVisible}")
     }
 
     private fun recentViewPager(data: List<RecentEntity>) {
+        Log.i("This is HomeFragment","recentViewPager / data : $data")
         val viewPage = binding.vpHomeRecent
         val adapter = RecentAdapter()
 
@@ -422,5 +430,19 @@ class HomeFragment : Fragment() {
         viewPage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         adapter.submitList(data)
         viewPage.offscreenPageLimit = 1
+
+        adapter.itemClick = object : CategoryItemClick {
+            override fun onClick(svcID: String) {
+                val dialog = DetailFragment.newInstance(svcID)
+                dialog.show(requireActivity().supportFragmentManager, "HomeRecent")
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadRecentData()
+        setupRecentData()
+        Log.i("This is HomeFragment","onResume")
     }
 }

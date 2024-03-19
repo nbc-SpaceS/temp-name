@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_home_recent_window"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_margin="5dp"
     android:background="@drawable/background_radius_12dp"
     android:clipToOutline="true"
@@ -37,27 +37,26 @@
         app:layout_constraintEnd_toEndOf="@id/tv_home_recent_area_minclassnm"
         app:layout_constraintStart_toEndOf="@id/iv_home_recent_img"
         app:layout_constraintTop_toTopOf="@id/iv_home_recent_img" />
-    
+
     <TextView
         android:id="@+id/tv_home_recent_area_minclassnm"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="지역명 - 소분류명"
         android:textSize="12sp"
-        android:layout_marginEnd="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_home_recent_service_name"
-        app:layout_constraintStart_toStartOf="@id/tv_home_recent_service_name"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="@id/tv_home_recent_service_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_recent_service_name" />
 
     <TextView
         android:id="@+id/tv_home_recent_pay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_white_with_rounded_stroke"
         android:layout_marginStart="8dp"
+        android:background="@drawable/background_white_with_rounded_stroke"
         android:paddingHorizontal="10dp"
         android:paddingVertical="2dp"
         android:text="유료"
@@ -65,24 +64,22 @@
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/iv_home_recent_img"
-        app:layout_constraintStart_toEndOf="@id/iv_home_recent_img"
-        />
+        app:layout_constraintStart_toEndOf="@id/iv_home_recent_img" />
 
     <TextView
         android:id="@+id/tv_home_recent_svcstatnm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_white_with_rounded_stroke"
-        app:layout_constraintStart_toEndOf="@id/tv_home_recent_pay"
-        app:layout_constraintTop_toTopOf="@id/tv_home_recent_pay"
-        app:layout_constraintBottom_toBottomOf="@id/tv_home_recent_pay"
         android:layout_marginStart="8dp"
+        android:background="@drawable/background_white_with_rounded_stroke"
         android:paddingHorizontal="10dp"
         android:paddingVertical="2dp"
         android:text="접수중"
         android:textColor="@color/gray"
         android:textSize="12sp"
         android:textStyle="bold"
-        />
+        app:layout_constraintBottom_toBottomOf="@id/tv_home_recent_pay"
+        app:layout_constraintStart_toEndOf="@id/tv_home_recent_pay"
+        app:layout_constraintTop_toTopOf="@id/tv_home_recent_pay" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
