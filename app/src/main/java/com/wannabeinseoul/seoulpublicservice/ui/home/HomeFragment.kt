@@ -43,10 +43,6 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -382,6 +378,11 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), "최근에 나온 서비스가 없습니다.", Toast.LENGTH_SHORT).show()
             } else {
                 val dialog = DetailFragment.newInstance(viewModel.randomService.random())
+                dialog.setCloseListener(object : DetailCloseInterface { // 다이얼로그 종료 리스너를 받아 onResume으로 갱신하기
+                    override fun onDialogClosed() {
+                        onResume()
+                    }
+                })
                 dialog.show(requireActivity().supportFragmentManager, "Detail")
             }
         }
@@ -473,13 +474,13 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupRecentData() { // 최근 검색어 존재할 때 배너 위치에 viewPager를 띄우는 부분
+    private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
         if(viewModel.recentData.value.isNullOrEmpty()) {
-            binding.ivHomeMainBanner.visibility = View.VISIBLE
-            binding.vpHomeRecent.visibility = View.INVISIBLE
+            binding.vpHomeRecent.visibility = View.GONE
+            binding.tvHomeRecentTitle.visibility = View.GONE
         } else {
-            binding.ivHomeMainBanner.visibility = View.INVISIBLE
             binding.vpHomeRecent.visibility = View.VISIBLE
+            binding.tvHomeRecentTitle.visibility = View.VISIBLE
         }
         Log.i("This is HomeFragment","setupRecentData\nmain banner / is visible : ${binding.ivHomeMainBanner.isVisible}\nrecent view pager / is visible : ${binding.vpHomeRecent.isVisible}")
     }
