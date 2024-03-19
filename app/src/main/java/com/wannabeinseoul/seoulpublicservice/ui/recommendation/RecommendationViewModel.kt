@@ -43,34 +43,39 @@ class RecommendationViewModel(
     val isLoading: LiveData<Boolean> get() = _isLoading
 
     init {
-
         _isLoading.value = true // 로딩 상태로 초기화
 
         viewModelScope.launch(Dispatchers.IO) {
-            val selectedRegion = regionPrefRepository.loadSelectedRegion().toString()
-//            val otherRegions = selectedRegion.filter { it.toString() != selectedRegion }
-            val items = listOf(
-                Pair("자전거", "자전거와 관련된 서비스"),
-                Pair("청소년", "청소년을 위한 서비스"),
-                Pair("장애인", "장애인을 위한 서비스"),
-                Pair("풋살", "풋살에 관한 서비스"),
-                Pair(selectedRegion, "${selectedRegion}에 관한 서비스"),
-            )
+            val selectedRegions = regionPrefRepository.load() // 선택한 모든 지역을 가져옴
+            val items = mutableListOf<Pair<String, String>>()
+            val regionItems = mutableListOf<Pair<String, String>>()
 
+            // 첫 번째 초기화 로직: 지역 외 로직
+            items.add(Pair("자전거", "자전거와 관련된 서비스"))
+            items.add(Pair("청소년", "청소년을 위한 서비스"))
+            items.add(Pair("장애인", "장애인을 위한 서비스"))
+            items.add(Pair("풋살", "풋살에 관한 서비스"))
 
-//            _horizontalDataList.postValue(
-//                items.map { RecommendationHorizontalData(it.second, emptyList()) })
+            // 두 번째 초기화 로직: 다중 선택한 지역에 대한 로직
+            selectedRegions.forEach { region ->
+                val regionInfo = region + "에 관한 서비스"
+                regionItems.add(Pair(region, regionInfo))
+            }
 
-            val queryResults = items.map { async { getQuery(it.first) } }.awaitAll()
+            val queryResults = (items + regionItems).map { async { getQuery(it.first) } }.awaitAll()
             val recommendationHorizontalDataList =
                 queryResults.mapIndexed { index, recommendationDataList ->
-                    RecommendationHorizontalData(items[index].second, recommendationDataList)
+                    RecommendationHorizontalData(
+                        (items + regionItems)[index].second,
+                        recommendationDataList
+                    )
                 }
 
             _horizontalDataList.postValue(recommendationHorizontalDataList)
             _isLoading.postValue(false)
         }
     }
+
 
     private suspend fun getQuery(query: String): List<RecommendationData> {
         val reservationEntities = reservationRepository.searchText(query).shuffled().take(5)
@@ -105,15 +110,16 @@ class RecommendationViewModel(
             }
         }
     }
-
-    private fun isReservationAvailableAbsence(row: Row): Boolean {
-        val currentTimeMillis = System.currentTimeMillis()
-        val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
-        val rcptenddtMillis = row.rcptenddt.toLongOrNull() ?: return false
-
-        return currentTimeMillis >= rcptbgndtMillis && currentTimeMillis <= rcptenddtMillis
-    }
 }
+
+//    private fun isReservationAvailableAbsence(row: Row): Boolean {
+//        val currentTimeMillis = System.currentTimeMillis()
+//        val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
+//        val rcptenddtMillis = row.rcptenddt.toLongOrNull() ?: return false
+//
+//        return currentTimeMillis >= rcptbgndtMillis && currentTimeMillis <= rcptenddtMillis
+//    }
+//}
 
 //    private suspend fun convertToSealedMulti(reservations: List<ReservationEntity>): List<SealedMulti> {
 //        // 현재 시간을 가져옴
