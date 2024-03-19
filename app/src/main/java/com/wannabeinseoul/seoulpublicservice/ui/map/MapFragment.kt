@@ -307,6 +307,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isCompassEnabled = false
         naverMap.uiSettings.isZoomControlEnabled = false
         naverMap.uiSettings.setLogoMargin(0, 0, 0, 0)
+        naverMap.uiSettings.isRotateGesturesEnabled = false
 
         if (app.lastLocation == null) {
             moveCamera(

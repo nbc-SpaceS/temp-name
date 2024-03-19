@@ -298,7 +298,7 @@ class HomeFragment : Fragment() {
             homeViewModel.performSearch(searchText)
         }
 
-        binding.etSearch.setOnEditorActionListener { v, actionId, event ->
+        binding.etSearch.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val searchText = v.text.toString()
                 homeViewModel.performSearch(searchText)
@@ -477,9 +477,11 @@ class HomeFragment : Fragment() {
     private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
         if(homeViewModel.recentData.value.isNullOrEmpty()) {
             binding.vpHomeRecent.visibility = View.GONE
+            binding.tvHomeRecentDescription.visibility = View.GONE
             binding.tvHomeRecentTitle.visibility = View.GONE
         } else {
             binding.vpHomeRecent.visibility = View.VISIBLE
+            binding.tvHomeRecentDescription.visibility = View.VISIBLE
             binding.tvHomeRecentTitle.visibility = View.VISIBLE
         }
         Log.i("This is HomeFragment","setupRecentData\nmain banner / is visible : ${binding.ivHomeMainBanner.isVisible}\nrecent view pager / is visible : ${binding.vpHomeRecent.isVisible}")
