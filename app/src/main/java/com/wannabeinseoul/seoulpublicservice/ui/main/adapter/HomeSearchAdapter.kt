@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
-import com.wannabeinseoul.seoulpublicservice.databinding.CategoryItemBinding
+import com.wannabeinseoul.seoulpublicservice.databinding.ItemCategoryBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
 
 class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapter<HomeSearchAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
         val ivImage: ImageView = binding.ivCtImage
         val tvServiceName: TextView = binding.tvCtServiceName
         val tvPlaceName: TextView = binding.tvCategoryItemPlace
@@ -25,7 +25,7 @@ class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapt
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = CategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
