@@ -58,4 +58,11 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/total_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@color/total_background</item>
+        <item name="windowSplashScreenAnimationDuration">500</item>
+        <item name="postSplashScreenTheme">@style/Theme.SeoulPublicService</item>
+    </style>
 </resources>
