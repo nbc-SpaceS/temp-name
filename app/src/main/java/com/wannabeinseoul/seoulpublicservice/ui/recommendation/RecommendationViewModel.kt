@@ -40,7 +40,7 @@ class RecommendationViewModel(
     }
 
     private val isLoading = MutableLiveData<Boolean>()
-    
+
     init {
         isLoading.value = true // 로딩 상태로 초기화
 
