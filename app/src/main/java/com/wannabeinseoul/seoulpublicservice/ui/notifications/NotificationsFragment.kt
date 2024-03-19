@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentNotificationsBinding
+import com.wannabeinseoul.seoulpublicservice.ui.dialog.filter.FilterFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class NotificationsFragment : DialogFragment() {

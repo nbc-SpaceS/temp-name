@@ -63,10 +63,7 @@ class EducationFragment : Fragment() {
                     ).size
                     item.copy(count = size)
                 }
-                Log.d("dkj", "${dbMemoryRepository.getFiltered(
-                    areanm = listOf("동작구"),
-                    minclassnm = listOf("자연/과학")
-                )}")
+
                 binding.clEducationNothing.isVisible = educationItems.all { it.count == 0 }
                 adapter.submitList(educationItems)
             }
