@@ -312,7 +312,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         moveCamera(
             fusedLocationSource?.lastLocation?.latitude,
             fusedLocationSource?.lastLocation?.longitude,
-            14.8
+            14.5
         )
 
 //        map.addOnLocationChangeListener { location ->
