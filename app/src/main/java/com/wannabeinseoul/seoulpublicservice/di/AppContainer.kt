@@ -14,6 +14,7 @@ import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.usecase.*
+import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -67,6 +68,8 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
     // TODO: retrofit 관련 로직들 따로 빼야 하나
     private val baseUrl = "http://openapi.seoul.go.kr:8088"
 
+    private val baseUrlWeather = "http://apis.data.go.kr/1360000"
+
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
 
@@ -89,9 +92,21 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         it.client(createOkHttpClient())
     }.build()
 
+    // 하나의 Retrofit은 하나의 Url만 사용가능
+    // 날씨(단기예보, 중기예보) 요청
+    private val retrofitWeather: Retrofit = Retrofit.Builder().also {
+        it.addConverterFactory(GsonConverterFactory.create())
+        it.baseUrl(baseUrlWeather)
+        it.client(createOkHttpClient())
+    }.build()
+
     /** Retrofit service object for creating api calls */
     private val retrofitService: SeoulApiService by lazy {
         retrofit.create(SeoulApiService::class.java)
+    }
+
+    private val retrofitServiceWeather: WeatherApiService by lazy {
+        retrofitWeather.create(WeatherApiService::class.java)
     }
 
     override val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
