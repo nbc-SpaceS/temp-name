@@ -245,7 +245,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         matchingColor[it.value[0].maxclassnm] ?: R.color.gray
                     )
                     marker.tag = it.value[0].maxclassnm
-                    marker.captionText = it.value.size.toString()
+                    if (it.value.size > 1) marker.captionText = it.value.size.toString()
                     marker.setCaptionAligns(Align.Top)
                     marker.captionTextSize = 16f
                     marker.captionMinZoom = 13.0
@@ -311,7 +311,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         moveCamera(
             fusedLocationSource?.lastLocation?.latitude,
-            fusedLocationSource?.lastLocation?.longitude
+            fusedLocationSource?.lastLocation?.longitude,
+            14.8
         )
 
 //        map.addOnLocationChangeListener { location ->
@@ -319,14 +320,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 //        }
     }
 
-    private fun moveCamera(y: Double?, x: Double?) {
+    private fun moveCamera(y: Double?, x: Double?, zoom: Double = 15.0) {
         val location = app.fusedLocationSource?.lastLocation
         val cameraUpdate = CameraUpdate.scrollAndZoomTo(
             LatLng(
                 y ?: location?.latitude ?: 37.5666,
                 x ?: location?.longitude ?: 126.9782
             ),
-            15.0
+            zoom
         ).animate(CameraAnimation.Easing, 600)
 
         naverMap?.moveCamera(cameraUpdate)
@@ -378,6 +379,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onPause() {
         super.onPause()
         binding.etMapSearch.setText("")
+        viewModel.offStart()
         mapView.onPause()
     }
 
