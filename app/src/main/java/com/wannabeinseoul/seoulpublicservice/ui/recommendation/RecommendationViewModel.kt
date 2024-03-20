@@ -50,7 +50,7 @@ class RecommendationViewModel(
             val regionItems = mutableListOf<Pair<String, String>>()
 
             // 첫 번째 초기화 로직: 지역 외 로직
-            items.add(Pair("자전거", "자전거와 관련된 서비스"))
+            items.add(Pair("교육", "교육과 관련된 서비스"))
             items.add(Pair("청소년", "청소년을 위한 서비스"))
             items.add(Pair("장애인", "장애인을 위한 서비스"))
             items.add(Pair("풋살", "풋살에 관한 서비스"))
