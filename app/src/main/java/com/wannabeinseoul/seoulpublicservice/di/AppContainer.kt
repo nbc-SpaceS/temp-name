@@ -43,6 +43,7 @@ interface AppContainer {
     val checkCredentialsUseCase: CheckCredentialsUseCase
     val checkComplaintSelfUseCase: CheckComplaintSelfUseCase
     val searchServiceDataOnMapUseCase: SearchServiceDataOnMapUseCase
+    val deleteReviewUseCase: DeleteReviewUseCase
     val prefRepository: PrefRepository
     val rowPrefRepository: RowPrefRepository
     val regionPrefRepository: RegionPrefRepository
@@ -201,6 +202,12 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         SearchServiceDataOnMapUseCase(
             reservationRepository = reservationRepository,
             dbMemoryRepository = dbMemoryRepository
+        )
+    }
+
+    override val deleteReviewUseCase by lazy {
+        DeleteReviewUseCase(
+            reviewRepository = reviewRepository
         )
     }
 

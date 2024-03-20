@@ -10,6 +10,8 @@ interface ReviewRepository {
 
     suspend fun reviseReview(id: String, svcId: String, review: String)
 
+    suspend fun deleteReview(reviewId: String)
+
     suspend fun getReviewId(svcId: String, userId: String): String
 
     suspend fun checkCredentials(id: String, svcId: String): Boolean
@@ -30,6 +32,10 @@ class ReviewRepositoryImpl : ReviewRepository {
 
         fireStore.collection("review").document(targetReview[0].reviewId ?: "")
             .update("content", review)
+    }
+
+    override suspend fun deleteReview(reviewId: String) {
+        fireStore.collection("review").document(reviewId).delete().await()
     }
 
     override suspend fun getReviewId(svcId: String, userId: String): String =

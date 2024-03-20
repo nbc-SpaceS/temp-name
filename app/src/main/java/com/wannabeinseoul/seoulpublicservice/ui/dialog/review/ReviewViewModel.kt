@@ -1,5 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
+import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,23 +9,36 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.room.util.copy
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo
 import com.wannabeinseoul.seoulpublicservice.usecase.CheckComplaintSelfUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.CheckCredentialsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.DeleteReviewUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetReviewListUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.ReviseReviewUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.UploadReviewUseCase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 class ReviewViewModel(
     private val uploadReviewUseCase: UploadReviewUseCase,
     private val getReviewListUseCase: GetReviewListUseCase,
     private val reviseReviewUseCase: ReviseReviewUseCase,
     private val checkCredentialsUseCase: CheckCredentialsUseCase,
-    private val checkComplaintSelfUseCase: CheckComplaintSelfUseCase
+    private val checkComplaintSelfUseCase: CheckComplaintSelfUseCase,
+    private val deleteReviewUseCase: DeleteReviewUseCase,
+    private val idPrefRepository: IdPrefRepository,
+    private val userName: String?,
+    private val userProfileImage: String?
 ) : ViewModel() {
+
+    private var _userId: String = idPrefRepository.load()
+    val userId: String get() = _userId
 
     private val _uiState: MutableLiveData<List<ReviewItem>> = MutableLiveData()
     val uiState: LiveData<List<ReviewItem>> get() = _uiState
@@ -31,15 +46,34 @@ class ReviewViewModel(
     private val _reviewCredentials: MutableLiveData<Boolean> = MutableLiveData()
     val reviewCredentials: LiveData<Boolean> get() = _reviewCredentials
 
-    private val _isComplaintSelf: MutableLiveData<Pair<Boolean, ComplaintUserInfo>> = MutableLiveData()
+    private val _isComplaintSelf: MutableLiveData<Pair<Boolean, ComplaintUserInfo>> =
+        MutableLiveData()
     val isComplaintSelf: LiveData<Pair<Boolean, ComplaintUserInfo>> get() = _isComplaintSelf
 
     fun uploadReview(svcId: String, review: String) {
-        _reviewCredentials.postValue(false)
+        _reviewCredentials.value = false
 
         viewModelScope.launch(Dispatchers.IO) {
-            uploadReviewUseCase(svcId, review)
-            _uiState.postValue(getReviewListUseCase(svcId))
+            async {
+                _uiState.postValue(uiState.value.orEmpty().toMutableList().apply {
+                    add(
+                        0, ReviewItem(
+                            "",
+                            userId,
+                            userName ?: "",
+                            "",
+                            review,
+                            "#000000",
+                            userProfileImage ?: ""
+                        )
+                    )
+                })
+            }
+
+            async {
+                uploadReviewUseCase(svcId, review)
+                _uiState.postValue(getReviewListUseCase(svcId))
+            }
         }
     }
 
@@ -54,8 +88,33 @@ class ReviewViewModel(
     }
 
     fun reviseReview(svcId: String, review: String) {
+        val idx = uiState.value.orEmpty().toMutableList().withIndex()
+            .find { it.value.userId == userId }?.index
+        if (idx != null) {
+            val item = uiState.value?.get(idx)?.copy(content = review)
+            _uiState.value = uiState.value.orEmpty().toMutableList().apply {
+                removeAt(idx)
+                add(idx, item!!)
+            }
+        }
+
         viewModelScope.launch(Dispatchers.IO) {
             reviseReviewUseCase(svcId, review)
+            _uiState.postValue(getReviewListUseCase(svcId))
+        }
+    }
+
+    fun deleteReview(svcId: String, reviewId: String) {
+        val idx = uiState.value.orEmpty().toMutableList().withIndex()
+            .find { it.value.reviewId == reviewId }?.index
+        if (idx != null) {
+            _uiState.value = uiState.value.orEmpty().toMutableList().apply {
+                removeAt(idx)
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteReviewUseCase(reviewId)
             _uiState.postValue(getReviewListUseCase(svcId))
         }
     }
@@ -84,7 +143,11 @@ class ReviewViewModel(
                     getReviewListUseCase = container.getReviewListUseCase,
                     reviseReviewUseCase = container.reviseReviewUseCase,
                     checkCredentialsUseCase = container.checkCredentialsUseCase,
-                    checkComplaintSelfUseCase = container.checkComplaintSelfUseCase
+                    checkComplaintSelfUseCase = container.checkComplaintSelfUseCase,
+                    deleteReviewUseCase = container.deleteReviewUseCase,
+                    idPrefRepository = container.idPrefRepository,
+                    userName = application.userName.value,
+                    userProfileImage = application.userProfileImageUrl
                 )
             }
         }
