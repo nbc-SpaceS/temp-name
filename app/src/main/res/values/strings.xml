@@ -194,6 +194,7 @@
     <string name="fragment_review_empty_description">작성된 후기가 없습니다.</string>
     <string name="fragment_review_input_review">후기를 입력해주세요.</string>
     <string name="item_detail_comment_user">TextView</string>
+    <string name="item_detail_comment_delete_btn">삭제</string>
     <string name="item_detail_comment_comment">TextView</string>
     <string name="item_home_name">축구장</string>
     <string name="item_map_info_region">송파구</string>
@@ -223,4 +224,6 @@
     <string name="recommendation_item_recommended_shared_text">청소년들을 대상으로 하는 공공서비스</string>
     <string name="recommendation_item_recommended_tip_title">그거 아시나요?</string>
     <string name="recommendation_item_recommended_tip_content">서울시의 긴급 구호 및 안전 시설을 이용할 때, 비상 상황에 대비하여 위치를 파악하고 신속하게 대응하는 것이 중요합니다.</string>
+    <string name="fragment_home_recent_title">최근에 들어갔던 서비스</string>
+    <string name="fragment_home_recent_description">최근에 들어갔던 서비스는 최대 10개까지 저장됩니다.</string>
 </resources>

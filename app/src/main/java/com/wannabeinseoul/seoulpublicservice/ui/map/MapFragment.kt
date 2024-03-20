@@ -1,11 +1,10 @@
 package com.wannabeinseoul.seoulpublicservice.ui.map
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -14,7 +13,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -30,7 +28,6 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Align
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
-import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -45,8 +42,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val binding get() = _binding!!
 
     private lateinit var mapView: MapView
-    private lateinit var naverMap: NaverMap
-    private lateinit var locationSource: FusedLocationSource
+    private var naverMap: NaverMap? = null
+//    private lateinit var locationSource: FusedLocationSource
 
     private val app by lazy {
         requireActivity().application as SeoulPublicServiceApplication
@@ -131,7 +128,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        locationSource = FusedLocationSource(this, 5000)
+//        locationSource = FusedLocationSource(this, 5000)
 
         addCallBack()
         initViewModel()
@@ -173,7 +170,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.fabMapCurrentLocation.setOnClickListener {
-            moveCamera(app.lastLocation?.latitude, app.lastLocation?.longitude)
+            val location = app.fusedLocationSource?.lastLocation
+            moveCamera(location?.latitude, location?.longitude)
         }
 
         binding.etMapSearch.setOnEditorActionListener { textView, actionId, _ ->
@@ -247,7 +245,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                         matchingColor[it.value[0].maxclassnm] ?: R.color.gray
                     )
                     marker.tag = it.value[0].maxclassnm
-                    marker.captionText = it.value.size.toString()
+                    if (it.value.size > 1) marker.captionText = it.value.size.toString()
                     marker.setCaptionAligns(Align.Top)
                     marker.captionTextSize = 16f
                     marker.captionMinZoom = 13.0
@@ -275,12 +273,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(map: NaverMap) {
 
         naverMap = map
-        naverMap.maxZoom = 18.0
-        naverMap.minZoom = 9.0
+        map.maxZoom = 18.0
+        map.minZoom = 9.0
 
         viewModel.checkReadyMap()
 
-        naverMap.setOnMapClickListener { _, _ ->
+        map.setOnMapClickListener { _, _ ->
             changeDetailVisible(false)
             activeMarkers.forEach { marker ->
                 marker.iconTintColor =
@@ -290,46 +288,49 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             zoomOut()
         }
 
-        naverMap.locationSource = locationSource
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            // GPS 권한 없으면 이거 하면 멈춰버려서 권한 체크로 감싸줌
-            naverMap.locationTrackingMode = LocationTrackingMode.NoFollow
+        val fusedLocationSource = app.fusedLocationSource
+        map.locationSource = fusedLocationSource
+        if (fusedLocationSource == null) {
+            Log.w("jj-MapFragment", "onMapReady fusedLocationSource is null")
+        } else {
+            if (fusedLocationSource.isActivated.not()) {
+                Log.w(
+                    "jj-MapFragment",
+                    "onMapReady fusedLocationSource is not activated. now activate."
+                )
+                fusedLocationSource.activate {}
+            }
+            map.locationTrackingMode = LocationTrackingMode.NoFollow
         }
-        naverMap.uiSettings.isLogoClickEnabled = false
-        naverMap.uiSettings.isScaleBarEnabled = false
-        naverMap.uiSettings.isCompassEnabled = false
-        naverMap.uiSettings.isZoomControlEnabled = false
-        naverMap.uiSettings.setLogoMargin(0, 0, 0, 0)
+        map.uiSettings.isLogoClickEnabled = false
+        map.uiSettings.isScaleBarEnabled = false
+        map.uiSettings.isCompassEnabled = false
+        map.uiSettings.isZoomControlEnabled = false
+        map.uiSettings.setLogoMargin(0, 0, 0, 0)
+        map.uiSettings.isRotateGesturesEnabled = false
 
-        if (app.lastLocation == null) {
-            moveCamera(
-                locationSource.lastLocation?.latitude,
-                locationSource.lastLocation?.longitude
-            )
-        }
+        moveCamera(
+            fusedLocationSource?.lastLocation?.latitude,
+            fusedLocationSource?.lastLocation?.longitude,
+            14.5
+        )
 
-        naverMap.addOnLocationChangeListener { location ->
-            app.lastLocation = location
-        }
+//        map.addOnLocationChangeListener { location ->
+//            app.lastLocation = location
+//        }
     }
 
-    private fun moveCamera(y: Double?, x: Double?) {
+    private fun moveCamera(y: Double?, x: Double?, zoom: Double = 15.0) {
+        val location = app.fusedLocationSource?.lastLocation
         val cameraUpdate = CameraUpdate.scrollAndZoomTo(
             LatLng(
-                y ?: app.lastLocation?.latitude ?: 37.5666,
-                x ?: app.lastLocation?.longitude ?: 126.9782
+                y ?: location?.latitude ?: 37.5666,
+                x ?: location?.longitude ?: 126.9782
             ),
-            15.0
+            zoom
         ).animate(CameraAnimation.Easing, 600)
 
-        naverMap.moveCamera(cameraUpdate)
+        naverMap?.moveCamera(cameraUpdate)
     }
 
     private fun changeDetailVisible(flag: Boolean) {
@@ -340,7 +341,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private fun zoomOut() {
         val cameraUpdate = CameraUpdate.zoomTo(14.5).animate(CameraAnimation.Easing, 300)
-        naverMap.moveCamera(cameraUpdate)
+        naverMap?.moveCamera(cameraUpdate)
     }
 
     private fun setInitialState() {
@@ -378,6 +379,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onPause() {
         super.onPause()
         binding.etMapSearch.setText("")
+        viewModel.offStart()
         mapView.onPause()
     }
 
@@ -394,6 +396,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroyView() {
         super.onDestroyView()
         mapView.onDestroy()
+
+        // onStop, onDestroy에서 연결된 위치 객체를 비활성화시켜버림... 다시 켜주면 되긴 하는데 로딩이 걸린다.
+        app.fusedLocationSource?.activate {}
     }
 
     override fun onLowMemory() {

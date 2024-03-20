@@ -1,21 +1,30 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
+import android.system.Os.remove
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 class GetReviewListUseCase(
     private val idPrefRepository: IdPrefRepository,
     private val serviceRepository: ServiceRepository,
     private val userBanRepository: UserBanRepository,
 ) {
-    suspend operator fun invoke(svcId: String): List<ReviewItem> {
-        val data = serviceRepository.getServiceReviews(svcId)
-        val banList = userBanRepository.getBanList().toMutableList().apply {
-            remove(idPrefRepository.load())
-        }
+    suspend operator fun invoke(svcId: String): List<ReviewItem> =
+        coroutineScope {
+            val data = async { serviceRepository.getServiceReviews(svcId) }
+            val banList = async {
+                userBanRepository.getBanList().toMutableList().apply {
+                    remove(idPrefRepository.load())
+                }
+            }
 
-        return data.filter { it.userId !in banList }.sortedByDescending { it.uploadTime }
-    }
+            return@coroutineScope data.await().filter { it.userId !in banList.await() }.sortedByDescending { it.uploadTime }
+        }
 }

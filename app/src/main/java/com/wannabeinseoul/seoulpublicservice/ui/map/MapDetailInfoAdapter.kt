@@ -8,10 +8,10 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemMapInfoWindowBinding
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
+import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class MapDetailInfoAdapter(
     private val saveService: (String) -> Unit,
@@ -90,7 +90,7 @@ class MapDetailInfoAdapter(
             } else {
                 ivMapInfoSaveServiceBtn.setImageResource(R.drawable.ic_save_empty)
             }
-            ivMapInfoPicture.load(item.imgurl)
+            ivMapInfoPicture.loadWithHolder(item.imgurl)
             tvMapInfoRegion.text = item.areanm
             tvMapInfoService.text =
                 HtmlCompat.fromHtml(item.svcnm, HtmlCompat.FROM_HTML_MODE_LEGACY)

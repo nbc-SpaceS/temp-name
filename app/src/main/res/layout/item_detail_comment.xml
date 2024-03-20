@@ -37,6 +37,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
+    <ImageView
+        android:id="@+id/iv_comment_delete_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_delete"
+        android:layout_marginEnd="4dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_comment_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_comment_user"
+        app:tint="@color/point_color" />
+
     <TextView
         android:id="@+id/tv_comment_text"
         android:layout_width="0dp"

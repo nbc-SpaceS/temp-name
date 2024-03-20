@@ -242,7 +242,7 @@ class FilterFragment : DialogFragment() {
         }
 
         chipGroupList.forEachIndexed { index, chipGroup ->
-            chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
                 viewModel.clearTemporary(index)
 
                 for (id in checkedIds) {

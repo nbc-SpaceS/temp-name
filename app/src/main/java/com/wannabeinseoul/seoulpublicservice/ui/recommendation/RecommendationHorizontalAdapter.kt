@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemBinding
+import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class RecommendationHorizontalAdapter(
     private val onItemClick: (RecommendationData) -> Unit
@@ -16,8 +16,8 @@ class RecommendationHorizontalAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RecommendationData) {
-            binding.ivRcSmallImage.load(item.imageUrl)
-            binding.tvRcPlaceName.text = item.serviceName
+            binding.ivRcSmallImage.loadWithHolder(item.imageUrl)
+            binding.tvRcPlaceName.text = item.decodedServiceName
             binding.tvRcPayType.text = item.payType.take(2)
             binding.tvRcAreaName.text = item.areaName
             binding.tvRcReview.text = "후기 ${item.reviewCount}개"

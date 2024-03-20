@@ -35,7 +35,8 @@ class RegionPrefRepositoryImpl(context: Context) : RegionPrefRepository {
         return gson.fromJson(json, Array<String>::class.java).toList()
     }
 
-    override fun loadSelectedRegion(): String = if (selectedRegionIndex == -1) "지역선택" else load()[selectedRegionIndex]
+    override fun loadSelectedRegion(): String =
+        if (selectedRegionIndex == -1) "지역선택" else load()[selectedRegionIndex]
 
     override fun saveSelectedRegion(num: Int) {
         selectedRegionIndex = num - 1
