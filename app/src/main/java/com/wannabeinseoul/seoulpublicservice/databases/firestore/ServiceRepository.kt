@@ -68,6 +68,7 @@ class ServiceRepositoryImpl : ServiceRepository {
             serviceReviewList.forEach {
                 resultList.add(
                     ReviewItem(
+                        it.reviewId ?: "",
                         it.userId ?: "",
                         serviceReviewUserList[it.userId]?.userName ?: "",
                         it.uploadTime ?: "",

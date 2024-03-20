@@ -3,6 +3,7 @@ package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,9 @@ import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
 
 class ReviewAdapter(
-    private val complaintUser: (String) -> Unit
+    private val complaintUser: (String) -> Unit,
+    private val deleteReview: (String) -> Unit,
+    private val userId: String
 ) : ListAdapter<ReviewItem, ReviewAdapter.ReviewViewHolder>(object :
     DiffUtil.ItemCallback<ReviewItem>() {
     override fun areItemsTheSame(oldItem: ReviewItem, newItem: ReviewItem): Boolean {
@@ -22,7 +25,7 @@ class ReviewAdapter(
     }
 }) {
 
-    class ReviewViewHolder(
+    inner class ReviewViewHolder(
         private val binding: ItemDetailCommentBinding,
         private val complaintUser: (String) -> Unit
     ) :
@@ -36,9 +39,19 @@ class ReviewAdapter(
                 ivCommentProfile.load(item.userProfileImage)
             }
 
+            ivCommentDeleteBtn.isVisible = (userId == item.userId)
+
             clItemDetailComment.setOnLongClickListener {
                 complaintUser(item.userId)
                 true
+            }
+
+            if (item.reviewId == "") {
+                ivCommentDeleteBtn.setOnClickListener(null)
+            } else {
+                ivCommentDeleteBtn.setOnClickListener {
+                    deleteReview(item.reviewId)
+                }
             }
         }
     }

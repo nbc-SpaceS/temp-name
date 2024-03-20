@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +36,12 @@ class ReviewFragment: BottomSheetDialogFragment() {
         ReviewAdapter(
             complaintUser = {
                 viewModel.checkComplaintSelf(it)
-            }
+            },
+            deleteReview = {
+                viewModel.deleteReview(svcId, it)
+                viewModel.checkWritableUser(svcId)
+            },
+            userId = viewModel.userId
         )
     }
 
@@ -71,12 +78,14 @@ class ReviewFragment: BottomSheetDialogFragment() {
         ivReviewSendBtn.setOnClickListener {
             viewModel.uploadReview(svcId, etReviewInputField.text.toString())
             setInitialState()
+            rvReviewList.layoutManager?.scrollToPosition(0)
         }
 
         etReviewInputField.setOnEditorActionListener { _, action, _ ->
             if (action == EditorInfo.IME_ACTION_SEARCH) {
                 viewModel.uploadReview(svcId, etReviewInputField.text.toString())
                 setInitialState()
+                rvReviewList.layoutManager?.scrollToPosition(0)
             }
 
             false
@@ -106,7 +115,10 @@ class ReviewFragment: BottomSheetDialogFragment() {
                 binding.tvReviewCount.isVisible = true
                 binding.tvReviewEmptyDescription.isVisible = false
             } else {
-                binding.tvReviewEmptyDescription.isVisible = true
+                binding.tvReviewCount.isVisible = false
+                Handler(Looper.getMainLooper()).postDelayed({
+                    binding.tvReviewEmptyDescription.isVisible = true
+                }, 300)
             }
         }
 
