@@ -23,12 +23,10 @@ class ComplaintRepositoryImpl : ComplaintRepository {
             return "신고했습니다."
         }
 
-        if (fireStore.collection("complaint").document(content.complaintId.toString())
+        return if (fireStore.collection("complaint").document(content.complaintId.toString())
                 .collection("detailInfo").whereEqualTo("id", content.id).get().await()
-                .toObjects(ComplaintEntity::class.java).isNotEmpty()
-        ) return "이미 신고한 사용자입니다."
-
-        return ""
+                .isEmpty.not()
+        ) "이미 신고한 사용자입니다." else ""
     }
 
     private suspend fun checkComplaintId(complaintId: String): Boolean =
