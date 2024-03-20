@@ -12,7 +12,6 @@ class RecommendationAdapter :
     ListAdapter<RecommendationAdapter.MultiView, RecyclerView.ViewHolder>(DiffCallback()) {
 
 
-
     sealed interface MultiView {
 
         enum class Type {

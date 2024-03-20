@@ -3,40 +3,61 @@ package com.wannabeinseoul.seoulpublicservice.ui.category
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentCategoryBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
+
 //ctrl alt o
 class CategoryFragment : Fragment() {
 
     private lateinit var binding: FragmentCategoryBinding
-//    private lateinit var categoryAdapter: CategoryAdapter
-    private val viewModel: CategoryViewModel by viewModels{CategoryViewModel.factory}
-
-    private val showDetailFragment = { svcid: String ->
-        DetailFragment.newInstance(svcid)
-            .show(requireActivity().supportFragmentManager, "Detail")
-            }    // 하단에 categoryClick 함수를 만들어서 필요 없을 듯 합니다...
-
+    private val viewModel: CategoryViewModel by viewModels { CategoryViewModel.factory }
     private val adapter by lazy {
-        CategoryAdapter{}
+        CategoryAdapter {}
     }
 
     private var payment: String = ""    // 요금이 무료인지 또는 ""인지
     private var serviceState: List<String> = listOf() // 서비스 상태가 가능인지 아니면 불가능인지
     private var search = "" // 검색어
 
+    private var isFabVisible = true// 숨기거나 표시
+    private val handler = Handler()// 일정 시간 후에 작업을 수행하기 위해 사용
+    private val delayMillis: Long = 500 // 0.5초
+
+    // 스크롤 이벤트를 처리하는 메서드
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            // 스크롤 방향에 따라 FAB의 가시성을 조절
+            if (dy > 0 && isFabVisible) { // 스크롤을 아래로 내릴 때
+                isFabVisible = false
+                binding.fabFloatingButton.hide()
+                binding.ivFloating.visibility = View.GONE
+            } else if (dy < 0 && !isFabVisible) { // 스크롤을 위로 올릴 때
+                isFabVisible = true
+                binding.fabFloatingButton.hide()
+                // 지연하여 이미지뷰를 보이도록 설정
+                handler.postDelayed({
+                    binding.ivFloating.visibility = View.VISIBLE
+                }, delayMillis)
+            }
+        }
+    }
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentCategoryBinding.inflate(inflater, container, false)
         return binding.root
@@ -51,14 +72,25 @@ class CategoryFragment : Fragment() {
         initViewModel()
 
         categoryClick()
+
+        binding.reCategory.addOnScrollListener(scrollListener)
+
+        // FloatingActionButton 클릭 이벤트 처리
+        binding.ivFloating.setOnClickListener {
+            Toast.makeText(requireContext(), "플로팅 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show()
+            binding.reCategory.smoothScrollToPosition(0)
+        }
     }
 
     private fun initView() {
         binding.reCategory.adapter = adapter
 
-        val category = if (arguments?.getString("category") == "서북병원") "병원" else arguments?.getString("category")
+        val category =
+            if (arguments?.getString("category") == "서북병원") "병원" else arguments?.getString("category")
         binding.tvCtTitle.text = "${arguments?.getString("region")} - $category"
-        viewModel.updateList(arguments?.getString("region") ?: "", arguments?.getString("category") ?: "")
+        viewModel.updateList(
+            arguments?.getString("region") ?: "", arguments?.getString("category") ?: ""
+        )
         //라이브데이터에 리스트를 넣어놈.
 
         binding.ivCategoryBack.setOnClickListener {
@@ -75,7 +107,7 @@ class CategoryFragment : Fragment() {
         }
         // 검색기능 추가
         binding.etCategorySearch.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performSearch()
                 hideKeyboard()
                 true
@@ -84,8 +116,9 @@ class CategoryFragment : Fragment() {
             }
         }
     }
+
     private fun performSearch() {
-        if(binding.etCategorySearch.text.isNotBlank()) {
+        if (binding.etCategorySearch.text.isNotBlank()) {
             search = binding.etCategorySearch.text.toString()
             viewModel.updateListWithSvcstatnmPay(
                 text = search,
@@ -96,7 +129,9 @@ class CategoryFragment : Fragment() {
             )
         } else {
             search = ""
-            viewModel.updateList(arguments?.getString("region") ?: "", arguments?.getString("category") ?: "")
+            viewModel.updateList(
+                arguments?.getString("region") ?: "", arguments?.getString("category") ?: ""
+            )
         }
     }
 
@@ -118,9 +153,9 @@ class CategoryFragment : Fragment() {
     }
 
     private fun categoryFilter(text: String) {
-        when(text) {
+        when (text) {
             "pay" -> {
-                payment = if(payment.isEmpty()) {
+                payment = if (payment.isEmpty()) {
                     binding.tvCtFree.setTextColor(Color.parseColor("#F8496C"))
                     "무료"
                 } else {
@@ -128,10 +163,11 @@ class CategoryFragment : Fragment() {
                     ""
                 }
             }
+
             "svc" -> {
-                serviceState = if(serviceState.isEmpty()) {
+                serviceState = if (serviceState.isEmpty()) {
                     binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#F8496C"))
-                    listOf("접수중","안내중")
+                    listOf("접수중", "안내중")
                 } else {
                     binding.tvCtIsReservationAvailable.setTextColor(Color.parseColor("#8E8E8E"))
                     listOf()
@@ -149,7 +185,8 @@ class CategoryFragment : Fragment() {
 
     // 키보드 숨기기
     private fun hideKeyboard() {
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etCategorySearch.windowToken, 0)
     }
 }
