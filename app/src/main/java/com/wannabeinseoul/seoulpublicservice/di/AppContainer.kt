@@ -5,25 +5,65 @@ import com.wannabeinseoul.seoulpublicservice.BuildConfig
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationDatabase
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.databases.firestore.*
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ComplaintRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ComplaintRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserBanRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.pref.*
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.PrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.usecase.*
+import com.wannabeinseoul.seoulpublicservice.usecase.CheckComplaintSelfUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.CheckCredentialsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.ComplaintUserUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.DeleteReviewUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.FilterServiceDataOnMapUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.GetDetailSeoulUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.GetReviewListUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.GetSavedServiceUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.LoadSavedFilterOptionsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.MappingDetailInfoWindowUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.ReviseReviewUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SaveFilterOptionsUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SaveServiceUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.SearchServiceDataOnMapUseCase
+import com.wannabeinseoul.seoulpublicservice.usecase.UploadReviewUseCase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-
-///** 클린아키텍쳐 하다가 정 안되면 그냥 이렇게 전역으로 놓고 쓰면 어디서든 사용 가능...할 줄 알았는데
-// * SharedPreferences나 Room 등 context를 사용하는 것들이 있어서
-// * 애플리케이션 클래스에서 만들어줄 수 밖에 없다. */
-//val myContainer: AppContainer = DefaultAppContainer()
 
 /** Dependency Injection container */
 interface AppContainer {
@@ -65,8 +105,7 @@ interface AppContainer {
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
-    // TODO: retrofit 관련 로직들 따로 빼야 하나
-    private val baseUrl = "http://openapi.seoul.go.kr:8088"
+    private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088"
 
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
@@ -84,24 +123,22 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         }.build()
     }
 
-    private val retrofit: Retrofit = Retrofit.Builder().also {
+    private fun createRetrofit(baseUrl: String): Retrofit = Retrofit.Builder().also {
         it.addConverterFactory(GsonConverterFactory.create())
         it.baseUrl(baseUrl)
         it.client(createOkHttpClient())
     }.build()
 
-    /** Retrofit service object for creating api calls */
-    private val retrofitService: SeoulApiService by lazy {
-        retrofit.create(SeoulApiService::class.java)
+    private val seoulRetrofit = createRetrofit(seoulApiBaseUrl)
+    private val retrofitSeoulApiService: SeoulApiService by lazy {
+        seoulRetrofit.create(SeoulApiService::class.java)
     }
 
-    override val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
+    override val seoulPublicRepository: SeoulPublicRepository by lazy {
+        SeoulPublicRepositoryImpl(retrofitSeoulApiService)
+    }
 
-//    override val seoulPublicRepository: SeoulPublicRepository by lazy {
-//        SeoulPublicRepositoryImpl(retrofitService)
-//    }
-
-    override val getAll2000UseCase: GetAll2000UseCase by lazy {
+    override val getAll2000UseCase by lazy {
         GetAll2000UseCase(
             seoulPublicRepository = seoulPublicRepository,
             prefRepository = prefRepository,
