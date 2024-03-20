@@ -16,6 +16,7 @@
     <color name="total_background">#FFFFFF</color>
     <color name="total_text_color">#1A1A1A</color>
 
+    <color name="recommendation_stroke">#DFC5C5C5</color>
     <color name="unClicked_button_solid">#E4E4E4</color>
     <color name="unClicked_button_stroke">#5B5B5B</color>
     <color name="unClicked_button_text">#7A7A7A</color>

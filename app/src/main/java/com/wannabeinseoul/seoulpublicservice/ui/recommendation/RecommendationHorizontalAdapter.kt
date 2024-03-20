@@ -17,7 +17,7 @@ class RecommendationHorizontalAdapter(
 
         fun bind(item: RecommendationData) {
             binding.ivRcSmallImage.loadWithHolder(item.imageUrl)
-            binding.tvRcPlaceName.text = item.serviceName
+            binding.tvRcPlaceName.text = item.decodedServiceName
             binding.tvRcPayType.text = item.payType.take(2)
             binding.tvRcAreaName.text = item.areaName
             binding.tvRcReview.text = "후기 ${item.reviewCount}개"

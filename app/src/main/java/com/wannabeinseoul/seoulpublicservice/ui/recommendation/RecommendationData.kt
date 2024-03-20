@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
+import androidx.core.text.HtmlCompat
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 
 data class RecommendationData(
@@ -12,7 +13,10 @@ data class RecommendationData(
     val usetgtinfo: String,
     var reviewCount: Int,
     val serviceName: String,
-)
+) {
+    val decodedServiceName: String =
+        HtmlCompat.fromHtml(serviceName, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+}
 
 fun Row.convertToRecommendationData() = RecommendationData(
     payType = this.payatnm,
@@ -25,20 +29,7 @@ fun Row.convertToRecommendationData() = RecommendationData(
     reviewCount = 0,
     serviceName = this.svcnm,
 )
-//플레이스네ㅐ임을 서비스스텟으로
+//플레이스네임을 서비스스텟으로
 
 fun List<Row>.convertToRecommendationDataList() =
     this.map { it.convertToRecommendationData() }
-
-
-//    private fun convertRowToRecommendation(row: Row): RecommendationData = RecommendationData(
-//        payType = row.payatnm,
-//        areaName = row.areanm,
-//        placeName = row.placenm,
-//        svcstatnm = row.svcstatnm,
-//        imageUrl = row.imgurl,
-//    )
-//
-//    private fun convertRowsToRecommendations(rows: List<Row>): List<RecommendationData> =
-//        rows.map { convertRowToRecommendation(it) }
-
