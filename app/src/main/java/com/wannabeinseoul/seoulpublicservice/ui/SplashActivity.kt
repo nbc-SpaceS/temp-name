@@ -5,8 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.AlphaAnimation
+import android.view.animation.AnimationUtils
+import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
@@ -35,7 +39,7 @@ class SplashActivity : AppCompatActivity() {
         val app = (application as SeoulPublicServiceApplication)
         val container = app.container
 
-        binding.tvSplashDescription.startAnimation(AlphaAnimation(0.0f, 0.1f).apply {
+        binding.tvSplashDescription.startAnimation(AlphaAnimation(0.0f, 1.0f).apply {
             startOffset = 100
             duration = 1500
         })

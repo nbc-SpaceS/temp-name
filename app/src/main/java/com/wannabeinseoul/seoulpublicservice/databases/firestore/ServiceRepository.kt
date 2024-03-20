@@ -15,6 +15,11 @@ interface ServiceRepository {
         reviewId: String
     )
 
+    suspend fun deleteServiceReview(
+        svcId: String,
+        reviewId: String
+    )
+
     suspend fun getService(
         svcId: String
     ): ServiceEntity?
@@ -42,16 +47,23 @@ class ServiceRepositoryImpl : ServiceRepository {
             .update("reviewIdList", service?.reviewIdList.orEmpty().toMutableList() + reviewId)
     }
 
+    override suspend fun deleteServiceReview(svcId: String, reviewId: String) {
+        val service = getService(svcId)
+        fireStore.collection("service").document(svcId)
+            .update("reviewIdList", service?.reviewIdList.orEmpty().toMutableList() - reviewId)
+    }
+
     override suspend fun getService(svcId: String): ServiceEntity? {
         if (!checkService(svcId)) fireStore.collection("service").document(svcId)
-            .set(ServiceEntity(svcId))
+            .set(ServiceEntity(svcId)).await()
 
         return fireStore.collection("service").document(svcId).get().await()
             .toObject(ServiceEntity::class.java)
     }
 
     override suspend fun getServiceReviews(svcId: String): List<ReviewItem> {
-        getService(svcId)
+        if (!checkService(svcId)) fireStore.collection("service").document(svcId)
+            .set(ServiceEntity(svcId))
 
         val serviceReviewList =
             fireStore.collection("review").whereEqualTo("svcId", svcId).get().await()
