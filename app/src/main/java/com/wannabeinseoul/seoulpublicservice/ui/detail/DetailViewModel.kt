@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,12 +44,15 @@ class DetailViewModel(
     private val _serviceData = MutableLiveData<ReservationEntity>()
     val serviceData: LiveData<ReservationEntity> get() = _serviceData
 
+    private val _distanceText = MutableLiveData<String>()
+    val distanceText: LiveData<String> get() = _distanceText
+
     // 닫기 이벤트
     private val _closeEvent = MutableLiveData<Boolean>()
     val closeEvent: LiveData<Boolean> get() = _closeEvent
 
-    private val _myLocationCallback = MutableLiveData<Boolean>()
-    val myLocationCallback:LiveData<Boolean> get() = _myLocationCallback
+//    private val _myLocationCallback = MutableLiveData<Boolean>()
+//    val myLocationCallback:LiveData<Boolean> get() = _myLocationCallback
 
     private val _textState = MutableLiveData<Boolean>()
     val textState: LiveData<Boolean> get() = _textState
@@ -77,9 +81,9 @@ class DetailViewModel(
         _closeEvent.value = event
     }
 
-    fun myLocationCallbackEvent(event: Boolean) {
-        _myLocationCallback.value = event
-    }
+//    fun myLocationCallbackEvent(event: Boolean) {
+//        _myLocationCallback.value = event
+//    }
 
     fun textOpened(event: Boolean) {
         _textState.value = event
@@ -152,12 +156,19 @@ class DetailViewModel(
         return R * c * 1000 // 단위를 미터로 변환
     }
 
+    // 반환값은 이제 사용 안할 겁니다. _distanceText에 넣어주고 옵저빙해서 텍스트뷰에 반영.
     fun distanceCheckResponse(distance : Double): String {
         return when {
             distance/1000 < 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
             distance/1000 >= 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
-            else -> "현위치로부터 ?km"
+            else -> {
+                Log.w("jj-상세페이지 뷰모델", "distanceCheckResponse distance error: $distance")
+                "현위치로부터 ?km"
+            }
         }
+            .also {
+                _distanceText.value = it
+            }
     }
 
     fun dateFormatRecent(date: LocalDateTime): String { // RecentEntity에서 사용할 날짜 타입 변경
