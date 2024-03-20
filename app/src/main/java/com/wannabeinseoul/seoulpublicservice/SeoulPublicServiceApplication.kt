@@ -48,12 +48,14 @@ class SeoulPublicServiceApplication : Application() {
     var userName: MutableLiveData<String?> = MutableLiveData()
     var userProfileImagePlaceholder: Drawable? = null
     var userProfileImageDrawable: MutableLiveData<Drawable?> = MutableLiveData<Drawable?>()
+    var userProfileImageUrl: String? = null
     var userId: String? = null
     var userColor: Int = 0
 
     fun setUser(user: UserEntity) {
         userId = user.userId
         userColor = user.userColor?.parseColor() ?: 0
+        userProfileImageUrl = user.userProfileImage
         userProfileImagePlaceholder =
             ResourcesCompat.getDrawable(resources, R.drawable.ic_profile_image, theme)!!
                 .apply { setTint(userColor) }

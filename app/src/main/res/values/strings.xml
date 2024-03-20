@@ -194,6 +194,7 @@
     <string name="fragment_review_empty_description">작성된 후기가 없습니다.</string>
     <string name="fragment_review_input_review">후기를 입력해주세요.</string>
     <string name="item_detail_comment_user">TextView</string>
+    <string name="item_detail_comment_delete_btn">삭제</string>
     <string name="item_detail_comment_comment">TextView</string>
     <string name="item_home_name">축구장</string>
     <string name="item_map_info_region">송파구</string>
