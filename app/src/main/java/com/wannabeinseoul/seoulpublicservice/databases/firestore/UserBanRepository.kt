@@ -8,9 +8,10 @@ interface UserBanRepository {
     suspend fun getBanList(): List<String>
 }
 
-class UserBanRepositoryImpl: UserBanRepository {
+class UserBanRepositoryImpl : UserBanRepository {
 
     private val fireStore = Firebase.firestore
 
-    override suspend fun getBanList(): List<String> = fireStore.collection("userBan").get().await().toObjects(String::class.java)
+    override suspend fun getBanList(): List<String> =
+        fireStore.collection("userBan").get().await().toObjects(String::class.java)
 }

@@ -194,10 +194,10 @@ class HomeFragment : Fragment() {
                     else -> "${mainViewModel.selectRegion.value}에서 모든 서비스를 사용할 수 있습니다."
                 }
                 binding.tvHomeDescription.text = when (it.size) {
-                    1 -> setSpannableString(6, 11)
-                    2 -> setSpannableString(6, 17)
-                    3 -> setSpannableString(6, 23)
-                    4 -> setSpannableString(6, 29)
+                    1 -> setSpannableString(5, 10)
+                    2 -> setSpannableString(5, 16)
+                    3 -> setSpannableString(5, 22)
+                    4 -> setSpannableString(5, 28)
                     else -> binding.tvHomeDescription.text
                 }
             }
@@ -446,20 +446,39 @@ class HomeFragment : Fragment() {
     private fun setSpannableString(start: Int, end: Int): SpannableString {
         val spannableString = SpannableString(binding.tvHomeDescription.text)
 
-        spannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.total_text_color
-                )
-            ),
-            start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        if (mainViewModel.selectRegion.value?.length!! > 3) {
+            spannableString.setSpan(
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.total_text_color
+                    )
+                ),
+                start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
 
-        spannableString.setSpan(
-            StyleSpan(Typeface.BOLD),
-            start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+            spannableString.setSpan(
+                StyleSpan(Typeface.BOLD),
+                start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        } else {
+            spannableString.setSpan(
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.total_text_color
+                    )
+                ),
+                start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+
+            spannableString.setSpan(
+                StyleSpan(Typeface.BOLD),
+                start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+
 
         return spannableString
     }

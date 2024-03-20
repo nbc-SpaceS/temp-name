@@ -44,7 +44,7 @@ class FacilityFragment : Fragment() {
             Item(R.drawable.ic_footvolleyball, "족구장"),
             Item(R.drawable.ic_futsal, "풋살장"),
             Item(R.drawable.ic_badminton, "배드민턴장"),
-            Item(R.drawable.ic_stadium, "다목적 경기장"),
+            Item(R.drawable.ic_stadium, "다목적경기장"),
             Item(R.drawable.ic_gym, "체육관"),
             Item(R.drawable.ic_basketball, "농구장"),
         )
