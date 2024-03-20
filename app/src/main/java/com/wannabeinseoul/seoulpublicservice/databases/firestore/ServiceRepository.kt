@@ -51,7 +51,8 @@ class ServiceRepositoryImpl : ServiceRepository {
     }
 
     override suspend fun getServiceReviews(svcId: String): List<ReviewItem> {
-        getService(svcId)
+        if (!checkService(svcId)) fireStore.collection("service").document(svcId)
+            .set(ServiceEntity(svcId))
 
         val serviceReviewList =
             fireStore.collection("review").whereEqualTo("svcId", svcId).get().await()
