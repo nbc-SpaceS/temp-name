@@ -5,6 +5,7 @@ import com.wannabeinseoul.seoulpublicservice.BuildConfig
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+
 interface WeatherApiService {
     @GET("/VilageFcstInfoService_2.0/getVilageFcst")
     suspend fun getWeatherShort(
@@ -16,18 +17,8 @@ interface WeatherApiService {
         @Query("base_time") time: String,
         @Query("nx") x: Double,
         @Query("ny") y: Double
-    )
+    ): Items
 }
 
 //   /VilageFcstInfoService_2.0/getVilageFcst 단기
 //   /MidFcstInfoService/getMidLandFcst
-/*
- @GET("videos")
-    suspend fun mostPopularVideos(
-        @Query("key") key: String?,
-        @Query("part") part: String?,
-        @Query("chart") chart: String?,
-        @Query("regionCode") code: String?
-    ): Response<Video>
-
- */

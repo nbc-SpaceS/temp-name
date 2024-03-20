@@ -15,6 +15,8 @@ import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.usecase.*
 import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherApiService
+import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherShortRepository
+import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherShortRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -62,6 +64,7 @@ interface AppContainer {
     val complaintRepository: ComplaintRepository
     val userBanRepository: UserBanRepository
     val recentPrefRepository: RecentPrefRepository
+    val weatherShortRepository: WeatherShortRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
@@ -111,7 +114,9 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val seoulPublicRepository by lazy { SeoulPublicRepositoryImpl(retrofitService) }
 
-//    override val seoulPublicRepository: SeoulPublicRepository by lazy {
+    override val weatherShortRepository by lazy { WeatherShortRepositoryImpl(retrofitServiceWeather) }
+
+    //    override val seoulPublicRepository: SeoulPublicRepository by lazy {
 //        SeoulPublicRepositoryImpl(retrofitService)
 //    }
 

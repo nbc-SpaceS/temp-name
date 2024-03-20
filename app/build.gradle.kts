@@ -27,7 +27,6 @@ android {
 
         buildConfigField("String", "SEOUL_KEY", properties.getProperty("SEOUL_KEY"))
         buildConfigField("String", "WEATHER_SHORT_KEY", properties.getProperty("WEATHER_SHORT_KEY"))
-        buildConfigField("String", "WEATHER_MID_KEY", properties.getProperty("WEATHER_MID_KEY"))
     }
 
     buildTypes {
