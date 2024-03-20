@@ -3,7 +3,6 @@ package com.wannabeinseoul.seoulpublicservice
 import android.app.Application
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Looper
@@ -14,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import coil.imageLoader
 import coil.request.ImageRequest
+import com.naver.maps.map.util.FusedLocationSource
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.di.AppContainer
 import com.wannabeinseoul.seoulpublicservice.di.DefaultAppContainer
@@ -42,7 +42,9 @@ class SeoulPublicServiceApplication : Application() {
     private val _initialLoadingFinished: MutableLiveData<Boolean> = MutableLiveData(false)
     val initialLoadingFinished: LiveData<Boolean> get() = _initialLoadingFinished
 
-    var lastLocation: Location? = null
+//    var lastLocation: Location? = null  // FusedLocationSource 직접 쓰게 변경
+
+    var fusedLocationSource: FusedLocationSource? = null
 
     // TODO: 일단 그냥 public으로 씀
     var userName: MutableLiveData<String?> = MutableLiveData()
