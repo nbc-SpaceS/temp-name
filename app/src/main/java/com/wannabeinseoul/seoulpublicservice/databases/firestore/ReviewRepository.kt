@@ -8,7 +8,7 @@ import kotlinx.coroutines.tasks.await
 interface ReviewRepository {
     fun addReview(reviewId: String, reviewInfo: ReviewEntity)
 
-    suspend fun reviseReview(id: String, svcId: String, review: String)
+    suspend fun reviseReview(reviewId: String, review: String)
 
     suspend fun deleteReview(reviewId: String)
 
@@ -25,12 +25,8 @@ class ReviewRepositoryImpl : ReviewRepository {
         fireStore.collection("review").document(reviewId).set(reviewInfo)
     }
 
-    override suspend fun reviseReview(id: String, svcId: String, review: String) {
-        val targetReview =
-            fireStore.collection("review").whereEqualTo("userId", id).whereEqualTo("svcId", svcId)
-                .get().await().toObjects(ReviewEntity::class.java)
-
-        fireStore.collection("review").document(targetReview[0].reviewId ?: "")
+    override suspend fun reviseReview(reviewId: String, review: String) {
+        fireStore.collection("review").document(reviewId)
             .update("content", review)
     }
 
