@@ -24,11 +24,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.LocationTrackingMode
-import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.R
@@ -39,6 +35,7 @@ import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
+import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherXYChange
 import java.time.LocalDateTime
 
 private const val DETAIL_PARAM = "detail_param1"
@@ -61,10 +58,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
 //    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var myLocation: LatLng  // 내 위치
+//    private lateinit var myLocation: LatLng  // 내 위치
     private lateinit var itemLocation: LatLng // 아이템 위치
 
     private var closeListener: DetailCloseInterface? = null
+
+    private val weatherChange by lazy { WeatherXYChange() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,14 +169,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             checkLatLng(data)   // itemLocation은 여기서 검사해서 반환함
             bind(data)
             saveRecent(data)
+            // 지도의 X는 경도, Y는 위도 / 기상청 변환기(x = 위도, y = 경도)
+            val change = weatherChange.change(0, data.Y.toDouble(), data.X.toDouble())
+            vm.getWeather(1, 3, "20240320","0800", change.first, change.second)
         }
-//        vm.myLocationCallback.observe(viewLifecycleOwner) {
-//            if(it) {
-//                if (::myLocation.isInitialized) {
-//                    distanceCheck()
-//                }
-//            }
-//        }
         vm.setReviews(param1!!)
         vm.textState.observe(viewLifecycleOwner) {
             textOpen = it
@@ -190,6 +185,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             mainViewModel.setCurrentReviewList(it)
         }
         vm.favoriteChanged.observe(viewLifecycleOwner) { favorite(it) }
+        vm.shortWeather.observe(viewLifecycleOwner) {   // 날씨는 여기에서 !!!!!
+            Log.i("This is DetailFragment","Items : $it\nitem type : ${it.javaClass.simpleName}")
+        }
 
         mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
             if (mainViewModel.currentReviewList.isNotEmpty()) {

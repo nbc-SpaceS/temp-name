@@ -15,9 +15,9 @@ interface WeatherShortRepository {
         row: Int,
         date: String,
         time: String,
-        x: Double,
-        y: Double
-    ) : Items
+        x: Int,
+        y: Int
+    ) : WeatherShortDTO
 }
 
 class WeatherShortRepositoryImpl(
@@ -28,7 +28,7 @@ class WeatherShortRepositoryImpl(
         row: Int,
         date: String,
         time: String,
-        x: Double,
-        y: Double
+        x: Int,
+        y: Int
     ) = weatherApiService.getWeatherShort(page = page, row = row, date = date, time = time, x = x, y = y)
 }

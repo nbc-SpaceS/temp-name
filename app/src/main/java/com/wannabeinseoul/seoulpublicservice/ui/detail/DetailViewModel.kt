@@ -21,6 +21,8 @@ import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
+import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherShortDTO
+import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherShortRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -39,7 +41,8 @@ class DetailViewModel(
     private val serviceRepository: ServiceRepository,
     private val savedPrefRepository: SavedPrefRepository,
     private val userBanRepository: UserBanRepository,
-    private val recentPrefRepository: RecentPrefRepository
+    private val recentPrefRepository: RecentPrefRepository,
+    private val weatherShortRepository: WeatherShortRepository
 ) : ViewModel() {
     private val _serviceData = MutableLiveData<ReservationEntity>()
     val serviceData: LiveData<ReservationEntity> get() = _serviceData
@@ -65,6 +68,9 @@ class DetailViewModel(
 
     private val _favoriteChanged: MutableLiveData<Boolean> = MutableLiveData()
     val favoriteChanged: LiveData<Boolean> get() = _favoriteChanged
+
+    private val _shortWeather: MutableLiveData<WeatherShortDTO> = MutableLiveData()
+    val shortWeather: LiveData<WeatherShortDTO> get() = _shortWeather
 
     fun getData(svcID: String) {
         viewModelScope.launch{
@@ -131,7 +137,8 @@ class DetailViewModel(
                     serviceRepository = container.serviceRepository,
                     savedPrefRepository = container.savedPrefRepository,
                     userBanRepository = container.userBanRepository,
-                    recentPrefRepository = container.recentPrefRepository
+                    recentPrefRepository = container.recentPrefRepository,
+                    weatherShortRepository = container.weatherShortRepository
                 )
             }
         }
@@ -177,5 +184,13 @@ class DetailViewModel(
 
     fun saveData(data: RecentEntity) {
         recentPrefRepository.setRecent(data)
+    }
+
+    fun getWeather(page: Int, row: Int, date: String, time: String, x: Int, y: Int) {
+        runBlocking(Dispatchers.IO) {
+            weatherShortRepository.getShortWeather(page, row, date, time, x, y)
+        }.let {
+            _shortWeather.value = it
+        }
     }
 }
