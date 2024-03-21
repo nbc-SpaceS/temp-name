@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.weather.shorttime
+package com.wannabeinseoul.seoulpublicservice.weather
 
 interface WeatherShortRepository {
     /**

@@ -1,14 +1,14 @@
-package com.wannabeinseoul.seoulpublicservice.weather.shorttime
+package com.wannabeinseoul.seoulpublicservice.weather
 
 import android.util.Log
 
 class WeatherXYChange{
-    fun onChange(mode: Int, x: Double, y: Double) {
-        val tmp = convertGRID_GPS(TO_GRID, 37.579871128849334, 126.98935225645432)
-        val change = convertGRID_GPS(mode, x, y)
-        Log.e(">>", "x = " + tmp.x + ", y = " + tmp.y)
-        Log.i("This is TestActivity Embed in DetailFragment", "x = $x / ${change.x}, y = $y / ${change.y}")
-    }
+//    fun onChange(mode: Int, x: Double, y: Double) {
+//        val tmp = convertGRID_GPS(TO_GRID, 37.579871128849334, 126.98935225645432)
+//        val change = convertGRID_GPS(mode, x, y)
+//        Log.e(">>", "x = " + tmp.x + ", y = " + tmp.y)
+//        Log.i("This is TestActivity Embed in DetailFragment", "x = $x / ${change.x}, y = $y / ${change.y}")
+//    }
 
     /**
      * @property change 좌표 기상청용으로 변환하기

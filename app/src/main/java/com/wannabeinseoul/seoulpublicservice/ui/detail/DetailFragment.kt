@@ -35,7 +35,6 @@ import com.wannabeinseoul.seoulpublicservice.databinding.FragmentDetailBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
-import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherXYChange
 import java.time.LocalDateTime
 
 private const val DETAIL_PARAM = "detail_param1"
@@ -55,22 +54,18 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     private var textOpen = false    // 텍스트 뷰가 펼쳐져 있는지(false = 접힌 상태, true = 펼친 상태)
 
     private lateinit var commentAdapter: DetailCommentAdapter  // 후기 ListAdapter 선언
-
-//    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-//    private lateinit var myLocation: LatLng  // 내 위치
     private lateinit var itemLocation: LatLng // 아이템 위치
 
     private var closeListener: DetailCloseInterface? = null
 
-    private val weatherChange by lazy { WeatherXYChange() }
+//    private val weatherChange by lazy { WeatherXYChange() }
+//    private val localDateTime by lazy { LocalDateTimeParser() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(DETAIL_PARAM)
         }
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         viewModel.getData(param1!!)
         viewModel.savedID(param1!!)
     }
@@ -90,36 +85,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
         favorite(viewModel.savedID.value!!)
-//        getCurrentLocation()  // FusedLocationSource 전역화 하면서 myLocation 필요 없어짐
         mapViewSet()
         viewModelInit()
         viewInit()
         mapView.getMapAsync(this)
         connectToCommentList(requireContext())
     }
-
-//    private fun getCurrentLocation() {
-//        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-//            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            fusedLocationClient.lastLocation
-//                .addOnSuccessListener { location ->
-//                    if (location != null) {
-//                        val latitude = location.latitude
-//                        val longitude = location.longitude
-//                        if (latitude != 0.0 && longitude != 0.0 && !latitude.toString().contains("37.42") && !longitude.toString().contains("-122.08")) {
-//                            myLocation = LatLng(latitude, longitude)
-//                            viewModel.myLocationCallbackEvent(true)
-//                        }
-//                    }
-//                }
-//                .addOnFailureListener { e ->
-//                    throw Exception("Error! : ", e)
-//                }
-//        } else {
-//            myLocation = LatLng(100.0, 100.0)
-//            viewModel.myLocationCallbackEvent(true)
-//        }
-//    }
 
     private fun saveRecent(data : ReservationEntity) {
         val recentItem = RecentEntity(
@@ -170,8 +141,10 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             bind(data)
             saveRecent(data)
             // 지도의 X는 경도, Y는 위도 / 기상청 변환기(x = 위도, y = 경도)
-            val change = weatherChange.change(0, data.Y.toDouble(), data.X.toDouble())
-            vm.getWeather(1, 3, "20240320","0800", change.first, change.second)
+//            val change = weatherChange.change(0, data.Y.toDouble(), data.X.toDouble())
+//            val weatherDate = "${localDateTime.year}${localDateTime.month}${localDateTime.day}"
+//            val weatherHour = "${localDateTime.hour}00"
+//            vm.getWeather(1, 3, weatherDate, weatherHour, change.first, change.second)
         }
         vm.setReviews(param1!!)
         vm.textState.observe(viewLifecycleOwner) {
@@ -185,9 +158,9 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             mainViewModel.setCurrentReviewList(it)
         }
         vm.favoriteChanged.observe(viewLifecycleOwner) { favorite(it) }
-        vm.shortWeather.observe(viewLifecycleOwner) {   // 날씨는 여기에서 !!!!!
-            Log.i("This is DetailFragment","Items : $it\nitem type : ${it.javaClass.simpleName}")
-        }
+//        vm.shortWeather.observe(viewLifecycleOwner) {   // 날씨는 여기에서 !!!!!
+//            Log.i("This is DetailFragment","Items : $it\nitem type : ${it.javaClass.simpleName}")
+//        }
 
         mainViewModel.refreshReviewListState.observe(viewLifecycleOwner) {
             if (mainViewModel.currentReviewList.isNotEmpty()) {
@@ -231,8 +204,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun distanceCheck() {
-//        binding.tvDetailDistanceFromHere.text = viewModel.distanceCheckResponse(viewModel.distance(itemLocation, myLocation))
-
         val location = app.fusedLocationSource?.lastLocation
         val latLng = if (location == null) {
             LatLng(100.0, 100.0)

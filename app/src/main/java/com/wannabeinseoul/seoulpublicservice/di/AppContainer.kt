@@ -14,9 +14,9 @@ import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.usecase.*
-import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherApiService
-import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherShortRepository
-import com.wannabeinseoul.seoulpublicservice.weather.shorttime.WeatherShortRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherApiService
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
