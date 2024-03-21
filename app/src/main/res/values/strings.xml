@@ -180,7 +180,7 @@
     <string name="fragment_map_btn_filter">필터</string>
     <string name="fragment_map_filter_count">1</string>
     <string name="fragment_map_culture_event">문화체험</string>
-    <string name="fragment_map_facility">공간시설</string>
+    <string name="fragment_map_facility">시설대관</string>
     <string name="fragment_map_diagnosis">진료복지</string>
     <string name="fragment_map_sports_facility">체육시설</string>
     <string name="fragment_map_education">교육강좌</string>

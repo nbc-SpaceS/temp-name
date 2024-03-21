@@ -39,8 +39,8 @@ class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapt
         holder.tvReservationStatus.text = item.SVCSTATNM
 
         if (item.PAYATNM.take(2) == "유료") {
-            holder.tvIsFree.setTextColor(Color.parseColor("#5E5E5E"))
-            holder.tvIsFree.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
+            holder.tvIsFree.setTextColor(Color.parseColor("#000000"))
+            holder.tvIsFree.setBackgroundResource(R.drawable.background_badge_pay_type)
         } else {
             holder.tvIsFree.setTextColor(Color.parseColor("#FFFFFF"))
             holder.tvIsFree.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
@@ -48,13 +48,13 @@ class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapt
 
         when (item.SVCSTATNM) {
             "접수중", "안내중" -> {
-                holder.tvReservationStatus.setTextColor(Color.parseColor("#F8496C"))
-                holder.tvReservationStatus.setBackgroundResource(R.drawable.background_white_with_f8496c_stroke)
+                holder.tvReservationStatus.setTextColor(Color.parseColor("#FFFFFF"))
+                holder.tvReservationStatus.setBackgroundResource(R.drawable.background_pointcolor_with_rounded)
             }
 
             else -> {
-                holder.tvReservationStatus.setTextColor(Color.parseColor("#5E5E5E"))
-                holder.tvReservationStatus.setBackgroundResource(R.drawable.background_white_with_rounded_stroke)
+                holder.tvReservationStatus.setTextColor(Color.parseColor("#000000"))
+                holder.tvReservationStatus.setBackgroundResource(R.drawable.background_badge_pay_type)
             }
         }
 
