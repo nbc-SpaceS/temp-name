@@ -1,3 +1,4 @@
+import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
 import java.util.Properties
 
 plugins {
@@ -26,6 +27,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "SEOUL_KEY", properties.getProperty("SEOUL_KEY"))
+        buildConfigField("String", "KMA_API_KEY", properties.getProperty("KMA_API_KEY"))
     }
 
     buildTypes {

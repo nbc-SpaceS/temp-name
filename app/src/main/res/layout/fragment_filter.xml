@@ -748,7 +748,7 @@
                             style="@style/Widget.MaterialComponents.Chip.Choice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/camping"
+                            android:text="@string/fragment_filter_camping"
                             android:textColor="@color/selector_chip_button_text"
                             android:textSize="14sp"
                             app:chipBackgroundColor="@color/selector_chip_button"

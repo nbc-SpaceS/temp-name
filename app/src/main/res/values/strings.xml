@@ -121,7 +121,7 @@
     <string name="fragment_filter_concert">공연장</string>
     <string name="fragment_filter_auditorium">강당</string>
     <string name="fragment_filter_citizen">주민공유공간</string>
-    <string name="camping">캠핑장</string>
+    <string name="fragment_filter_camping">캠핑장</string>
     <string name="fragment_filter_young">청년공간</string>
     <string name="fragment_filter_recording">녹화장소</string>
     <string name="fragment_filter_meeting_room">회의실</string>
