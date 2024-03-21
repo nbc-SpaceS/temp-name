@@ -1,7 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
-import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.room.util.copy
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.complaint.ComplaintUserInfo
@@ -20,10 +17,7 @@ import com.wannabeinseoul.seoulpublicservice.usecase.GetReviewListUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.ReviseReviewUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.UploadReviewUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlin.system.measureTimeMillis
-import kotlin.time.measureTime
 
 class ReviewViewModel(
     private val uploadReviewUseCase: UploadReviewUseCase,
@@ -52,28 +46,23 @@ class ReviewViewModel(
 
     fun uploadReview(svcId: String, review: String) {
         _reviewCredentials.value = false
+        _uiState.postValue(uiState.value.orEmpty().toMutableList().apply {
+            add(
+                0, ReviewItem(
+                    "",
+                    userId,
+                    userName ?: "",
+                    "",
+                    review,
+                    "#000000",
+                    userProfileImage ?: ""
+                )
+            )
+        })
 
         viewModelScope.launch(Dispatchers.IO) {
-            async {
-                _uiState.postValue(uiState.value.orEmpty().toMutableList().apply {
-                    add(
-                        0, ReviewItem(
-                            "",
-                            userId,
-                            userName ?: "",
-                            "",
-                            review,
-                            "#000000",
-                            userProfileImage ?: ""
-                        )
-                    )
-                })
-            }
-
-            async {
-                uploadReviewUseCase(svcId, review)
-                _uiState.postValue(getReviewListUseCase(svcId))
-            }
+            uploadReviewUseCase(svcId, review)
+            _uiState.postValue(getReviewListUseCase(svcId))
         }
     }
 
@@ -88,19 +77,23 @@ class ReviewViewModel(
     }
 
     fun reviseReview(svcId: String, review: String) {
-        val idx = uiState.value.orEmpty().toMutableList().withIndex()
-            .find { it.value.userId == userId }?.index
-        if (idx != null) {
-            val item = uiState.value?.get(idx)?.copy(content = review)
-            _uiState.value = uiState.value.orEmpty().toMutableList().apply {
-                removeAt(idx)
-                add(idx, item!!)
-            }
-        }
+        val reviewItem = uiState.value.orEmpty().toMutableList().withIndex()
+            .find { it.value.userId == userId }
 
-        viewModelScope.launch(Dispatchers.IO) {
-            reviseReviewUseCase(svcId, review)
-            _uiState.postValue(getReviewListUseCase(svcId))
+        if (reviewItem?.value?.reviewId != "") {
+            val idx = reviewItem?.index
+            if (idx != null) {
+                val item = uiState.value?.get(idx)?.copy(content = review)
+                _uiState.value = uiState.value.orEmpty().toMutableList().apply {
+                    removeAt(idx)
+                    add(idx, item!!)
+                }
+            }
+
+            viewModelScope.launch(Dispatchers.IO) {
+                reviseReviewUseCase(reviewItem?.value?.reviewId ?: "", review)
+                _uiState.postValue(getReviewListUseCase(svcId))
+            }
         }
     }
 
@@ -114,7 +107,7 @@ class ReviewViewModel(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            deleteReviewUseCase(reviewId)
+            deleteReviewUseCase(svcId, reviewId)
             _uiState.postValue(getReviewListUseCase(svcId))
         }
     }

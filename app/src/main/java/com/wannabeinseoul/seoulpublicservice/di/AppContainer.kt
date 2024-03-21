@@ -216,7 +216,6 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val reviseReviewUseCase by lazy {
         ReviseReviewUseCase(
-            idPrefRepository = idPrefRepository,
             reviewRepository = reviewRepository
         )
     }
@@ -244,7 +243,10 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val deleteReviewUseCase by lazy {
         DeleteReviewUseCase(
-            reviewRepository = reviewRepository
+            reviewRepository = reviewRepository,
+            serviceRepository = serviceRepository,
+            userRepository = userRepository,
+            idPrefRepository = idPrefRepository
         )
     }
 
