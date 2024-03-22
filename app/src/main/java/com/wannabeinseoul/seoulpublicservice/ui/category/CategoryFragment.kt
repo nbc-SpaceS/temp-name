@@ -53,6 +53,7 @@ class CategoryFragment : Fragment() {
             }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -71,12 +72,6 @@ class CategoryFragment : Fragment() {
         categoryClick()
 
         binding.reCategory.addOnScrollListener(scrollListener)
-
-        // FloatingActionButton 클릭 이벤트 처리
-        binding.fabRecentFloating.setOnClickListener {
-            Toast.makeText(requireContext(), "플로팅 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show()
-            binding.reCategory.smoothScrollToPosition(0)
-        }
     }
 
     private fun initView() {
