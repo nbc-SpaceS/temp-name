@@ -17,9 +17,9 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.di.AppContainer
 import com.wannabeinseoul.seoulpublicservice.di.DefaultAppContainer
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.util.RoomRowMapper
 import com.wannabeinseoul.seoulpublicservice.util.parseColor
+import com.wannabeinseoul.seoulpublicservice.util.toastLong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -36,13 +36,8 @@ class SeoulPublicServiceApplication : Application() {
 
     private val tempKeyRowsSavedTime = "tempKeyRowsSavedTime"  // 나중에 이름 바꿀거. key 전역으로 관리할수도.
 
-    private var _rowList: List<Row> = emptyList()
-    val rowList: List<Row> get() = _rowList
-
     private val _initialLoadingFinished: MutableLiveData<Boolean> = MutableLiveData(false)
     val initialLoadingFinished: LiveData<Boolean> get() = _initialLoadingFinished
-
-//    var lastLocation: Location? = null  // FusedLocationSource 직접 쓰게 변경
 
     var fusedLocationSource: FusedLocationSource? = null
 
@@ -86,7 +81,7 @@ class SeoulPublicServiceApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        _container = DefaultAppContainer(this) { rowList }
+        _container = DefaultAppContainer(this)
 
         CoroutineScope(Dispatchers.Default).launch {
             updateRowList()
@@ -102,16 +97,15 @@ class SeoulPublicServiceApplication : Application() {
             (cap.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
                     cap.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)).not()
         ) {
+            // TODO: toast를 withContext Main 에서 해주는 게 맞을 듯
             Looper.prepare()
-            Toast.makeText(
-                this,
-                "네트워크 연결이 불가능하므로 저장된 데이터로 표시됩니다.",
-                Toast.LENGTH_LONG
-            ).show()
+            toastLong(this, "네트워크 연결이 불가능하므로 저장된 데이터로 표시됩니다.")
             getFromDB()
             Log.d(
                 JJTAG, "cm.getNetworkCapabilities(cm.activeNetwork): $cap\n" +
-                        "DB에서 꺼냄(네트워크 불가): ${rowList.toString().take(255)}"
+                        "DB에서 꺼냄(네트워크 불가): ${
+                            container.dbMemoryRepository.getAll().toString().take(255)
+                        }"
             )
             return
         }
@@ -134,7 +128,7 @@ class SeoulPublicServiceApplication : Application() {
                 getAndUpdateAll2000()
             } else {
                 getFromDB()
-                if (_rowList.isEmpty()) getAndUpdateAll2000()
+                if (container.dbMemoryRepository.getAll().isEmpty()) getAndUpdateAll2000()
             }
         }
     }
@@ -142,9 +136,11 @@ class SeoulPublicServiceApplication : Application() {
     private suspend fun getAndUpdateAll2000() {
         try {
             withTimeout(6_000L) {
-                _rowList = container.seoulPublicRepository.getAllParallel()
-//                _rowList = container.seoulPublicRepository.getAll2000()
-                val reservationEntities = RoomRowMapper.mappingRowToRoom(_rowList)
+                container.dbMemoryRepository.postAll(
+                    container.seoulPublicRepository.getAllParallel()
+                )
+                val reservationEntities =
+                    RoomRowMapper.mappingRowToRoom(container.dbMemoryRepository.getAll())
                 container.reservationRepository.deleteAll()
                 container.reservationRepository.insertAll(reservationEntities)
                 container.prefRepository
@@ -164,7 +160,7 @@ class SeoulPublicServiceApplication : Application() {
 
     private suspend fun getFromDB() {
         val reservationEntities = container.reservationRepository.getAll()
-        _rowList = RoomRowMapper.mappingRoomToRow(reservationEntities)
+        container.dbMemoryRepository.postAll(RoomRowMapper.mappingRoomToRow(reservationEntities))
     }
 
 }
