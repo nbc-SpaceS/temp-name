@@ -217,9 +217,6 @@ class HomeViewModel(
             run.let {
                 val itemList = mutableListOf<WeatherShort>()
                 val items = it.response.body.items.item
-//                for(item in items) {
-//                    Log.i("This is HomeViewModel","item date : ${item.fcstDate}\nitem time : ${item.fcstTime}\nbase date : ${item.baseDate}\nbase time : ${item.baseTime}")
-//                }
                 var skyValue: Int? = null
                 var tmpValue: Int? = null
                 var popValue: Int? = null
