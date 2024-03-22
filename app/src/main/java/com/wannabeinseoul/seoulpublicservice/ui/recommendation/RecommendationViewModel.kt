@@ -39,7 +39,7 @@ class RecommendationViewModel(
         _multiViews.value = list
     }
 
-    private val isLoading = MutableLiveData<Boolean>()
+    val isLoading = MutableLiveData<Boolean>()
 
     init {
         isLoading.value = true // 로딩 상태로 초기화
@@ -50,7 +50,7 @@ class RecommendationViewModel(
             val regionItems = mutableListOf<Pair<String, String>>()
 
             // 첫 번째 초기화 로직: 지역 외 로직
-            items.add(Pair("자전거", "자전거와 관련된 서비스"))
+            items.add(Pair("교육", "교육과 관련된 서비스"))
             items.add(Pair("청소년", "청소년을 위한 서비스"))
             items.add(Pair("장애인", "장애인을 위한 서비스"))
             items.add(Pair("풋살", "풋살에 관한 서비스"))
@@ -75,6 +75,51 @@ class RecommendationViewModel(
         }
     }
 
+//    fun loadMoreData() {
+//        if (isLoading.value == true) return // 이미 로딩 중이라면 추가 데이터를 가져오지 않음
+//
+//        viewModelScope.launch(Dispatchers.IO) {
+//            isLoading.postValue(true) // 로딩 상태로 변경
+//
+//            // 기존에 가져온 데이터를 저장할 리스트
+//            val existingData = _horizontalDataList.value.orEmpty().toMutableList()
+//
+//            // 새로운 데이터를 가져오는 로직
+//            val newSelectedRegions = regionPrefRepository.load() // 선택한 모든 지역을 가져옴
+//            val newItems = mutableListOf<Pair<String, String>>()
+//            val newRegionItems = mutableListOf<Pair<String, String>>()
+//
+//            // 첫 번째 초기화 로직: 지역 외 로직
+//            newItems.add(Pair("교육", "교육과 관련된 서비스"))
+//            newItems.add(Pair("청소년", "청소년을 위한 서비스"))
+//            newItems.add(Pair("장애인", "장애인을 위한 서비스"))
+//            newItems.add(Pair("풋살", "풋살에 관한 서비스"))
+//
+//            // 두 번째 초기화 로직: 다중 선택한 지역에 대한 로직
+//            newSelectedRegions.forEach { region ->
+//                val regionInfo = region + "에 관한 서비스"
+//                newRegionItems.add(Pair(region, regionInfo))
+//            }
+//
+//            val queryResults = (newItems + newRegionItems).map { async { getQuery(it.first) } }.awaitAll()
+//            val recommendationHorizontalDataList =
+//                queryResults.mapIndexed { index, recommendationDataList ->
+//                    RecommendationHorizontalData(
+//                        (newItems + newRegionItems)[index].second,
+//                        recommendationDataList
+//                    )
+//                }
+//
+//            // 중복된 데이터 제거
+//            val newData = recommendationHorizontalDataList.filterNot { existingData.contains(it) }
+//
+//            // 새로운 데이터를 기존 데이터에 추가하여 업데이트
+//            existingData.addAll(newData)
+//            _horizontalDataList.postValue(existingData)
+//
+//            isLoading.postValue(false) // 로딩 상태 변경
+//        }
+//    }
 
     private suspend fun getQuery(query: String): List<RecommendationData> {
         val reservationEntities = reservationRepository.searchText(query).shuffled().take(5)

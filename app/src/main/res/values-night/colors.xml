@@ -40,9 +40,9 @@
     <color name="badge_pay_type_solid">#6A6A6A</color>
     <color name="badge_pay_type_stroke">#00000000</color>
 
-    <color name="marker1_solid">#25B1FF</color>
-    <color name="marker2_solid">#FFAC1C</color>
-    <color name="marker3_solid">#1FCD26</color>
-    <color name="marker4_solid">#FF5722</color>
-    <color name="marker5_solid">#673AB7</color>
+    <color name="marker1_solid">#fa4a4a</color>
+    <color name="marker2_solid">#9C4AFA</color>
+    <color name="marker3_solid">#638cff</color>
+    <color name="marker4_solid">#F7CE3F</color>
+    <color name="marker5_solid">#62E7CF</color>
 </resources>

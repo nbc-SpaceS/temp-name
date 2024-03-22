@@ -17,6 +17,7 @@ import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryActivity
 
 class ItemAdapter(
     private val regionPrefRepository: RegionPrefRepository,
+    private val maxClass: String
 ) : ListAdapter<Item, ItemAdapter.ItemViewHolder>(object : DiffUtil.ItemCallback<Item>() {
     override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
         return oldItem.name == newItem.name
@@ -45,8 +46,7 @@ class ItemAdapter(
             ivIcon.setImageResource(item.icon)
             tvName.text = item.name
 
-            ivIcon.setBackgroundResource(R.drawable.background_radius_10dp_ff6685)
-            ivIcon.setColorFilter(Color.WHITE)
+            setIconColor()
 
             if (item.count == 0) {
                 // 리스트가 비어있을 때 아이템의 배경과 이미지 색을 변경하고 클릭 불가능하게 설정
@@ -56,14 +56,13 @@ class ItemAdapter(
                 itemView.setOnClickListener(null)
             } else {
                 // 리스트가 비어있지 않을 때 아이템의 배경과 이미지 색을 원래대로 복원하고 클릭 가능하게 설정
-                ivIcon.setBackgroundResource(R.drawable.background_radius_10dp_ff6685)
-                ivIcon.setColorFilter(Color.WHITE)
+                setIconColor()
                 itemView.setOnClickListener {
                     if (regionPrefRepository.loadSelectedRegion() == "지역선택") {
                         Toast.makeText(it.context, "관심지역을 먼저 선택해주세요.", Toast.LENGTH_SHORT).show()
                     } else {
                         // 아이콘의 배경색과 색상을 변경
-                        ivIcon.setBackgroundResource(R.drawable.background_radius_10dp_e95a77)
+                        setClickedIconColor()
                         // 선택된 항목의 데이터와 지역을 가지고 카테고리 페이지로 이동
                         val intent = Intent(it.context, CategoryActivity::class.java).apply {
                             if (item.name == "병원") {
@@ -81,11 +80,48 @@ class ItemAdapter(
                         it.context.startActivity(intent)
                         // 일정 시간 후에 아이콘의 배경색과 색상을 원래대로 복원
                         itemView.postDelayed({
-                            ivIcon.setBackgroundResource(R.drawable.background_radius_10dp_ff6685)
-                            ivIcon.setColorFilter(Color.WHITE)
+                            setIconColor()
                         }, 500)
                     }
                 }
+            }
+        }
+
+        private fun setIconColor() = with(binding) {
+            when (maxClass) {
+                "체육시설" -> {
+                    ivIcon.setBackgroundResource(R.drawable.background_facility_category_button)
+                    ivIcon.setColorFilter(Color.WHITE)
+                }
+                "교육강좌" -> {
+                    ivIcon.setBackgroundResource(R.drawable.background_education_category_button)
+                    ivIcon.setColorFilter(Color.WHITE)
+                }
+                "문화체험" -> {
+                    ivIcon.setBackgroundResource(R.drawable.background_culture_event_category_button)
+                    ivIcon.setColorFilter(Color.WHITE)
+                }
+                "시설대관" -> {
+                    ivIcon.setBackgroundResource(R.drawable.background_facility_rent_category_button)
+                    ivIcon.setColorFilter(Color.WHITE)
+                }
+                "진료복지" -> {
+                    ivIcon.setBackgroundResource(R.drawable.background_medical_category_button)
+                    ivIcon.setColorFilter(Color.WHITE)
+                }
+
+                else -> Unit
+            }
+        }
+
+        private fun setClickedIconColor() = with(binding) {
+            when (maxClass) {
+                "체육시설" -> ivIcon.setBackgroundResource(R.drawable.background_facility_category_button_clicked)
+                "교육강좌" -> ivIcon.setBackgroundResource(R.drawable.background_education_category_button_clicked)
+                "문화체험" -> ivIcon.setBackgroundResource(R.drawable.background_culture_event_category_button_clicked)
+                "시설대관" -> ivIcon.setBackgroundResource(R.drawable.background_facility_rent_category_button_clicked)
+                "진료복지" -> ivIcon.setBackgroundResource(R.drawable.background_medical_category_button_clicked)
+                else -> Unit
             }
         }
     }

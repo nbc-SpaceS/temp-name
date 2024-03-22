@@ -8,7 +8,8 @@
     android:layout_margin="5dp"
     android:background="@drawable/background_radius_12dp"
     android:clipToOutline="true"
-    android:elevation="2dp">
+    android:elevation="2dp"
+    android:outlineSpotShadowColor="@color/total_text_color">
 
     <ImageView
         android:id="@+id/iv_home_recent_img"

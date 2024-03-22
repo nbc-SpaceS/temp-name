@@ -48,11 +48,11 @@
     <string name="fragment_category_tv_ct_click_free">무료</string>
     <string name="fragment_category_tv_ct_is_reservation_available">예약가능</string>
     <string name="fragment_category_tv_ct_click_is_reservation_available">예약가능</string>
-    <string name="fragment_category_tv_reservation_empty">해당하는 서비스가 없습니다.</string>
+    <string name="fragment_category_tv_reservation_empty">해당하는 공공서비스가 없습니다.</string>
     <string name="fragment_complaint_tv_complaint_description">xx님을 신고하시겠습니까?</string>
     <string name="fragment_complaint_btn_cancel">취소</string>
     <string name="fragment_complaint_btn_confirm">확인</string>
-    <string name="fragment_culture_event_unavailable">사용할 수 있는 서비스가 없습니다.</string>
+    <string name="fragment_culture_event_unavailable">사용할 수 있는 공공서비스가 없습니다.</string>
     <string name="fragment_detail_price_pay">유료</string>
     <string name="fragment_detail_subcategory">소분류</string>
     <string name="fragment_detail_title">제목</string>
@@ -76,9 +76,9 @@
     <string name="fragment_detail_more">더보기…</string>
     <string name="fragment_detail_review">후기</string>
     <string name="fragment_detail_empty_review">작성된 후기가 없습니다.</string>
-    <string name="fragment_education_unavailable">사용할 수 있는 서비스가 없습니다.</string>
-    <string name="fragment_facility_unavailable">사용할 수 있는 서비스가 없습니다.</string>
-    <string name="fragment_facility_rent_unavailable">사용할 수 있는 서비스가 없습니다.</string>
+    <string name="fragment_education_unavailable">사용할 수 있는 공공서비스가 없습니다.</string>
+    <string name="fragment_facility_unavailable">사용할 수 있는 공공서비스가 없습니다.</string>
+    <string name="fragment_facility_rent_unavailable">사용할 수 있는 공공서비스가 없습니다.</string>
     <string name="fragment_filter_title">필터</string>
     <string name="fragment_filter_reset">초기화</string>
     <string name="fragment_filter_list">서비스 종류</string>
@@ -180,15 +180,16 @@
     <string name="fragment_map_btn_filter">필터</string>
     <string name="fragment_map_filter_count">1</string>
     <string name="fragment_map_culture_event">문화체험</string>
-    <string name="fragment_map_facility">공간시설</string>
+    <string name="fragment_map_facility">시설대관</string>
     <string name="fragment_map_diagnosis">진료복지</string>
     <string name="fragment_map_sports_facility">체육시설</string>
     <string name="fragment_map_education">교육강좌</string>
     <string name="fragment_map_current_location">Find Current Location</string>
-    <string name="fragment_medical_unavailable">사용할 수 있는 서비스가 없습니다.</string>
+    <string name="fragment_medical_unavailable">사용할 수 있는 공공서비스가 없습니다.</string>
     <string name="fragment_notification_notification">알림</string>
     <string name="fragment_notification_description">최대 50개의 알림만 노출됩니다.</string>
-    <string name="fragment_recommendation_today_service">오늘의 추천 서비스</string>
+    <string name="fragment_recommendation_today_service1">이 추천하는</string>
+    <string name="fragment_recommendation_today_service2">오늘은 이런 공공서비스 어떠세요?</string>
     <string name="fragment_review_review">후기</string>
     <string name="fragment_review_count">0</string>
     <string name="fragment_review_empty_description">작성된 후기가 없습니다.</string>
@@ -211,8 +212,8 @@
     <string name="my_page_item_reviewed_title">공공서비스 제목이 들어가는 공간</string>
     <string name="my_page_item_reviewed_content">내 닉네임 : 댓글 내용이 들어가는 공간</string>
     <string name="my_page_item_reviewed_date">99.99.99</string>
-    <string name="my_page_item_reviewed_header_title">후기 남긴 서비스</string>
-    <string name="my_page_item_reviewed_nothing_text">후기를 남긴 서비스가 없습니다</string>
+    <string name="my_page_item_reviewed_header_title">후기 남긴 공공서비스</string>
+    <string name="my_page_item_reviewed_nothing_text">후기를 남긴 공공서비스가 없습니다</string>
     <string name="my_page_item_saved_title">저장한 공공서비스</string>
     <string name="my_page_item_saved_clear">전체삭제</string>
     <string name="my_page_item_saved_nothing">저장한 공공서비스가 없습니다</string>
@@ -224,6 +225,6 @@
     <string name="recommendation_item_recommended_shared_text">청소년들을 대상으로 하는 공공서비스</string>
     <string name="recommendation_item_recommended_tip_title">그거 아시나요?</string>
     <string name="recommendation_item_recommended_tip_content">서울시의 긴급 구호 및 안전 시설을 이용할 때, 비상 상황에 대비하여 위치를 파악하고 신속하게 대응하는 것이 중요합니다.</string>
-    <string name="fragment_home_recent_title">최근에 들어갔던 서비스</string>
-    <string name="fragment_home_recent_description">최근에 들어갔던 서비스는 최대 10개까지 저장됩니다.</string>
+    <string name="fragment_home_recent_title">최근에 들어갔던 공공서비스</string>
+    <string name="fragment_home_recent_description">최근에 들어갔던 공공서비스는 최대 10개까지 저장됩니다.</string>
 </resources>

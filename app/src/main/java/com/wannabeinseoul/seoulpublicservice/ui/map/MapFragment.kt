@@ -106,11 +106,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private val matchingColor = hashMapOf(
-        "문화체험" to R.color.marker1_solid,
-        "공간시설" to R.color.marker2_solid,
-        "진료복지" to R.color.marker3_solid,
-        "체육시설" to R.color.marker4_solid,
-        "교육강좌" to R.color.marker5_solid
+        "체육시설" to R.color.marker1_solid,
+        "교육강좌" to R.color.marker2_solid,
+        "문화체험" to R.color.marker3_solid,
+        "공간시설" to R.color.marker4_solid,
+        "진료복지" to R.color.marker5_solid
     )
 
     override fun onCreateView(
@@ -182,6 +182,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     viewModel.setServiceData()
                 }
                 setInitialState()
+                moveCamera(null, null, 10.0)
                 true
             }
             false
@@ -202,6 +203,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     viewModel.setServiceData()
                 }
                 rvAdapter.submitList(viewModel.loadSavedOptions().flatten())
+                moveCamera(null, null, 10.0)
                 if (viewModel.loadSavedOptions().any { it.isNotEmpty() }) {
                     binding.tvMapFilterBtn.setTextColor(requireContext().getColor(R.color.point_color))
                     binding.clMapFilterCount.isVisible = true

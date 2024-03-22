@@ -23,7 +23,7 @@ class FacilityFragment : Fragment() {
     private val regionPrefRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.regionPrefRepository }
     private val dbMemoryRepository by lazy { (requireActivity().application as SeoulPublicServiceApplication).container.dbMemoryRepository }
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val adapter by lazy { ItemAdapter(regionPrefRepository) }
+    private val adapter by lazy { ItemAdapter(regionPrefRepository, "체육시설") }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -44,7 +44,7 @@ class FacilityFragment : Fragment() {
             Item(R.drawable.ic_footvolleyball, "족구장"),
             Item(R.drawable.ic_futsal, "풋살장"),
             Item(R.drawable.ic_badminton, "배드민턴장"),
-            Item(R.drawable.ic_stadium, "다목적 경기장"),
+            Item(R.drawable.ic_stadium, "다목적경기장"),
             Item(R.drawable.ic_gym, "체육관"),
             Item(R.drawable.ic_basketball, "농구장"),
         )

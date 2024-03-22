@@ -33,6 +33,11 @@ interface UserRepository {
         reviewId: String
     )
 
+    suspend fun deleteUserReview(
+        id: String,
+        reviewId: String
+    )
+
     suspend fun getUser(
         id: String
     ): UserEntity?
@@ -72,13 +77,19 @@ class UserRepositoryImpl : UserRepository {
             .update("reviewIdList", user?.reviewIdList.orEmpty().toMutableList() + reviewId)
     }
 
+    override suspend fun deleteUserReview(id: String, reviewId: String) {
+        val user = getUser(id)
+        fireStore.collection("user").document(id)
+            .update("reviewIdList", user?.reviewIdList.orEmpty().toMutableList() - reviewId)
+    }
+
     override suspend fun getUser(id: String): UserEntity? =
         fireStore.collection("user").document(id).get().await().toObject(UserEntity::class.java)
 
     override suspend fun getUserId(name: String): String {
         val user =
             fireStore.collection("user").whereEqualTo("userName", name).limit(1).get().await()
-        return user.documents[0].id
+        return user.documents.getOrNull(0)?.id ?: ""
     }
 
     override suspend fun getReview(id: String): List<ReviewEntity> =
