@@ -41,10 +41,10 @@ class SeoulPublicRepositoryImpl(
         val body = response.body() ?: return 0
             .apply { Log.w(JJTAG, "getTotalNum body == null, response: $response") }
 
-        val s =
+        val logMsg =
             "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
                     body.tvYeyakCOllect.rowList.firstOrNull().toString().take(255)
-        Log.d(JJTAG, "getTotalNum getFirst 응답: $s")
+        Log.d(JJTAG, "getTotalNum getFirst 응답: $logMsg")
         return body.tvYeyakCOllect.listTotalCount.toInt()
     }
 
@@ -58,10 +58,13 @@ class SeoulPublicRepositoryImpl(
                 val to = (i + 1) * batchSize
                 try {
                     val response = seoulApiService.getAllRange(from, to)
-                    Log.d(JJTAG, "$from~$to, " + response.body().toString().take(255))
+                    Log.d(
+                        JJTAG,
+                        "getAllParallel $from~$to, " + response.body().toString().take(255)
+                    )
                     response.toRowList()
                 } catch (e: Throwable) {
-                    Log.e(JJTAG, "getAllParallel 에러 $from~$to", e)
+                    Log.e(JJTAG, "getAllParallel error $from~$to", e)
                     emptyList()
                 }
             }
@@ -94,12 +97,12 @@ class SeoulPublicRepositoryImpl(
         }
         val body = response.body()
         if (body == null) {
-            Log.d(JJTAG, "getAll1000 body == null")
+            Log.d(JJTAG, "getAll1000 body == null, response: $response")
         } else {
-            val s =
+            val logMsg =
                 "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
                         body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-            Log.d(JJTAG, "getAll1000 응답: $s")
+            Log.d(JJTAG, "getAll1000 응답: $logMsg")
         }
         return response.toRowList()
     }
@@ -114,12 +117,12 @@ class SeoulPublicRepositoryImpl(
             }
             val body = response.body()
             if (body == null) {
-                Log.d(JJTAG, "getAll2000 1~1000 body == null")
+                Log.d(JJTAG, "getAll2000 1~1000 body == null, response: $response")
             } else {
-                val s =
+                val logMsg =
                     "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
                             body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-                Log.d(JJTAG, "getAll2000 1~1000 응답: $s")
+                Log.d(JJTAG, "getAll2000 1~1000 응답: $logMsg")
             }
             response.toRowList()
         }
@@ -132,12 +135,12 @@ class SeoulPublicRepositoryImpl(
             }
             val body = response.body()
             if (body == null) {
-                Log.d(JJTAG, "getAll2000 1001~2000 body == null")
+                Log.d(JJTAG, "getAll2000 1001~2000 body == null, response: $response")
             } else {
-                val s =
+                val logMsg =
                     "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
                             body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-                Log.d(JJTAG, "getAll2000 1001~2000 응답: $s")
+                Log.d(JJTAG, "getAll2000 1001~2000 응답: $logMsg")
             }
             response.toRowList()
         }
@@ -153,14 +156,15 @@ class SeoulPublicRepositoryImpl(
         }
         val body = response.body()
         if (body == null) {
-            Log.d(JJTAG, "getDetail body == null")
+            Log.d(JJTAG, "getDetail body == null, response: $response")
         } else {
+            // TODO: try 없어도 되지 않나
             try {
-                val s =
+                val logMsg =
                     "total: ${body.listPublicReservationDetail.listTotalCount}, ${body.listPublicReservationDetail.result}\n" +
                             body.listPublicReservationDetail.rowList.firstOrNull().toString()
                                 .take(127)
-                Log.d(JJTAG, "getDetail 응답: $s")
+                Log.d(JJTAG, "getDetail 응답: $logMsg")
             } catch (e: Throwable) {
                 Log.d(JJTAG, "getDetail svcid: $svcid, response: $response", e)
             }
