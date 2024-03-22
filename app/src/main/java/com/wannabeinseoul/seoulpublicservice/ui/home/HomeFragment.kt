@@ -74,6 +74,23 @@ class HomeFragment : Fragment() {
         setupUIComponents()
     }
 
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.loadRecentData()
+        setupRecentData()
+        Log.i("This is HomeFragment","onResume")
+    }
+
+    override fun onStop() {
+        homeViewModel.clearSearchResult()
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun initViewModel() {
         // MainViewModel의 LiveData를 관찰하여 UI를 업데이트
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
@@ -208,11 +225,16 @@ class HomeFragment : Fragment() {
 
             loadRecentData()
             recentData.observe(viewLifecycleOwner) {
-                Log.i("This is HomeFragment","recent data observe :\nList : ${it}")
+                Log.i("This is HomeFragment","recent data observe :\nList : $it")
                 // take는 모르겠으나 어쨌든 잘 나오는 거 같음
                 setupRecentData()
                 recentViewPager(it)
             }
+
+            weatherData.observe(viewLifecycleOwner) { weatherData ->
+                Log.d("WeatherData", weatherData.toString())
+            }
+            fetchWeatherData()
         }
     }
 
@@ -478,19 +500,7 @@ class HomeFragment : Fragment() {
             )
         }
 
-
-
         return spannableString
-    }
-
-    override fun onStop() {
-        homeViewModel.clearSearchResult()
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
@@ -505,17 +515,14 @@ class HomeFragment : Fragment() {
         }
         Log.i("This is HomeFragment","setupRecentData\nmain banner / is visible : ${binding.ivHomeMainBanner.isVisible}\nrecent view pager / is visible : ${binding.vpHomeRecent.isVisible}")
     }
-
     private fun recentViewPager(data: List<RecentEntity>) {
         Log.i("This is HomeFragment","recentViewPager / data : $data")
         val viewPage = binding.vpHomeRecent
         val adapter = RecentAdapter()
-
         viewPage.adapter = adapter
         viewPage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         adapter.submitList(data)
         viewPage.offscreenPageLimit = 1
-
         adapter.itemClick = object : CategoryItemClick {
             override fun onClick(svcID: String) {
                 val dialog = DetailFragment.newInstance(svcID)
@@ -527,12 +534,5 @@ class HomeFragment : Fragment() {
                 dialog.show(requireActivity().supportFragmentManager, "HomeRecent")
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        homeViewModel.loadRecentData()
-        setupRecentData()
-        Log.i("This is HomeFragment","onResume")
     }
 }

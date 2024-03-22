@@ -19,6 +19,9 @@ import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.kma.KmaApiService
+import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
+import com.wannabeinseoul.seoulpublicservice.kma.KmaRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
@@ -102,10 +105,12 @@ interface AppContainer {
     val complaintRepository: ComplaintRepository
     val userBanRepository: UserBanRepository
     val recentPrefRepository: RecentPrefRepository
+    val kmaRepository: KmaRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
     private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088/"
+    private val kmaApiBaseUrl = "http://apis.data.go.kr/"
 
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
@@ -136,6 +141,15 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
 
     override val seoulPublicRepository: SeoulPublicRepository by lazy {
         SeoulPublicRepositoryImpl(retrofitSeoulApiService)
+    }
+
+    private val kmaRetrofit = createRetrofit(kmaApiBaseUrl)
+    private val retrofitKmaApiService: KmaApiService by lazy {
+        kmaRetrofit.create(KmaApiService::class.java)
+    }
+
+    override val kmaRepository: KmaRepository by lazy {
+        KmaRepositoryImpl(retrofitKmaApiService)
     }
 
     override val getAll2000UseCase by lazy {
