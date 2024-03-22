@@ -17,8 +17,9 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.di.AppContainer
 import com.wannabeinseoul.seoulpublicservice.di.DefaultAppContainer
-import com.wannabeinseoul.seoulpublicservice.util.RoomRowMapper
 import com.wannabeinseoul.seoulpublicservice.util.parseColor
+import com.wannabeinseoul.seoulpublicservice.util.toReservationEntityList
+import com.wannabeinseoul.seoulpublicservice.util.toRowList
 import com.wannabeinseoul.seoulpublicservice.util.toastLong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -140,7 +141,7 @@ class SeoulPublicServiceApplication : Application() {
                     container.seoulPublicRepository.getAllParallel()
                 )
                 val reservationEntities =
-                    RoomRowMapper.mappingRowToRoom(container.dbMemoryRepository.getAll())
+                    container.dbMemoryRepository.getAll().toReservationEntityList()
                 container.reservationRepository.deleteAll()
                 container.reservationRepository.insertAll(reservationEntities)
                 container.prefRepository
@@ -160,7 +161,7 @@ class SeoulPublicServiceApplication : Application() {
 
     private suspend fun getFromDB() {
         val reservationEntities = container.reservationRepository.getAll()
-        container.dbMemoryRepository.postAll(RoomRowMapper.mappingRoomToRow(reservationEntities))
+        container.dbMemoryRepository.postAll(reservationEntities.toRowList())
     }
 
 }
