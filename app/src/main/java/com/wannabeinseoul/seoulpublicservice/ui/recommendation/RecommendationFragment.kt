@@ -12,6 +12,7 @@ import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
+import kotlinx.coroutines.Dispatchers
 
 class RecommendationFragment : Fragment() {
 
@@ -46,7 +47,42 @@ class RecommendationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initViewModel()
+
+//        var isLoading = false
+//        binding.reScroll.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//
+//                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+//                val totalItemCount = layoutManager.itemCount
+//
+//                // 스크롤이 마지막 아이템에 도달하면 추가 아이템을 로드
+//                if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
+//                    isLoading = true
+//                    loadMoreItems()
+//                }
+//            }
+//        })
     }
+
+//    private fun loadMoreItems() {
+//        // 추가 아이템을 가져오는 비동기 작업을 수행
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val newItems = reservationRepository.searchText(query).shuffled().take(20) // 20개의 새로운 아이템을 가져옴
+//            delay(1000) // 예시를 위해 1초의 딜레이를 추가 (실제로는 필요 없음)
+//
+//            // 가져온 아이템을 기존 아이템 리스트에 추가
+//            val currentItems = adapter.currentList.toMutableList()
+//            currentItems.addAll(newItems)
+//
+//            // UI 업데이트를 메인 스레드에서 수행
+//            withContext(Dispatchers.Main) {
+//                adapter.submitList(currentItems)
+//                isLoading = false
+//            }
+//        }
+//    }
 
     private fun initView() = binding.let { binding ->
         binding.reScroll.adapter = recommendationAdapter
