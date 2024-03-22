@@ -89,7 +89,7 @@ class UserRepositoryImpl : UserRepository {
     override suspend fun getUserId(name: String): String {
         val user =
             fireStore.collection("user").whereEqualTo("userName", name).limit(1).get().await()
-        return user.documents[0].id
+        return user.documents.getOrNull(0)?.id ?: ""
     }
 
     override suspend fun getReview(id: String): List<ReviewEntity> =

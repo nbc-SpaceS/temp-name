@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class RecommendationViewModel(
@@ -50,7 +51,7 @@ class RecommendationViewModel(
             val regionItems = mutableListOf<Pair<String, String>>()
 
             // 첫 번째 초기화 로직: 지역 외 로직
-            items.add(Pair("자전거", "자전거와 관련된 서비스"))
+            items.add(Pair("교육", "교육과 관련된 서비스"))
             items.add(Pair("청소년", "청소년을 위한 서비스"))
             items.add(Pair("장애인", "장애인을 위한 서비스"))
             items.add(Pair("풋살", "풋살에 관한 서비스"))
@@ -75,9 +76,27 @@ class RecommendationViewModel(
         }
     }
 
+//    fun loadMoreItems(query: String) {
+//        // 추가 아이템을 가져오는 비동기 작업을 수행
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val newItems =
+//                reservationRepository.searchText(query).shuffled().take(5) // 20개의 새로운 아이템을 가져옴
+//
+//            // 가져온 아이템을 기존 아이템 리스트에 추가
+//            val currentItems = adapter.currentList.toMutableList()
+//            currentItems.addAll(newItems)
+//
+//            // UI 업데이트를 메인 스레드에서 수행
+//            withContext(Dispatchers.Main) {
+//                adapter.submitList(currentItems)
+//                isLoading.postValue(false)
+//            }
+//        }
+//    }
 
     private suspend fun getQuery(query: String): List<RecommendationData> {
-        val reservationEntities = reservationRepository.searchText(query).shuffled().take(5)
+        val reservationEntities =
+            reservationRepository.searchText(query).take(20).shuffled().take(5)
         val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
         return List(reservationEntities.size) {
             RecommendationData(

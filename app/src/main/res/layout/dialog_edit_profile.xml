@@ -90,7 +90,7 @@
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        android:background="@drawable/background_radius_10dp_ff6685"
+        android:background="@drawable/selector_edit_profile_okay_background"
         android:text="@string/dialog_edit_profile_btn_confirm"
         android:textColor="#FFFFFF"
         android:textSize="16sp"

@@ -146,36 +146,20 @@
         app:layout_constraintTop_toBottomOf="@+id/md_category"
         tools:listitem="@layout/item_category" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_recent_floating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/fab_current_position_button_solid"
+        android:contentDescription="@string/fragment_map_current_location"
+        android:src="@drawable/ic_arrow_up"
+        android:visibility="gone"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_floating"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/ic_floating_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_floatingButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="#00FFFFFF"
-            android:visibility="gone"
-            app:backgroundTint="#00FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="47dp"
+        app:tint="@color/fab_current_position_icon_solid" />
 </androidx.constraintlayout.widget.ConstraintLayout>

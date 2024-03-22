@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
+import kotlinx.coroutines.Dispatchers
 
 class RecommendationFragment : Fragment() {
 
@@ -46,13 +48,30 @@ class RecommendationFragment : Fragment() {
         initView()
         initViewModel()
 
+//        var isLoading = false
+//        binding.reScroll.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//
+//                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+//                val totalItemCount = layoutManager.itemCount
+//
+//                // 스크롤이 마지막 아이템에 도달하면 추가 아이템을 로드
+//                if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
+//                    isLoading = true
+//                    loadMoreItems()
+//                }
+//            }
+//        })
     }
+
+
 
     private fun initView() = binding.let { binding ->
         binding.reScroll.adapter = recommendationAdapter
         binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
     }
-
 
     private val tipsMap = mapOf(
         "서울시 관련 Tip!" to listOf(
@@ -112,9 +131,7 @@ class RecommendationFragment : Fragment() {
     private val randomTipHeader: String = tipsMap.keys.random()
     private val randomTip: String = tipsMap[randomTipHeader]?.random() ?: ""
 
-
     private fun initViewModel() = viewModel.let { vm ->
-
         vm.horizontalDataList.observe(viewLifecycleOwner) { horizontalDataList ->
             val multiViews: MutableList<RecommendationAdapter.MultiView> = horizontalDataList.map {
                 RecommendationAdapter.MultiView.Horizontal(it.title,

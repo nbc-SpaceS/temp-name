@@ -11,9 +11,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentCategoryBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
@@ -31,9 +33,7 @@ class CategoryFragment : Fragment() {
     private var serviceState: List<String> = listOf() // 서비스 상태가 가능인지 아니면 불가능인지
     private var search = "" // 검색어
 
-    private var isFabVisible = true// 숨기거나 표시
-    private val handler = Handler()// 일정 시간 후에 작업을 수행하기 위해 사용
-    private val delayMillis: Long = 500 // 0.5초
+    private var isFabVisible = false// 숨기거나 표시
 
     // 스크롤 이벤트를 처리하는 메서드
     private val scrollListener = object : RecyclerView.OnScrollListener() {
@@ -41,21 +41,18 @@ class CategoryFragment : Fragment() {
             super.onScrolled(recyclerView, dx, dy)
 
             // 스크롤 방향에 따라 FAB의 가시성을 조절
-            if (dy > 0 && isFabVisible) { // 스크롤을 아래로 내릴 때
-                isFabVisible = false
-                binding.fabFloatingButton.hide()
-                binding.ivFloating.visibility = View.GONE
-            } else if (dy < 0 && !isFabVisible) { // 스크롤을 위로 올릴 때
+            // 스크롤 방향에 따라 FAB의 가시성을 조절
+            if (dy < 0 && isFabVisible) { // 스크롤을 위로 올릴 때
                 isFabVisible = true
-                binding.fabFloatingButton.hide()
-                // 지연하여 이미지뷰를 보이도록 설정
-                handler.postDelayed({
-                    binding.ivFloating.visibility = View.VISIBLE
-                }, delayMillis)
+                binding.fabRecentFloating.show()
+                binding.fabRecentFloating.isInvisible// 플로팅 버튼 숨기기
+            } else if (dy > 0 && !isFabVisible) { // 스크롤을 아래로 내릴 때
+                isFabVisible = true
+                binding.fabRecentFloating.show() // 플로팅 버튼 표시
+                binding.fabRecentFloating.isInvisible
             }
         }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -76,8 +73,7 @@ class CategoryFragment : Fragment() {
         binding.reCategory.addOnScrollListener(scrollListener)
 
         // FloatingActionButton 클릭 이벤트 처리
-        binding.ivFloating.setOnClickListener {
-            Toast.makeText(requireContext(), "플로팅 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show()
+        binding.fabRecentFloating.setOnClickListener {
             binding.reCategory.smoothScrollToPosition(0)
         }
     }

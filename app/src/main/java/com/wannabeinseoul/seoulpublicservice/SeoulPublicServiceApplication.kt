@@ -142,7 +142,8 @@ class SeoulPublicServiceApplication : Application() {
     private suspend fun getAndUpdateAll2000() {
         try {
             withTimeout(6_000L) {
-                _rowList = container.seoulPublicRepository.getAll2000()
+                _rowList = container.seoulPublicRepository.getAllParallel()
+//                _rowList = container.seoulPublicRepository.getAll2000()
                 val reservationEntities = RoomRowMapper.mappingRowToRoom(_rowList)
                 container.reservationRepository.deleteAll()
                 container.reservationRepository.insertAll(reservationEntities)
