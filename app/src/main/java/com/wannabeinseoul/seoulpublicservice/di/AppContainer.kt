@@ -105,7 +105,7 @@ interface AppContainer {
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
-    private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088"
+    private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088/"
 
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
