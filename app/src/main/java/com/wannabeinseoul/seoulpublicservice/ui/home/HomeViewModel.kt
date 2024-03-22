@@ -9,12 +9,14 @@ import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
-import com.wannabeinseoul.seoulpublicservice.kma.KmaMidLandFcstDto
+import com.wannabeinseoul.seoulpublicservice.kma.Item
 import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.weather.ShortMidMapper
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherMid
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
 import kotlinx.coroutines.Dispatchers
@@ -61,8 +63,10 @@ class HomeViewModel(
     private val _shortWeather: MutableLiveData<List<WeatherShort>> = MutableLiveData()
     val shortWeather: LiveData<List<WeatherShort>> get() = _shortWeather
 
-    private val _weatherData: MutableLiveData<KmaMidLandFcstDto> = MutableLiveData()
-    val weatherData: LiveData<KmaMidLandFcstDto> get() = _weatherData
+//    private val _weatherData: MutableLiveData<KmaMidLandFcstDto> = MutableLiveData()
+//    val weatherData: LiveData<KmaMidLandFcstDto> get() = _weatherData
+    private val _weatherData: MutableLiveData<List<WeatherShort>> = MutableLiveData()
+    val weatherData: LiveData<List<WeatherShort>> get() = _weatherData
 
     fun clearSearchResult() {
         if (_displaySearchResult.value?.isNotEmpty() == true) _displaySearchResult.value =
@@ -208,7 +212,9 @@ class HomeViewModel(
                 tmFc = tmFc
             )
             if (response.isSuccessful) {
-                _weatherData.value = response.body()
+                Log.i("This is HomeViewModel","kma : ${response.body()!!.response.body.items.itemList[0]}")
+                setWeatherShort(response.body()!!.response.body.items.itemList[0])
+//                _weatherData.value = response.body()
             }
         }
     }
@@ -271,6 +277,22 @@ class HomeViewModel(
                 _shortWeather.postValue(itemList)
             }
         }
+    }
+
+    fun setWeatherShort(dto: Item) {
+        val itemList = mutableListOf<WeatherShort>()
+        dto.let {
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am, it.rnSt3Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf4Am, it.rnSt4Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf5Am, it.rnSt5Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf6Am, it.rnSt6Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf7Am, it.rnSt7Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf8, it.rnSt8)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9, it.rnSt9)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10, it.rnSt10)))
+        }
+        Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
+        _weatherData.postValue(itemList)
     }
 
     companion object {

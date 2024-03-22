@@ -28,6 +28,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -64,6 +65,9 @@ class HomeFragment : Fragment() {
             homeViewModel.setupRegions()
         }
     }
+
+    val mediatorLiveData = MutableLiveData <List<WeatherShort>>()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -225,11 +229,24 @@ class HomeFragment : Fragment() {
                 setupRecentData()
                 recentViewPager(it)
             }
-            shortWeather.observe(viewLifecycleOwner) {
-                if(it.isNotEmpty()) weatherAdapter(it)
+            shortWeather.observe(viewLifecycleOwner) {      // 단기예보
+//                if(it.isNotEmpty()) weatherAdapter(it)
+                val weatherDataList = weatherData.value
+                if(!it.isNullOrEmpty() && !weatherDataList.isNullOrEmpty()) {
+                    val combinedData = it + weatherDataList
+                    mediatorLiveData.value = combinedData
+                }
             }
-            weatherData.observe(viewLifecycleOwner) { weatherData ->
+            weatherData.observe(viewLifecycleOwner) { weatherData ->        // 중기예보
                 Log.d("WeatherData", weatherData.toString())
+                val shortWeatherList = shortWeather.value
+                if(!weatherData.isNullOrEmpty() && !shortWeatherList.isNullOrEmpty()) {
+                    val combinedData = shortWeatherList + weatherData
+                    mediatorLiveData.value = combinedData
+                }
+            }
+            mediatorLiveData.observe(viewLifecycleOwner) {
+                if(it.isNotEmpty()) weatherAdapter(it)
             }
             fetchWeatherData()
         }
@@ -536,7 +553,7 @@ class HomeFragment : Fragment() {
         Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
         homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
     }
-    private fun weatherAdapter(short: List<WeatherShort>) {
+    private fun weatherAdapter(short: List<WeatherShort>) { // 날씨 어댑터
         val adapter = WeatherAdapter()
         binding.rvHomeWeatherWeek.adapter = adapter
         binding.rvHomeWeatherWeek.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

@@ -38,13 +38,14 @@ class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : 
                             else -> throw Exception()
                         }
                     }
-                    else -> throw Exception()   // 현재 에러가 발생하는 지점
+                    else -> throw Exception()
                 })
             binding.tvHomeWeatherPop.text = "${dto.pop}%"
-            binding.tvHomeWeatherTmp.text = "${dto.tmp} ℃"
+            binding.tvHomeWeatherTmp.text = "${dto?.tmp?:"null"} ℃"
         }
         fun day(pos: Int) {
-            binding.tvHomeWeatherDay.text = today.plusDays(pos.toLong()).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREA)
+            binding.tvHomeWeatherDay.text = today.plusDays(pos.toLong()).dayOfWeek.getDisplayName(
+                TextStyle.FULL, Locale.KOREA)
         }
     }
 
