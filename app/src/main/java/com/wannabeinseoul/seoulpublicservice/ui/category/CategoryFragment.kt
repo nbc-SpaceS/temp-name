@@ -41,17 +41,18 @@ class CategoryFragment : Fragment() {
             super.onScrolled(recyclerView, dx, dy)
 
             // 스크롤 방향에 따라 FAB의 가시성을 조절
-            if (dy > 0 && !isFabVisible) { // 스크롤을 아래로 내릴 때
+            // 스크롤 방향에 따라 FAB의 가시성을 조절
+            if (dy < 0 && isFabVisible) { // 스크롤을 위로 올릴 때
                 isFabVisible = true
                 binding.fabRecentFloating.show()
+                binding.fabRecentFloating.isInvisible// 플로팅 버튼 숨기기
+            } else if (dy > 0 && !isFabVisible) { // 스크롤을 아래로 내릴 때
+                isFabVisible = true
+                binding.fabRecentFloating.show() // 플로팅 버튼 표시
                 binding.fabRecentFloating.isInvisible
-            } else if (dy < 0 && isFabVisible) { // 스크롤을 위로 올릴 때
-                isFabVisible = false
-                binding.fabRecentFloating.hide()
             }
         }
     }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -73,7 +74,6 @@ class CategoryFragment : Fragment() {
 
         // FloatingActionButton 클릭 이벤트 처리
         binding.fabRecentFloating.setOnClickListener {
-            Toast.makeText(requireContext(), "플로팅 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show()
             binding.reCategory.smoothScrollToPosition(0)
         }
     }
