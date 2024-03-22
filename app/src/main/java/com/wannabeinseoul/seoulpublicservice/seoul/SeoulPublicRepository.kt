@@ -71,7 +71,7 @@ class SeoulPublicRepositoryImpl(
         }
         deferredList.awaitAll().flatten()
             .also {
-                Log.i(
+                Log.d(
                     JJTAG, "getAllParallel return total ${it.size} in $total, " +
                             it.firstOrNull().toString().take(255)
                 )
@@ -95,15 +95,12 @@ class SeoulPublicRepositoryImpl(
             Log.e(JJTAG, "getAll1000 error", e)
             return emptyList()
         }
-        val body = response.body()
-        if (body == null) {
-            Log.d(JJTAG, "getAll1000 body == null, response: $response")
-        } else {
-            val logMsg =
-                "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                        body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-            Log.d(JJTAG, "getAll1000 응답: $logMsg")
-        }
+        val body = response.body() ?: return emptyList<Row>()
+            .also { Log.w(JJTAG, "getAll1000 response.body is null, response: $response") }
+        val logMsg =
+            "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
+                    body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
+        Log.d(JJTAG, "getAll1000 응답: $logMsg")
         return response.toRowList()
     }
 
@@ -113,17 +110,14 @@ class SeoulPublicRepositoryImpl(
                 seoulApiService.getAllRange(1, 1000)
             } catch (e: Throwable) {
                 Log.e(JJTAG, "getAll2000 getAllRange(1, 1000) error", e)
-                return@async emptyList()
+                return@async emptyList<Row>()
             }
-            val body = response.body()
-            if (body == null) {
-                Log.d(JJTAG, "getAll2000 1~1000 body == null, response: $response")
-            } else {
-                val logMsg =
-                    "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                            body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-                Log.d(JJTAG, "getAll2000 1~1000 응답: $logMsg")
-            }
+            val body = response.body() ?: return@async emptyList<Row>()
+                .also { Log.w(JJTAG, "getAll2000 1~1000 body == null, response: $response") }
+            val logMsg =
+                "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
+                        body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
+            Log.d(JJTAG, "getAll2000 1~1000 응답: $logMsg")
             response.toRowList()
         }
         val deferred2 = async {
@@ -133,15 +127,12 @@ class SeoulPublicRepositoryImpl(
                 Log.e(JJTAG, "getAll2000 getAllRange(1001, 2000) error", e)
                 return@async emptyList()
             }
-            val body = response.body()
-            if (body == null) {
-                Log.d(JJTAG, "getAll2000 1001~2000 body == null, response: $response")
-            } else {
-                val logMsg =
-                    "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                            body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-                Log.d(JJTAG, "getAll2000 1001~2000 응답: $logMsg")
-            }
+            val body = response.body() ?: return@async emptyList<Row>()
+                .also { Log.w(JJTAG, "getAll2000 1001~2000 body == null, response: $response") }
+            val logMsg =
+                "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
+                        body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
+            Log.d(JJTAG, "getAll2000 1001~2000 응답: $logMsg")
             response.toRowList()
         }
         return@coroutineScope deferred1.await() + deferred2.await()
@@ -154,20 +145,16 @@ class SeoulPublicRepositoryImpl(
             Log.e(JJTAG, "getDetail", e)
             return null
         }
-        val body = response.body()
-        if (body == null) {
-            Log.d(JJTAG, "getDetail body == null, response: $response")
-        } else {
-            // TODO: try 없어도 되지 않나
-            try {
-                val logMsg =
-                    "total: ${body.listPublicReservationDetail.listTotalCount}, ${body.listPublicReservationDetail.result}\n" +
-                            body.listPublicReservationDetail.rowList.firstOrNull().toString()
-                                .take(127)
-                Log.d(JJTAG, "getDetail 응답: $logMsg")
-            } catch (e: Throwable) {
-                Log.d(JJTAG, "getDetail svcid: $svcid, response: $response", e)
-            }
+        val body = response.body() ?: return null
+            .apply { Log.w(JJTAG, "getDetail body == null, response: $response") }
+        try {
+            val logMsg =
+                "total: ${body.listPublicReservationDetail.listTotalCount}, ${body.listPublicReservationDetail.result}\n" +
+                        body.listPublicReservationDetail.rowList.firstOrNull().toString()
+                            .take(127)
+            Log.d(JJTAG, "getDetail 응답: $logMsg")
+        } catch (e: Throwable) {
+            Log.w(JJTAG, "getDetail svcid: $svcid, response: $response", e)
         }
         return response.toDetailRow()
     }
