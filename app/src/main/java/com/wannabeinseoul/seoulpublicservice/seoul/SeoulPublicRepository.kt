@@ -84,18 +84,12 @@ class SeoulPublicRepositoryImpl(
         val response = seoulApiService.getAll1000()
         val body = response.body()
         if (body == null) {
-            Log.d(
-                JJTAG,
-                "getAll1000 body == null"
-            )
+            Log.d(JJTAG, "getAll1000 body == null")
         } else {
             val s =
                 "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
                         body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-            Log.d(
-                JJTAG,
-                "getAll1000 응답: $s"
-            )
+            Log.d(JJTAG, "getAll1000 응답: $s")
         }
         return response.toRowList()
     }
@@ -105,18 +99,12 @@ class SeoulPublicRepositoryImpl(
             val response = seoulApiService.getAllRange(1, 1000)
             val body = response.body()
             if (body == null) {
-                Log.d(
-                    JJTAG,
-                    "getAll2000 1~1000 body == null"
-                )
+                Log.d(JJTAG, "getAll2000 1~1000 body == null")
             } else {
                 val s =
                     "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
                             body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-                Log.d(
-                    JJTAG,
-                    "getAll2000 1~1000 응답: $s"
-                )
+                Log.d(JJTAG, "getAll2000 1~1000 응답: $s")
             }
             response.toRowList()
         }
@@ -124,18 +112,12 @@ class SeoulPublicRepositoryImpl(
             val response = seoulApiService.getAllRange(1001, 2000)
             val body = response.body()
             if (body == null) {
-                Log.d(
-                    JJTAG,
-                    "getAll2000 1001~2000 body == null"
-                )
+                Log.d(JJTAG, "getAll2000 1001~2000 body == null")
             } else {
                 val s =
                     "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
                             body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
-                Log.d(
-                    JJTAG,
-                    "getAll2000 1001~2000 응답: $s"
-                )
+                Log.d(JJTAG, "getAll2000 1001~2000 응답: $s")
             }
             response.toRowList()
         }
@@ -146,26 +128,16 @@ class SeoulPublicRepositoryImpl(
         val response = seoulApiService.getDetail(svcid)
         val body = response.body()
         if (body == null) {
-            Log.d(
-                JJTAG,
-                "getDetail body == null"
-            )
+            Log.d(JJTAG, "getDetail body == null")
         } else {
             try {
                 val s =
                     "total: ${body.listPublicReservationDetail.listTotalCount}, ${body.listPublicReservationDetail.result}\n" +
                             body.listPublicReservationDetail.rowList.firstOrNull().toString()
                                 .take(127)
-                Log.d(
-                    JJTAG,
-                    "getDetail 응답: $s"
-                )
-            } catch (e: Exception) {
-                Log.d(
-                    JJTAG,
-                    "getDetail e: $e\n" +
-                            "svcid: $svcid, response: $response"
-                )
+                Log.d(JJTAG, "getDetail 응답: $s")
+            } catch (e: Throwable) {
+                Log.d(JJTAG, "getDetail svcid: $svcid, response: $response", e)
             }
         }
         return response.toDetailRow()
