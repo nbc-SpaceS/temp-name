@@ -43,6 +43,9 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherAdapter
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherSeoulArea
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
 
 class HomeFragment : Fragment() {
 
@@ -79,6 +82,7 @@ class HomeFragment : Fragment() {
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
             if (it != "지역선택") {
                 homeViewModel.setViewPagerCategory(it)
+                weatherDataSend(it)  // 지역정보를 기상청 좌표로 변환한 후 API를 요청하기 위해
             } else {
                 binding.tvHomeDescription.text = "아직 관심지역이 선택되지 않았습니다."
             }
@@ -99,7 +103,7 @@ class HomeFragment : Fragment() {
                         tvHomeCurrentRegion.text = selectedRegions[0]
                         tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
                         mdHomeRegionList.isVisible = true
-                        mainViewModel.setRegion(selectedRegions[0])
+                        mainViewModel.setRegion(selectedRegions[0]) // 이부분?
                         when (selectedRegions.size) {
                             1 -> {
                                 tvHomeSelectRegion1.text = selectedRegions[0]
@@ -208,10 +212,11 @@ class HomeFragment : Fragment() {
 
             loadRecentData()
             recentData.observe(viewLifecycleOwner) {
-                Log.i("This is HomeFragment","recent data observe :\nList : ${it}")
-                // take는 모르겠으나 어쨌든 잘 나오는 거 같음
                 setupRecentData()
                 recentViewPager(it)
+            }
+            shortWeather.observe(viewLifecycleOwner) {
+                if(it.isNotEmpty()) weatherAdapter(it)
             }
         }
     }
@@ -484,11 +489,9 @@ class HomeFragment : Fragment() {
             binding.tvHomeRecentDescription.visibility = View.VISIBLE
             binding.tvHomeRecentTitle.visibility = View.VISIBLE
         }
-        Log.i("This is HomeFragment","setupRecentData\nmain banner / is visible : ${binding.ivHomeMainBanner.isVisible}\nrecent view pager / is visible : ${binding.vpHomeRecent.isVisible}")
     }
 
     private fun recentViewPager(data: List<RecentEntity>) {
-        Log.i("This is HomeFragment","recentViewPager / data : $data")
         val viewPage = binding.vpHomeRecent
         val adapter = RecentAdapter()
 
@@ -510,10 +513,22 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun weatherDataSend(area: String) {
+        val seoulWeather = WeatherSeoulArea().weatherSeoulArea[area]
+        Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
+        homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
+    }
+    private fun weatherAdapter(short: List<WeatherShort>) {
+        val adapter = WeatherAdapter()
+        binding.rvHomeWeatherWeek.adapter = adapter
+        binding.rvHomeWeatherWeek.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        Log.i("This is HomeFragment","short : $short")
+        adapter.submitList(short)
+    }
+
     override fun onResume() {
         super.onResume()
         homeViewModel.loadRecentData()
         setupRecentData()
-        Log.i("This is HomeFragment","onResume")
     }
 }

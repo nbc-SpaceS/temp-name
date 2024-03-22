@@ -13,9 +13,13 @@ import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class HomeViewModel(
@@ -24,7 +28,8 @@ class HomeViewModel(
     private val reservationRepository: ReservationRepository,
     private val dbMemoryRepository: DbMemoryRepository,
     private val savedPrefRepository: SavedPrefRepository,
-    private val recentPrefRepository: RecentPrefRepository
+    private val recentPrefRepository: RecentPrefRepository,
+    private val weatherShortRepository: WeatherShortRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -51,6 +56,9 @@ class HomeViewModel(
     private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> =
         MutableLiveData()
     val updateViewPagerCategory: LiveData<List<Pair<String, Int>>> get() = _updateViewPagerCategory
+
+    private val _shortWeather: MutableLiveData<List<WeatherShort>> = MutableLiveData()
+    val shortWeather: LiveData<List<WeatherShort>> get() = _shortWeather
 
     fun clearSearchResult() {
         if (_displaySearchResult.value?.isNotEmpty() == true) _displaySearchResult.value =
@@ -171,6 +179,69 @@ class HomeViewModel(
         _recentData.value = recentPrefRepository.getRecent()
     }
 
+    fun weatherShortData(lat_x: Int, lng_y: Int) {
+        viewModelScope.launch { // 여기서부터 실행해야함
+            val run = runBlocking(Dispatchers.IO) {
+                val locale = ZoneId.of("Asia/Seoul")
+                val local = LocalDateTime.now(locale)
+                var y = local.year
+                var m = String.format("%02d",local.monthValue)
+                var d = local.dayOfMonth
+                var h = local.hour
+                Log.i("This is HomeViewModel","m : $m\nd : $d\nh : $h")
+                if (h < 5) {
+                    val yesterday = local.minusDays(1)
+                    d = yesterday.dayOfMonth
+                    h = 17
+                    if (d == 1) {
+                        if (local.month.value == 1) {
+                            m = "12"
+                            val lastYear = local.minusYears(1)
+                            y = lastYear.year
+                            d = lastYear.month.maxLength()
+                        } else {
+                            val lastMonth = yesterday.minusMonths(1)
+                            m = String.format("%02d",lastMonth.monthValue)
+                            d = lastMonth.month.maxLength()
+                        }
+                    }
+                } else {
+                    h = 5
+                }
+                Log.i("This is HomeViewModel","m : $m\nh : $h")
+                val localDate = "$y$m$d"
+                val localTime = "${String.format("%02d",h)}00"
+                Log.i("This is HomeViewModel","localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y")
+                weatherShortRepository.getShortWeather(1,1000, localDate, localTime, lat_x, lng_y)
+            }
+            run.let {
+                val itemList = mutableListOf<WeatherShort>()
+                val items = it.response.body.items.item
+//                for(item in items) {
+//                    Log.i("This is HomeViewModel","item date : ${item.fcstDate}\nitem time : ${item.fcstTime}\nbase date : ${item.baseDate}\nbase time : ${item.baseTime}")
+//                }
+                var skyValue: Int? = null
+                var tmpValue: Int? = null
+                var popValue: Int? = null
+                val filtering = items.filter { it.fcstTime == "0600" && (it.category == "SKY" || it.category == "TMP" || it.category == "POP") }
+                for(item in filtering) {
+                    if(item.category == "SKY") skyValue = item.fcstValue.toInt()
+                    if(item.category == "TMP") tmpValue = item.fcstValue.toInt()
+                    if(item.category == "POP") popValue = item.fcstValue.toInt()
+                    Log.i("This is HomeViewModel","skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue")
+                    if(skyValue != null && tmpValue != null && popValue != null) {
+                        itemList.add(WeatherShort(skyValue, tmpValue, popValue))
+                        skyValue = null
+                        tmpValue = null
+                        popValue = null
+                    }
+                }
+                Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
+                _shortWeather.value = itemList
+            }
+        }
+    }
+
     companion object {
         val factory = viewModelFactory {
             initializer {
@@ -183,7 +254,8 @@ class HomeViewModel(
                     reservationRepository = container.reservationRepository,
                     dbMemoryRepository = container.dbMemoryRepository,
                     savedPrefRepository = container.savedPrefRepository,
-                    recentPrefRepository = container.recentPrefRepository
+                    recentPrefRepository = container.recentPrefRepository,
+                    weatherShortRepository = container.weatherShortRepository
                 )
             }
         }
