@@ -1,7 +1,11 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -9,6 +13,8 @@ import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
+import com.wannabeinseoul.seoulpublicservice.kma.KmaMidLandFcstDto
+import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
@@ -24,7 +30,8 @@ class HomeViewModel(
     private val reservationRepository: ReservationRepository,
     private val dbMemoryRepository: DbMemoryRepository,
     private val savedPrefRepository: SavedPrefRepository,
-    private val recentPrefRepository: RecentPrefRepository
+    private val recentPrefRepository: RecentPrefRepository,
+    private val kmaRepository: KmaRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -41,16 +48,17 @@ class HomeViewModel(
     private var _displaySearchResult: MutableLiveData<List<ReservationEntity>> = MutableLiveData()
     val displaySearchResult: LiveData<List<ReservationEntity>> get() = _displaySearchResult
 
-    private var _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
-        MutableLiveData()
+    private var _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> = MutableLiveData()
     val displaySearchHistory: LiveData<Pair<List<String>, SearchPrefRepository>> get() = _displaySearchHistory
 
     private val _recentData: MutableLiveData<List<RecentEntity>> = MutableLiveData()
     val recentData: LiveData<List<RecentEntity>> get() = _recentData
 
-    private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> =
-        MutableLiveData()
+    private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> = MutableLiveData()
     val updateViewPagerCategory: LiveData<List<Pair<String, Int>>> get() = _updateViewPagerCategory
+
+    private val _weatherData: MutableLiveData<KmaMidLandFcstDto> = MutableLiveData()
+    val weatherData: LiveData<KmaMidLandFcstDto> get() = _weatherData
 
     fun clearSearchResult() {
         if (_displaySearchResult.value?.isNotEmpty() == true) _displaySearchResult.value =
@@ -171,6 +179,36 @@ class HomeViewModel(
         _recentData.value = recentPrefRepository.getRecent()
     }
 
+    // 날씨 정보를 가져오는 메소드
+    fun fetchWeatherData() {
+        viewModelScope.launch {
+            val now = LocalDateTime.now()
+            val hour = now.hour
+
+            val tmFc: String = if (hour < 6) {
+                // 현재 시간이 06시 이전인 경우, 이전 날짜의 18시를 설정
+                now.minusDays(1).withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+            } else if (hour < 18) {
+                // 현재 시간이 06시와 18시 사이인 경우, 당일의 06시를 설정
+                now.withHour(6).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+            } else {
+                // 현재 시간이 18시 이후인 경우, 당일의 18시를 설정
+                now.withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+            }
+
+            val response = kmaRepository.getMidLandFcst(
+                numOfRows = 10,
+                pageNo = 1,
+                dataType = "JSON",
+                regId = "11B00000",
+                tmFc = tmFc
+            )
+            if (response.isSuccessful) {
+                _weatherData.value = response.body()
+            }
+        }
+    }
+
     companion object {
         val factory = viewModelFactory {
             initializer {
@@ -183,7 +221,8 @@ class HomeViewModel(
                     reservationRepository = container.reservationRepository,
                     dbMemoryRepository = container.dbMemoryRepository,
                     savedPrefRepository = container.savedPrefRepository,
-                    recentPrefRepository = container.recentPrefRepository
+                    recentPrefRepository = container.recentPrefRepository,
+                    kmaRepository = container.kmaRepository
                 )
             }
         }

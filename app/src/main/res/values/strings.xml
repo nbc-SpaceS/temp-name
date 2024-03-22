@@ -170,7 +170,7 @@
     <string name="fragment_filter_apply_filter">필터 적용하기</string>
     <string name="fragment_home_region_select">지역선택</string>
     <string name="fragment_home_service_list">찾으시는 공공서비스가 있나요?</string>
-    <string name="fragment_home_description">관악구에는 체육시설, 진료복지 서비스가 없습니다.</string>
+    <string name="fragment_home_description">송파구에는 체육시설, 진료복지 서비스가 있습니다.</string>
     <string name="fragment_home_et_search_hint">전체 공공서비스 대상 검색</string>
     <string name="fragment_home_select_region1">송파구</string>
     <string name="fragment_home_select_region2">강남구</string>

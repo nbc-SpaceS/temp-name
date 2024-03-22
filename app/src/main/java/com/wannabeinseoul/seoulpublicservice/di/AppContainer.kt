@@ -109,8 +109,8 @@ interface AppContainer {
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
-    private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088"
-    private val kmaApiBaseUrl = "http://apis.data.go.kr/1360000/MidFcstInfoService/"
+    private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088/"
+    private val kmaApiBaseUrl = "http://apis.data.go.kr/"
 
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
@@ -143,7 +143,7 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         SeoulPublicRepositoryImpl(retrofitSeoulApiService)
     }
 
-    private val kmaRetrofit: Retrofit = createRetrofit(kmaApiBaseUrl)
+    private val kmaRetrofit = createRetrofit(kmaApiBaseUrl)
     private val retrofitKmaApiService: KmaApiService by lazy {
         kmaRetrofit.create(KmaApiService::class.java)
     }

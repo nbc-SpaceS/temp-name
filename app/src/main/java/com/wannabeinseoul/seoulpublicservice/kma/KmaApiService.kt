@@ -5,9 +5,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface KmaApiService {
-    @GET("getMidLandFcst")
+    @GET("1360000/MidFcstInfoService/getMidLandFcst")
     suspend fun getMidLandFcst(
-        @Query("serviceKey") serviceKey: String,
         @Query("numOfRows") numOfRows: Int,
         @Query("pageNo") pageNo: Int,
         @Query("dataType") dataType: String,
