@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemHomeWeatherBinding
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 
 class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : DiffUtil.ItemCallback<WeatherShort>() {
     override fun areItemsTheSame(oldItem: WeatherShort, newItem: WeatherShort): Boolean {
@@ -19,7 +22,9 @@ class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : 
         return oldItem == newItem
     }
 }) {
+    val today = LocalDate.now()!!
     inner class Holder(val binding: ItemHomeWeatherBinding): RecyclerView.ViewHolder(binding.root) {
+
         fun bind(dto: WeatherShort) {
             Log.i("This is WeatherAdapter","dto : ${dto.sky}")
             binding.ivHomeWeatherIcon.setImageResource(
@@ -36,7 +41,10 @@ class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : 
                     else -> throw Exception()   // 현재 에러가 발생하는 지점
                 })
             binding.tvHomeWeatherPop.text = "${dto.pop}%"
-            binding.tvHomeWeatherTmp.text = "${dto.tmp}`C"
+            binding.tvHomeWeatherTmp.text = "${dto.tmp} ℃"
+        }
+        fun day(pos: Int) {
+            binding.tvHomeWeatherDay.text = today.plusDays(pos.toLong()).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREA)
         }
     }
 
@@ -48,5 +56,6 @@ class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         Log.i("This is WeatherAdapter","getItem : ${getItem(position)}")
         holder.bind(getItem(position))
+        holder.day(position)
     }
 }
