@@ -77,6 +77,16 @@ class HomeFragment : Fragment() {
         setupUIComponents()
     }
 
+    override fun onStop() {
+        homeViewModel.clearSearchResult()
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun initViewModel() {
         // MainViewModel의 LiveData를 관찰하여 UI를 업데이트
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
@@ -103,7 +113,7 @@ class HomeFragment : Fragment() {
                         tvHomeCurrentRegion.text = selectedRegions[0]
                         tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.total_text_color))
                         mdHomeRegionList.isVisible = true
-                        mainViewModel.setRegion(selectedRegions[0]) // 이부분?
+                        mainViewModel.setRegion(selectedRegions[0])
                         when (selectedRegions.size) {
                             1 -> {
                                 tvHomeSelectRegion1.text = selectedRegions[0]
@@ -218,6 +228,10 @@ class HomeFragment : Fragment() {
             shortWeather.observe(viewLifecycleOwner) {
                 if(it.isNotEmpty()) weatherAdapter(it)
             }
+            weatherData.observe(viewLifecycleOwner) { weatherData ->
+                Log.d("WeatherData", weatherData.toString())
+            }
+            fetchWeatherData()
         }
     }
 
@@ -483,19 +497,7 @@ class HomeFragment : Fragment() {
             )
         }
 
-
-
         return spannableString
-    }
-
-    override fun onStop() {
-        homeViewModel.clearSearchResult()
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
@@ -509,16 +511,13 @@ class HomeFragment : Fragment() {
             binding.tvHomeRecentTitle.visibility = View.VISIBLE
         }
     }
-
     private fun recentViewPager(data: List<RecentEntity>) {
         val viewPage = binding.vpHomeRecent
         val adapter = RecentAdapter()
-
         viewPage.adapter = adapter
         viewPage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         adapter.submitList(data)
         viewPage.offscreenPageLimit = 1
-
         adapter.itemClick = object : CategoryItemClick {
             override fun onClick(svcID: String) {
                 val dialog = DetailFragment.newInstance(svcID)

@@ -9,6 +9,29 @@ import com.wannabeinseoul.seoulpublicservice.databases.firestore.*
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.*
+import com.wannabeinseoul.seoulpublicservice.kma.KmaApiService
+import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
+import com.wannabeinseoul.seoulpublicservice.kma.KmaRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.PrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RowPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulApiService
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
@@ -61,11 +84,13 @@ interface AppContainer {
     val userBanRepository: UserBanRepository
     val recentPrefRepository: RecentPrefRepository
     val weatherShortRepository: WeatherShortRepository
+    val kmaRepository: KmaRepository
 }
 
 class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : AppContainer {
     private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088/"
     private val weatherBaseUrl = "https://apis.data.go.kr/1360000/"
+    private val kmaApiBaseUrl = "http://apis.data.go.kr/"
 
     private fun createOkHttpClient(): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
@@ -98,10 +123,14 @@ class DefaultAppContainer(context: Context, getAppRowList: () -> List<Row>) : Ap
         SeoulPublicRepositoryImpl(retrofitSeoulApiService)
     }
 
-    /** Retrofit service object for creating api calls */
-//    private val retrofitService: SeoulApiService by lazy {
-//        seoulRetrofit.create(SeoulApiService::class.java)
-//    }
+    private val kmaRetrofit = createRetrofit(kmaApiBaseUrl)
+    private val retrofitKmaApiService: KmaApiService by lazy {
+        kmaRetrofit.create(KmaApiService::class.java)
+    }
+
+    override val kmaRepository: KmaRepository by lazy {
+        KmaRepositoryImpl(retrofitKmaApiService)
+    }
 
     // 단기예보용
     private val weatherShortRetrofit = createRetrofit(weatherBaseUrl)
