@@ -1,5 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.weather
 
+import android.util.Log
+
+private const val JJTAG = "jj-WeatherShortRepository"
+
 interface WeatherShortRepository {
     /**
      * @property getShortWeather 단기예보 요청
@@ -30,5 +34,17 @@ class WeatherShortRepositoryImpl(
         time: String,
         x: Int,
         y: Int
-    ) = weatherApiService.getWeatherShort(page = page, row = row, date = date, time = time, x = x, y = y)
+    ) = try {
+        weatherApiService.getWeatherShort(
+            page = page,
+            row = row,
+            date = date,
+            time = time,
+            x = x,
+            y = y
+        )
+    } catch (e: Throwable) {
+        Log.e(JJTAG, "getShortWeather page:$page, row:$row, date:$date, time:$time, x:$x, y:$y", e)
+        WeatherShortDTO.new()
+    }
 }

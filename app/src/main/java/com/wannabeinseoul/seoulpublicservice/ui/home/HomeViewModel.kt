@@ -180,7 +180,7 @@ class HomeViewModel(
     }
 
     fun weatherShortData(lat_x: Int, lng_y: Int) {
-        viewModelScope.launch { // 여기서부터 실행해야함
+        viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
             val run = runBlocking(Dispatchers.IO) {
                 val locale = ZoneId.of("Asia/Seoul")
                 val local = LocalDateTime.now(locale)
@@ -237,7 +237,7 @@ class HomeViewModel(
                     }
                 }
                 Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
-                _shortWeather.value = itemList
+                _shortWeather.postValue(itemList)
             }
         }
     }
