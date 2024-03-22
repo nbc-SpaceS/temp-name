@@ -32,7 +32,12 @@ class SeoulPublicRepositoryImpl(
 
     override suspend fun getTotalNum(): Int {
         Log.d(JJTAG, "getTotalNum getFirst 시간체크용")
-        val response = seoulApiService.getFirst()
+        val response = try {
+            seoulApiService.getFirst()
+        } catch (e: Throwable) {
+            Log.e(JJTAG, "getTotalNum getFirst error", e)
+            return 0
+        }
         val body = response.body() ?: return 0
             .apply { Log.w(JJTAG, "getTotalNum body == null, response: $response") }
 
@@ -81,7 +86,12 @@ class SeoulPublicRepositoryImpl(
 //    }
 
     override suspend fun getAll1000(): List<Row> {
-        val response = seoulApiService.getAll1000()
+        val response = try {
+            seoulApiService.getAll1000()
+        } catch (e: Throwable) {
+            Log.e(JJTAG, "getAll1000 error", e)
+            return emptyList()
+        }
         val body = response.body()
         if (body == null) {
             Log.d(JJTAG, "getAll1000 body == null")
@@ -96,7 +106,12 @@ class SeoulPublicRepositoryImpl(
 
     override suspend fun getAll2000(): List<Row> = coroutineScope {
         val deferred1 = async {
-            val response = seoulApiService.getAllRange(1, 1000)
+            val response = try {
+                seoulApiService.getAllRange(1, 1000)
+            } catch (e: Throwable) {
+                Log.e(JJTAG, "getAll2000 getAllRange(1, 1000) error", e)
+                return@async emptyList()
+            }
             val body = response.body()
             if (body == null) {
                 Log.d(JJTAG, "getAll2000 1~1000 body == null")
@@ -109,7 +124,12 @@ class SeoulPublicRepositoryImpl(
             response.toRowList()
         }
         val deferred2 = async {
-            val response = seoulApiService.getAllRange(1001, 2000)
+            val response = try {
+                seoulApiService.getAllRange(1001, 2000)
+            } catch (e: Throwable) {
+                Log.e(JJTAG, "getAll2000 getAllRange(1001, 2000) error", e)
+                return@async emptyList()
+            }
             val body = response.body()
             if (body == null) {
                 Log.d(JJTAG, "getAll2000 1001~2000 body == null")
@@ -125,7 +145,12 @@ class SeoulPublicRepositoryImpl(
     }
 
     override suspend fun getDetail(svcid: String): DetailRow? {
-        val response = seoulApiService.getDetail(svcid)
+        val response = try {
+            seoulApiService.getDetail(svcid)
+        } catch (e: Throwable) {
+            Log.e(JJTAG, "getDetail", e)
+            return null
+        }
         val body = response.body()
         if (body == null) {
             Log.d(JJTAG, "getDetail body == null")
