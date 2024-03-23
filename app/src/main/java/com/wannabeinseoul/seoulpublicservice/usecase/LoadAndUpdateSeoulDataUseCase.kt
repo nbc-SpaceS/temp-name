@@ -9,7 +9,6 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
-import com.wannabeinseoul.seoulpublicservice.util.toReservationEntityList
 import com.wannabeinseoul.seoulpublicservice.util.toastLong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,9 +73,8 @@ class LoadAndUpdateSeoulDataUseCase(
     private suspend fun getAndUpdateAll() {
         try {
             withTimeout(10_000L) {
-                // TODO: getAllParallel 말고 getAllParallelAsReservationEntities 처럼 만들어야. 병렬 하는 김에 같이.
-                val rows = seoulPublicRepository.getAllParallel()
-                val reservationEntities = rows.toReservationEntityList()
+                val reservationEntities =
+                    seoulPublicRepository.getAllParallelAsReservationEntities()
                 withContext(Dispatchers.Main) {
                     dbMemoryRepository.setAll(reservationEntities)
                 }

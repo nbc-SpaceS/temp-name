@@ -1,6 +1,8 @@
 package com.wannabeinseoul.seoulpublicservice.seoul
 
 import android.util.Log
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
+import com.wannabeinseoul.seoulpublicservice.util.toReservationEntityList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -14,7 +16,7 @@ interface SeoulPublicRepository {
     suspend fun getTotalNum(): Int
 
     /** 종합으로 전체 병렬로 가져오기 */
-    suspend fun getAllParallel(): List<Row>
+    suspend fun getAllParallelAsReservationEntities(): List<ReservationEntity>
 
     /** 종합으로 첫 천개 가져오기 */
     suspend fun getAll1000(): List<Row>
@@ -49,7 +51,8 @@ class SeoulPublicRepositoryImpl(
         return body.tvYeyakCOllect?.listTotalCount?.toInt() ?: 0
     }
 
-    override suspend fun getAllParallel(): List<Row> = coroutineScope {
+    override suspend fun getAllParallelAsReservationEntities(
+    ): List<ReservationEntity> = coroutineScope {
         val batchSize = 192
         val total = getTotalNum()
         val batchTotal = (total + batchSize - 1) / batchSize
@@ -59,11 +62,11 @@ class SeoulPublicRepositoryImpl(
                 val to = (i + 1) * batchSize
                 try {
                     val response = seoulApiService.getAllRange(from, to)
-                    response.toRowList()
+                    response.toRowList().toReservationEntityList()
                         .also {
                             Log.d(
                                 JJTAG,
-                                "getAllParallel $from~$to: ${it.size}, ${it.firstOrNull()?.svcid}"
+                                "getAllParallel $from~$to: ${it.size}, ${it.firstOrNull()?.SVCID}"
                             )
                         }
                 } catch (e: Throwable) {
@@ -76,7 +79,7 @@ class SeoulPublicRepositoryImpl(
             .also {
                 Log.d(
                     JJTAG,
-                    "getAllParallel return total ${it.size} in $total, ${it.firstOrNull()?.svcid}"
+                    "getAllParallel return total ${it.size} in $total, ${it.firstOrNull()?.SVCID}"
                 )
             }
     }
