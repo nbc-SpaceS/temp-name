@@ -57,7 +57,7 @@ class LoadAndUpdateSeoulDataUseCase(
         }
 
         var isOld = true
-        val rowsSavedTime = prefRepository.load(KEY_SAVED_TIME).toLongOrNull()
+        val rowsSavedTime = prefRepository.load(KEY_SAVED_TIME)?.toLongOrNull()
         if (rowsSavedTime == null) {
             Log.w(
                 JJTAG,
