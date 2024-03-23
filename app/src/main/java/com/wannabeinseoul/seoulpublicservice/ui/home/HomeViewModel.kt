@@ -1,11 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -13,15 +9,22 @@ import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
-import com.wannabeinseoul.seoulpublicservice.kma.KmaMidLandFcstDto
+import com.wannabeinseoul.seoulpublicservice.kma.Item
 import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
+import com.wannabeinseoul.seoulpublicservice.kma.temperature.TempRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.weather.ShortMidMapper
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherMid
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class HomeViewModel(
@@ -31,7 +34,9 @@ class HomeViewModel(
     private val dbMemoryRepository: DbMemoryRepository,
     private val savedPrefRepository: SavedPrefRepository,
     private val recentPrefRepository: RecentPrefRepository,
-    private val kmaRepository: KmaRepository
+    private val weatherShortRepository: WeatherShortRepository,
+    private val kmaRepository: KmaRepository,
+    private val tempRepository: TempRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -57,8 +62,13 @@ class HomeViewModel(
     private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> = MutableLiveData()
     val updateViewPagerCategory: LiveData<List<Pair<String, Int>>> get() = _updateViewPagerCategory
 
-    private val _weatherData: MutableLiveData<KmaMidLandFcstDto> = MutableLiveData()
-    val weatherData: LiveData<KmaMidLandFcstDto> get() = _weatherData
+    private val _shortWeather: MutableLiveData<List<WeatherShort>> = MutableLiveData()
+    val shortWeather: LiveData<List<WeatherShort>> get() = _shortWeather
+
+//    private val _weatherData: MutableLiveData<KmaMidLandFcstDto> = MutableLiveData()
+//    val weatherData: LiveData<KmaMidLandFcstDto> get() = _weatherData
+    private val _weatherData: MutableLiveData<List<WeatherShort>> = MutableLiveData()
+    val weatherData: LiveData<List<WeatherShort>> get() = _weatherData
 
     fun clearSearchResult() {
         if (_displaySearchResult.value?.isNotEmpty() == true) _displaySearchResult.value =
@@ -203,10 +213,98 @@ class HomeViewModel(
                 regId = "11B00000",
                 tmFc = tmFc
             )
-            if (response.isSuccessful) {
-                _weatherData.value = response.body()
+            val resposeTemp = tempRepository.getTemp(
+                numOfRows = 10,
+                pageNo = 1,
+                dataType = "JSON",
+                regId = "11B10101",
+                tmFc = tmFc
+            )
+            if (response.isSuccessful && resposeTemp.isSuccessful) {
+                Log.i("This is HomeViewModel","kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${resposeTemp.body()!!.response.body.items.item[0]}")
+                setWeatherShort(
+                    response.body()!!.response.body.items.itemList[0],
+                    resposeTemp.body()!!.response.body.items.item[0]
+                )
+//                _weatherData.value = response.body()
             }
         }
+    }
+
+    fun weatherShortData(lat_x: Int, lng_y: Int) {
+        viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
+            val run = runBlocking(Dispatchers.IO) {
+                val locale = ZoneId.of("Asia/Seoul")
+                val local = LocalDateTime.now(locale)
+                var y = local.year
+                var m = String.format("%02d",local.monthValue)
+                var d = local.dayOfMonth
+                var h = local.hour
+                Log.i("This is HomeViewModel","m : $m\nd : $d\nh : $h")
+                if (h < 5) {
+                    val yesterday = local.minusDays(1)
+                    d = yesterday.dayOfMonth
+                    h = 17
+                    if (d == 1) {
+                        if (local.month.value == 1) {
+                            m = "12"
+                            val lastYear = local.minusYears(1)
+                            y = lastYear.year
+                            d = lastYear.month.maxLength()
+                        } else {
+                            val lastMonth = yesterday.minusMonths(1)
+                            m = String.format("%02d",lastMonth.monthValue)
+                            d = lastMonth.month.maxLength()
+                        }
+                    }
+                } else {
+                    h = 5
+                }
+                Log.i("This is HomeViewModel","m : $m\nh : $h")
+                val localDate = "$y$m$d"
+                val localTime = "${String.format("%02d",h)}00"
+                Log.i("This is HomeViewModel","localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y")
+                weatherShortRepository.getShortWeather(1,1000, localDate, localTime, lat_x, lng_y)
+            }
+            run.let {
+                val itemList = mutableListOf<WeatherShort>()
+                val items = it.response.body.items.item
+                var skyValue: Int? = null
+                var tmpValue: Int? = null
+                var popValue: Int? = null
+                val filtering = items.filter { it.fcstTime == "0600" && (it.category == "SKY" || it.category == "TMP" || it.category == "POP") }
+                for(item in filtering) {
+                    if(item.category == "SKY") skyValue = item.fcstValue.toInt()
+                    if(item.category == "TMP") tmpValue = item.fcstValue.toInt()
+                    if(item.category == "POP") popValue = item.fcstValue.toInt()
+                    Log.i("This is HomeViewModel","skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue")
+                    if(skyValue != null && tmpValue != null && popValue != null) {
+                        itemList.add(WeatherShort(skyValue, tmpValue, popValue))
+                        skyValue = null
+                        tmpValue = null
+                        popValue = null
+                    }
+                }
+                Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
+                _shortWeather.postValue(itemList)
+            }
+        }
+    }
+
+    fun setWeatherShort(dto: Item, temp: com.wannabeinseoul.seoulpublicservice.kma.temperature.Item) {
+        val itemList = mutableListOf<WeatherShort>()
+        dto.let {
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am, (temp.taMax3 + temp.taMin3)/2, it.rnSt3Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf4Am, (temp.taMax4 + temp.taMin4)/2, it.rnSt4Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf5Am, (temp.taMax5 + temp.taMin5)/2, it.rnSt5Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf6Am, (temp.taMax6 + temp.taMin6)/2, it.rnSt6Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf7Am, (temp.taMax7 + temp.taMin7)/2, it.rnSt7Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf8, (temp.taMax8 + temp.taMin8)/2, it.rnSt8)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9, (temp.taMax9 + temp.taMin9)/2, it.rnSt9)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10, (temp.taMax10 + temp.taMin10)/2, it.rnSt10)))
+        }
+        Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
+        _weatherData.postValue(itemList)
     }
 
     companion object {
@@ -222,7 +320,9 @@ class HomeViewModel(
                     dbMemoryRepository = container.dbMemoryRepository,
                     savedPrefRepository = container.savedPrefRepository,
                     recentPrefRepository = container.recentPrefRepository,
-                    kmaRepository = container.kmaRepository
+                    kmaRepository = container.kmaRepository,
+                    weatherShortRepository = container.weatherShortRepository,
+                    tempRepository = container.tempRepository
                 )
             }
         }
