@@ -82,12 +82,19 @@ class LoadAndUpdateSeoulDataUseCase(
         callback()
     }
 
+    // TODO: -ing 룸에 데이터 안들어감
     private suspend fun getAndUpdateAll2000() {
         try {
-            withTimeout(6_000L) {
-                dbMemoryRepository.postAll(
-                    seoulPublicRepository.getAllParallel()
-                )
+            withTimeout(10_000L) {
+                withContext(Dispatchers.Main) {
+                    dbMemoryRepository.setAll(
+                        seoulPublicRepository.getAllParallel()
+                    )
+                }
+
+//                dbMemoryRepository.postAll(
+//                    seoulPublicRepository.getAllParallel()
+//                )
                 val reservationEntities =
                     dbMemoryRepository.getAll().toReservationEntityList()
                 reservationRepository.deleteAll()
@@ -109,7 +116,11 @@ class LoadAndUpdateSeoulDataUseCase(
 
     private suspend fun getFromDB() {
         val reservationEntities = reservationRepository.getAll()
-        dbMemoryRepository.postAll(reservationEntities.toRowList())
+        withContext(Dispatchers.Main) {
+            dbMemoryRepository.setAll(reservationEntities.toRowList())
+        }
+
+//        dbMemoryRepository.postAll(reservationEntities.toRowList())
     }
 
 }
