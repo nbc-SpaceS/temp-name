@@ -217,7 +217,7 @@ class HomeViewModel(
                 numOfRows = 10,
                 pageNo = 1,
                 dataType = "JSON",
-                regId = "11B00000",
+                regId = "11B10101",
                 tmFc = tmFc
             )
             if (response.isSuccessful && resposeTemp.isSuccessful) {
