@@ -2,12 +2,13 @@ package com.wannabeinseoul.seoulpublicservice.weather
 
 data class WeatherShort(
     val sky: Int,
-    val tmp: Int?,
+    val tmp: Int,
     val pop: Int
 )
 
 data class WeatherMid(
     val sky: String,
+    val tmp: Int,
     val pop: Int
 )
 
@@ -21,7 +22,7 @@ object ShortMidMapper {
         }
         return WeatherShort(
             sky = change,
-            tmp = null,
+            tmp = weatherMid.tmp,
             pop = weatherMid.pop
         )
     }

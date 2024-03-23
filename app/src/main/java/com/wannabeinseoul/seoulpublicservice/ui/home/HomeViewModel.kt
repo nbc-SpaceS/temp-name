@@ -11,6 +11,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.kma.Item
 import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
+import com.wannabeinseoul.seoulpublicservice.kma.temperature.TempRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
@@ -34,7 +35,8 @@ class HomeViewModel(
     private val savedPrefRepository: SavedPrefRepository,
     private val recentPrefRepository: RecentPrefRepository,
     private val weatherShortRepository: WeatherShortRepository,
-    private val kmaRepository: KmaRepository
+    private val kmaRepository: KmaRepository,
+    private val tempRepository: TempRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -211,9 +213,19 @@ class HomeViewModel(
                 regId = "11B00000",
                 tmFc = tmFc
             )
-            if (response.isSuccessful) {
-                Log.i("This is HomeViewModel","kma : ${response.body()!!.response.body.items.itemList[0]}")
-                setWeatherShort(response.body()!!.response.body.items.itemList[0])
+            val resposeTemp = tempRepository.getTemp(
+                numOfRows = 10,
+                pageNo = 1,
+                dataType = "JSON",
+                regId = "11B00000",
+                tmFc = tmFc
+            )
+            if (response.isSuccessful && resposeTemp.isSuccessful) {
+                Log.i("This is HomeViewModel","kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${resposeTemp.body()!!.response.body.items.item[0]}")
+                setWeatherShort(
+                    response.body()!!.response.body.items.itemList[0],
+                    resposeTemp.body()!!.response.body.items.item[0]
+                )
 //                _weatherData.value = response.body()
             }
         }
@@ -279,17 +291,17 @@ class HomeViewModel(
         }
     }
 
-    fun setWeatherShort(dto: Item) {
+    fun setWeatherShort(dto: Item, temp: com.wannabeinseoul.seoulpublicservice.kma.temperature.Item) {
         val itemList = mutableListOf<WeatherShort>()
         dto.let {
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am, it.rnSt3Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf4Am, it.rnSt4Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf5Am, it.rnSt5Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf6Am, it.rnSt6Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf7Am, it.rnSt7Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf8, it.rnSt8)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9, it.rnSt9)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10, it.rnSt10)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am, (temp.taMax3 + temp.taMin3)/2, it.rnSt3Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf4Am, (temp.taMax4 + temp.taMin4)/2, it.rnSt4Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf5Am, (temp.taMax5 + temp.taMin5)/2, it.rnSt5Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf6Am, (temp.taMax6 + temp.taMin6)/2, it.rnSt6Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf7Am, (temp.taMax7 + temp.taMin7)/2, it.rnSt7Am)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf8, (temp.taMax8 + temp.taMin8)/2, it.rnSt8)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9, (temp.taMax9 + temp.taMin9)/2, it.rnSt9)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10, (temp.taMax10 + temp.taMin10)/2, it.rnSt10)))
         }
         Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
         _weatherData.postValue(itemList)
@@ -309,7 +321,8 @@ class HomeViewModel(
                     savedPrefRepository = container.savedPrefRepository,
                     recentPrefRepository = container.recentPrefRepository,
                     kmaRepository = container.kmaRepository,
-                    weatherShortRepository = container.weatherShortRepository
+                    weatherShortRepository = container.weatherShortRepository,
+                    tempRepository = container.tempRepository
                 )
             }
         }

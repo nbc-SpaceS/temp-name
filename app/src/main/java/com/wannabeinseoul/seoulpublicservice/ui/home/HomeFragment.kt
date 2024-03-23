@@ -237,7 +237,7 @@ class HomeFragment : Fragment() {
                     mediatorLiveData.value = combinedData
                 }
             }
-            weatherData.observe(viewLifecycleOwner) { weatherData ->        // 중기예보
+            weatherData.observe(viewLifecycleOwner) { weatherData ->        // 중기예보(기온 포함됨)
                 Log.d("WeatherData", weatherData.toString())
                 val shortWeatherList = shortWeather.value
                 if(!weatherData.isNullOrEmpty() && !shortWeatherList.isNullOrEmpty()) {
