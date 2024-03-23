@@ -41,11 +41,12 @@ class SeoulPublicRepositoryImpl(
         val body = response.body() ?: return 0
             .apply { Log.w(JJTAG, "getTotalNum body == null, response: $response") }
 
+        // TODO: String에 null을 더하면?
         val logMsg =
-            "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                    body.tvYeyakCOllect.rowList.firstOrNull().toString().take(255)
+            "total: ${body.tvYeyakCOllect?.listTotalCount}, ${body.tvYeyakCOllect?.result}\n" +
+                    body.tvYeyakCOllect?.rowList?.firstOrNull()?.svcid
         Log.d(JJTAG, "getTotalNum getFirst 응답: $logMsg")
-        return body.tvYeyakCOllect.listTotalCount.toInt()
+        return body.tvYeyakCOllect?.listTotalCount?.toInt() ?: 0
     }
 
     override suspend fun getAllParallel(): List<Row> = coroutineScope {
@@ -98,8 +99,8 @@ class SeoulPublicRepositoryImpl(
         val body = response.body() ?: return emptyList<Row>()
             .also { Log.w(JJTAG, "getAll1000 response.body is null, response: $response") }
         val logMsg =
-            "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                    body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
+            "total: ${body.tvYeyakCOllect?.listTotalCount}, ${body.tvYeyakCOllect?.result}\n" +
+                    body.tvYeyakCOllect?.rowList?.firstOrNull()?.svcid
         Log.d(JJTAG, "getAll1000 응답: $logMsg")
         return response.toRowList()
     }
@@ -115,8 +116,8 @@ class SeoulPublicRepositoryImpl(
             val body = response.body() ?: return@async emptyList<Row>()
                 .also { Log.w(JJTAG, "getAll2000 1~1000 body == null, response: $response") }
             val logMsg =
-                "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                        body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
+                "total: ${body.tvYeyakCOllect?.listTotalCount}, ${body.tvYeyakCOllect?.result}\n" +
+                        body.tvYeyakCOllect?.rowList?.firstOrNull()?.svcid
             Log.d(JJTAG, "getAll2000 1~1000 응답: $logMsg")
             response.toRowList()
         }
@@ -130,8 +131,8 @@ class SeoulPublicRepositoryImpl(
             val body = response.body() ?: return@async emptyList<Row>()
                 .also { Log.w(JJTAG, "getAll2000 1001~2000 body == null, response: $response") }
             val logMsg =
-                "total: ${body.tvYeyakCOllect.listTotalCount}, ${body.tvYeyakCOllect.result}\n" +
-                        body.tvYeyakCOllect.rowList.firstOrNull().toString().take(127)
+                "total: ${body.tvYeyakCOllect?.listTotalCount}, ${body.tvYeyakCOllect?.result}\n" +
+                        body.tvYeyakCOllect?.rowList?.firstOrNull()?.svcid
             Log.d(JJTAG, "getAll2000 1001~2000 응답: $logMsg")
             response.toRowList()
         }

@@ -9,7 +9,6 @@ import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import com.wannabeinseoul.seoulpublicservice.util.toReservationEntityList
-import com.wannabeinseoul.seoulpublicservice.util.toRowList
 import com.wannabeinseoul.seoulpublicservice.util.toastLong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -88,7 +87,7 @@ class LoadAndUpdateSeoulDataUseCase(
             withTimeout(10_000L) {
                 withContext(Dispatchers.Main) {
                     dbMemoryRepository.setAll(
-                        seoulPublicRepository.getAllParallel()
+                        seoulPublicRepository.getAllParallel().toReservationEntityList()
                     )
                 }
 
@@ -96,7 +95,7 @@ class LoadAndUpdateSeoulDataUseCase(
 //                    seoulPublicRepository.getAllParallel()
 //                )
                 val reservationEntities =
-                    dbMemoryRepository.getAll().toReservationEntityList()
+                    dbMemoryRepository.getAll()
                 reservationRepository.deleteAll()
                 reservationRepository.insertAll(reservationEntities)
                 prefRepository
@@ -117,7 +116,7 @@ class LoadAndUpdateSeoulDataUseCase(
     private suspend fun getFromDB() {
         val reservationEntities = reservationRepository.getAll()
         withContext(Dispatchers.Main) {
-            dbMemoryRepository.setAll(reservationEntities.toRowList())
+            dbMemoryRepository.setAll(reservationEntities)
         }
 
 //        dbMemoryRepository.postAll(reservationEntities.toRowList())

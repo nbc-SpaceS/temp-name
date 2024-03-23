@@ -1,15 +1,15 @@
 package com.wannabeinseoul.seoulpublicservice.usecase
 
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
 
 class SearchServiceDataOnMapUseCase(
     private val reservationRepository: ReservationRepository,
     private val dbMemoryRepository: DbMemoryRepository,
 ) {
-    operator fun invoke(word: String, savedOptions: List<List<String>>): HashMap<Pair<String, String>, List<Row>> {
-        val hash: HashMap<Pair<String, String>, List<Row>> = hashMapOf()
+    operator fun invoke(word: String, savedOptions: List<List<String>>): HashMap<Pair<String, String>, List<ReservationEntity>> {
+        val hash: HashMap<Pair<String, String>, List<ReservationEntity>> = hashMapOf()
 //                var item = RoomRowMapper.mappingRoomToRow(
 //                    reservationRepository.getFilter(
 //                        loadedData.subList(0, 5).flatten(),
@@ -28,10 +28,10 @@ class SearchServiceDataOnMapUseCase(
         )
 
         for (i in item) {
-            if (hash.containsKey(Pair(i.y, i.x))) {
-                hash[Pair(i.y, i.x)] = hash[Pair(i.y, i.x)].orEmpty().toMutableList() + i
+            if (hash.containsKey(Pair(i.Y, i.X))) {
+                hash[Pair(i.Y, i.X)] = hash[Pair(i.Y, i.X)].orEmpty().toMutableList() + i
             } else {
-                hash[Pair(i.y, i.x)] = listOf(i)
+                hash[Pair(i.Y, i.X)] = listOf(i)
             }
         }
 
