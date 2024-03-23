@@ -35,7 +35,7 @@ class SeoulPublicRepositoryImpl(
         val response = try {
             seoulApiService.getFirst()
         } catch (e: Throwable) {
-            Log.e(JJTAG, "getTotalNum getFirst error", e)
+            Log.e(JJTAG, "getTotalNum seoulApiService.getFirst error", e)
             return 0
         }
         val body = response.body() ?: return 0
@@ -59,11 +59,13 @@ class SeoulPublicRepositoryImpl(
                 val to = (i + 1) * batchSize
                 try {
                     val response = seoulApiService.getAllRange(from, to)
-                    Log.d(
-                        JJTAG,
-                        "getAllParallel $from~$to, " + response.body().toString().take(255)
-                    )
                     response.toRowList()
+                        .also {
+                            Log.d(
+                                JJTAG,
+                                "getAllParallel $from~$to: ${it.size}, ${it.firstOrNull()?.svcid}"
+                            )
+                        }
                 } catch (e: Throwable) {
                     Log.e(JJTAG, "getAllParallel error $from~$to", e)
                     emptyList()
@@ -73,8 +75,8 @@ class SeoulPublicRepositoryImpl(
         deferredList.awaitAll().flatten()
             .also {
                 Log.d(
-                    JJTAG, "getAllParallel return total ${it.size} in $total, " +
-                            it.firstOrNull().toString().take(255)
+                    JJTAG,
+                    "getAllParallel return total ${it.size} in $total, ${it.firstOrNull()?.svcid}"
                 )
             }
     }

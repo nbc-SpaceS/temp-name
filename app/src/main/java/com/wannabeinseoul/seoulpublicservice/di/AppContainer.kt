@@ -118,6 +118,7 @@ interface AppContainer {
     val tempRepository: TempRepository
 }
 
+// TODO: 타입이 Impl로 되어있는 애들 수정
 class DefaultAppContainer(context: Context) : AppContainer {
     private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088/"
     private val weatherBaseUrl = "https://apis.data.go.kr/1360000/"
