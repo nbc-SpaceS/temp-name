@@ -54,7 +54,7 @@ class SeoulPublicRepositoryImpl(
     override suspend fun getAllParallelAsReservationEntities(
         total: Int,
     ): List<ReservationEntity> = coroutineScope {
-        val batchSize = 192
+        val batchSize = 256
         val batchTotal = (total + batchSize - 1) / batchSize
         val deferredList = List(batchTotal) { i ->
             async(Dispatchers.IO) {
