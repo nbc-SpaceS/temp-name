@@ -15,8 +15,8 @@ interface SeoulPublicRepository {
     /** 종합으로 첫 번째꺼 가져와서 전체 개수 확인하기 */
     suspend fun getTotalNum(): Int
 
-    /** 종합으로 전체 병렬로 가져오기 */
-    suspend fun getAllParallelAsReservationEntities(): List<ReservationEntity>
+    /** 종합으로 전체 병렬로 가져오기. 병렬 요청 중 일부가 실패하면 일부만 빈 채로 반환. */
+    suspend fun getAllParallelAsReservationEntities(total: Int): List<ReservationEntity>
 
     /** 종합으로 첫 천개 가져오기 */
     suspend fun getAll1000(): List<Row>
@@ -52,9 +52,9 @@ class SeoulPublicRepositoryImpl(
     }
 
     override suspend fun getAllParallelAsReservationEntities(
+        total: Int,
     ): List<ReservationEntity> = coroutineScope {
         val batchSize = 192
-        val total = getTotalNum()
         val batchTotal = (total + batchSize - 1) / batchSize
         val deferredList = List(batchTotal) { i ->
             async(Dispatchers.IO) {

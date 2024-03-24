@@ -73,14 +73,17 @@ class LoadAndUpdateSeoulDataUseCase(
     private suspend fun getAndUpdateAll() {
         try {
             withTimeout(10_000L) {
+                val total = seoulPublicRepository.getTotalNum()
                 val reservationEntities =
-                    seoulPublicRepository.getAllParallelAsReservationEntities()
+                    seoulPublicRepository.getAllParallelAsReservationEntities(total)
                 withContext(Dispatchers.Main) {
                     dbMemoryRepository.setAll(reservationEntities)
                 }
-                reservationRepository.deleteAll()
-                reservationRepository.insertAll(reservationEntities)
-                prefRepository.save(KEY_SAVED_TIME, System.currentTimeMillis().toString())
+                if (total == reservationEntities.size) {
+                    reservationRepository.deleteAll()
+                    reservationRepository.insertAll(reservationEntities)
+                    prefRepository.save(KEY_SAVED_TIME, System.currentTimeMillis().toString())
+                }
             }
         } catch (e: Throwable) {
             Log.e(JJTAG, "getAndUpdateAll 실패 (주로 Timeout)", e)
