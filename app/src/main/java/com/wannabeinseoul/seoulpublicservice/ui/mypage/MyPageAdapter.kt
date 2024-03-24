@@ -152,17 +152,17 @@ class MyPageAdapter(
 
         override fun onBind(item: MultiView) {
             val reviewedData = (item as MultiView.Reviewed).reviewedData
-            val row = item.reviewedData.row
-            b.ivReviewedThumbnail.loadWithHolder(row.IMGURL)
-            b.tvReviewedArea.text = row.AREANM
-            b.tvReviewedTitle.text = row.SVCNM.fromHtml()
+            val entity = item.reviewedData.entity
+            b.ivReviewedThumbnail.loadWithHolder(entity.IMGURL)
+            b.tvReviewedArea.text = entity.AREANM
+            b.tvReviewedTitle.text = entity.SVCNM.fromHtml()
             b.tvReviewedReviewContent.text = reviewedData.content
             b.tvReviewedDate.text = reviewedData.uploadTime.let {
                 if (it.length > 15) it.substring(2..15)
                 else it
             }
 
-            b.root.setOnClickListener { onReviewedClick(row.SVCID) }
+            b.root.setOnClickListener { onReviewedClick(entity.SVCID) }
         }
     }
 
