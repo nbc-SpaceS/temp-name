@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 
+private const val JJTAG = "jj-SavedPrefRepository"
+
 interface SavedPrefRepository {
     fun getSvcidList(): List<String>
     fun setSvcidList(list: List<String>)
@@ -42,15 +44,15 @@ class SavedPrefRepositoryImpl(context: Context) : SavedPrefRepository {
 
     private fun getSvcidListFromPref(): List<String> {
         val json = pref.getString(keySvcidList, null) ?: return emptyList<String>()
-            .apply { Log.w("jj-SavedPrefRepositoryImpl", "getSvcidListFromPref got null") }
-        Log.d("jj-SavedPrefRepositoryImpl", "getSvcidListFromPref json: ${json.take(255)}")
+            .apply { Log.d(JJTAG, "getSvcidListFromPref got null") }
+        Log.d(JJTAG, "getSvcidListFromPref json: ${json.take(255)}")
         return gson.fromJson(json, Array<String>::class.java).toList()
     }
 
     private fun setSvcidListToPref(list: List<String>) {
         val json = gson.toJson(list)
         pref.edit().putString(keySvcidList, json).apply()
-        Log.d("jj-SavedPrefRepositoryImpl", "setSvcidListToPref json: ${json.take(255)}")
+        Log.d(JJTAG, "setSvcidListToPref json: ${json.take(255)}")
     }
 
     override fun getSvcidList(): List<String> = savedSvcidListLiveData.value!!
