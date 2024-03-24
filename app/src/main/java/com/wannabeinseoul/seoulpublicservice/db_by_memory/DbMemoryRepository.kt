@@ -6,8 +6,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-// TODO: set으로 변경
-private val areasInSeoul = listOf(
+private val areasInSeoul = setOf(
     "강남구",
     "강동구",
     "강북구",

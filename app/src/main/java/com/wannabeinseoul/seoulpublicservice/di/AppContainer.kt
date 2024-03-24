@@ -118,7 +118,6 @@ interface AppContainer {
     val tempRepository: TempRepository
 }
 
-// TODO: 타입이 Impl로 되어있는 애들 수정
 class DefaultAppContainer(context: Context) : AppContainer {
     private val seoulApiBaseUrl = "http://openapi.seoul.go.kr:8088/"
     private val weatherBaseUrl = "https://apis.data.go.kr/1360000/"
@@ -331,7 +330,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     /** Room과 관련된 Repository에 의존성 주입?? */
     private val database by lazy { ReservationDatabase.getDatabase(context) }
-    override val reservationRepository by lazy {
+    override val reservationRepository: ReservationRepository by lazy {
         ReservationRepositoryImpl(database.getReservation())
     }
 
@@ -355,7 +354,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
         RecommendPrefRepositoryImpl(context)
     }
 
-    override val userProfileRepository by lazy {
+    override val userProfileRepository: UserProfileRepository by lazy {
         UserProfileRepositoryImpl(userRepository)
     }
 
@@ -363,19 +362,19 @@ class DefaultAppContainer(context: Context) : AppContainer {
         UserRepositoryImpl()
     }
 
-    override val serviceRepository by lazy {
+    override val serviceRepository: ServiceRepository by lazy {
         ServiceRepositoryImpl()
     }
 
-    override val reviewRepository by lazy {
+    override val reviewRepository: ReviewRepository by lazy {
         ReviewRepositoryImpl()
     }
 
-    override val complaintRepository by lazy {
+    override val complaintRepository: ComplaintRepository by lazy {
         ComplaintRepositoryImpl()
     }
 
-    override val userBanRepository by lazy {
+    override val userBanRepository: UserBanRepository by lazy {
         UserBanRepositoryImpl()
     }
 
