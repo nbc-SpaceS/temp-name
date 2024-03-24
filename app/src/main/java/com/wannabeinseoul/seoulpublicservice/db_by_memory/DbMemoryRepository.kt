@@ -36,8 +36,8 @@ private val areasInSeoul = setOf(
 
 interface DbMemoryRepository {
     fun getAll(): List<ReservationEntity>
-    fun setAll(rowList: List<ReservationEntity>)
-    fun postAll(rowList: List<ReservationEntity>)
+    fun setAll(reservationEntityList: List<ReservationEntity>)
+    fun postAll(reservationEntityList: List<ReservationEntity>)
     fun getHasLocation(): List<ReservationEntity>
     fun getFiltered(
         minclassnm: List<String>? = null,
@@ -67,15 +67,16 @@ interface DbMemoryRepository {
 
 class DbMemoryRepositoryImpl : DbMemoryRepository {
 
-    private val _rowListLd = MutableLiveData<List<ReservationEntity>>(emptyList())
-    private val rowListLd: LiveData<List<ReservationEntity>> get() = _rowListLd
+    private val _entityListLd = MutableLiveData<List<ReservationEntity>>(emptyList())
+    private val entityListLd: LiveData<List<ReservationEntity>> get() = _entityListLd
 
-    override fun getAll() = rowListLd.value!!
-    override fun setAll(rowList: List<ReservationEntity>) {
-        _rowListLd.value = rowList
+    override fun getAll() = entityListLd.value!!
+    override fun setAll(reservationEntityList: List<ReservationEntity>) {
+        _entityListLd.value = reservationEntityList
     }
 
-    override fun postAll(rowList: List<ReservationEntity>) = _rowListLd.postValue(rowList)
+    override fun postAll(reservationEntityList: List<ReservationEntity>) =
+        _entityListLd.postValue(reservationEntityList)
 
     override fun getHasLocation() = getAll().getHasLocation()
 

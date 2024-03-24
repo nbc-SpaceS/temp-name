@@ -62,8 +62,8 @@ class LoadAndUpdateSeoulDataUseCase(
         if (isOld) {
             getAndUpdateAll()
         } else {
-            val rows = loadFromRoomToDbMemory()
-            if (rows.isEmpty()) getAndUpdateAll()
+            val reservationEntities = loadFromRoomToDbMemory()
+            if (reservationEntities.isEmpty()) getAndUpdateAll()
         }
 
 
