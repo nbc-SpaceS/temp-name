@@ -53,7 +53,6 @@ import com.wannabeinseoul.seoulpublicservice.usecase.CheckCredentialsUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.ComplaintUserUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.DeleteReviewUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.FilterServiceDataOnMapUseCase
-import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetDetailSeoulUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetReviewListUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetSavedServiceUseCase
@@ -77,7 +76,6 @@ import java.util.concurrent.TimeUnit
 /** Dependency Injection container */
 interface AppContainer {
     val seoulPublicRepository: SeoulPublicRepository
-    val getAll2000UseCase: GetAll2000UseCase
     val getDetailSeoulUseCase: GetDetailSeoulUseCase
     val loadSavedFilterOptionsUseCase: LoadSavedFilterOptionsUseCase
     val filterServiceDataOnMapUseCase: FilterServiceDataOnMapUseCase
@@ -182,14 +180,6 @@ class DefaultAppContainer(context: Context) : AppContainer {
     }
 
     /** ======== UseCase ======== **/
-
-    override val getAll2000UseCase by lazy {
-        GetAll2000UseCase(
-            seoulPublicRepository = seoulPublicRepository,
-            prefRepository = prefRepository,
-            rowPrefRepository = rowPrefRepository
-        )
-    }
 
     override val getDetailSeoulUseCase by lazy {
         GetDetailSeoulUseCase(

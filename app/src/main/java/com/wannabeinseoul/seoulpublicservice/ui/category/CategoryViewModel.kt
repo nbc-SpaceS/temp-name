@@ -13,7 +13,6 @@ import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
-import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +20,6 @@ import kotlinx.coroutines.withContext
 class CategoryViewModel(
     private val categoryPrefRepository: CategoryPrefRepository,
     private val regionPrefRepository: RegionPrefRepository,
-    private val getAll2000UseCase: GetAll2000UseCase,
     private val seoulPublicRepository: SeoulPublicRepository,
     private val dbMemoryRepository: DbMemoryRepository,
     private val reservationRepository: ReservationRepository
@@ -50,10 +48,9 @@ class CategoryViewModel(
             initializer {
                 val container = (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
                 CategoryViewModel(
-                    seoulPublicRepository = container.seoulPublicRepository,
                     categoryPrefRepository = container.categoryPrefRepository,
                     regionPrefRepository = container.regionPrefRepository,
-                    getAll2000UseCase = container.getAll2000UseCase,
+                    seoulPublicRepository = container.seoulPublicRepository,
                     dbMemoryRepository = container.dbMemoryRepository,
                     reservationRepository = container.reservationRepository
                 )
