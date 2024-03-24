@@ -5,7 +5,6 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.util.toReservationEntityList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import retrofit2.Response
 
@@ -75,7 +74,7 @@ class SeoulPublicRepositoryImpl(
                 }
             }
         }
-        deferredList.awaitAll().flatten()
+        deferredList.flatMap { it.await() }
             .also {
                 Log.d(
                     JJTAG,
