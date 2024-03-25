@@ -122,7 +122,7 @@ class DbMemoryRepositoryImpl : DbMemoryRepository {
 fun ReservationEntity.isInSeoul() = this.AREANM in areasInSeoul
 fun ReservationEntity.isNotInSeoul() = this.AREANM !in areasInSeoul
 fun ReservationEntity.hasLocation() =
-    this.X.toDoubleOrNull() != null && this.Y.toDoubleOrNull() != null
+    this.X.isNotBlank() && this.Y.isNotBlank()  // toDoubleOrNull을 하면 엄청나게 느려진다
 
 fun List<ReservationEntity>.getInSeoul() = this.filter { it.isInSeoul() }
 fun List<ReservationEntity>.getNotInSeoul() = this.filter { it.isNotInSeoul() }
