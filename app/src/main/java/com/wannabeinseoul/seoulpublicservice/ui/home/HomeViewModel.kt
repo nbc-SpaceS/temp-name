@@ -243,7 +243,7 @@ class HomeViewModel(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("This is HomeViewModel","Error! : $e\nfun fetchWeatherData")
+                Log.e("This is HomeViewModel","Error! : fun fetchWeatherData", e)
                 _weatherData.postValue(emptyList())
             }
         }

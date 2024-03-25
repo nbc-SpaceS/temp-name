@@ -32,7 +32,7 @@ class TempRepositoryImpl(
                 tmFc = tmFc
             )
         } catch (e: Exception) {
-            Log.e("This is MidTempRepository", "Error! : $e\nTempRepositoryImpl")
+            Log.e("This is MidTempRepository", "Error! : TempRepositoryImpl", e)
             return null
         }
     }

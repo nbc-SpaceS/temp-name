@@ -32,7 +32,7 @@ class KmaRepositoryImpl(
                 tmFc = tmFc
             )
         } catch (e: Exception) {
-            Log.e("This is MidLandFcstRepository", "Error! : $e\nKmaRepositoryImpl")
+            Log.e("This is MidLandFcstRepository", "Error! : KmaRepositoryImpl", e)
             return null
         }
     }
