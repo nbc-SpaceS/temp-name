@@ -90,14 +90,14 @@ class MyPageViewModel(
                 )
                 return@mapNotNull null
             }
-            val row = dbMemoryRepository.findBySvcid(reviewEntity.svcId)
+            val entity = dbMemoryRepository.findBySvcid(reviewEntity.svcId)
                 ?: return@mapNotNull null.apply {
                     Log.e(
                         JJTAG,
                         "loadReviewedList - dbMemoryRepository.findBySvcid == null. svcId: ${reviewEntity.svcId}"
                     )
                 }
-            ReviewedData(row, reviewEntity.content ?: "", reviewEntity.uploadTime ?: "")
+            ReviewedData(entity, reviewEntity.content ?: "", reviewEntity.uploadTime ?: "")
         })
     }
 

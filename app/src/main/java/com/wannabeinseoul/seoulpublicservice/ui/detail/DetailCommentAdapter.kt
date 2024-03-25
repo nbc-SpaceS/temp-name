@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.ui.detail
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
+import com.wannabeinseoul.seoulpublicservice.util.parseColor
 
 class DetailCommentAdapter:ListAdapter<ReviewItem, DetailCommentAdapter.Holder>(object : DiffUtil.ItemCallback<ReviewItem>() {
     override fun areItemsTheSame(oldItem: ReviewItem, newItem: ReviewItem): Boolean {
@@ -27,7 +27,7 @@ class DetailCommentAdapter:ListAdapter<ReviewItem, DetailCommentAdapter.Holder>(
             binding.tvCommentUser.text = detailCommentType.userName
             binding.tvCommentText.text = detailCommentType.content
             if (detailCommentType.userProfileImage.isEmpty()) {
-                binding.ivCommentProfile.drawable.setTint(Color.parseColor(detailCommentType.userColor))
+                binding.ivCommentProfile.drawable.setTint(detailCommentType.userColor.parseColor())
             } else {
                 binding.ivCommentProfile.load(detailCommentType.userProfileImage)
             }
