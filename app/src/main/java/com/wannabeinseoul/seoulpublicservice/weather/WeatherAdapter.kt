@@ -44,8 +44,8 @@ class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : 
             binding.tvHomeWeatherTmp.text = "${dto.tmp} ℃"
         }
         fun day(pos: Int) {
-            binding.tvHomeWeatherDay.text = today.plusDays(pos.toLong()).dayOfWeek.getDisplayName(
-                TextStyle.FULL, Locale.KOREA)
+            binding.tvHomeWeatherDay.text =
+                "${today.plusDays(pos.toLong()).dayOfMonth}(${today.plusDays(pos.toLong()).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREA).replace("요일","")})"
         }
     }
 

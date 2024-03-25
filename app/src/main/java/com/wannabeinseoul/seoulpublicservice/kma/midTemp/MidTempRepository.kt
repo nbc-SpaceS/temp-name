@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
+import android.util.Log
 import retrofit2.Response
 
 interface TempRepository {
@@ -9,19 +10,30 @@ interface TempRepository {
         dataType: String,
         regId: String,
         tmFc: String
-    ): Response<TemperatureDTO>
+    ): Response<TemperatureDTO>?
 }
 
-class TempRepositoryImpl (
+class TempRepositoryImpl(
     private val midTempApiService: MidTempApiService
-): TempRepository {
+) : TempRepository {
     override suspend fun getTemp(
         numOfRows: Int,
         pageNo: Int,
         dataType: String,
         regId: String,
         tmFc: String
-    ): Response<TemperatureDTO> {
-        return midTempApiService.getTemp(numOfRows = numOfRows, pageNo = pageNo, dataType = dataType, regId = regId, tmFc = tmFc)
+    ): Response<TemperatureDTO>? {
+        try {
+            return midTempApiService.getTemp(
+                numOfRows = numOfRows,
+                pageNo = pageNo,
+                dataType = dataType,
+                regId = regId,
+                tmFc = tmFc
+            )
+        } catch (e: Exception) {
+            Log.e("This is MidTempRepository", "Error! : $e\nTempRepositoryImpl")
+            return null
+        }
     }
 }
