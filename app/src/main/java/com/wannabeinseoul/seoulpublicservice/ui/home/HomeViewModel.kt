@@ -215,27 +215,36 @@ class HomeViewModel(
                 // 현재 시간이 18시 이후인 경우, 당일의 18시를 설정
                 now.withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
-
-            val response = kmaRepository.getMidLandFcst(      // 중기예보
-                numOfRows = 10,
-                pageNo = 1,
-                dataType = "JSON",
-                regId = "11B00000",
-                tmFc = tmFc
-            )
-            val responseTemp = tempRepository.getTemp(         // 중기기온
-                numOfRows = 10,
-                pageNo = 1,
-                dataType = "JSON",
-                regId = "11B10101",
-                tmFc = tmFc
-            )
-            if (response.isSuccessful && responseTemp.isSuccessful) {  // 중기 예보 & 기온을 수신했을 경우
-                Log.i("This is HomeViewModel","kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${responseTemp.body()!!.response.body.items.item[0]}")
-                setWeatherShort(
-                    response.body()!!.response.body.items.itemList[0],
-                    responseTemp.body()!!.response.body.items.item[0]
+            try {
+                val response = kmaRepository.getMidLandFcst(      // 중기예보
+                    numOfRows = 10,
+                    pageNo = 1,
+                    dataType = "JSON",
+                    regId = "11B00000",
+                    tmFc = tmFc
                 )
+                val responseTemp = tempRepository.getTemp(         // 중기기온
+                    numOfRows = 10,
+                    pageNo = 1,
+                    dataType = "JSON",
+                    regId = "11B10101",
+                    tmFc = tmFc
+                )
+                if(response!!.body()!!.response.header.resultCode == "00" && responseTemp!!.body()!!.response.header.resultCode == "00") {
+                    if (response.isSuccessful && responseTemp.isSuccessful) {  // 중기 예보 & 기온을 수신했을 경우
+                        Log.i(
+                            "This is HomeViewModel",
+                            "kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${responseTemp.body()!!.response.body.items.item[0]}"
+                        )
+                        setWeatherShort(
+                            response.body()!!.response.body.items.itemList[0],
+                            responseTemp.body()!!.response.body.items.item[0]
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("This is HomeViewModel","Error! : fun fetchWeatherData", e)
+                _weatherData.postValue(emptyList())
             }
         }
     }
@@ -313,7 +322,6 @@ class HomeViewModel(
             itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9, (temp.taMax9 + temp.taMin9)/2, it.rnSt9)))
             itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10, (temp.taMax10 + temp.taMin10)/2, it.rnSt10)))
         }
-        Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
         _weatherData.postValue(itemList)
     }
 
