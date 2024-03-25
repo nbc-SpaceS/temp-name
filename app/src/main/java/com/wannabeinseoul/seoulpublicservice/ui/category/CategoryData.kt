@@ -1,6 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 
 data class CategoryData(
     val imageUrl: String, // 이미지 URL
@@ -12,15 +12,29 @@ data class CategoryData(
     val svcid: String // 서비스 ID
 )
 
-fun Row.convertToCategoryData() = CategoryData(
-    imageUrl = this.imgurl,
-    serviceName = this.svcnm,
-    placeName = this.placenm,
-    payType = this.payatnm,
-    areaName = this.areanm,
-    isReservationAvailable = this.svcstatnm,
-    svcid = this.svcid
+fun ReservationEntity.convertToCategoryData() = CategoryData(
+    imageUrl = this.IMGURL,
+    serviceName = this.SVCNM,
+    placeName = this.PLACENM,
+    payType = this.PAYATNM,
+    areaName = this.AREANM,
+    isReservationAvailable = this.SVCSTATNM,
+    svcid = this.SVCID
 )
 
-fun List<Row>.convertToCategoryDataList(): List<CategoryData> =
+fun List<ReservationEntity>.convertToCategoryDataList(): List<CategoryData> =
     this.map { it.convertToCategoryData() }
+
+
+//fun Row.convertToCategoryData() = CategoryData(
+//    imageUrl = this.imgurl,
+//    serviceName = this.svcnm,
+//    placeName = this.placenm,
+//    payType = this.payatnm,
+//    areaName = this.areanm,
+//    isReservationAvailable = this.svcstatnm,
+//    svcid = this.svcid
+//)
+//
+//fun List<Row>.convertToCategoryDataList(): List<CategoryData> =
+//    this.map { it.convertToCategoryData() }

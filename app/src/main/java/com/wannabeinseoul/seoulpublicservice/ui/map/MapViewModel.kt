@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.usecase.FilterServiceDataOnMapUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.GetSavedServiceUseCase
 import com.wannabeinseoul.seoulpublicservice.usecase.LoadSavedFilterOptionsUseCase
@@ -36,9 +36,9 @@ class MapViewModel(
     private val _canStart: MutableLiveData<Boolean> = MutableLiveData()
     val canStart: LiveData<Boolean> get() = _canStart
 
-    private val _filteringData: MutableLiveData<HashMap<Pair<String, String>, List<Row>>> =
+    private val _filteringData: MutableLiveData<HashMap<Pair<String, String>, List<ReservationEntity>>> =
         MutableLiveData()
-    val filteringData: LiveData<HashMap<Pair<String, String>, List<Row>>> get() = _filteringData
+    val filteringData: LiveData<HashMap<Pair<String, String>, List<ReservationEntity>>> get() = _filteringData
 
     private val _updateData: MutableLiveData<List<DetailInfoWindow>> = MutableLiveData()
     val updateData: LiveData<List<DetailInfoWindow>> get() = _updateData
@@ -90,7 +90,7 @@ class MapViewModel(
         saveServiceUseCase(id)
     }
 
-    fun updateInfo(info: List<Row>) {
+    fun updateInfo(info: List<ReservationEntity>) {
         _updateData.value = mappingDetailInfoWindowUseCase(info)
     }
 

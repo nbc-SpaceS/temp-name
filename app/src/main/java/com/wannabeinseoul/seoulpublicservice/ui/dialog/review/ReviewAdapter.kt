@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.ui.dialog.review
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -9,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemDetailCommentBinding
+import com.wannabeinseoul.seoulpublicservice.util.parseColor
 
 class ReviewAdapter(
     private val complaintUser: (String) -> Unit,
@@ -34,7 +34,7 @@ class ReviewAdapter(
             tvCommentText.text = item.content
             tvCommentUser.text = item.userName
             if (item.userProfileImage.isEmpty()) {
-                ivCommentProfile.drawable.setTint(Color.parseColor(item.userColor))
+                ivCommentProfile.drawable.setTint(item.userColor.parseColor())
             } else {
                 ivCommentProfile.load(item.userProfileImage)
             }

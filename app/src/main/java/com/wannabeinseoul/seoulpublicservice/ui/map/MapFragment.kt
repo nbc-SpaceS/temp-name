@@ -244,9 +244,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     marker.map = naverMap
                     marker.icon = MarkerIcons.BLACK
                     marker.iconTintColor = requireContext().getColor(
-                        matchingColor[it.value[0].maxclassnm] ?: R.color.gray
+                        matchingColor[it.value[0].MAXCLASSNM] ?: R.color.gray
                     )
-                    marker.tag = it.value[0].maxclassnm
+                    marker.tag = it.value[0].MAXCLASSNM
                     if (it.value.size > 1) marker.captionText = it.value.size.toString()
                     marker.setCaptionAligns(Align.Top)
                     marker.captionTextSize = 16f
