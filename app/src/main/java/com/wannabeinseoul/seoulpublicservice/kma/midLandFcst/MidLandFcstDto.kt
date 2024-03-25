@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.kma
+package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
 import com.google.gson.annotations.SerializedName
 

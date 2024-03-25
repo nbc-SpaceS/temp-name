@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.kma.temperature
+package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
 data class TemperatureDTO(
     val response: Response

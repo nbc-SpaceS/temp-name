@@ -9,9 +9,9 @@ import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
-import com.wannabeinseoul.seoulpublicservice.kma.Item
-import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
-import com.wannabeinseoul.seoulpublicservice.kma.temperature.TempRepository
+import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.Item
+import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepository
+import com.wannabeinseoul.seoulpublicservice.kma.midTemp.TempRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
@@ -65,11 +65,10 @@ class HomeViewModel(
     private val _shortWeather: MutableLiveData<List<WeatherShort>> = MutableLiveData()
     val shortWeather: LiveData<List<WeatherShort>> get() = _shortWeather
 
-//    private val _weatherData: MutableLiveData<KmaMidLandFcstDto> = MutableLiveData()
-//    val weatherData: LiveData<KmaMidLandFcstDto> get() = _weatherData
     private val _weatherData: MutableLiveData<List<WeatherShort>> = MutableLiveData()
     val weatherData: LiveData<List<WeatherShort>> get() = _weatherData
 
+    // 검색 결과를 지우는 메소드
     fun clearSearchResult() {
         if (_displaySearchResult.value?.isNotEmpty() == true) _displaySearchResult.value =
             emptyList()
@@ -79,6 +78,7 @@ class HomeViewModel(
             )
     }
 
+    // 뷰페이저 카테고리 설정 메소드
     fun setViewPagerCategory(area: String) {
         _updateViewPagerCategory.value = dbMemoryRepository.getFilteredCountWithMaxClass(
             listOf(
@@ -94,10 +94,12 @@ class HomeViewModel(
         }
     }
 
+    // 랜덤 서비스 설정 메소드
     fun setRandomService() {
         _randomService = dbMemoryRepository.getFilteredByDate()
     }
 
+    // 지역 설정 메소드
     fun setupRegions() {
         selectedRegions = regionPrefRepository.load().toMutableList()
 
@@ -113,6 +115,7 @@ class HomeViewModel(
         }
     }
 
+    // 검색어를 이용하여 검색을 수행하는 메소드
     fun performSearch(query: String) {
         // 검색어가 비어있지 않을 때만 검색어가 저장됨
         if (query.isNotEmpty()) {
@@ -125,26 +128,31 @@ class HomeViewModel(
         }
     }
 
+    // 검색어 저장 메소드
     private fun saveSearchQuery(query: String) {
         searchPrefRepository.save(query)
         Log.d("Search", "Saved search query: $query") // 로그 찍기
     }
 
+    // 검색 결과를 가져오는 메소드
     private suspend fun displaySearchResults(query: String) {
         // searchText 메소드를 호출하여 검색 결과를 가져옴
         _displaySearchResult.postValue(reservationRepository.searchText(query))
     }
 
+    // 검색어 목록 불러오기
     fun showSearchHistory() {
         // 포커스가 EditText에 있을 때 저장된 검색어를 불러옴
         _displaySearchHistory.value =
             Pair(searchPrefRepository.load().toMutableList(), searchPrefRepository)
     }
 
+    // 선택된 지역을 저장하는 메소드
     fun saveSelectedRegion(index: Int) {
         regionPrefRepository.saveSelectedRegion(index)
     }
 
+    // 새 알림 표시 업데이트
     fun updateNotificationSign() {
         if (savedPrefRepository.getFlag().not()) {
             savedPrefRepository.setFlag(true)
@@ -181,10 +189,12 @@ class HomeViewModel(
         }
     }
 
+    // 새 알림 표시 가리기
     fun hideNotificationSign() {
         _notificationSign.value = false
     }
 
+    // 최근 서비스 목록 불러오기
     fun loadRecentData() {
         _recentData.value = recentPrefRepository.getRecent()
     }
@@ -226,11 +236,11 @@ class HomeViewModel(
                     response.body()!!.response.body.items.itemList[0],
                     responseTemp.body()!!.response.body.items.item[0]
                 )
-//                _weatherData.value = response.body()
             }
         }
     }
 
+    // 날씨 단기 예보 가져오기
     fun weatherShortData(lat_x: Int, lng_y: Int) {
         viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
             val run = runBlocking(Dispatchers.IO) {
@@ -291,7 +301,7 @@ class HomeViewModel(
         }
     }
 
-    fun setWeatherShort(dto: Item, temp: com.wannabeinseoul.seoulpublicservice.kma.temperature.Item) {
+    private fun setWeatherShort(dto: Item, temp: com.wannabeinseoul.seoulpublicservice.kma.midTemp.Item) {
         val itemList = mutableListOf<WeatherShort>()
         dto.let {
             itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am, (temp.taMax3 + temp.taMin3)/2, it.rnSt3Am)))
