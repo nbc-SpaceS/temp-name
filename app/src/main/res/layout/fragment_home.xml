@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_home"
     tools:context=".ui.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,8 +52,8 @@
         android:id="@+id/iv_home_notification_count_background"
         android:layout_width="8dp"
         android:layout_height="8dp"
-        android:layout_marginEnd="3dp"
         android:layout_marginTop="3dp"
+        android:layout_marginEnd="3dp"
         android:background="@drawable/background_corners_round_f8496c"
         android:clipToOutline="true"
         android:visibility="gone"
@@ -91,8 +91,8 @@
                 android:text="@string/fragment_home_description"
                 android:textColor="@color/gray"
                 android:textSize="11sp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_service_list"
-                app:layout_constraintStart_toStartOf="@+id/tv_service_list"/>
+                app:layout_constraintStart_toStartOf="@+id/tv_service_list"
+                app:layout_constraintTop_toBottomOf="@+id/tv_service_list" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
@@ -112,7 +112,7 @@
                 android:layout_marginTop="-10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tab_layout" >
+                app:layout_constraintTop_toBottomOf="@+id/tab_layout">
 
             </androidx.viewpager2.widget.ViewPager2>
 
@@ -182,16 +182,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_home_recent_description">
 
             </androidx.viewpager2.widget.ViewPager2>
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/vp_home_recent_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vp_home_recent"
+                app:tabBackground="@drawable/background_home_recent_indicator_dot"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -268,13 +278,13 @@
         android:id="@+id/rv_search_history"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
         android:layout_marginTop="-14dp"
         android:background="@drawable/background_select_region_layout"
-        android:elevation="0dp"
-        android:visibility="invisible"
-        android:overScrollMode="never"
         android:clipToPadding="false"
+        android:elevation="0dp"
+        android:overScrollMode="never"
+        android:paddingTop="20dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/layout_search"
         app:layout_constraintStart_toStartOf="@+id/layout_search"
         app:layout_constraintTop_toBottomOf="@+id/layout_search" />

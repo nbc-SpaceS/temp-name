@@ -272,7 +272,7 @@ class HomeViewModel(
                 }
                 Log.i("This is HomeViewModel","m : $m\nh : $h")
                 val localDate = "$y$m$d"
-                val localTime = "${String.format("%02d",h)}00"
+                val localTime = "${String.format("%02d",h)}10"
                 Log.i("This is HomeViewModel","localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y")
                 weatherShortRepository.getShortWeather(1,1000, localDate, localTime, lat_x, lng_y)
             }
