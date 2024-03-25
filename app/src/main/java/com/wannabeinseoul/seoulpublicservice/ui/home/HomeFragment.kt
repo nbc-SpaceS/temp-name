@@ -551,6 +551,7 @@ class HomeFragment : Fragment() {
         viewPage.adapter = adapter
         viewPage.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         adapter.submitList(data)
+        TabLayoutMediator(binding.vpHomeRecentIndicator, binding.vpHomeRecent) { _, _ -> }.attach() // Indicator 연결
         viewPage.offscreenPageLimit = 1
         adapter.itemClick = object : CategoryItemClick {
             override fun onClick(svcID: String) {
@@ -567,9 +568,12 @@ class HomeFragment : Fragment() {
 
     // 단기예보 지역 정보를 기상청 좌표로 변환한 후 API 요청
     private fun weatherDataSend(area: String) { // 단기예보
-        val seoulWeather = WeatherSeoulArea().weatherSeoulArea[area]
-        Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
-        homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
+        val seoul = WeatherSeoulArea().weatherSeoulArea
+        if(seoul.keys.contains(area)) {
+            val seoulWeather = seoul[area]
+            Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
+            homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
+        }
     }
     private fun weatherAdapter(short: List<WeatherShort>) { // 날씨 어댑터
         val adapter = WeatherAdapter()
