@@ -91,6 +91,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    // ViewModel, LiveData 초기화 설정
     private fun initViewModel() {
         // MainViewModel의 LiveData를 관찰하여 UI를 업데이트
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
@@ -251,6 +252,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // UI 구성 요소 설정
     private fun setupUIComponents() {
         homeViewModel.setupRegions()
         homeViewModel.updateNotificationSign()
@@ -265,6 +267,7 @@ class HomeFragment : Fragment() {
         setupBannerClick()
     }
 
+    // ViewPager, TabLayout 설정
     private fun setupViewPager() {
         val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
@@ -297,6 +300,7 @@ class HomeFragment : Fragment() {
         }.attach()
     }
 
+    // 뒤로 가기 버튼 설정
     private fun setupBackPress() {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -327,6 +331,7 @@ class HomeFragment : Fragment() {
         )
     }
 
+    // 검색 기능 설정
     private fun setupSearch() {
         binding.ivSearch.setOnClickListener {
             val searchText = binding.etSearch.text.toString()
@@ -347,6 +352,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // 검색어 저장 목록을 설정
     @SuppressLint("ClickableViewAccessibility")
     private fun setupSearchHistory() {
         binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
@@ -370,6 +376,7 @@ class HomeFragment : Fragment() {
 
 
 
+    //
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
             toggleRegionListVisibility()
@@ -396,6 +403,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // 공지사항 클릭 시 공지사항 화면으로 이동
     private fun setupNotificationClick() {
         binding.ivNotification.setOnClickListener {
             // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
@@ -407,6 +415,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // 배너 클릭 시 랜덤 서비스 상세 페이지로 이동
     private fun setupBannerClick() {
         binding.ivHomeMainBanner.setOnClickListener {
             if (homeViewModel.randomService.isEmpty()) {
@@ -423,6 +432,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // 지역 선택 화면을 토글
     private fun toggleRegionListVisibility() {
         if (binding.clHomeRegionList.isVisible) {
             binding.ivHomeMoreBtn.setImageResource(R.drawable.ic_more)
@@ -434,6 +444,7 @@ class HomeFragment : Fragment() {
         binding.clHomeRegionList.isVisible = !binding.clHomeRegionList.isVisible
     }
 
+    // 지역을 다시 선택할 때, 지역 선택 화면으로 이동
     private fun reselectRegion() {
         binding.clHomeRegionList.isVisible = false
         binding.tvHomeSelectRegion1.setTextColor(requireContext().getColor(R.color.unable_button_text))
@@ -445,6 +456,7 @@ class HomeFragment : Fragment() {
         resultLauncher.launch(intent)
     }
 
+    // 지역을 선택했을 때, 선택된 지역을 표시하고, 선택된 지역을 저장
     private fun selectRegion(regionView: TextView, index: Int, regionViews: List<TextView>) {
         regionViews.forEach { view ->
             if (view == regionView) {
@@ -459,16 +471,19 @@ class HomeFragment : Fragment() {
         homeViewModel.saveSelectedRegion(index)
     }
 
+    // 검색어 저장 목록을 숨김
     private fun hideSearchHistory() {
         // 포커스가 EditText에서 벗어났을 때 검색어 저장 목록을 표시하는 RecyclerView를 숨김
         binding.rvSearchHistory.visibility = View.GONE
     }
 
+    // 키보드 숨기기
     private fun hideKeyboard() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
+    // 검색 결과를 클릭했을 때 상세 페이지로 이동
     private fun searchClick(adapter: HomeSearchAdapter) {
         adapter.categoryItemClick = object : CategoryItemClick {
             override fun onClick(svcID: String) {
@@ -478,6 +493,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // 각 지역에 있는 서비스의 개수를 보여주는 텍스트를 설정
     private fun setSpannableString(start: Int, end: Int): SpannableString {
         val spannableString = SpannableString(binding.tvHomeDescription.text)
 
@@ -527,6 +543,8 @@ class HomeFragment : Fragment() {
             binding.tvHomeRecentTitle.visibility = View.VISIBLE
         }
     }
+
+    // 최근에 들어간 서비스를 보여주는 viewPager
     private fun recentViewPager(data: List<RecentEntity>) {
         val viewPage = binding.vpHomeRecent
         val adapter = RecentAdapter()
@@ -547,6 +565,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // 단기예보 지역 정보를 기상청 좌표로 변환한 후 API 요청
     private fun weatherDataSend(area: String) { // 단기예보
         val seoulWeather = WeatherSeoulArea().weatherSeoulArea[area]
         Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
