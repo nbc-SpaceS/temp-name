@@ -131,16 +131,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_pager" />
 
+            <TextView
+                android:id="@+id/tv_home_weather_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/fragment_home_weather_forecast"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/iv_home_main_banner"
+                app:layout_constraintTop_toBottomOf="@+id/iv_home_main_banner" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_home_weather_week"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
                 app:layout_constraintBottom_toTopOf="@+id/tv_home_recent_title"
-                app:layout_constraintEnd_toEndOf="@+id/iv_home_main_banner"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/iv_home_main_banner"
-                app:layout_constraintTop_toBottomOf="@+id/iv_home_main_banner" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_home_weather_forecast" />
 
             <TextView
                 android:id="@+id/tv_home_recent_title"
@@ -168,6 +181,7 @@
                 android:id="@+id/vp_home_recent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="8dp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -175,14 +189,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_home_recent_description">
 
             </androidx.viewpager2.widget.ViewPager2>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_search_results"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/total_background"
-                android:visibility="invisible"
-                tools:layout_editor_absoluteY="76dp" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/vp_home_recent_indicator"
@@ -195,24 +201,7 @@
                 app:layout_constraintTop_toBottomOf="@id/vp_home_recent"
                 app:tabBackground="@drawable/background_home_recent_indicator_dot"
                 app:tabGravity="center"
-                app:tabIndicatorHeight="0dp">
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Monday" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tuesday" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Wednesday" />
-            </com.google.android.material.tabs.TabLayout>
-
+                app:tabIndicatorHeight="0dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -266,6 +255,18 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/total_background"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_search" />
 
     <View
         android:id="@+id/view_control_rv_search_results"
