@@ -11,6 +11,7 @@ import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecom
 class RecommendationAdapter :
     ListAdapter<RecommendationAdapter.MultiView, RecyclerView.ViewHolder>(DiffCallback()) {
 
+    /** sealed interface */
 
     sealed interface MultiView {
 
@@ -24,6 +25,7 @@ class RecommendationAdapter :
         data class Horizontal(
             val headerTitle: String,
             val adapter: RecommendationHorizontalAdapter,
+            val onScrollListener: RecyclerView.OnScrollListener,
         ) : MultiView {
             override val viewType: Type = Type.HORIZONTAL
         }
@@ -36,13 +38,17 @@ class RecommendationAdapter :
         }
     }
 
-    inner class RecommendationViewHolder(
+
+    /** 뷰홀더들 */
+
+    inner class HorizontalViewHolder(
         private val binding: RecommendationItemRecommendedBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MultiView.Horizontal) {
             binding.reShared.adapter = item.adapter
             binding.tvSharedText.text = item.headerTitle
+            binding.reShared.addOnScrollListener(item.onScrollListener)
         }
     }
 
@@ -55,9 +61,12 @@ class RecommendationAdapter :
         }
     }
 
+    /* 뷰홀더 끝 */
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            MultiView.Type.HORIZONTAL.ordinal -> RecommendationViewHolder(
+            MultiView.Type.HORIZONTAL.ordinal -> HorizontalViewHolder(
                 RecommendationItemRecommendedBinding
                     .inflate(LayoutInflater.from(parent.context), parent, false)
             )
@@ -74,7 +83,7 @@ class RecommendationAdapter :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
         when (item.viewType) {
-            MultiView.Type.HORIZONTAL -> (holder as RecommendationViewHolder).bind(item as MultiView.Horizontal)
+            MultiView.Type.HORIZONTAL -> (holder as HorizontalViewHolder).bind(item as MultiView.Horizontal)
             MultiView.Type.TIP -> (holder as TipViewHolder).bind(item as MultiView.Tip)
         }
     }

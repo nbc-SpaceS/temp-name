@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
@@ -26,6 +27,16 @@ class RecommendationViewModel(
     private val serviceRepository: ServiceRepository,
     private val regionPrefRepository: RegionPrefRepository
 ) : ViewModel() {
+    private inner class RandomQueryUseCase {
+        private val entitiesMap = mapOf<String, List<ReservationEntity>>()
+
+        operator fun invoke(query: String, num: Int): List<ReservationEntity> {
+            // TODO: -ing
+
+
+            return emptyList()
+        }
+    }
 
     private val _horizontalDataList = MutableLiveData<List<RecommendationHorizontalData>>()
     val horizontalDataList: LiveData<List<RecommendationHorizontalData>> get() = _horizontalDataList
