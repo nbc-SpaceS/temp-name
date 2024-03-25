@@ -184,12 +184,4 @@ class DetailViewModel(
     fun saveData(data: RecentEntity) {
         recentPrefRepository.setRecent(data)
     }
-
-//    fun getWeather(page: Int, row: Int, date: String, time: String, x: Int, y: Int) {   // 테스트용
-//        runBlocking(Dispatchers.IO) {
-//            weatherShortRepository.getShortWeather(page, row, date, time, x, y)
-//        }.let {
-//            _shortWeather.value = it
-//        }
-//    }
 }
