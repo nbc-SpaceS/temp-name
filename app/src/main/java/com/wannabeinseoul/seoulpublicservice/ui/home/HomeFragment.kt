@@ -96,7 +96,7 @@ class HomeFragment : Fragment() {
         mainViewModel.selectRegion.observe(viewLifecycleOwner) {
             if (it != "지역선택") {
                 homeViewModel.setViewPagerCategory(it)
-//                weatherDataSend(it)  // 지역정보를 기상청 좌표로 변환한 후 API를 요청하기 위해(단기예보)
+                weatherDataSend(it)  // 지역정보를 기상청 좌표로 변환한 후 API를 요청하기 위해(단기예보)
             } else {
                 binding.tvHomeDescription.text = "아직 관심지역이 선택되지 않았습니다."
             }
@@ -230,7 +230,6 @@ class HomeFragment : Fragment() {
                 recentViewPager(it)
             }
             shortWeather.observe(viewLifecycleOwner) {      // 단기예보
-//                if(it.isNotEmpty()) weatherAdapter(it)
                 val weatherDataList = weatherData.value
                 if(!it.isNullOrEmpty() && !weatherDataList.isNullOrEmpty()) {
                     val combinedData = it + weatherDataList
@@ -246,7 +245,7 @@ class HomeFragment : Fragment() {
                 }
             }
             mediatorLiveData.observe(viewLifecycleOwner) {
-//                if(it.isNotEmpty()) weatherAdapter(it)(날씨를 Adapter에 연결)
+                if(it.isNotEmpty()) weatherAdapter(it)
             }
             fetchWeatherData()
         }
@@ -551,7 +550,7 @@ class HomeFragment : Fragment() {
     private fun weatherDataSend(area: String) { // 단기예보
         val seoulWeather = WeatherSeoulArea().weatherSeoulArea[area]
         Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
-//        homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
+        homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
     }
     private fun weatherAdapter(short: List<WeatherShort>) { // 날씨 어댑터
         val adapter = WeatherAdapter()
