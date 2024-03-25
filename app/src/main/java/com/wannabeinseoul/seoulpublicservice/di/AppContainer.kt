@@ -19,12 +19,12 @@ import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.kma.KmaApiService
-import com.wannabeinseoul.seoulpublicservice.kma.KmaRepository
-import com.wannabeinseoul.seoulpublicservice.kma.KmaRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.kma.temperature.TempApiService
-import com.wannabeinseoul.seoulpublicservice.kma.temperature.TempRepository
-import com.wannabeinseoul.seoulpublicservice.kma.temperature.TempRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.MidLandFcstApiService
+import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepository
+import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.kma.midTemp.MidTempApiService
+import com.wannabeinseoul.seoulpublicservice.kma.midTemp.TempRepository
+import com.wannabeinseoul.seoulpublicservice.kma.midTemp.TempRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
@@ -153,12 +153,12 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     // 중기예보용
     private val kmaRetrofit = createRetrofit(weatherBaseUrl)
-    private val retrofitKmaApiService: KmaApiService by lazy {
-        kmaRetrofit.create(KmaApiService::class.java)
+    private val retrofitMidLandFcstApiService: MidLandFcstApiService by lazy {
+        kmaRetrofit.create(MidLandFcstApiService::class.java)
     }
 
     override val kmaRepository: KmaRepository by lazy {
-        KmaRepositoryImpl(retrofitKmaApiService)
+        KmaRepositoryImpl(retrofitMidLandFcstApiService)
     }
 
     // 단기예보용
@@ -172,8 +172,8 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     // 중기기온용
     private val midTempRetrofit = createRetrofit(weatherBaseUrl)
-    private val retrofitTempService: TempApiService by lazy {
-        midTempRetrofit.create(TempApiService::class.java)
+    private val retrofitTempService: MidTempApiService by lazy {
+        midTempRetrofit.create(MidTempApiService::class.java)
     }
     override val tempRepository: TempRepository by lazy {
         TempRepositoryImpl(retrofitTempService)
