@@ -88,10 +88,7 @@ class HomeViewModel(
                 "공간시설",
                 "진료복지"
             ), area
-        ).filter { it.second != 0 }.map {
-            if (it.first == "공간시설") Pair("시설대관", it.second)
-            else it
-        }
+        ).filter { it.second != 0 }
     }
 
     // 랜덤 서비스 설정 메소드

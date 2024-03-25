@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">SeoulPublicService</string>
-    <string name="title_home">메인 페이지</string>
-    <string name="title_map">지도 페이지</string>
-    <string name="title_recommendation">추천 페이지</string>
-    <string name="title_mypage">마이 페이지</string>
+    <string name="title_home">메인</string>
+    <string name="title_map">지도</string>
+    <string name="title_recommendation">추천</string>
+    <string name="title_mypage">My</string>
     <string name="complaint_description">%s님을 신고하시겠습니까?</string>
     <string name="interest_region_select_comment">관심지역은 최대 3개까지 선택가능합니다.</string>
     <string name="interest_region_select_btn1">강남구</string>
@@ -96,7 +96,7 @@
     <string name="fragment_filter_stadium">다목적경기장</string>
     <string name="fragment_filter_gym">체육관</string>
     <string name="fragment_filter_basketball">농구장</string>
-    <string name="fragment_filter_education">교육</string>
+    <string name="fragment_filter_education">교육강좌</string>
     <string name="fragment_filter_culture">교양/어학</string>
     <string name="fragment_filter_communication">정보통신</string>
     <string name="fragment_filter_history">역사</string>
@@ -116,7 +116,7 @@
     <string name="fragment_filter_park">공원탐방</string>
     <string name="fragment_filter_kids">서울형키즈카페</string>
     <string name="fragment_filter_farm">농장체험</string>
-    <string name="fragment_filter_rent">시설대관</string>
+    <string name="fragment_filter_rent">공간시설</string>
     <string name="fragment_filter_room">다목적실</string>
     <string name="fragment_filter_concert">공연장</string>
     <string name="fragment_filter_auditorium">강당</string>
@@ -127,7 +127,7 @@
     <string name="fragment_filter_meeting_room">회의실</string>
     <string name="fragment_filter_lecture">강의실</string>
     <string name="fragment_filter_complaint">민원/기타</string>
-    <string name="fragment_filter_diagnosis">진료</string>
+    <string name="fragment_filter_diagnosis">진료복지</string>
     <string name="fragment_filter_hospital">병원</string>
     <string name="fragment_filter_children_hospital">어린이병원</string>
     <string name="fragment_filter_bus">장애인버스</string>
@@ -180,7 +180,7 @@
     <string name="fragment_map_btn_filter">필터</string>
     <string name="fragment_map_filter_count">1</string>
     <string name="fragment_map_culture_event">문화체험</string>
-    <string name="fragment_map_facility">시설대관</string>
+    <string name="fragment_map_facility">공간시설</string>
     <string name="fragment_map_diagnosis">진료복지</string>
     <string name="fragment_map_sports_facility">체육시설</string>
     <string name="fragment_map_education">교육강좌</string>
@@ -227,5 +227,6 @@
     <string name="recommendation_item_recommended_tip_content">서울시의 긴급 구호 및 안전 시설을 이용할 때, 비상 상황에 대비하여 위치를 파악하고 신속하게 대응하는 것이 중요합니다.</string>
     <string name="fragment_home_recent_title">최근에 들어갔던 공공서비스</string>
     <string name="fragment_home_weather_forecast">일기예보</string>
+    <string name="fragment_home_weather_forecast_description">오늘부터 10일 간의 날씨정보입니다.</string>
     <string name="fragment_home_recent_description">최근에 들어갔던 공공서비스는 최대 10개까지 저장됩니다.</string>
 </resources>

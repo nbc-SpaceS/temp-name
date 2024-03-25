@@ -17,10 +17,10 @@ class FilterViewModel(
 
     private val selectedOptions = listOf<MutableList<String>>(
         mutableListOf(), // 서비스 종류의 '체육시설'
-        mutableListOf(), // 서비스 종류의 '교육'
+        mutableListOf(), // 서비스 종류의 '교육강좌'
         mutableListOf(), // 서비스 종류의 '문화행사'
-        mutableListOf(), // 서비스 종류의 '시설대관'
-        mutableListOf(), // 서비스 종류의 '진료'
+        mutableListOf(), // 서비스 종류의 '공간시설'
+        mutableListOf(), // 서비스 종류의 '진료복지'
         mutableListOf(), // 관심 지역의 '서울시'
         mutableListOf(), // 관심 지역의 '이외지역'
         mutableListOf(), // '접수 가능 여부'

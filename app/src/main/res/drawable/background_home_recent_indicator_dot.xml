@@ -3,7 +3,7 @@
 <item android:state_selected="true">
     <shape
         android:shape="ring"
-        android:thickness="6dp"
+        android:thickness="5dp"
         android:innerRadius="0dp"
         android:useLevel="false">
         <corners
@@ -17,7 +17,7 @@
 </item>
 <item android:state_selected="false">
     <shape android:shape="ring"
-        android:thickness="6dp"
+        android:thickness="3dp"
         android:innerRadius="0dp"
         android:useLevel="false">
         <corners

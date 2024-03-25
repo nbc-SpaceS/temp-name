@@ -101,7 +101,7 @@ class ItemAdapter(
                     ivIcon.setBackgroundResource(R.drawable.background_culture_event_category_button)
                     ivIcon.setColorFilter(Color.WHITE)
                 }
-                "시설대관" -> {
+                "공간시설" -> {
                     ivIcon.setBackgroundResource(R.drawable.background_facility_rent_category_button)
                     ivIcon.setColorFilter(Color.WHITE)
                 }
@@ -119,7 +119,7 @@ class ItemAdapter(
                 "체육시설" -> ivIcon.setBackgroundResource(R.drawable.background_facility_category_button_clicked)
                 "교육강좌" -> ivIcon.setBackgroundResource(R.drawable.background_education_category_button_clicked)
                 "문화체험" -> ivIcon.setBackgroundResource(R.drawable.background_culture_event_category_button_clicked)
-                "시설대관" -> ivIcon.setBackgroundResource(R.drawable.background_facility_rent_category_button_clicked)
+                "공간시설" -> ivIcon.setBackgroundResource(R.drawable.background_facility_rent_category_button_clicked)
                 "진료복지" -> ivIcon.setBackgroundResource(R.drawable.background_medical_category_button_clicked)
                 else -> Unit
             }
