@@ -246,7 +246,10 @@ class HomeFragment : Fragment() {
                 }
             }
             mediatorLiveData.observe(viewLifecycleOwner) {
-                if(it.isNotEmpty()) weatherAdapter(it)
+                if(it.isNotEmpty()) {
+                    weatherAdapter(it)
+                    binding.tvHomeWeatherForecast.isVisible = true
+                }
             }
             fetchWeatherData()
         }
@@ -376,7 +379,6 @@ class HomeFragment : Fragment() {
 
 
 
-    //
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
             toggleRegionListVisibility()

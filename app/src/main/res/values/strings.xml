@@ -226,5 +226,6 @@
     <string name="recommendation_item_recommended_tip_title">그거 아시나요?</string>
     <string name="recommendation_item_recommended_tip_content">서울시의 긴급 구호 및 안전 시설을 이용할 때, 비상 상황에 대비하여 위치를 파악하고 신속하게 대응하는 것이 중요합니다.</string>
     <string name="fragment_home_recent_title">최근에 들어갔던 공공서비스</string>
+    <string name="fragment_home_weather_forecast">일기예보</string>
     <string name="fragment_home_recent_description">최근에 들어갔던 공공서비스는 최대 10개까지 저장됩니다.</string>
 </resources>
