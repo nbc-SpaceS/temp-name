@@ -143,6 +143,17 @@
                 app:layout_constraintStart_toStartOf="@+id/iv_home_main_banner"
                 app:layout_constraintTop_toBottomOf="@+id/iv_home_main_banner" />
 
+            <TextView
+                android:id="@+id/tv_home_weather_forecast_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fragment_home_weather_forecast_description"
+                android:textColor="@color/gray"
+                android:textSize="11sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/tv_home_weather_forecast"
+                app:layout_constraintTop_toBottomOf="@+id/tv_home_weather_forecast" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_home_weather_week"
                 android:layout_width="0dp"
@@ -153,7 +164,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/tv_home_recent_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_home_weather_forecast" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_home_weather_forecast_description" />
 
             <TextView
                 android:id="@+id/tv_home_recent_title"
@@ -181,9 +192,10 @@
                 android:id="@+id/vp_home_recent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:paddingHorizontal="20dp"
                 android:layout_marginTop="8dp"
                 android:visibility="visible"
+                android:clipToPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_home_recent_description">
@@ -193,8 +205,8 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/vp_home_recent_indicator"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_height="20dp"
+                android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

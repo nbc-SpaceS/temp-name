@@ -29,7 +29,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -252,6 +254,7 @@ class HomeFragment : Fragment() {
                 if(it.isNotEmpty()) {
                     weatherAdapter(it)
                     binding.tvHomeWeatherForecast.isVisible = true
+                    binding.tvHomeWeatherForecastDescription.isVisible = true
                 }
             }
             fetchWeatherData()
@@ -300,7 +303,7 @@ class HomeFragment : Fragment() {
                 0 -> tab.text = "체육시설"
                 1 -> tab.text = "교육강좌"
                 2 -> tab.text = "문화체험"
-                3 -> tab.text = "시설대관"
+                3 -> tab.text = "공간시설"
                 4 -> tab.text = "진료복지"
             }
         }.attach()
