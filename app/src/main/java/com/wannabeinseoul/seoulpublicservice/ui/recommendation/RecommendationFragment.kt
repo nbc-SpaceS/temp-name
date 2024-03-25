@@ -1,18 +1,18 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
-import kotlinx.coroutines.Dispatchers
 
 class RecommendationFragment : Fragment() {
 
@@ -67,10 +67,11 @@ class RecommendationFragment : Fragment() {
     }
 
 
-
-    private fun initView() = binding.let { binding ->
-        binding.reScroll.adapter = recommendationAdapter
-        binding.reScroll.layoutManager = LinearLayoutManager(requireContext())
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initView() = binding.let { b ->
+        b.reScroll.adapter = recommendationAdapter
+        b.reScroll.layoutManager = LinearLayoutManager(requireContext())
+        b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
     }
 
     private val tipsMap = mapOf(
@@ -144,7 +145,9 @@ class RecommendationFragment : Fragment() {
         }
 
         vm.multiViews.observe(viewLifecycleOwner) {
-            recommendationAdapter.submitList(it)
+            recommendationAdapter.submitList(it) {
+                binding.clRecommendationLoadingLayer.isVisible = false
+            }
         }
     }
 }
