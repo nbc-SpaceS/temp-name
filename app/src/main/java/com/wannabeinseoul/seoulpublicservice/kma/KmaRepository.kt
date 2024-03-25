@@ -22,7 +22,7 @@ class KmaRepositoryImpl(
         regId: String,
         tmFc: String
     ): Response<KmaMidLandFcstDto> {
-        val response = kmaApiService.getMidLandFcst(numOfRows, pageNo, dataType, regId, tmFc)
+        val response = kmaApiService.getMidLandFcst(numOfRows = numOfRows, pageNo = pageNo, dataType = dataType, regId = regId, tmFc = tmFc)
         return response
     }
 }

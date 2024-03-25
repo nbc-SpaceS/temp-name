@@ -22,6 +22,6 @@ class TempRepositoryImpl (
         regId: String,
         tmFc: String
     ): Response<TemperatureDTO> {
-        return tempApiService.getTemp(numOfRows, pageNo, dataType, regId, tmFc)
+        return tempApiService.getTemp(numOfRows = numOfRows, pageNo = pageNo, dataType = dataType, regId = regId, tmFc = tmFc)
     }
 }

@@ -206,28 +206,28 @@ class HomeViewModel(
                 now.withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
 
-//            val response = kmaRepository.getMidLandFcst(      // 중기예보
-//                numOfRows = 10,
-//                pageNo = 1,
-//                dataType = "JSON",
-//                regId = "11B00000",
-//                tmFc = tmFc
-//            )
-//            val resposeTemp = tempRepository.getTemp(         // 중기기온
-//                numOfRows = 10,
-//                pageNo = 1,
-//                dataType = "JSON",
-//                regId = "11B10101",
-//                tmFc = tmFc
-//            )
-//            if (response.isSuccessful && resposeTemp.isSuccessful) {  // 중기 예보 & 기온을 수신했을 경우
-//                Log.i("This is HomeViewModel","kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${resposeTemp.body()!!.response.body.items.item[0]}")
-//                setWeatherShort(
-//                    response.body()!!.response.body.items.itemList[0],
-//                    resposeTemp.body()!!.response.body.items.item[0]
-//                )
-////                _weatherData.value = response.body()
-//            }
+            val response = kmaRepository.getMidLandFcst(      // 중기예보
+                numOfRows = 10,
+                pageNo = 1,
+                dataType = "JSON",
+                regId = "11B00000",
+                tmFc = tmFc
+            )
+            val responseTemp = tempRepository.getTemp(         // 중기기온
+                numOfRows = 10,
+                pageNo = 1,
+                dataType = "JSON",
+                regId = "11B10101",
+                tmFc = tmFc
+            )
+            if (response.isSuccessful && responseTemp.isSuccessful) {  // 중기 예보 & 기온을 수신했을 경우
+                Log.i("This is HomeViewModel","kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${responseTemp.body()!!.response.body.items.item[0]}")
+                setWeatherShort(
+                    response.body()!!.response.body.items.itemList[0],
+                    responseTemp.body()!!.response.body.items.item[0]
+                )
+//                _weatherData.value = response.body()
+            }
         }
     }
 
