@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.kma.temperature
+package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
 import retrofit2.Response
 
@@ -13,7 +13,7 @@ interface TempRepository {
 }
 
 class TempRepositoryImpl (
-    private val tempApiService: TempApiService
+    private val midTempApiService: MidTempApiService
 ): TempRepository {
     override suspend fun getTemp(
         numOfRows: Int,
@@ -22,6 +22,6 @@ class TempRepositoryImpl (
         regId: String,
         tmFc: String
     ): Response<TemperatureDTO> {
-        return tempApiService.getTemp(numOfRows, pageNo, dataType, regId, tmFc)
+        return midTempApiService.getTemp(numOfRows = numOfRows, pageNo = pageNo, dataType = dataType, regId = regId, tmFc = tmFc)
     }
 }

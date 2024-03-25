@@ -1,4 +1,4 @@
-package com.wannabeinseoul.seoulpublicservice.kma
+package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
 import retrofit2.Response
 
@@ -13,7 +13,7 @@ interface KmaRepository {
 }
 
 class KmaRepositoryImpl(
-    private val kmaApiService: KmaApiService
+    private val midLandFcstApiService: MidLandFcstApiService
 ) : KmaRepository {
     override suspend fun getMidLandFcst(
         numOfRows: Int,
@@ -22,7 +22,7 @@ class KmaRepositoryImpl(
         regId: String,
         tmFc: String
     ): Response<KmaMidLandFcstDto> {
-        val response = kmaApiService.getMidLandFcst(numOfRows, pageNo, dataType, regId, tmFc)
+        val response = midLandFcstApiService.getMidLandFcst(numOfRows = numOfRows, pageNo = pageNo, dataType = dataType, regId = regId, tmFc = tmFc)
         return response
     }
 }

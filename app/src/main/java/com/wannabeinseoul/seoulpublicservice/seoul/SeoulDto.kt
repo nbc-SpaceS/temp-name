@@ -4,164 +4,106 @@ import com.google.gson.annotations.SerializedName
 
 /** TvYeyakCOllect 응답 dto */
 data class SeoulDto(
-    val tvYeyakCOllect: TvYeyakCOllect
+    val tvYeyakCOllect: TvYeyakCOllect? = null
 )
 
 data class TvYeyakCOllect(
     @SerializedName("list_total_count")
-    val listTotalCount: Long,
+    val listTotalCount: Long? = null,
 
     @SerializedName("RESULT")
-    val result: Result,
+    val result: Result? = null,
 
     @SerializedName("row")
-    val rowList: List<Row>
+    val rowList: List<Row>? = null
 )
 
 
 data class Result(
     @SerializedName("CODE")
-    val code: String,
+    val code: String? = null,
 
     @SerializedName("MESSAGE")
-    val message: String
+    val message: String? = null
 )
 
 
 data class Row(
     @SerializedName("DIV")
-    val div: String,
+    val div: String? = null,
 
     @SerializedName("SERVICE")
-    val service: String,
+    val service: String? = null,
 
     @SerializedName("GUBUN")
-    val gubun: String,
+    val gubun: String? = null,
 
     @SerializedName("SVCID")
-    val svcid: String,
+    val svcid: String? = null,
 
     @SerializedName("MAXCLASSNM")
-    val maxclassnm: String,
+    val maxclassnm: String? = null,
 
     @SerializedName("MINCLASSNM")
-    val minclassnm: String,
+    val minclassnm: String? = null,
 
     @SerializedName("SVCSTATNM")
-    val svcstatnm: String,
+    val svcstatnm: String? = null,
 
     @SerializedName("SVCNM")
-    val svcnm: String,
+    val svcnm: String? = null,
 
     @SerializedName("PAYATNM")
-    val payatnm: String,
+    val payatnm: String? = null,
 
     @SerializedName("PLACENM")
-    val placenm: String,
+    val placenm: String? = null,
 
     @SerializedName("USETGTINFO")
-    val usetgtinfo: String,
+    val usetgtinfo: String? = null,
 
     @SerializedName("SVCURL")
-    val svcurl: String,
+    val svcurl: String? = null,
 
     @SerializedName("X")
-    val x: String,
+    val x: String? = null,
 
     @SerializedName("Y")
-    val y: String,
+    val y: String? = null,
 
     @SerializedName("SVCOPNBGNDT")
-    val svcopnbgndt: String,
+    val svcopnbgndt: String? = null,
 
     @SerializedName("SVCOPNENDDT")
-    val svcopnenddt: String,
+    val svcopnenddt: String? = null,
 
     @SerializedName("RCPTBGNDT")
-    val rcptbgndt: String,
+    val rcptbgndt: String? = null,
 
     @SerializedName("RCPTENDDT")
-    val rcptenddt: String,
+    val rcptenddt: String? = null,
 
     @SerializedName("AREANM")
-    val areanm: String,
+    val areanm: String? = null,
 
     @SerializedName("IMGURL")
-    val imgurl: String,
+    val imgurl: String? = null,
 
     @SerializedName("DTLCONT")
-    val dtlcont: String,
+    val dtlcont: String? = null,
 
     @SerializedName("TELNO")
-    val telno: String,
+    val telno: String? = null,
 
     @SerializedName("V_MAX")
-    val vMax: String,
+    val vMax: String? = null,
 
     @SerializedName("V_MIN")
-    val vMin: String,
+    val vMin: String? = null,
 
     @SerializedName("REVSTDDAY")
-    val revstdday: Long,
+    val revstdday: Long? = null,
 
     @SerializedName("REVSTDDAYNM")
-    val revstddaynm: String
-) {
-    companion object {
-        fun new(
-            div: String = "",
-            service: String = "",
-            gubun: String = "",
-            svcid: String = "",
-            maxclassnm: String = "",
-            minclassnm: String = "",
-            svcstatnm: String = "",
-            svcnm: String = "",
-            payatnm: String = "",
-            placenm: String = "",
-            usetgtinfo: String = "",
-            svcurl: String = "",
-            x: String = "",
-            y: String = "",
-            svcopnbgndt: String = "",
-            svcopnenddt: String = "",
-            rcptbgndt: String = "",
-            rcptenddt: String = "",
-            areanm: String = "",
-            imgurl: String = "",
-            dtlcont: String = "",
-            telno: String = "",
-            vMax: String = "",
-            vMin: String = "",
-            revstdday: Long = 0,
-            revstddaynm: String = ""
-        ) = Row(
-            div,
-            service,
-            gubun,
-            svcid,
-            maxclassnm,
-            minclassnm,
-            svcstatnm,
-            svcnm,
-            payatnm,
-            placenm,
-            usetgtinfo,
-            svcurl,
-            x,
-            y,
-            svcopnbgndt,
-            svcopnenddt,
-            rcptbgndt,
-            rcptenddt,
-            areanm,
-            imgurl,
-            dtlcont,
-            telno,
-            vMax,
-            vMin,
-            revstdday,
-            revstddaynm,
-        )
-    }
-}
+    val revstddaynm: String? = null
+)

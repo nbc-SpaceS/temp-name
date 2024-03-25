@@ -131,15 +131,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_pager" />
 
+            <TextView
+                android:id="@+id/tv_home_weather_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/fragment_home_weather_forecast"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/iv_home_main_banner"
+                app:layout_constraintTop_toBottomOf="@+id/iv_home_main_banner" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_home_weather_week"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
                 app:layout_constraintBottom_toTopOf="@+id/tv_home_recent_title"
-                app:layout_constraintEnd_toEndOf="@+id/iv_home_main_banner"
-                app:layout_constraintStart_toStartOf="@+id/iv_home_main_banner"
-                app:layout_constraintTop_toBottomOf="@+id/iv_home_main_banner" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_home_weather_forecast" />
 
             <TextView
                 android:id="@+id/tv_home_recent_title"

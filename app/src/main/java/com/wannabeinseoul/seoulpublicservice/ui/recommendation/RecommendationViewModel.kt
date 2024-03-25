@@ -12,19 +12,15 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
-import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class RecommendationViewModel(
     private val recommendPrefRepository: RecommendPrefRepository,
-    private val getAll2000UseCase: GetAll2000UseCase,
     private val seoulPublicRepository: SeoulPublicRepository,
     private val reservationRepository: ReservationRepository,
     private val serviceRepository: ServiceRepository,
@@ -118,9 +114,8 @@ class RecommendationViewModel(
             initializer {
                 val container = (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
                 RecommendationViewModel(
-                    seoulPublicRepository = container.seoulPublicRepository,
                     recommendPrefRepository = container.recommendPrefRepository,
-                    getAll2000UseCase = container.getAll2000UseCase,
+                    seoulPublicRepository = container.seoulPublicRepository,
                     reservationRepository = container.reservationRepository,
                     serviceRepository = container.serviceRepository,
                     regionPrefRepository = container.regionPrefRepository
