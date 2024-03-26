@@ -1,5 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.weather
 
+import android.util.Log
+
 data class WeatherShort(
     val sky: Int,
     val tmp: Int,
@@ -18,7 +20,8 @@ object ShortMidMapper {
             weatherMid.sky == "맑음" -> 1
             weatherMid.sky.contains("구름많") -> 3
             weatherMid.sky.contains("흐") -> 4
-            else -> throw Exception()
+            else -> 4
+                .apply { Log.e("ShortMidMapper", "midToShort weatherMid.sky: ${weatherMid.sky}") }
         }
         return WeatherShort(
             sky = change,
