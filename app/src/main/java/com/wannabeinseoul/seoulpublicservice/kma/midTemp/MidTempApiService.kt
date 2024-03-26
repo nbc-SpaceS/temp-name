@@ -14,5 +14,5 @@ interface MidTempApiService {
         @Query("dataType") dataType: String,
         @Query("regId") regId: String,
         @Query("tmFc") tmFc: String
-    ): Response<TemperatureDTO>
+    ): Response<MidTemp>
 }

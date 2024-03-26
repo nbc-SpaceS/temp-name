@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    val mediatorLiveData = MutableLiveData <List<WeatherShort>>()
+    private val mediatorLiveData = MutableLiveData <List<WeatherShort>>()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -382,8 +382,6 @@ class HomeFragment : Fragment() {
             true
         }
     }
-
-
 
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {

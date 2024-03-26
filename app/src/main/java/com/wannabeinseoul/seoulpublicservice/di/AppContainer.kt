@@ -23,8 +23,8 @@ import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.MidLandFcstApiServi
 import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepository
 import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.kma.midTemp.MidTempApiService
-import com.wannabeinseoul.seoulpublicservice.kma.midTemp.TempRepository
-import com.wannabeinseoul.seoulpublicservice.kma.midTemp.TempRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.kma.midTemp.MidTempRepository
+import com.wannabeinseoul.seoulpublicservice.kma.midTemp.MidTempRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.CategoryPrefRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.pref.FilterPrefRepository
@@ -113,7 +113,7 @@ interface AppContainer {
     val recentPrefRepository: RecentPrefRepository
     val weatherShortRepository: WeatherShortRepository
     val kmaRepository: KmaRepository
-    val tempRepository: TempRepository
+    val midTempRepository: MidTempRepository
 }
 
 class DefaultAppContainer(context: Context) : AppContainer {
@@ -175,8 +175,8 @@ class DefaultAppContainer(context: Context) : AppContainer {
     private val retrofitTempService: MidTempApiService by lazy {
         midTempRetrofit.create(MidTempApiService::class.java)
     }
-    override val tempRepository: TempRepository by lazy {
-        TempRepositoryImpl(retrofitTempService)
+    override val midTempRepository: MidTempRepository by lazy {
+        MidTempRepositoryImpl(retrofitTempService)
     }
 
     /** ======== UseCase ======== **/
