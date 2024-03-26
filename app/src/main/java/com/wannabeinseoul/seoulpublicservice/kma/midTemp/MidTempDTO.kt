@@ -2,7 +2,25 @@ package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
 data class TemperatureDTO(
     val response: Response
-)
+) {
+    companion object {
+        fun emptyTemp() = TemperatureDTO(
+            Response(
+                Body(
+                    "",
+                    Items(emptyList()),
+                    0,
+                    0,
+                    0
+                    ),
+                Header(
+                    "",
+                    ""
+                )
+            )
+        )
+    }
+}
 data class Response(
     val body: Body,
     val header: Header

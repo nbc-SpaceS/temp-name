@@ -1,7 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
 import android.util.Log
-import retrofit2.Response
 
 interface KmaRepository {
     suspend fun getMidLandFcst(
@@ -10,7 +9,7 @@ interface KmaRepository {
         dataType: String,
         regId: String,
         tmFc: String
-    ): Response<KmaMidLandFcstDto>?
+    ): Items
 }
 
 class KmaRepositoryImpl(
@@ -22,18 +21,17 @@ class KmaRepositoryImpl(
         dataType: String,
         regId: String,
         tmFc: String
-    ): Response<KmaMidLandFcstDto>? {
-        try {
-            return midLandFcstApiService.getMidLandFcst(
-                numOfRows = numOfRows,
-                pageNo = pageNo,
-                dataType = dataType,
-                regId = regId,
-                tmFc = tmFc
-            )
-        } catch (e: Exception) {
-            Log.e("This is MidLandFcstRepository", "Error! : KmaRepositoryImpl", e)
-            return null
-        }
+    ) = try
+    {
+        midLandFcstApiService.getMidLandFcst(
+            numOfRows = numOfRows,
+            pageNo = pageNo,
+            dataType = dataType,
+            regId = regId,
+            tmFc = tmFc
+        ).response.body.items
+    } catch (e: Exception) {
+        Log.e("This is MidLandFcstRepository", "Error! : KmaRepositoryImpl", e)
+        KmaMidLandFcstDto.emptyMid().response.body.items
     }
 }
