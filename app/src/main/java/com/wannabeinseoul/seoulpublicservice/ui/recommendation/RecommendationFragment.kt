@@ -51,9 +51,9 @@ class RecommendationFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() = binding.let { b ->
-        b.reScroll.adapter = recommendationAdapter
-        b.reScroll.itemAnimator = null
-        b.reScroll.layoutManager = LinearLayoutManager(requireContext())
+        b.rvScroll.adapter = recommendationAdapter
+        b.rvScroll.itemAnimator = null
+        b.rvScroll.layoutManager = LinearLayoutManager(requireContext())
         b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
     }
 
