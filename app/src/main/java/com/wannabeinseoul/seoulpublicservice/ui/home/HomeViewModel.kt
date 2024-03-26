@@ -227,7 +227,7 @@ class HomeViewModel(
                     regId = "11B10101",
                     tmFc = tmFc
                 )
-                if(response.itemList.isEmpty() && responseTemp.item.isEmpty()) {
+                if(response.itemList.isNotEmpty() && responseTemp.item.isNotEmpty()) {
                     Log.i(
                         "This is HomeViewModel",
                         "kma : ${response.itemList}\ntemp : ${responseTemp.item}"
