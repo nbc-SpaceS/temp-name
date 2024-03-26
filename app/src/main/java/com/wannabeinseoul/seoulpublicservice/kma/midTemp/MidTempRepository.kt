@@ -9,7 +9,7 @@ interface TempRepository {
         dataType: String,
         regId: String,
         tmFc: String
-    ): Items
+    ): Item?
 }
 
 class TempRepositoryImpl(
@@ -21,17 +21,20 @@ class TempRepositoryImpl(
         dataType: String,
         regId: String,
         tmFc: String
-    ) = try
-    {
-        midTempApiService.getTemp(
-            numOfRows = numOfRows,
-            pageNo = pageNo,
-            dataType = dataType,
-            regId = regId,
-            tmFc = tmFc
-        ).response.body.items
-    } catch (e: Exception) {
-        Log.e("This is MidTempRepository", "Error! : TempRepositoryImpl", e)
-        TemperatureDTO.emptyTemp().response.body.items
+    ): Item? {
+        val response = try {
+            midTempApiService.getTemp(
+                numOfRows = numOfRows,
+                pageNo = pageNo,
+                dataType = dataType,
+                regId = regId,
+                tmFc = tmFc
+            )
+        } catch (e: Throwable) {
+            Log.e("This is MidTempRepository", "Error! : TempRepositoryImpl", e)
+            return null
+        }
+        val body = response.body() ?: return null
+        return body.response?.body?.items?.item?.firstOrNull()
     }
 }

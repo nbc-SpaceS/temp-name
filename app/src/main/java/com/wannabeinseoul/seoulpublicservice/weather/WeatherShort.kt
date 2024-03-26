@@ -20,8 +20,7 @@ object ShortMidMapper {
             weatherMid.sky == "맑음" -> 1
             weatherMid.sky.contains("구름많") -> 3
             weatherMid.sky.contains("흐") -> 4
-            else -> 4
-                .apply { Log.e("ShortMidMapper", "midToShort weatherMid.sky: ${weatherMid.sky}") }
+            else -> 4.apply { Log.e("ShortMidMapper", "midToShort weatherMid.sky: ${weatherMid.sky}") }
         }
         return WeatherShort(
             sky = change,
