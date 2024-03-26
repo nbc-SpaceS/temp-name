@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.db_by_memory
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
@@ -196,7 +197,7 @@ fun List<ReservationEntity>.getFilteredByDate(): List<String> {
     val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
     return getHasLocation().filter {
-        (it.SVCNM == "접수중") &&
+        (it.SVCSTATNM == "접수중") &&
                 (datePattern.format(
                     LocalDateTime.parse(
                         it.RCPTBGNDT,
