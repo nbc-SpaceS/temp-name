@@ -40,7 +40,7 @@ class HomeViewModel(
     private val recentPrefRepository: RecentPrefRepository,
     private val weatherShortRepository: WeatherShortRepository,
     private val kmaRepository: KmaRepository,
-    private val tempRepository: TempRepository
+    private val tempRepository: TempRepository,
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()

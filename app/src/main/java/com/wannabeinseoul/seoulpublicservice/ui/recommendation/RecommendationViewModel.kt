@@ -25,7 +25,7 @@ class RecommendationViewModel(
     private val seoulPublicRepository: SeoulPublicRepository,
     private val reservationRepository: ReservationRepository,
     private val serviceRepository: ServiceRepository,
-    private val regionPrefRepository: RegionPrefRepository
+    private val regionPrefRepository: RegionPrefRepository,
 ) : ViewModel() {
     private inner class RandomQueryUseCase {
         private val entitiesMap = mapOf<String, List<ReservationEntity>>()
@@ -83,6 +83,8 @@ class RecommendationViewModel(
             isLoading.postValue(false)
         }
     }
+
+
 
 //    fun loadMoreItems(query: String) {
 //        // 추가 아이템을 가져오는 비동기 작업을 수행
