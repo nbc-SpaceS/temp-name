@@ -9,7 +9,7 @@ interface KmaRepository {
         dataType: String,
         regId: String,
         tmFc: String
-    ): KmaMidLandFcstDto
+    ): Items
 }
 
 class KmaRepositoryImpl(
@@ -29,9 +29,9 @@ class KmaRepositoryImpl(
             dataType = dataType,
             regId = regId,
             tmFc = tmFc
-        )
+        ).response.body.items
     } catch (e: Exception) {
         Log.e("This is MidLandFcstRepository", "Error! : KmaRepositoryImpl", e)
-        KmaMidLandFcstDto.emptyMid()
+        KmaMidLandFcstDto.emptyMid().response.body.items
     }
 }

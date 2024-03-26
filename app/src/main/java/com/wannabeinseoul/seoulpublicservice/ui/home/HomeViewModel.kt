@@ -213,7 +213,7 @@ class HomeViewModel(
                 now.withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
             try {
-                val response = kmaRepository.getMidLandFcst(      // 중기예보
+                val response = kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
                     numOfRows = 10,
                     pageNo = 1,
                     dataType = "JSON",
@@ -227,14 +227,14 @@ class HomeViewModel(
                     regId = "11B10101",
                     tmFc = tmFc
                 )
-                if(response.response.header.resultCode == "00" && responseTemp.response.header.resultCode == "00") {
+                if(response.itemList.isEmpty() && responseTemp.item.isEmpty()) {
                     Log.i(
                         "This is HomeViewModel",
-                        "kma : ${response.response.body.items.itemList[0]}\ntemp : ${responseTemp.response.body.items.item[0]}"
+                        "kma : ${response.itemList}\ntemp : ${responseTemp.item}"
                     )
                     setWeatherShort(
-                        response.response.body.items.itemList[0],
-                        responseTemp.response.body.items.item[0]
+                        response.itemList[0],
+                        responseTemp.item[0]
                     )
                 } else {
                     throw Exception()

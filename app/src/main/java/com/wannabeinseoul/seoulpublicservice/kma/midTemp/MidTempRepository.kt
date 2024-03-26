@@ -9,7 +9,7 @@ interface TempRepository {
         dataType: String,
         regId: String,
         tmFc: String
-    ): TemperatureDTO
+    ): Items
 }
 
 class TempRepositoryImpl(
@@ -29,9 +29,9 @@ class TempRepositoryImpl(
             dataType = dataType,
             regId = regId,
             tmFc = tmFc
-        )
+        ).response.body.items
     } catch (e: Exception) {
         Log.e("This is MidTempRepository", "Error! : TempRepositoryImpl", e)
-        TemperatureDTO.emptyTemp()
+        TemperatureDTO.emptyTemp().response.body.items
     }
 }
