@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
 import com.wannabeinseoul.seoulpublicservice.BuildConfig
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,5 +14,5 @@ interface MidLandFcstApiService {
         @Query("dataType") dataType: String,
         @Query("regId") regId: String,
         @Query("tmFc") tmFc: String
-    ): KmaMidLandFcstDto
+    ): Response<KmaMidLandFcstDto>
 }

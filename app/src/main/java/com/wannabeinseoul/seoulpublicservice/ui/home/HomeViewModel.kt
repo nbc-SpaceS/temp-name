@@ -1,7 +1,11 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -227,20 +231,20 @@ class HomeViewModel(
                     regId = "11B10101",
                     tmFc = tmFc
                 )
-                if(response.itemList.isNotEmpty() && responseTemp.item.isNotEmpty()) {
+                if(response != null && responseTemp.item.isNotEmpty()) {
                     Log.i(
                         "This is HomeViewModel",
-                        "kma : ${response.itemList}\ntemp : ${responseTemp.item}"
+                        "kma : ${response}\ntemp : ${responseTemp.item}"
                     )
                     setWeatherShort(
-                        response.itemList[0],
+                        response,
                         responseTemp.item[0]
                     )
                 } else {
-                    throw Exception()
+                    throw Exception("else) response != null && responseTemp.item.isNotEmpty()")
                 }
-            } catch (e: Exception) {
-                Log.e("This is HomeViewModel","Error! : fun fetchWeatherData", e)
+            } catch (e: Throwable) {
+                Log.e("HomeViewModel","fetchWeatherData error", e)
                 _weatherData.postValue(emptyList())
             }
         }
@@ -310,14 +314,14 @@ class HomeViewModel(
     private fun setWeatherShort(dto: Item, temp: com.wannabeinseoul.seoulpublicservice.kma.midTemp.Item) {
         val itemList = mutableListOf<WeatherShort>()
         dto.let {
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am, (temp.taMax3 + temp.taMin3)/2, it.rnSt3Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf4Am, (temp.taMax4 + temp.taMin4)/2, it.rnSt4Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf5Am, (temp.taMax5 + temp.taMin5)/2, it.rnSt5Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf6Am, (temp.taMax6 + temp.taMin6)/2, it.rnSt6Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf7Am, (temp.taMax7 + temp.taMin7)/2, it.rnSt7Am)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf8, (temp.taMax8 + temp.taMin8)/2, it.rnSt8)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9, (temp.taMax9 + temp.taMin9)/2, it.rnSt9)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10, (temp.taMax10 + temp.taMin10)/2, it.rnSt10)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am ?: "", (temp.taMax3 + temp.taMin3)/2, it.rnSt3Am ?: -1)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf4Am ?: "", (temp.taMax4 + temp.taMin4)/2, it.rnSt4Am ?: -1)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf5Am ?: "", (temp.taMax5 + temp.taMin5)/2, it.rnSt5Am ?: -1)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf6Am ?: "", (temp.taMax6 + temp.taMin6)/2, it.rnSt6Am ?: -1)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf7Am ?: "", (temp.taMax7 + temp.taMin7)/2, it.rnSt7Am ?: -1)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf8 ?: "", (temp.taMax8 + temp.taMin8)/2, it.rnSt8 ?: -1)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9 ?: "", (temp.taMax9 + temp.taMin9)/2, it.rnSt9 ?: -1)))
+            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10 ?: "", (temp.taMax10 + temp.taMin10)/2, it.rnSt10 ?: -1)))
         }
         _weatherData.postValue(itemList)
     }
