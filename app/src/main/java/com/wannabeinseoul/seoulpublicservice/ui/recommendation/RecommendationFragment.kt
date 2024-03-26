@@ -2,6 +2,7 @@ package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +14,17 @@ import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class RecommendationFragment : Fragment() {
 
     private lateinit var binding: FragmentRecommendationBinding
     private val viewModel: RecommendationViewModel by viewModels { factory }
-
-
-    private val app by lazy { requireActivity().application as SeoulPublicServiceApplication }
-    private val dbMemoryRepository by lazy { app.container.dbMemoryRepository }
-    private val serviceRepository by lazy { app.container.serviceRepository }
-    private val regionPrefRepository by lazy { app.container.regionPrefRepository }
-    private val reservationRepository by lazy { app.container.reservationRepository }
-
 
     private val showDetailFragment: (RecommendationData) -> Unit =
         { recommendationData: RecommendationData ->
@@ -47,29 +46,13 @@ class RecommendationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initViewModel()
-
-//        var isLoading = false
-//        binding.reScroll.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//
-//                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-//                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-//                val totalItemCount = layoutManager.itemCount
-//
-//                // 스크롤이 마지막 아이템에 도달하면 추가 아이템을 로드
-//                if (!isLoading && lastVisibleItemPosition == totalItemCount - 1) {
-//                    isLoading = true
-//                    loadMoreItems()
-//                }
-//            }
-//        })
     }
 
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() = binding.let { b ->
         b.reScroll.adapter = recommendationAdapter
+        b.reScroll.itemAnimator = null
         b.reScroll.layoutManager = LinearLayoutManager(requireContext())
         b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
     }
@@ -133,9 +116,6 @@ class RecommendationFragment : Fragment() {
     private val randomTip: String = tipsMap[randomTipHeader]?.random() ?: ""
 
     private fun initViewModel() = viewModel.let { vm ->
-        // 프래그먼트에서 해줄 건 뷰모델 함수 호출하는 람다식(== 함수) 넘겨주는게 끝.
-//        fun fn1(query: String, num: Int) = vm.fn1(query, num)
-        fun fn1(query: String, num: Int) = listOf<RecommendationData>()
 
         vm.horizontalDataList.observe(viewLifecycleOwner) { horizontalDataList ->
             val multiViews: MutableList<RecommendationAdapter.MultiView> = horizontalDataList.map {
@@ -143,7 +123,11 @@ class RecommendationFragment : Fragment() {
                     it.keyword,
                     it.title,
                     RecommendationHorizontalAdapter(showDetailFragment).apply { submitList(it.list) },
-                    ::fn1
+                    infiniteScrollLambdaFunc = { query, num ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            vm.getAdditionalQuery(query, num)
+                        }
+                    }
                 )
             }.toMutableList()
             if (multiViews.size >= 1) {
@@ -157,5 +141,12 @@ class RecommendationFragment : Fragment() {
                 binding.clRecommendationLoadingLayer.isVisible = false
             }
         }
+    }
+
+    override fun onResume() {
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.fetchRegionList()
+        }
+        super.onResume()
     }
 }

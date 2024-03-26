@@ -6,6 +6,9 @@ import com.wannabeinseoul.seoulpublicservice.databases.entity.ReviewEntity
 import com.wannabeinseoul.seoulpublicservice.databases.entity.ServiceEntity
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
 interface ServiceRepository {
@@ -104,15 +107,29 @@ class ServiceRepositoryImpl : ServiceRepository {
     override suspend fun getServiceReviewsCount(svcIdList: List<String>): List<Int> {
         if (svcIdList.isEmpty()) return emptyList()
 
-        svcIdList.forEach { svcId ->
-            if (!checkService(svcId)) fireStore.collection("service").document(svcId)
-                .set(ServiceEntity(svcId))
+        var countResult: List<ServiceEntity>? = null
+
+        coroutineScope {
+            svcIdList.forEach { svcId ->
+                if (!checkService(svcId)) fireStore.collection("service").document(svcId)
+                    .set(ServiceEntity(svcId))
+            }
+
+            val batchSize = 15
+            val batchTotal = (svcIdList.size + batchSize - 1) / batchSize
+            val count = List(batchTotal) { i ->
+                async(Dispatchers.IO) {
+                    val from = i * batchSize
+                    val to = if ((i + 1) * batchSize - 1 < svcIdList.size) (i + 1) * batchSize - 1 else svcIdList.size
+                    fireStore.collection("service").whereIn("svcId", svcIdList.slice(from until to)).get().await()
+                        .toObjects(ServiceEntity::class.java)
+                }
+            }
+
+            countResult = count.flatMap { it.await() }
         }
 
-        val count = fireStore.collection("service").whereIn("svcId", svcIdList).get().await()
-            .toObjects(ServiceEntity::class.java)
-
-        return svcIdList.map { svcId -> count.find { it.svcId == svcId }?.reviewIdList?.size ?: 0 }
+        return svcIdList.map { svcId -> countResult?.find { it.svcId == svcId }?.reviewIdList?.size ?: 0 }
     }
 
 

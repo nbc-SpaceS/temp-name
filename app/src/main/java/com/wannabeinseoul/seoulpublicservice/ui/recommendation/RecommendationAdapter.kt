@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedTipBinding
+import kotlin.reflect.KSuspendFunction2
 
 class RecommendationAdapter :
     ListAdapter<RecommendationAdapter.MultiView, RecyclerView.ViewHolder>(DiffCallback()) {
@@ -27,7 +29,7 @@ class RecommendationAdapter :
             val keyword: String,
             val headerTitle: String,
             val adapter: RecommendationHorizontalAdapter,
-            val infiniteScrollLambdaFunc: (String, Int) -> List<RecommendationData>,
+            val infiniteScrollLambdaFunc: (String, Int) -> Unit,
         ) : MultiView {
             override val viewType: Type = Type.HORIZONTAL
         }
@@ -49,6 +51,7 @@ class RecommendationAdapter :
 
         fun bind(item: MultiView.Horizontal) {
             binding.reShared.adapter = item.adapter
+            binding.reShared.itemAnimator = null
             binding.tvSharedText.text = item.headerTitle
             binding.reShared.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -57,7 +60,10 @@ class RecommendationAdapter :
                     val lastPosition = recyclerView.adapter!!.itemCount - 1
 
                     if (lastVisiblePosition == lastPosition) {
-                        item.infiniteScrollLambdaFunc(item.keyword, 5)
+                        Log.d("dkj", "현재 개수 : ${recyclerView.adapter?.itemCount}")
+                        item.infiniteScrollLambdaFunc(item.keyword,
+                            recyclerView.adapter?.itemCount?.plus(5) ?: 5
+                        )
                     }
                 }
             })
@@ -106,7 +112,13 @@ class RecommendationAdapter :
 
     class DiffCallback : DiffUtil.ItemCallback<MultiView>() {
         override fun areItemsTheSame(oldItem: MultiView, newItem: MultiView): Boolean {
-            return oldItem == newItem
+            return if (oldItem is MultiView.Horizontal && newItem is MultiView.Horizontal) {
+                oldItem.keyword == newItem.keyword
+            } else if (oldItem is MultiView.Tip && newItem is MultiView.Tip) {
+                oldItem.content == newItem.content
+            } else {
+                oldItem === newItem
+            }
         }
 
         override fun areContentsTheSame(oldItem: MultiView, newItem: MultiView): Boolean {
