@@ -21,7 +21,7 @@ interface WeatherShortRepository {
         time: String,
         x: Int,
         y: Int
-    ) : WeatherShortDTO
+    ): List<Item>
 }
 
 class WeatherShortRepositoryImpl(
@@ -34,17 +34,26 @@ class WeatherShortRepositoryImpl(
         time: String,
         x: Int,
         y: Int
-    ) = try {
-        weatherApiService.getWeatherShort(
-            page = page,
-            row = row,
-            date = date,
-            time = time,
-            x = x,
-            y = y
-        )
-    } catch (e: Throwable) {
-        Log.e(JJTAG, "getShortWeather page:$page, row:$row, date:$date, time:$time, x:$x, y:$y", e)
-        WeatherShortDTO.new()
+    ): List<Item> {
+        val response = try {
+            weatherApiService.getWeatherShort(
+                page = page,
+                row = row,
+                date = date,
+                time = time,
+                x = x,
+                y = y
+            )
+        } catch (e: Throwable) {
+            Log.e(
+                JJTAG,
+                "getShortWeather page:$page, row:$row, date:$date, time:$time, x:$x, y:$y",
+                e
+            )
+            return emptyList()
+        }
+        val body = response.body() ?: return emptyList<Item>()
+            .apply { Log.w(JJTAG, "getShortWeather body() == null, response: $response") }
+        return body.response?.body?.items?.item ?: emptyList()
     }
 }

@@ -2,6 +2,7 @@ package com.wannabeinseoul.seoulpublicservice.weather
 
 
 import com.wannabeinseoul.seoulpublicservice.BuildConfig
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -17,7 +18,7 @@ interface WeatherApiService {
         @Query("base_time") time: String,
         @Query("nx") x: Int,
         @Query("ny") y: Int
-    ): WeatherShortDTO
+    ): Response<WeatherShortDTO>
 }
 
 //   /VilageFcstInfoService_2.0/getVilageFcst 단기

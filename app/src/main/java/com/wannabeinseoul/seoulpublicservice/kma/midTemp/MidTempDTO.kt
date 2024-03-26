@@ -1,9 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
 data class MidTempDTO(
-    val response: Response? = null
+    val response: MidTempDTOResponse? = null
 )
-data class Response(
+data class MidTempDTOResponse(
     val body: Body? = null,
     val header: Header? = null
 )
@@ -59,7 +59,7 @@ data class Item(
     val taMin8Low: Int? = null,
     val taMin9: Int? = null,
     val taMin9High: Int? = null,
-    val taMin9Low: Int? = null
+    val taMin9Low: Int? = null,
 )
 data class Header(
     val resultCode: String? = null,
