@@ -227,17 +227,17 @@ class HomeViewModel(
                     regId = "11B10101",
                     tmFc = tmFc
                 )
-                if(response!!.body()!!.response.header.resultCode == "00" && responseTemp!!.body()!!.response.header.resultCode == "00") {
-                    if (response.isSuccessful && responseTemp.isSuccessful) {  // 중기 예보 & 기온을 수신했을 경우
-                        Log.i(
-                            "This is HomeViewModel",
-                            "kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${responseTemp.body()!!.response.body.items.item[0]}"
-                        )
-                        setWeatherShort(
-                            response.body()!!.response.body.items.itemList[0],
-                            responseTemp.body()!!.response.body.items.item[0]
-                        )
-                    }
+                if(response.response.header.resultCode == "00" && responseTemp.response.header.resultCode == "00") {
+                    Log.i(
+                        "This is HomeViewModel",
+                        "kma : ${response.response.body.items.itemList[0]}\ntemp : ${responseTemp.response.body.items.item[0]}"
+                    )
+                    setWeatherShort(
+                        response.response.body.items.itemList[0],
+                        responseTemp.response.body.items.item[0]
+                    )
+                } else {
+                    throw Exception()
                 }
             } catch (e: Exception) {
                 Log.e("This is HomeViewModel","Error! : fun fetchWeatherData", e)

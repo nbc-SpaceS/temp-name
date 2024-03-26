@@ -5,7 +5,25 @@ import com.google.gson.annotations.SerializedName
 data class KmaMidLandFcstDto(
     @SerializedName("response")
     val response: Response
-)
+) {
+    companion object {
+        fun emptyMid() = KmaMidLandFcstDto(
+            Response(
+                Header(
+                    "",
+                    ""
+                ),
+                Body(
+                    "",
+                    Items(emptyList()),
+                    0,
+                    0,
+                    0
+                )
+            )
+        )
+    }
+}
 
 data class Response(
     @SerializedName("header")
