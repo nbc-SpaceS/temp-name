@@ -288,15 +288,15 @@ class HomeViewModel(
             }
             run.let {
                 val itemList = mutableListOf<WeatherShort>()
-                val items = it.response.body.items.item
+                val items = it
                 var skyValue: Int? = null
                 var tmpValue: Int? = null
                 var popValue: Int? = null
                 val filtering = items.filter { it.fcstTime == "0600" && (it.category == "SKY" || it.category == "TMP" || it.category == "POP") }
                 for(item in filtering) {
-                    if(item.category == "SKY") skyValue = item.fcstValue.toInt()
-                    if(item.category == "TMP") tmpValue = item.fcstValue.toInt()
-                    if(item.category == "POP") popValue = item.fcstValue.toInt()
+                    if(item.category == "POP") popValue = item.fcstValue?.toIntOrNull() ?: -1
+                    if(item.category == "SKY") skyValue = item.fcstValue?.toIntOrNull() ?: 4  // null 이면 흐림을 기본값으로
+                    if(item.category == "TMP") tmpValue = item.fcstValue?.toIntOrNull() ?: 999
                     Log.i("This is HomeViewModel","skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue")
                     if(skyValue != null && tmpValue != null && popValue != null) {
                         itemList.add(WeatherShort(skyValue, tmpValue, popValue))
