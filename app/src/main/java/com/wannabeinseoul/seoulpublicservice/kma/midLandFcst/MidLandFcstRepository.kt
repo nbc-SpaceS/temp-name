@@ -2,6 +2,8 @@ package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
 import android.util.Log
 
+private const val TAG = "KmaRepository"
+
 interface KmaRepository {
     suspend fun getMidLandFcst(
         numOfRows: Int,
@@ -9,7 +11,7 @@ interface KmaRepository {
         dataType: String,
         regId: String,
         tmFc: String
-    ): Items
+    ): Item?
 }
 
 class KmaRepositoryImpl(
@@ -21,17 +23,26 @@ class KmaRepositoryImpl(
         dataType: String,
         regId: String,
         tmFc: String
-    ) = try
-    {
-        midLandFcstApiService.getMidLandFcst(
-            numOfRows = numOfRows,
-            pageNo = pageNo,
-            dataType = dataType,
-            regId = regId,
-            tmFc = tmFc
-        ).response.body.items
-    } catch (e: Exception) {
-        Log.e("This is MidLandFcstRepository", "Error! : KmaRepositoryImpl", e)
-        KmaMidLandFcstDto.emptyMid().response.body.items
+    ): Item? {
+        val response = try {
+            midLandFcstApiService.getMidLandFcst(
+                numOfRows = numOfRows,
+                pageNo = pageNo,
+                dataType = dataType,
+                regId = regId,
+                tmFc = tmFc
+            )
+        } catch (e: Throwable) {
+            Log.e(
+                TAG,
+                "getMidLandFcst error. numOfRows:$numOfRows, pageNo:$pageNo" +
+                        ", dataType:$dataType, regId:$regId, tmFc:$tmFc",
+                e
+            )
+            return null
+        }
+        val body = response.body() ?: return null
+            .apply { Log.w(TAG, "getMidLandFcst body() == null, response: $response") }
+        return body.response?.body?.items?.itemList?.firstOrNull()
     }
 }
