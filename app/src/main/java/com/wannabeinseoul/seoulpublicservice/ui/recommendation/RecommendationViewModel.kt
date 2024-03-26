@@ -73,6 +73,7 @@ class RecommendationViewModel(
             val recommendationHorizontalDataList =
                 queryResults.mapIndexed { index, recommendationDataList ->
                     RecommendationHorizontalData(
+                        (items + regionItems)[index].first,
                         (items + regionItems)[index].second,
                         recommendationDataList
                     )

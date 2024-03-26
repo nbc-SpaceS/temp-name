@@ -213,7 +213,7 @@ class HomeViewModel(
                 now.withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
             try {
-                val response = kmaRepository.getMidLandFcst(      // 중기예보
+                val response = kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
                     numOfRows = 10,
                     pageNo = 1,
                     dataType = "JSON",
@@ -227,17 +227,17 @@ class HomeViewModel(
                     regId = "11B10101",
                     tmFc = tmFc
                 )
-                if(response!!.body()!!.response.header.resultCode == "00" && responseTemp!!.body()!!.response.header.resultCode == "00") {
-                    if (response.isSuccessful && responseTemp.isSuccessful) {  // 중기 예보 & 기온을 수신했을 경우
-                        Log.i(
-                            "This is HomeViewModel",
-                            "kma : ${response.body()!!.response.body.items.itemList[0]}\ntemp : ${responseTemp.body()!!.response.body.items.item[0]}"
-                        )
-                        setWeatherShort(
-                            response.body()!!.response.body.items.itemList[0],
-                            responseTemp.body()!!.response.body.items.item[0]
-                        )
-                    }
+                if(response.itemList.isEmpty() && responseTemp.item.isEmpty()) {
+                    Log.i(
+                        "This is HomeViewModel",
+                        "kma : ${response.itemList}\ntemp : ${responseTemp.item}"
+                    )
+                    setWeatherShort(
+                        response.itemList[0],
+                        responseTemp.item[0]
+                    )
+                } else {
+                    throw Exception()
                 }
             } catch (e: Exception) {
                 Log.e("This is HomeViewModel","Error! : fun fetchWeatherData", e)
