@@ -1,92 +1,74 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
-data class TemperatureDTO(
-    val response: Response
-) {
-    companion object {
-        fun emptyTemp() = TemperatureDTO(
-            Response(
-                Body(
-                    "",
-                    Items(emptyList()),
-                    0,
-                    0,
-                    0
-                    ),
-                Header(
-                    "",
-                    ""
-                )
-            )
-        )
-    }
-}
-data class Response(
-    val body: Body,
-    val header: Header
+data class MidTempDTO(
+    val response: MidTempDTOResponse? = null
+)
+data class MidTempDTOResponse(
+    val body: Body? = null,
+    val header: Header? = null
 )
 data class Items(
-    val item: List<Item>
+    val item: List<Item>? = null
 )
 data class Item(
-    val regId: String,
-    val taMax10: Int,
-    val taMax10High: Int,
-    val taMax10Low: Int,
-    val taMax3: Int,
-    val taMax3High: Int,
-    val taMax3Low: Int,
-    val taMax4: Int,
-    val taMax4High: Int,
-    val taMax4Low: Int,
-    val taMax5: Int,
-    val taMax5High: Int,
-    val taMax5Low: Int,
-    val taMax6: Int,
-    val taMax6High: Int,
-    val taMax6Low: Int,
-    val taMax7: Int,
-    val taMax7High: Int,
-    val taMax7Low: Int,
-    val taMax8: Int,
-    val taMax8High: Int,
-    val taMax8Low: Int,
-    val taMax9: Int,
-    val taMax9High: Int,
-    val taMax9Low: Int,
-    val taMin10: Int,
-    val taMin10High: Int,
-    val taMin10Low: Int,
-    val taMin3: Int,
-    val taMin3High: Int,
-    val taMin3Low: Int,
-    val taMin4: Int,
-    val taMin4High: Int,
-    val taMin4Low: Int,
-    val taMin5: Int,
-    val taMin5High: Int,
-    val taMin5Low: Int,
-    val taMin6: Int,
-    val taMin6High: Int,
-    val taMin6Low: Int,
-    val taMin7: Int,
-    val taMin7High: Int,
-    val taMin7Low: Int,
-    val taMin8: Int,
-    val taMin8High: Int,
-    val taMin8Low: Int,
-    val taMin9: Int,
-    val taMin9High: Int,
-    val taMin9Low: Int
+    val regId: String? = null,
+    val taMax10: Int? = null,
+    val taMax10High: Int? = null,
+    val taMax10Low: Int? = null,
+    val taMax3: Int? = null,
+    val taMax3High: Int? = null,
+    val taMax3Low: Int? = null,
+    val taMax4: Int? = null,
+    val taMax4High: Int? = null,
+    val taMax4Low: Int? = null,
+    val taMax5: Int? = null,
+    val taMax5High: Int? = null,
+    val taMax5Low: Int? = null,
+    val taMax6: Int? = null,
+    val taMax6High: Int? = null,
+    val taMax6Low: Int? = null,
+    val taMax7: Int? = null,
+    val taMax7High: Int? = null,
+    val taMax7Low: Int? = null,
+    val taMax8: Int? = null,
+    val taMax8High: Int? = null,
+    val taMax8Low: Int? = null,
+    val taMax9: Int? = null,
+    val taMax9High: Int? = null,
+    val taMax9Low: Int? = null,
+    val taMin10: Int? = null,
+    val taMin10High: Int? = null,
+    val taMin10Low: Int? = null,
+    val taMin3: Int? = null,
+    val taMin3High: Int? = null,
+    val taMin3Low: Int? = null,
+    val taMin4: Int? = null,
+    val taMin4High: Int? = null,
+    val taMin4Low: Int? = null,
+    val taMin5: Int? = null,
+    val taMin5High: Int? = null,
+    val taMin5Low: Int? = null,
+    val taMin6: Int? = null,
+    val taMin6High: Int? = null,
+    val taMin6Low: Int? = null,
+    val taMin7: Int? = null,
+    val taMin7High: Int? = null,
+    val taMin7Low: Int? = null,
+    val taMin8: Int? = null,
+    val taMin8High: Int? = null,
+    val taMin8Low: Int? = null,
+    val taMin9: Int? = null,
+    val taMin9High: Int? = null,
+    val taMin9Low: Int? = null,
 )
 data class Header(
-    val resultCode: String,
-    val resultMsg: String
+    val resultCode: String? = null,
+    val resultMsg: String? = null
 )
 data class Body(
-    val dataType: String,
-    val items: Items,
-    val numOfRows: Int,
-    val pageNo: Int,
-    val totalCount: Int
+    val dataType: String? = null,
+    val items: Items? = null,
+    val numOfRows: Int? = null,
+    val pageNo: Int? = null,
+    val totalCount: Int? = null
 )
