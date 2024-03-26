@@ -11,6 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentNotificationsBinding
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailCloseInterface
+import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class NotificationsFragment : DialogFragment() {
@@ -23,7 +25,16 @@ class NotificationsFragment : DialogFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: NotificationsViewModel by viewModels { NotificationsViewModel.factory }
-    private val mainViewModel: MainViewModel by activityViewModels()
+
+    private val adapter: NotificationAdapter by lazy {
+        NotificationAdapter(
+            moveDetail = {
+                val dialog = DetailFragment.newInstance(it)
+                dialog.show(requireActivity().supportFragmentManager, "Detail")
+                dismiss()
+            }
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,10 +59,16 @@ class NotificationsFragment : DialogFragment() {
         ivNotificationBackBtn.setOnClickListener {
             dismiss()
         }
+
+        rvNotification.adapter = adapter
+
+        viewModel.updateUiState()
     }
 
     private fun initViewModel() = with(viewModel) {
-
+        uiState.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
     }
 
     override fun onDestroyView() {
