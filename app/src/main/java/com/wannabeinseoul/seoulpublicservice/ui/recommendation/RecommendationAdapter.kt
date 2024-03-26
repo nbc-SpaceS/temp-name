@@ -3,6 +3,7 @@ package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedBinding
@@ -23,9 +24,10 @@ class RecommendationAdapter :
         val viewType: Type
 
         data class Horizontal(
+            val keyword: String,
             val headerTitle: String,
             val adapter: RecommendationHorizontalAdapter,
-            val onScrollListener: RecyclerView.OnScrollListener,
+            val infiniteScrollLambdaFunc: (String, Int) -> List<RecommendationData>,
         ) : MultiView {
             override val viewType: Type = Type.HORIZONTAL
         }
@@ -48,7 +50,17 @@ class RecommendationAdapter :
         fun bind(item: MultiView.Horizontal) {
             binding.reShared.adapter = item.adapter
             binding.tvSharedText.text = item.headerTitle
-            binding.reShared.addOnScrollListener(item.onScrollListener)
+            binding.reShared.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val lastVisiblePosition = (recyclerView.layoutManager as LinearLayoutManager)
+                        .findLastCompletelyVisibleItemPosition()
+                    val lastPosition = recyclerView.adapter!!.itemCount - 1
+
+                    if (lastVisiblePosition == lastPosition) {
+                        item.infiniteScrollLambdaFunc(item.keyword, 5)
+                    }
+                }
+            })
         }
     }
 
