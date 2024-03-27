@@ -411,10 +411,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // 공지사항 클릭 시 공지사항 화면으로 이동
+    // 알림 버튼 클릭 시 알림 화면으로 이동
     private fun setupNotificationClick() {
         binding.ivNotification.setOnClickListener {
-            // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
             val notificationFragment = NotificationsFragment.newInstance()
             notificationFragment.show(
                 requireActivity().supportFragmentManager, "NotificationFragment"

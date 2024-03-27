@@ -1,7 +1,11 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -16,7 +20,10 @@ import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
-import com.wannabeinseoul.seoulpublicservice.weather.*
+import com.wannabeinseoul.seoulpublicservice.weather.ShortMidMapper
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherMid
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -153,66 +160,64 @@ class HomeViewModel(
     fun updateNotificationSign() {
         if (savedPrefRepository.getFlag().not()) {
             savedPrefRepository.setFlag(true)
-            viewModelScope.launch(Dispatchers.IO) {
-                val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+            val datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
 
-                val savedServiceList = savedPrefRepository.getSvcidList().map {
-                    reservationRepository.getService(it)
-                }
-
-                // 예약 시작까지 하루 남은 서비스의 개수
-                val list = savedServiceList.filter {
-                    datePattern.format(
-                        LocalDateTime.parse(
-                            it.RCPTBGNDT,
-                            formatter
-                        )
-                    ) > datePattern.format(
-                        LocalDateTime.now()
-                    ) && datePattern.format(
-                        LocalDateTime.parse(
-                            it.RCPTBGNDT,
-                            formatter
-                        )
-                    ) < datePattern.format(
-                        LocalDateTime.now().plusDays(2)
-                    )
-                }.size
-
-                // 예약 마감까지 하루 남은 서비스의 개수
-                val list2 = savedServiceList.filter {
-                    datePattern.format(
-                        LocalDateTime.parse(
-                            it.RCPTENDDT,
-                            formatter
-                        )
-                    ) < datePattern.format(
-                        LocalDateTime.now()
-                    ) && datePattern.format(
-                        LocalDateTime.parse(
-                            it.RCPTENDDT,
-                            formatter
-                        )
-                    ) > datePattern.format(
-                        LocalDateTime.now().minusDays(2)
-                    )
-                }.size
-
-                // 예약 가능한 서비스의 개수
-                val list3 = savedServiceList.filter {
-                    datePattern.format(
-                        LocalDateTime.parse(
-                            it.RCPTBGNDT,
-                            formatter
-                        )
-                    ) == datePattern.format(
-                        LocalDateTime.now()
-                    )
-                }.size
-
-                _notificationSign.postValue(list != 0 || list2 != 0 || list3 != 0)
+            val savedServiceList = savedPrefRepository.getSvcidList().map {
+                reservationRepository.getService(it)
             }
+
+            // 예약 시작까지 하루 남은 서비스의 개수
+            val list = savedServiceList.filter {
+                datePattern.format(
+                    LocalDateTime.parse(
+                        it.RCPTBGNDT,
+                        formatter
+                    )
+                ) > datePattern.format(
+                    LocalDateTime.now()
+                ) && datePattern.format(
+                    LocalDateTime.parse(
+                        it.RCPTBGNDT,
+                        formatter
+                    )
+                ) < datePattern.format(
+                    LocalDateTime.now().plusDays(2)
+                )
+            }.size
+
+            // 예약 마감까지 하루 남은 서비스의 개수
+            val list2 = savedServiceList.filter {
+                datePattern.format(
+                    LocalDateTime.parse(
+                        it.RCPTENDDT,
+                        formatter
+                    )
+                ) < datePattern.format(
+                    LocalDateTime.now()
+                ) && datePattern.format(
+                    LocalDateTime.parse(
+                        it.RCPTENDDT,
+                        formatter
+                    )
+                ) > datePattern.format(
+                    LocalDateTime.now().minusDays(2)
+                )
+            }.size
+
+            // 예약 가능한 서비스의 개수
+            val list3 = savedServiceList.filter {
+                datePattern.format(
+                    LocalDateTime.parse(
+                        it.RCPTBGNDT,
+                        formatter
+                    )
+                ) == datePattern.format(
+                    LocalDateTime.now()
+                )
+            }.size
+
+            _notificationSign.value = list != 0 || list2 != 0 || list3 != 0
         }
     }
 
@@ -246,20 +251,6 @@ class HomeViewModel(
                     .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
             try {
-//                val response = kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
-//                    numOfRows = 10,
-//                    pageNo = 1,
-//                    dataType = "JSON",
-//                    regId = "11B00000",
-//                    tmFc = tmFc
-//                )
-//                val responseTemp = tempRepository.getTemp(         // 중기기온
-//                    numOfRows = 10,
-//                    pageNo = 1,
-//                    dataType = "JSON",
-//                    regId = "11B10101",
-//                    tmFc = tmFc
-//                )
                 val response =
                     if (WeatherData.getMid() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
                         kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
