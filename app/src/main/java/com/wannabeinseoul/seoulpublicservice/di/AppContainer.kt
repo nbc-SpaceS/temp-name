@@ -17,6 +17,8 @@ import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepo
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserProfileRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.WeatherDBRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.WeatherDBRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.MidLandFcstApiService
@@ -114,6 +116,7 @@ interface AppContainer {
     val weatherShortRepository: WeatherShortRepository
     val kmaRepository: KmaRepository
     val tempRepository: TempRepository
+    val weatherDBRepository: WeatherDBRepository
 }
 
 class DefaultAppContainer(context: Context) : AppContainer {
@@ -177,6 +180,10 @@ class DefaultAppContainer(context: Context) : AppContainer {
     }
     override val tempRepository: TempRepository by lazy {
         TempRepositoryImpl(retrofitTempService)
+    }
+
+    override val weatherDBRepository: WeatherDBRepository by lazy {
+        WeatherDBRepositoryImpl()
     }
 
     /** ======== UseCase ======== **/
