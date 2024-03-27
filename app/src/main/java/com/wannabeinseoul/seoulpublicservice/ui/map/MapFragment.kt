@@ -250,8 +250,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     if (it.value.size > 1) marker.captionText = it.value.size.toString()
                     marker.setCaptionAligns(Align.Top)
                     marker.captionTextSize = 16f
-                    marker.captionMinZoom = 13.0
-                    marker.captionMaxZoom = 14.8
+                    marker.captionMinZoom = 12.5
+                    marker.captionMaxZoom = 18.0
                     marker.onClickListener = Overlay.OnClickListener { _ ->
                         changeDetailVisible(true)
                         activeMarkers.forEach { marker ->

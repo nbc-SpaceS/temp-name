@@ -75,22 +75,6 @@ class ReviewFragment: BottomSheetDialogFragment() {
 
         rvReviewList.adapter = adapter
 
-        ivReviewSendBtn.setOnClickListener {
-            viewModel.uploadReview(svcId, etReviewInputField.text.toString())
-            setInitialState()
-            rvReviewList.layoutManager?.scrollToPosition(0)
-        }
-
-        etReviewInputField.setOnEditorActionListener { _, action, _ ->
-            if (action == EditorInfo.IME_ACTION_SEARCH) {
-                viewModel.uploadReview(svcId, etReviewInputField.text.toString())
-                setInitialState()
-                rvReviewList.layoutManager?.scrollToPosition(0)
-            }
-
-            false
-        }
-
         dialog?.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
                 dismiss()
@@ -110,6 +94,7 @@ class ReviewFragment: BottomSheetDialogFragment() {
 
         uiState.observe(viewLifecycleOwner) {
             adapter.submitList(it.toList())
+            binding.rvReviewList.smoothScrollToPosition(0)
             binding.tvReviewCount.text = it.size.toString()
             if (it.isNotEmpty()) {
                 binding.tvReviewCount.isVisible = true
@@ -127,14 +112,18 @@ class ReviewFragment: BottomSheetDialogFragment() {
                 binding.etReviewInputField.hint = "후기를 입력해주세요."
                 binding.ivReviewSendBtn.setImageResource(R.drawable.ic_send)
                 binding.ivReviewSendBtn.setOnClickListener {
-                    viewModel.uploadReview(svcId, binding.etReviewInputField.text.toString())
-                    setInitialState()
+                    if (binding.etReviewInputField.text.isNotEmpty()) {
+                        viewModel.uploadReview(svcId, binding.etReviewInputField.text.toString())
+                        setInitialState()
+                    }
                 }
 
                 binding.etReviewInputField.setOnEditorActionListener { _, action, _ ->
                     if (action == EditorInfo.IME_ACTION_SEARCH) {
-                        viewModel.uploadReview(svcId, binding.etReviewInputField.text.toString())
-                        setInitialState()
+                        if (binding.etReviewInputField.text.isNotEmpty()) {
+                            viewModel.uploadReview(svcId, binding.etReviewInputField.text.toString())
+                            setInitialState()
+                        }
                     }
 
                     false
@@ -143,14 +132,18 @@ class ReviewFragment: BottomSheetDialogFragment() {
                 binding.etReviewInputField.hint = "작성한 후기 수정만 가능합니다."
                 binding.ivReviewSendBtn.setImageResource(R.drawable.ic_revise)
                 binding.ivReviewSendBtn.setOnClickListener {
-                    viewModel.reviseReview(svcId, binding.etReviewInputField.text.toString())
-                    setInitialState()
+                    if (binding.etReviewInputField.text.isNotEmpty()) {
+                        viewModel.reviseReview(svcId, binding.etReviewInputField.text.toString())
+                        setInitialState()
+                    }
                 }
 
                 binding.etReviewInputField.setOnEditorActionListener { _, action, _ ->
                     if (action == EditorInfo.IME_ACTION_SEARCH) {
-                        viewModel.reviseReview(svcId, binding.etReviewInputField.text.toString())
-                        setInitialState()
+                        if (binding.etReviewInputField.text.isNotEmpty()) {
+                            viewModel.reviseReview(svcId, binding.etReviewInputField.text.toString())
+                            setInitialState()
+                        }
                     }
 
                     false
