@@ -57,7 +57,7 @@ class KmaRepositoryImpl(
                 WeatherData.getMid()
             }
         val item = body.response?.body?.items?.itemList?.firstOrNull()
-        if(item != null) WeatherData.saveMid(item)
+        if (item != null) WeatherData.saveMid(item)
         return item
     }
 }

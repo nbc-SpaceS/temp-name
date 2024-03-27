@@ -46,8 +46,8 @@ class TempRepositoryImpl(
 //            .apply { Log.w(TAG, "getMidLandFcst body() == null, response: $response") }
 //        return body.response?.body?.items?.item?.firstOrNull()
         val body = response.body()
-            ?: return if(WeatherData.getTmp() == null) {
-                null.apply{
+            ?: return if (WeatherData.getTmp() == null) {
+                null.apply {
                     Log.w(
                         TAG,
                         "getMidLandFcst return if(WeatherData.getMid() == null), response: $response"
@@ -57,7 +57,7 @@ class TempRepositoryImpl(
                 WeatherData.getTmp()
             }
         val item = body.response?.body?.items?.item?.firstOrNull()
-        if(item != null) WeatherData.saveTmp(item)
+        if (item != null) WeatherData.saveTmp(item)
         return item
     }
 }

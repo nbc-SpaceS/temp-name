@@ -51,13 +51,15 @@ class HomeViewModel(
     private var _displaySearchResult: MutableLiveData<List<ReservationEntity>> = MutableLiveData()
     val displaySearchResult: LiveData<List<ReservationEntity>> get() = _displaySearchResult
 
-    private var _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> = MutableLiveData()
+    private var _displaySearchHistory: MutableLiveData<Pair<List<String>, SearchPrefRepository>> =
+        MutableLiveData()
     val displaySearchHistory: LiveData<Pair<List<String>, SearchPrefRepository>> get() = _displaySearchHistory
 
     private val _recentData: MutableLiveData<List<RecentEntity>> = MutableLiveData()
     val recentData: LiveData<List<RecentEntity>> get() = _recentData
 
-    private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> = MutableLiveData()
+    private val _updateViewPagerCategory: MutableLiveData<List<Pair<String, Int>>> =
+        MutableLiveData()
     val updateViewPagerCategory: LiveData<List<Pair<String, Int>>> get() = _updateViewPagerCategory
 
     private val _shortWeather: MutableLiveData<List<WeatherShort>> = MutableLiveData()
@@ -161,22 +163,52 @@ class HomeViewModel(
 
                 // 예약 시작까지 하루 남은 서비스의 개수
                 val list = savedServiceList.filter {
-                    datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) > datePattern.format(
-                        LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) < datePattern.format(
-                        LocalDateTime.now().plusDays(2))
+                    datePattern.format(
+                        LocalDateTime.parse(
+                            it.RCPTBGNDT,
+                            formatter
+                        )
+                    ) > datePattern.format(
+                        LocalDateTime.now()
+                    ) && datePattern.format(
+                        LocalDateTime.parse(
+                            it.RCPTBGNDT,
+                            formatter
+                        )
+                    ) < datePattern.format(
+                        LocalDateTime.now().plusDays(2)
+                    )
                 }.size
 
                 // 예약 마감까지 하루 남은 서비스의 개수
                 val list2 = savedServiceList.filter {
-                    datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) < datePattern.format(
-                        LocalDateTime.now()) && datePattern.format(LocalDateTime.parse(it.RCPTENDDT, formatter)) > datePattern.format(
-                        LocalDateTime.now().minusDays(2))
+                    datePattern.format(
+                        LocalDateTime.parse(
+                            it.RCPTENDDT,
+                            formatter
+                        )
+                    ) < datePattern.format(
+                        LocalDateTime.now()
+                    ) && datePattern.format(
+                        LocalDateTime.parse(
+                            it.RCPTENDDT,
+                            formatter
+                        )
+                    ) > datePattern.format(
+                        LocalDateTime.now().minusDays(2)
+                    )
                 }.size
 
                 // 예약 가능한 서비스의 개수
                 val list3 = savedServiceList.filter {
-                    datePattern.format(LocalDateTime.parse(it.RCPTBGNDT, formatter)) == datePattern.format(
-                        LocalDateTime.now())
+                    datePattern.format(
+                        LocalDateTime.parse(
+                            it.RCPTBGNDT,
+                            formatter
+                        )
+                    ) == datePattern.format(
+                        LocalDateTime.now()
+                    )
                 }.size
 
                 _notificationSign.postValue(list != 0 || list2 != 0 || list3 != 0)
@@ -202,13 +234,16 @@ class HomeViewModel(
 
             val tmFc: String = if (hour < 6) {
                 // 현재 시간이 06시 이전인 경우, 이전 날짜의 18시를 설정
-                now.minusDays(1).withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+                now.minusDays(1).withHour(18).withMinute(0).withSecond(0)
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             } else if (hour < 18) {
                 // 현재 시간이 06시와 18시 사이인 경우, 당일의 06시를 설정
-                now.withHour(6).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+                now.withHour(6).withMinute(0).withSecond(0)
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             } else {
                 // 현재 시간이 18시 이후인 경우, 당일의 18시를 설정
-                now.withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
+                now.withHour(18).withMinute(0).withSecond(0)
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
             try {
 //                val response = kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
@@ -225,29 +260,31 @@ class HomeViewModel(
 //                    regId = "11B10101",
 //                    tmFc = tmFc
 //                )
-                val response = if(WeatherData.getMid() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
-                    kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
-                        numOfRows = 10,
-                        pageNo = 1,
-                        dataType = "JSON",
-                        regId = "11B00000",
-                        tmFc = tmFc
-                    )
-                } else {
-                    WeatherData.getMid()
-                }
-                val responseTemp = if(WeatherData.getTmp() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
-                    tempRepository.getTemp(         // 중기기온
-                        numOfRows = 10,
-                        pageNo = 1,
-                        dataType = "JSON",
-                        regId = "11B10101",
-                        tmFc = tmFc
-                    )
-                } else {
-                    WeatherData.getTmp()
-                }
-                if(response != null && responseTemp != null) {
+                val response =
+                    if (WeatherData.getMid() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                        kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
+                            numOfRows = 10,
+                            pageNo = 1,
+                            dataType = "JSON",
+                            regId = "11B00000",
+                            tmFc = tmFc
+                        )
+                    } else {
+                        WeatherData.getMid()
+                    }
+                val responseTemp =
+                    if (WeatherData.getTmp() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                        tempRepository.getTemp(         // 중기기온
+                            numOfRows = 10,
+                            pageNo = 1,
+                            dataType = "JSON",
+                            regId = "11B10101",
+                            tmFc = tmFc
+                        )
+                    } else {
+                        WeatherData.getTmp()
+                    }
+                if (response != null && responseTemp != null) {
                     Log.i(
                         "This is HomeViewModel",
                         "kma : ${response}\ntemp : $responseTemp"
@@ -260,7 +297,7 @@ class HomeViewModel(
                     throw Exception("else) response != null && responseTemp != null")
                 }
             } catch (e: Throwable) {
-                Log.e("HomeViewModel","fetchWeatherData error", e)
+                Log.e("HomeViewModel", "fetchWeatherData error", e)
                 _weatherData.postValue(emptyList())
             }
         }
@@ -268,7 +305,7 @@ class HomeViewModel(
 
     // 날씨 단기 예보 가져오기
     fun weatherShortData(lat_x: Int, lng_y: Int) {
-        if(lat_x != Int.MAX_VALUE && lng_y != Int.MAX_VALUE) {
+        if (lat_x != Int.MAX_VALUE && lng_y != Int.MAX_VALUE) {
             viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
                 val run = runBlocking(Dispatchers.IO) {
                     val locale = ZoneId.of("Asia/Seoul")
@@ -347,17 +384,84 @@ class HomeViewModel(
         }
     }
 
-    private fun setWeatherShort(dto: Item, temp: com.wannabeinseoul.seoulpublicservice.kma.midTemp.Item) {
+    private fun setWeatherShort(
+        dto: Item,
+        temp: com.wannabeinseoul.seoulpublicservice.kma.midTemp.Item
+    ) {
         val itemList = mutableListOf<WeatherShort>()
         dto.let {
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf3Am ?: "", ((temp.taMax3 ?: 99) + (temp.taMin3 ?: 99))/2, it.rnSt3Am ?: -1)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf4Am ?: "", ((temp.taMax4 ?: 99) + (temp.taMin4 ?: 99))/2, it.rnSt4Am ?: -1)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf5Am ?: "", ((temp.taMax5 ?: 99) + (temp.taMin5 ?: 99))/2, it.rnSt5Am ?: -1)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf6Am ?: "", ((temp.taMax6 ?: 99) + (temp.taMin6 ?: 99))/2, it.rnSt6Am ?: -1)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf7Am ?: "", ((temp.taMax7 ?: 99) + (temp.taMin7 ?: 99))/2, it.rnSt7Am ?: -1)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf8 ?: "", ((temp.taMax8 ?: 99) + (temp.taMin8 ?: 99))/2, it.rnSt8 ?: -1)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf9 ?: "", ((temp.taMax9 ?: 99) + (temp.taMin9 ?: 99))/2, it.rnSt9 ?: -1)))
-            itemList.add(ShortMidMapper.midToShort(WeatherMid(it.wf10 ?: "", ((temp.taMax10 ?: 99) + (temp.taMin10 ?: 99))/2, it.rnSt10 ?: -1)))
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf3Am ?: "",
+                        ((temp.taMax3 ?: 99) + (temp.taMin3 ?: 99)) / 2,
+                        it.rnSt3Am ?: -1
+                    )
+                )
+            )
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf4Am ?: "",
+                        ((temp.taMax4 ?: 99) + (temp.taMin4 ?: 99)) / 2,
+                        it.rnSt4Am ?: -1
+                    )
+                )
+            )
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf5Am ?: "",
+                        ((temp.taMax5 ?: 99) + (temp.taMin5 ?: 99)) / 2,
+                        it.rnSt5Am ?: -1
+                    )
+                )
+            )
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf6Am ?: "",
+                        ((temp.taMax6 ?: 99) + (temp.taMin6 ?: 99)) / 2,
+                        it.rnSt6Am ?: -1
+                    )
+                )
+            )
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf7Am ?: "",
+                        ((temp.taMax7 ?: 99) + (temp.taMin7 ?: 99)) / 2,
+                        it.rnSt7Am ?: -1
+                    )
+                )
+            )
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf8 ?: "",
+                        ((temp.taMax8 ?: 99) + (temp.taMin8 ?: 99)) / 2,
+                        it.rnSt8 ?: -1
+                    )
+                )
+            )
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf9 ?: "",
+                        ((temp.taMax9 ?: 99) + (temp.taMin9 ?: 99)) / 2,
+                        it.rnSt9 ?: -1
+                    )
+                )
+            )
+            itemList.add(
+                ShortMidMapper.midToShort(
+                    WeatherMid(
+                        it.wf10 ?: "",
+                        ((temp.taMax10 ?: 99) + (temp.taMin10 ?: 99)) / 2,
+                        it.rnSt10 ?: -1
+                    )
+                )
+            )
         }
         _weatherData.postValue(itemList)
     }

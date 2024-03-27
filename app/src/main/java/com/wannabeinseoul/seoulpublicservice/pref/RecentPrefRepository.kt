@@ -7,11 +7,11 @@ import com.google.gson.reflect.TypeToken
 import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 
 interface RecentPrefRepository {
-    fun setRecent(value : RecentEntity)
+    fun setRecent(value: RecentEntity)
     fun getRecent(): List<RecentEntity>
 }
 
-class RecentPrefRepositoryImpl(context: Context): RecentPrefRepository {
+class RecentPrefRepositoryImpl(context: Context) : RecentPrefRepository {
     private val pref = context.getSharedPreferences("RecentPrefRepository", Context.MODE_PRIVATE)
     private val gson = Gson()
 
@@ -19,21 +19,24 @@ class RecentPrefRepositoryImpl(context: Context): RecentPrefRepository {
         val editor = pref.edit()
         val temp = mutableListOf<RecentEntity>()
         val recent = getRecent().toMutableList()
-        if(recent.isEmpty()) {
+        if (recent.isEmpty()) {
             temp.add(value)
             editor.putString(value.SVCID, gson.toJson(temp))
             temp.remove(value)
         }
 
         val index = recent.find { it.SVCID == value.SVCID } // 없으면 널인듯
-        Log.i("This is RecentPrefRepository","recent : $recent\nindex : $index")
+        Log.i("This is RecentPrefRepository", "recent : $recent\nindex : $index")
 
-        if(index != null) {
+        if (index != null) {
             recent.remove(index)
         } else {
-            if(recent.size >= 10) {
+            if (recent.size >= 10) {
                 val oldItem = recent.minByOrNull { it.DATETIME }
-                Log.i("This is RecentPrefRepository","oldItem : $oldItem\nrecent size : ${recent.size}\noldDateTime : ${oldItem?.DATETIME}")
+                Log.i(
+                    "This is RecentPrefRepository",
+                    "oldItem : $oldItem\nrecent size : ${recent.size}\noldDateTime : ${oldItem?.DATETIME}"
+                )
                 editor.remove(oldItem!!.SVCID)
             }
         }
@@ -45,11 +48,17 @@ class RecentPrefRepositoryImpl(context: Context): RecentPrefRepository {
 
     override fun getRecent(): List<RecentEntity> {
         val recent = mutableListOf<RecentEntity>()
-        pref.all.forEach{ (_, value) ->
-            Log.i("This is RecentPrefRepository","value : ${value}\nall value size : ${pref.all.values.size}")
+        pref.all.forEach { (_, value) ->
+            Log.i(
+                "This is RecentPrefRepository",
+                "value : ${value}\nall value size : ${pref.all.values.size}"
+            )
             val json = value as String
             json.let {
-                val list = gson.fromJson<List<RecentEntity>>(json, object : TypeToken<List<RecentEntity>>() {}.type)
+                val list = gson.fromJson<List<RecentEntity>>(
+                    json,
+                    object : TypeToken<List<RecentEntity>>() {}.type
+                )
                 recent.addAll(list)
             }
         }

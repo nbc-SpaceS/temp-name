@@ -56,10 +56,15 @@ class WeatherShortRepositoryImpl(
 //            .apply { Log.w(JJTAG, "getShortWeather body() == null, response: $response") }
 //        return body.response?.body?.items?.item ?: emptyList()
         val body = response.body()
-            ?: return if(WeatherData.getShort().isNullOrEmpty()) {
-                emptyList<Item>().apply { Log.w(JJTAG, "getShortWeather body() == null, response: $response") }
+            ?: return if (WeatherData.getShort().isNullOrEmpty()) {
+                emptyList<Item>().apply {
+                    Log.w(
+                        JJTAG,
+                        "getShortWeather body() == null, response: $response"
+                    )
+                }
             } else {
-                WeatherData.getShort()?: emptyList()
+                WeatherData.getShort() ?: emptyList()
             }
         val item = body.response?.body?.items?.item ?: emptyList()
         WeatherData.saveShort(item)

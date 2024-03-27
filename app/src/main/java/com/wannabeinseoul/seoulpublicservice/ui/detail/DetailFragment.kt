@@ -70,7 +70,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         viewModel.savedID(param1!!)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?) = Dialog(requireContext(), R.style.DetailTransparent)
+    override fun onCreateDialog(savedInstanceState: Bundle?) =
+        Dialog(requireContext(), R.style.DetailTransparent)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,7 +93,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         connectToCommentList(requireContext())
     }
 
-    private fun saveRecent(data : ReservationEntity) {
+    private fun saveRecent(data: ReservationEntity) {
         val recentItem = RecentEntity(
             DATETIME = viewModel.dateFormatRecent(LocalDateTime.now()),
             SVCID = data.SVCID,
@@ -104,7 +105,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             PAYATNM = data.PAYATNM
         )
         viewModel.saveData(recentItem)
-        Log.i("This is DetailFragment","recent item : $recentItem")
+        Log.i("This is DetailFragment", "recent item : $recentItem")
     }
 
     private fun mapViewSet() {
@@ -119,8 +120,22 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             showMore(textOpen)
         }
         it.ivDetailFavorite.setOnClickListener { viewModel.changeFavorite(param1!!) }
-        it.btnDetailCall.setOnClickListener { startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${viewModel.serviceData.value?.TELNO}"))) }
-        it.btnDetailReservation.setOnClickListener { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(viewModel.serviceData.value?.SVCURL))) }
+        it.btnDetailCall.setOnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.parse("tel:${viewModel.serviceData.value?.TELNO}")
+                )
+            )
+        }
+        it.btnDetailReservation.setOnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(viewModel.serviceData.value?.SVCURL)
+                )
+            )
+        }
         it.ivDetailShare.setOnClickListener {
             val i = Intent(Intent.ACTION_SEND)
             i.type = "text/html"
@@ -151,7 +166,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             textOpen = it
             showMore(it)
         }
-        vm.closeEvent.observe(viewLifecycleOwner) { close -> if(close) dismiss() }
+        vm.closeEvent.observe(viewLifecycleOwner) { close -> if (close) dismiss() }
         vm.reviewUiState.observe(viewLifecycleOwner) {
             commentAdapter.submitList(it.take(5))
             binding.tvDetailEmptyDescription.isVisible = it.isEmpty()
@@ -172,17 +187,20 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         vm.distanceText.observe(viewLifecycleOwner) { binding.tvDetailDistanceFromHere.text = it }
     }
 
-    private fun bind(data : ReservationEntity) {
+    private fun bind(data: ReservationEntity) {
         buttonDesign(data)
         binding.let {
             it.ivDetailImg.loadWithHolder(data.IMGURL)
             it.tvDetailTypeSmall.text = data.MINCLASSNM
             it.tvDetailName.text = Html.fromHtml(data.SVCNM, Html.FROM_HTML_MODE_LEGACY)
-            it.tvDetailLocation.text = "${data.AREANM} - ${Html.fromHtml(data.PLACENM, Html.FROM_HTML_MODE_LEGACY)}"
+            it.tvDetailLocation.text =
+                "${data.AREANM} - ${Html.fromHtml(data.PLACENM, Html.FROM_HTML_MODE_LEGACY)}"
             it.tvDetailDistanceFromHere.text = "현위치로부터 ?km"
             it.tvDetailUsetgtinfo.text = data.USETGTINFO.trim()
-            it.tvDetailSvcopndt.text = "${viewModel.dateFormat(data.SVCOPNBGNDT)} ~ ${viewModel.dateFormat(data.SVCOPNENDDT)}"
-            it.tvDetailRcptdt.text = "${viewModel.dateFormat(data.RCPTBGNDT)} ~ ${viewModel.dateFormat(data.RCPTENDDT)}"
+            it.tvDetailSvcopndt.text =
+                "${viewModel.dateFormat(data.SVCOPNBGNDT)} ~ ${viewModel.dateFormat(data.SVCOPNENDDT)}"
+            it.tvDetailRcptdt.text =
+                "${viewModel.dateFormat(data.RCPTBGNDT)} ~ ${viewModel.dateFormat(data.RCPTENDDT)}"
             it.tvDetailV.text = "${data.V_MIN} ~ ${data.V_MAX}"
             it.tvDetailRevstdday.text = "${data.REVSTDDAYNM} ${data.REVSTDDAY}일 전"
             it.tvDetailDescription.text = Html.fromHtml(data.DTLCONT, Html.FROM_HTML_MODE_LEGACY)
@@ -205,8 +223,8 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             distanceCheck()  // 어디에 둬야 할지 모르겠어서 여기에 둠
 
             itemLocation
-        } catch (npe:NullPointerException) {
-            Log.e("DetailFragment","Error! : checkLatLng", npe)
+        } catch (npe: NullPointerException) {
+            Log.e("DetailFragment", "Error! : checkLatLng", npe)
             LatLng(100.0, 100.0)
         }
     }
@@ -276,7 +294,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     private fun keyEvent() {
         dialog?.setOnKeyListener { _, keyCode, event ->
-            if(keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
                 snapshotCallback()
                 Handler(Looper.getMainLooper()).postDelayed({
                     dismiss()
@@ -335,17 +353,18 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         mapView.onLowMemory()
     }
 
-    private fun showMore(state : Boolean) {
+    private fun showMore(state: Boolean) {
         val text = binding.tvDetailDescription
         val more = binding.tvDetailShowMore
         val layoutParams = text.layoutParams
         more.let {
-            when(state) {
+            when (state) {
                 true -> {   // 펼쳐진 상태일 때
                     text.maxLines = Int.MAX_VALUE
                     layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                     more.text = "접기..."
                 }
+
                 false -> {  // 접혀있는 상태일 때
                     text.maxLines = 6
                     layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -357,11 +376,12 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun favorite(state: Boolean) {
-        when(state) {
+        when (state) {
             true -> {
                 binding.ivDetailFavorite.setImageResource(R.drawable.ic_save_fill)
                 binding.ivDetailFavorite.drawable.setTint(requireContext().getColor(R.color.point_color))
             }
+
             false -> {
                 binding.ivDetailFavorite.setImageResource(R.drawable.ic_save_empty)
             }
@@ -379,23 +399,27 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
 
     private fun buttonDesign(data: ReservationEntity) {
         val button = binding.btnDetailReservation
-        when(data.SVCSTATNM) {
+        when (data.SVCSTATNM) {
             "접수중" -> {
                 button.text = "예약하기"
                 button.isEnabled = true
             }
+
             "안내중" -> {
                 button.text = "예약안내"
                 button.isEnabled = true
             }
+
             "접수종료" -> {
                 button.text = "접수종료"
                 button.isEnabled = false
             }
+
             "예약일시중지" -> {
                 button.text = "예약일시중지"
                 button.isEnabled = false
             }
+
             "예약마감" -> {
                 button.text = "예약마감"
                 button.isEnabled = false
