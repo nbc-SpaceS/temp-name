@@ -73,9 +73,14 @@ class LoadAndUpdateSeoulDataUseCase(
     private suspend fun getAndUpdateAll() {
         try {
             withTimeout(10_000L) {
+                val startTime = System.currentTimeMillis()
                 val total = seoulPublicRepository.getTotalNum()
                 val reservationEntities =
                     seoulPublicRepository.getAllParallelAsReservationEntities(total)
+                Log.v(
+                    JJTAG,
+                    "getAndUpdateAll ${reservationEntities.size}/$total: ${(System.currentTimeMillis() - startTime).toFloat() / 1000}"
+                )
                 withContext(Dispatchers.Main) {
                     dbMemoryRepository.setAll(reservationEntities)
                 }

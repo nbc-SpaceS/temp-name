@@ -11,7 +11,6 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -35,6 +34,7 @@ import com.wannabeinseoul.seoulpublicservice.databinding.FragmentMapBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.filter.FilterFragment
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
+import com.wannabeinseoul.seoulpublicservice.util.toastShort
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -43,7 +43,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private var naverMap: NaverMap? = null
-//    private lateinit var locationSource: FusedLocationSource
 
     private val app by lazy {
         requireActivity().application as SeoulPublicServiceApplication
@@ -170,8 +169,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.fabMapCurrentLocation.setOnClickListener {
-            val location = app.fusedLocationSource?.lastLocation
-            moveCamera(location?.latitude, location?.longitude)
+            val latLng = app.getLastLatLng()
+            when {
+                latLng == null -> {
+                    toastShort(requireContext(), "현재 위치가 확인되지 않아 시청으로 이동합니다")
+                    moveCameraToCityHall()
+                }
+
+                latLng.inSeoulOrNull() == null -> {
+                    toastShort(requireContext(), "현재 위치가 서울 외부이므로 시청으로 이동합니다")
+                    moveCameraToCityHall()
+                }
+
+                else -> moveCamera(latLng)
+            }
         }
 
         binding.etMapSearch.setOnEditorActionListener { textView, actionId, _ ->
@@ -232,9 +243,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 activeMarkers.clear()
 
                 if (filteringData.value?.size == 0) {
-                    Toast.makeText(requireContext(), "필터링 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                    toastShort(requireContext(), "필터링 결과가 없습니다.")
                 } else {
-                    Toast.makeText(requireContext(), "${filteringData.value?.size}+개의 서비스가 있습니다.", Toast.LENGTH_SHORT).show()
+                    toastShort(requireContext(), "${filteringData.value?.size}+개의 서비스가 있습니다.")
                 }
 
                 filteringData.value?.forEach {
@@ -311,29 +322,30 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map.uiSettings.setLogoMargin(0, 0, 0, 0)
         map.uiSettings.isRotateGesturesEnabled = false
 
-        moveCamera(
-            fusedLocationSource?.lastLocation?.latitude,
-            fusedLocationSource?.lastLocation?.longitude,
-            14.5
-        )
-
-//        map.addOnLocationChangeListener { location ->
-//            app.lastLocation = location
-//        }
+        moveCamera(latLng = null, 14.5)
     }
 
-    private fun moveCamera(y: Double?, x: Double?, zoom: Double = 15.0) {
-        val location = app.fusedLocationSource?.lastLocation
-        val cameraUpdate = CameraUpdate.scrollAndZoomTo(
-            LatLng(
-                y ?: location?.latitude ?: 37.5666,
-                x ?: location?.longitude ?: 126.9782
-            ),
-            zoom
-        ).animate(CameraAnimation.Easing, 600)
+    private val cityHall = LatLng(37.5666, 126.9782)
+    private fun LatLng.inSeoulOrNull() =
+        if (this.latitude in 37.413294..37.715133 &&
+            this.longitude in 126.734086..127.269311
+        ) this else null
 
+    /** null이면 차례대로 파라미터 좌표 -> 현재위치(서울범위) -> 시청 */
+    private fun moveCamera(latLng: LatLng?, zoom: Double = 15.0) {
+        val pos = latLng ?: app.getLastLatLng()?.inSeoulOrNull() ?: cityHall
+        val cameraUpdate = CameraUpdate.scrollAndZoomTo(pos, zoom)
+            .animate(CameraAnimation.Easing, 600)
         naverMap?.moveCamera(cameraUpdate)
     }
+
+    /** null이면 차례대로 파라미터 좌표 -> 현재위치(서울범위) -> 시청 */
+    private fun moveCamera(y: Double?, x: Double?, zoom: Double = 15.0) {
+        val latLng = if (y == null || x == null) null else LatLng(y, x)
+        moveCamera(latLng, zoom)
+    }
+
+    private fun moveCameraToCityHall() = moveCamera(cityHall, 15.0)
 
     private fun changeDetailVisible(flag: Boolean) {
         binding.vpMapDetailInfo.isVisible = flag
