@@ -29,9 +29,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -47,8 +45,10 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherAdapter
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherData
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherSeoulArea
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
+import java.time.LocalDate
 
 class HomeFragment : Fragment() {
 
@@ -577,10 +577,21 @@ class HomeFragment : Fragment() {
     // 단기예보 지역 정보를 기상청 좌표로 변환한 후 API 요청
     private fun weatherDataSend(area: String) { // 단기예보
         val seoul = WeatherSeoulArea().weatherSeoulArea
-        if(seoul.keys.contains(area)) {
-            val seoulWeather = seoul[area]
-            Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
-            homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
+        if(WeatherData.getArea() == null || WeatherData.getArea()!! != area || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+            if (seoul.keys.contains(area)) {
+                WeatherData.saveAreaDate(area, LocalDate.now().dayOfMonth)
+                val seoulWeather = seoul[area]
+                Log.i(
+                    "This is HomeFragment",
+                    "seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first ?: "null"}\nsecond : ${seoulWeather?.second ?: "null"}"
+                )
+                homeViewModel.weatherShortData(
+                    seoulWeather?.first ?: 60,
+                    seoulWeather?.second ?: 127
+                )    // null일 경우 = 서울시청
+            }
+        } else {
+            homeViewModel.weatherShortData(Int.MAX_VALUE, Int.MAX_VALUE)
         }
     }
     private fun weatherAdapter(short: List<WeatherShort>) { // 날씨 어댑터

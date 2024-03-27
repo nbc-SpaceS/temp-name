@@ -16,13 +16,11 @@ import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
-import com.wannabeinseoul.seoulpublicservice.weather.ShortMidMapper
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherMid
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
+import com.wannabeinseoul.seoulpublicservice.weather.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -213,20 +211,42 @@ class HomeViewModel(
                 now.withHour(18).withMinute(0).withSecond(0).format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
             try {
-                val response = kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
-                    numOfRows = 10,
-                    pageNo = 1,
-                    dataType = "JSON",
-                    regId = "11B00000",
-                    tmFc = tmFc
-                )
-                val responseTemp = tempRepository.getTemp(         // 중기기온
-                    numOfRows = 10,
-                    pageNo = 1,
-                    dataType = "JSON",
-                    regId = "11B10101",
-                    tmFc = tmFc
-                )
+//                val response = kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
+//                    numOfRows = 10,
+//                    pageNo = 1,
+//                    dataType = "JSON",
+//                    regId = "11B00000",
+//                    tmFc = tmFc
+//                )
+//                val responseTemp = tempRepository.getTemp(         // 중기기온
+//                    numOfRows = 10,
+//                    pageNo = 1,
+//                    dataType = "JSON",
+//                    regId = "11B10101",
+//                    tmFc = tmFc
+//                )
+                val response = if(WeatherData.getMid() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                    kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
+                        numOfRows = 10,
+                        pageNo = 1,
+                        dataType = "JSON",
+                        regId = "11B00000",
+                        tmFc = tmFc
+                    )
+                } else {
+                    WeatherData.getMid()
+                }
+                val responseTemp = if(WeatherData.getTmp() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                    tempRepository.getTemp(         // 중기기온
+                        numOfRows = 10,
+                        pageNo = 1,
+                        dataType = "JSON",
+                        regId = "11B10101",
+                        tmFc = tmFc
+                    )
+                } else {
+                    WeatherData.getTmp()
+                }
                 if(response != null && responseTemp != null) {
                     Log.i(
                         "This is HomeViewModel",
@@ -248,62 +268,82 @@ class HomeViewModel(
 
     // 날씨 단기 예보 가져오기
     fun weatherShortData(lat_x: Int, lng_y: Int) {
-        viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
-            val run = runBlocking(Dispatchers.IO) {
-                val locale = ZoneId.of("Asia/Seoul")
-                val local = LocalDateTime.now(locale)
-                var y = local.year
-                var m = String.format("%02d",local.monthValue)
-                var d = local.dayOfMonth
-                var h = local.hour
-                Log.i("This is HomeViewModel","m : $m\nd : $d\nh : $h")
-                if (h < 5) {
-                    val yesterday = local.minusDays(1)
-                    d = yesterday.dayOfMonth
-                    h = 17
-                    if (d == 1) {
-                        if (local.month.value == 1) {
-                            m = "12"
-                            val lastYear = local.minusYears(1)
-                            y = lastYear.year
-                            d = lastYear.month.maxLength()
-                        } else {
-                            val lastMonth = yesterday.minusMonths(1)
-                            m = String.format("%02d",lastMonth.monthValue)
-                            d = lastMonth.month.maxLength()
+        if(lat_x != Int.MAX_VALUE && lng_y != Int.MAX_VALUE) {
+            viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
+                val run = runBlocking(Dispatchers.IO) {
+                    val locale = ZoneId.of("Asia/Seoul")
+                    val local = LocalDateTime.now(locale)
+                    var y = local.year
+                    var m = String.format("%02d", local.monthValue)
+                    var d = local.dayOfMonth
+                    var h = local.hour
+                    Log.i("This is HomeViewModel", "m : $m\nd : $d\nh : $h")
+                    if (h < 5) {
+                        val yesterday = local.minusDays(1)
+                        d = yesterday.dayOfMonth
+                        h = 17
+                        if (d == 1) {
+                            if (local.month.value == 1) {
+                                m = "12"
+                                val lastYear = local.minusYears(1)
+                                y = lastYear.year
+                                d = lastYear.month.maxLength()
+                            } else {
+                                val lastMonth = yesterday.minusMonths(1)
+                                m = String.format("%02d", lastMonth.monthValue)
+                                d = lastMonth.month.maxLength()
+                            }
+                        }
+                    } else {
+                        h = 5
+                    }
+                    Log.i("This is HomeViewModel", "m : $m\nh : $h")
+                    val localDate = "$y$m$d"
+                    val localTime = "${String.format("%02d", h)}10"
+                    Log.i(
+                        "This is HomeViewModel",
+                        "localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y"
+                    )
+                    weatherShortRepository.getShortWeather(
+                        1,
+                        1000,
+                        localDate,
+                        localTime,
+                        lat_x,
+                        lng_y
+                    )
+                }
+                run.let {
+                    val itemList = mutableListOf<WeatherShort>()
+                    val items = it
+                    var skyValue: Int? = null
+                    var tmpValue: Int? = null
+                    var popValue: Int? = null
+                    val filtering =
+                        items.filter { it.fcstTime == "0600" && (it.category == "SKY" || it.category == "TMP" || it.category == "POP") }
+                    for (item in filtering) {
+                        if (item.category == "POP") popValue = item.fcstValue?.toIntOrNull() ?: -1
+                        if (item.category == "SKY") skyValue =
+                            item.fcstValue?.toIntOrNull() ?: 4  // null 이면 흐림을 기본값으로
+                        if (item.category == "TMP") tmpValue = item.fcstValue?.toIntOrNull() ?: 99
+                        Log.i(
+                            "This is HomeViewModel",
+                            "skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue"
+                        )
+                        if (skyValue != null && tmpValue != null && popValue != null) {
+                            itemList.add(WeatherShort(skyValue, tmpValue, popValue))
+                            skyValue = null
+                            tmpValue = null
+                            popValue = null
                         }
                     }
-                } else {
-                    h = 5
+                    WeatherData.saveMix(itemList)
+                    Log.i("This is HomeViewModel", "itemList count : ${itemList.count()}")
+                    _shortWeather.postValue(itemList)
                 }
-                Log.i("This is HomeViewModel","m : $m\nh : $h")
-                val localDate = "$y$m$d"
-                val localTime = "${String.format("%02d",h)}10"
-                Log.i("This is HomeViewModel","localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y")
-                weatherShortRepository.getShortWeather(1,1000, localDate, localTime, lat_x, lng_y)
             }
-            run.let {
-                val itemList = mutableListOf<WeatherShort>()
-                val items = it
-                var skyValue: Int? = null
-                var tmpValue: Int? = null
-                var popValue: Int? = null
-                val filtering = items.filter { it.fcstTime == "0600" && (it.category == "SKY" || it.category == "TMP" || it.category == "POP") }
-                for(item in filtering) {
-                    if(item.category == "POP") popValue = item.fcstValue?.toIntOrNull() ?: -1
-                    if(item.category == "SKY") skyValue = item.fcstValue?.toIntOrNull() ?: 4  // null 이면 흐림을 기본값으로
-                    if(item.category == "TMP") tmpValue = item.fcstValue?.toIntOrNull() ?: 99
-                    Log.i("This is HomeViewModel","skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue")
-                    if(skyValue != null && tmpValue != null && popValue != null) {
-                        itemList.add(WeatherShort(skyValue, tmpValue, popValue))
-                        skyValue = null
-                        tmpValue = null
-                        popValue = null
-                    }
-                }
-                Log.i("This is HomeViewModel","itemList count : ${itemList.count()}")
-                _shortWeather.postValue(itemList)
-            }
+        } else {
+            _shortWeather.postValue(WeatherData.getMix())
         }
     }
 
