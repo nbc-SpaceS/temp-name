@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemCategoryBinding
+import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 
 class CategoryAdapter(private val onItemClick: (svcid: String) -> Unit) :
@@ -20,7 +21,7 @@ class CategoryAdapter(private val onItemClick: (svcid: String) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: CategoryData) {
             binding.apply {
-                binding.ivCtImage.load(item.imageUrl)
+                binding.ivCtImage.loadWithHolder(item.imageUrl)
                 binding.tvCtServiceName.text = Html.fromHtml(item.serviceName, Html.FROM_HTML_MODE_LEGACY)
                 binding.tvCategoryItemPlace.text = item.placeName
                 binding.tvCtReservationEnd.text = item.isReservationAvailable

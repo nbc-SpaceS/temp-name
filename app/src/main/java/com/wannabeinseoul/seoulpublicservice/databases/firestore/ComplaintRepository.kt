@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firestore
 
+import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.wannabeinseoul.seoulpublicservice.databases.entity.ComplaintEntity
@@ -14,7 +15,8 @@ class ComplaintRepositoryImpl : ComplaintRepository {
     private val fireStore = Firebase.firestore
 
     override suspend fun addComplaint(content: ComplaintEntity): String {
-        if (!checkComplaintId(content.complaintId.toString())) {
+        if (content.complaintId?.let { checkComplaintId(it) } == false) {
+            fireStore.collection("complaint").document(content.complaintId.toString()).set(hashMapOf("complaintId" to content.complaintId.toString()))
             fireStore.collection("complaint").document(content.complaintId.toString())
                 .collection("detailInfo").document(content.complaintTime.toString()).set(content)
 
@@ -24,7 +26,8 @@ class ComplaintRepositoryImpl : ComplaintRepository {
         }
 
         return if (fireStore.collection("complaint").document(content.complaintId.toString())
-                .collection("detailInfo").whereEqualTo("id", content.id).get().await()
+                .collection("detailInfo").whereEqualTo("complaintId", content.complaintId)
+                .whereEqualTo("id", content.id).get().await()
                 .isEmpty.not()
         ) "이미 신고한 사용자입니다." else ""
     }

@@ -3,5 +3,10 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">openapi.seoul.go.kr</domain>
         <domain includeSubdomains="true">apis.data.go.kr</domain>
+        <domain includeSubdomains="true">yeyak.seoul.go.kr</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/seoul_go_kr" />
+        </trust-anchors>
     </domain-config>
 </network-security-config>
