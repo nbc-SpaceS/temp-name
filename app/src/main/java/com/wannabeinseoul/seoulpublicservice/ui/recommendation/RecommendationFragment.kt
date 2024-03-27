@@ -42,7 +42,6 @@ class RecommendationFragment : Fragment() {
         initViewModel()
     }
 
-
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() = binding.let { b ->
         b.rvScroll.adapter = recommendationAdapter
