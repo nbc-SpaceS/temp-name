@@ -81,7 +81,6 @@ class RecommendationAdapter :
 
     /* 뷰홀더 끝 */
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             MultiView.Type.HORIZONTAL.ordinal -> HorizontalViewHolder(

@@ -72,7 +72,7 @@ class LoadAndUpdateSeoulDataUseCase(
 
     private suspend fun getAndUpdateAll() {
         try {
-            withTimeout(10_000L) {
+            withTimeout(20_000L) {
                 val total = seoulPublicRepository.getTotalNum()
                 val reservationEntities =
                     seoulPublicRepository.getAllParallelAsReservationEntities(total)
