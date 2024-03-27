@@ -13,7 +13,8 @@ import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
-class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : DiffUtil.ItemCallback<WeatherShort>() {
+class WeatherAdapter : ListAdapter<WeatherShort, WeatherAdapter.Holder>(object :
+    DiffUtil.ItemCallback<WeatherShort>() {
     override fun areItemsTheSame(oldItem: WeatherShort, newItem: WeatherShort): Boolean {
         return oldItem == newItem
     }
@@ -23,12 +24,14 @@ class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : 
     }
 }) {
     val today = LocalDate.now()!!
-    inner class Holder(val binding: ItemHomeWeatherBinding): RecyclerView.ViewHolder(binding.root) {
+
+    inner class Holder(val binding: ItemHomeWeatherBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(dto: WeatherShort) {
-            Log.i("This is WeatherAdapter","dto : ${dto.sky}")
+            Log.i("This is WeatherAdapter", "dto : ${dto.sky}")
             binding.ivHomeWeatherIcon.setImageResource(
-                when(dto.sky) {
+                when (dto.sky) {
                     1 -> R.drawable.face_sunny
                     3 -> R.drawable.face_cloudy
                     4 -> {
@@ -38,32 +41,53 @@ class WeatherAdapter: ListAdapter<WeatherShort, WeatherAdapter.Holder>(object : 
                             else -> throw Exception()
                         }
                     }
+
                     else -> throw Exception()
-                })
+                }
+            )
             binding.tvHomeWeatherPop.text = "${dto.pop}%"
             binding.tvHomeWeatherTmp.text = "${dto.tmp} ℃"
         }
+
         fun day(pos: Int) {
             val now = today.plusDays(pos.toLong())
             binding.tvHomeWeatherDay.text = when {
                 now.dayOfMonth == 1 -> {
-                    when(now.monthValue) {
-                        1 -> "${now.year}.${now.monthValue}.${now.dayOfMonth}${now.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREA).replace("요일","")})"
-                        else -> "${now.monthValue}.${now.dayOfMonth}(${now.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREA).replace("요일","")})"
+                    when (now.monthValue) {
+                        1 -> "${now.year}.${now.monthValue}.${now.dayOfMonth}${
+                            now.dayOfWeek.getDisplayName(
+                                TextStyle.FULL,
+                                Locale.KOREA
+                            ).replace("요일", "")
+                        })"
+
+                        else -> "${now.monthValue}.${now.dayOfMonth}(${
+                            now.dayOfWeek.getDisplayName(
+                                TextStyle.FULL,
+                                Locale.KOREA
+                            ).replace("요일", "")
+                        })"
                     }
                 }
-                else -> "${now.dayOfMonth}(${now.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREA).replace("요일","")})"
+
+                else -> "${now.dayOfMonth}(${
+                    now.dayOfWeek.getDisplayName(
+                        TextStyle.FULL,
+                        Locale.KOREA
+                    ).replace("요일", "")
+                })"
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val binding = ItemHomeWeatherBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemHomeWeatherBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return Holder(binding)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        Log.i("This is WeatherAdapter","getItem : ${getItem(position)}")
+        Log.i("This is WeatherAdapter", "getItem : ${getItem(position)}")
         holder.bind(getItem(position))
         holder.day(position)
     }

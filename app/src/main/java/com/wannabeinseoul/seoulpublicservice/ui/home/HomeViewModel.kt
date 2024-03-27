@@ -1,11 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -20,13 +16,11 @@ import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
-import com.wannabeinseoul.seoulpublicservice.weather.ShortMidMapper
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherMid
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
+import com.wannabeinseoul.seoulpublicservice.weather.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -252,20 +246,30 @@ class HomeViewModel(
                     .format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))
             }
             try {
-                val response = kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
-                    numOfRows = 10,
-                    pageNo = 1,
-                    dataType = "JSON",
-                    regId = "11B00000",
-                    tmFc = tmFc
-                )
-                val responseTemp = tempRepository.getTemp(         // 중기기온
-                    numOfRows = 10,
-                    pageNo = 1,
-                    dataType = "JSON",
-                    regId = "11B10101",
-                    tmFc = tmFc
-                )
+                val response =
+                    if (WeatherData.getMid() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                        kmaRepository.getMidLandFcst(      // 중기예보(error = emptyList)
+                            numOfRows = 10,
+                            pageNo = 1,
+                            dataType = "JSON",
+                            regId = "11B00000",
+                            tmFc = tmFc
+                        )
+                    } else {
+                        WeatherData.getMid()
+                    }
+                val responseTemp =
+                    if (WeatherData.getTmp() == null || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                        tempRepository.getTemp(         // 중기기온
+                            numOfRows = 10,
+                            pageNo = 1,
+                            dataType = "JSON",
+                            regId = "11B10101",
+                            tmFc = tmFc
+                        )
+                    } else {
+                        WeatherData.getTmp()
+                    }
                 if (response != null && responseTemp != null) {
                     Log.i(
                         "This is HomeViewModel",
@@ -287,70 +291,82 @@ class HomeViewModel(
 
     // 날씨 단기 예보 가져오기
     fun weatherShortData(lat_x: Int, lng_y: Int) {
-        viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
-            val run = runBlocking(Dispatchers.IO) {
-                val locale = ZoneId.of("Asia/Seoul")
-                val local = LocalDateTime.now(locale)
-                var y = local.year
-                var m = String.format("%02d", local.monthValue)
-                var d = local.dayOfMonth
-                var h = local.hour
-                Log.i("This is HomeViewModel", "m : $m\nd : $d\nh : $h")
-                if (h < 5) {
-                    val yesterday = local.minusDays(1)
-                    d = yesterday.dayOfMonth
-                    h = 17
-                    if (d == 1) {
-                        if (local.month.value == 1) {
-                            m = "12"
-                            val lastYear = local.minusYears(1)
-                            y = lastYear.year
-                            d = lastYear.month.maxLength()
-                        } else {
-                            val lastMonth = yesterday.minusMonths(1)
-                            m = String.format("%02d", lastMonth.monthValue)
-                            d = lastMonth.month.maxLength()
+        if (lat_x != Int.MAX_VALUE && lng_y != Int.MAX_VALUE) {
+            viewModelScope.launch(Dispatchers.IO) { // 여기서부터 실행해야함
+                val run = runBlocking(Dispatchers.IO) {
+                    val locale = ZoneId.of("Asia/Seoul")
+                    val local = LocalDateTime.now(locale)
+                    var y = local.year
+                    var m = String.format("%02d", local.monthValue)
+                    var d = local.dayOfMonth
+                    var h = local.hour
+                    Log.i("This is HomeViewModel", "m : $m\nd : $d\nh : $h")
+                    if (h < 5) {
+                        val yesterday = local.minusDays(1)
+                        d = yesterday.dayOfMonth
+                        h = 17
+                        if (d == 1) {
+                            if (local.month.value == 1) {
+                                m = "12"
+                                val lastYear = local.minusYears(1)
+                                y = lastYear.year
+                                d = lastYear.month.maxLength()
+                            } else {
+                                val lastMonth = yesterday.minusMonths(1)
+                                m = String.format("%02d", lastMonth.monthValue)
+                                d = lastMonth.month.maxLength()
+                            }
                         }
+                    } else {
+                        h = 5
                     }
-                } else {
-                    h = 5
-                }
-                Log.i("This is HomeViewModel", "m : $m\nh : $h")
-                val localDate = "$y$m$d"
-                val localTime = "${String.format("%02d", h)}10"
-                Log.i(
-                    "This is HomeViewModel",
-                    "localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y"
-                )
-                weatherShortRepository.getShortWeather(1, 1000, localDate, localTime, lat_x, lng_y)
-            }
-            run.let {
-                val itemList = mutableListOf<WeatherShort>()
-                val items = it
-                var skyValue: Int? = null
-                var tmpValue: Int? = null
-                var popValue: Int? = null
-                val filtering =
-                    items.filter { it.fcstTime == "0600" && (it.category == "SKY" || it.category == "TMP" || it.category == "POP") }
-                for (item in filtering) {
-                    if (item.category == "POP") popValue = item.fcstValue?.toIntOrNull() ?: -1
-                    if (item.category == "SKY") skyValue =
-                        item.fcstValue?.toIntOrNull() ?: 4  // null 이면 흐림을 기본값으로
-                    if (item.category == "TMP") tmpValue = item.fcstValue?.toIntOrNull() ?: 999
+                    Log.i("This is HomeViewModel", "m : $m\nh : $h")
+                    val localDate = "$y$m$d"
+                    val localTime = "${String.format("%02d", h)}10"
                     Log.i(
                         "This is HomeViewModel",
-                        "skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue"
+                        "localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y"
                     )
-                    if (skyValue != null && tmpValue != null && popValue != null) {
-                        itemList.add(WeatherShort(skyValue, tmpValue, popValue))
-                        skyValue = null
-                        tmpValue = null
-                        popValue = null
-                    }
+                    weatherShortRepository.getShortWeather(
+                        1,
+                        1000,
+                        localDate,
+                        localTime,
+                        lat_x,
+                        lng_y
+                    )
                 }
-                Log.i("This is HomeViewModel", "itemList count : ${itemList.count()}")
-                _shortWeather.postValue(itemList)
+                run.let {
+                    val itemList = mutableListOf<WeatherShort>()
+                    val items = it
+                    var skyValue: Int? = null
+                    var tmpValue: Int? = null
+                    var popValue: Int? = null
+                    val filtering =
+                        items.filter { it.fcstTime == "0600" && (it.category == "SKY" || it.category == "TMP" || it.category == "POP") }
+                    for (item in filtering) {
+                        if (item.category == "POP") popValue = item.fcstValue?.toIntOrNull() ?: -1
+                        if (item.category == "SKY") skyValue =
+                            item.fcstValue?.toIntOrNull() ?: 4  // null 이면 흐림을 기본값으로
+                        if (item.category == "TMP") tmpValue = item.fcstValue?.toIntOrNull() ?: 99
+                        Log.i(
+                            "This is HomeViewModel",
+                            "skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue"
+                        )
+                        if (skyValue != null && tmpValue != null && popValue != null) {
+                            itemList.add(WeatherShort(skyValue, tmpValue, popValue))
+                            skyValue = null
+                            tmpValue = null
+                            popValue = null
+                        }
+                    }
+                    WeatherData.saveMix(itemList)
+                    Log.i("This is HomeViewModel", "itemList count : ${itemList.count()}")
+                    _shortWeather.postValue(itemList)
+                }
             }
+        } else {
+            _shortWeather.postValue(WeatherData.getMix())
         }
     }
 
@@ -364,7 +380,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf3Am ?: "",
-                        ((temp.taMax3 ?: 999) + (temp.taMin3 ?: 999)) / 2,
+                        ((temp.taMax3 ?: 99) + (temp.taMin3 ?: 99)) / 2,
                         it.rnSt3Am ?: -1
                     )
                 )
@@ -373,7 +389,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf4Am ?: "",
-                        ((temp.taMax4 ?: 999) + (temp.taMin4 ?: 999)) / 2,
+                        ((temp.taMax4 ?: 99) + (temp.taMin4 ?: 99)) / 2,
                         it.rnSt4Am ?: -1
                     )
                 )
@@ -382,7 +398,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf5Am ?: "",
-                        ((temp.taMax5 ?: 999) + (temp.taMin5 ?: 999)) / 2,
+                        ((temp.taMax5 ?: 99) + (temp.taMin5 ?: 99)) / 2,
                         it.rnSt5Am ?: -1
                     )
                 )
@@ -391,7 +407,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf6Am ?: "",
-                        ((temp.taMax6 ?: 999) + (temp.taMin6 ?: 999)) / 2,
+                        ((temp.taMax6 ?: 99) + (temp.taMin6 ?: 99)) / 2,
                         it.rnSt6Am ?: -1
                     )
                 )
@@ -400,7 +416,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf7Am ?: "",
-                        ((temp.taMax7 ?: 999) + (temp.taMin7 ?: 999)) / 2,
+                        ((temp.taMax7 ?: 99) + (temp.taMin7 ?: 99)) / 2,
                         it.rnSt7Am ?: -1
                     )
                 )
@@ -409,7 +425,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf8 ?: "",
-                        ((temp.taMax8 ?: 999) + (temp.taMin8 ?: 999)) / 2,
+                        ((temp.taMax8 ?: 99) + (temp.taMin8 ?: 99)) / 2,
                         it.rnSt8 ?: -1
                     )
                 )
@@ -418,7 +434,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf9 ?: "",
-                        ((temp.taMax9 ?: 999) + (temp.taMin9 ?: 999)) / 2,
+                        ((temp.taMax9 ?: 99) + (temp.taMin9 ?: 99)) / 2,
                         it.rnSt9 ?: -1
                     )
                 )
@@ -427,7 +443,7 @@ class HomeViewModel(
                 ShortMidMapper.midToShort(
                     WeatherMid(
                         it.wf10 ?: "",
-                        ((temp.taMax10 ?: 999) + (temp.taMin10 ?: 999)) / 2,
+                        ((temp.taMax10 ?: 99) + (temp.taMin10 ?: 99)) / 2,
                         it.rnSt10 ?: -1
                     )
                 )
