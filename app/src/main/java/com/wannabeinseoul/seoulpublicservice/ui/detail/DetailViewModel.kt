@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -144,10 +145,15 @@ class DetailViewModel(
     }
 
     fun dateFormat(date: String): String {  // 날짜 포맷
-        val datePattern = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
-        val dateTime = LocalDateTime.parse(date, formatter)
-        return datePattern.format(dateTime)
+        return try {
+            val datePattern = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S")
+            val dateTime = LocalDateTime.parse(date, formatter)
+            datePattern.format(dateTime)
+        } catch (dtpe: DateTimeParseException) {
+            Log.e("DetailViewModel","Error! dateFormat", dtpe)
+            date
+        }
     }
 
     // 두 지점 간의 직선 거리를 계산하는 함수
