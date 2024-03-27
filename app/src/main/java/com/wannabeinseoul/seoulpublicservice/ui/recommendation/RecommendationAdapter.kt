@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedBinding
 import com.wannabeinseoul.seoulpublicservice.databinding.RecommendationItemRecommendedTipBinding
-import kotlin.reflect.KSuspendFunction2
 
 class RecommendationAdapter :
     ListAdapter<RecommendationAdapter.MultiView, RecyclerView.ViewHolder>(DiffCallback()) {
