@@ -190,17 +190,25 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
     }
 
     private fun checkLatLng(data: ReservationEntity): LatLng {  // 마커의 위치 처리
-        val x = data.X.toDoubleOrNull()
-        val y = data.Y.toDoubleOrNull()
-        itemLocation = if(x != null && y != null) {
-            LatLng(y.toDouble(), x.toDouble())   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
-        } else {
+        return try {
+            val x = data.X.toDoubleOrNull()
+            val y = data.Y.toDoubleOrNull()
+            itemLocation = if (x != null && y != null) {
+                LatLng(
+                    y.toDouble(),
+                    x.toDouble()
+                )   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
+            } else {
+                LatLng(100.0, 100.0)
+            }
+
+            distanceCheck()  // 어디에 둬야 할지 모르겠어서 여기에 둠
+
+            itemLocation
+        } catch (npe:NullPointerException) {
+            Log.e("DetailFragment","Error! : checkLatLng", npe)
             LatLng(100.0, 100.0)
         }
-
-        distanceCheck()  // 어디에 둬야 할지 모르겠어서 여기에 둠
-
-        return itemLocation
     }
 
     private fun distanceCheck() {
