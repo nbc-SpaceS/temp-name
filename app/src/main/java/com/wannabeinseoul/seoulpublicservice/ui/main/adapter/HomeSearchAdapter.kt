@@ -12,6 +12,7 @@ import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemCategoryBinding
 import com.wannabeinseoul.seoulpublicservice.ui.category.CategoryItemClick
+import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapter<HomeSearchAdapter.ViewHolder>() {
 
@@ -32,7 +33,7 @@ class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapt
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         // ivImage에 coil 라이브러리를 사용하여 이미지 로드
-        holder.ivImage.load(item.IMGURL)
+        holder.ivImage.loadWithHolder(item.IMGURL)
         holder.tvServiceName.text = Html.fromHtml(item.SVCNM, Html.FROM_HTML_MODE_LEGACY)
         holder.tvPlaceName.text = item.PLACENM
         holder.tvIsFree.text = item.PAYATNM.take(2)
