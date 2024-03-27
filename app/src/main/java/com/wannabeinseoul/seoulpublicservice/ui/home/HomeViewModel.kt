@@ -8,6 +8,7 @@ import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.WeatherDBRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.Item
 import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepository
@@ -34,7 +35,8 @@ class HomeViewModel(
     private val recentPrefRepository: RecentPrefRepository,
     private val weatherShortRepository: WeatherShortRepository,
     private val kmaRepository: KmaRepository,
-    private val tempRepository: TempRepository
+    private val tempRepository: TempRepository,
+    private val weatherDBRepository: WeatherDBRepository
 ) : ViewModel() {
 
     private var selectedRegions: List<String> = emptyList()
@@ -67,6 +69,9 @@ class HomeViewModel(
 
     private val _weatherData: MutableLiveData<List<WeatherShort>> = MutableLiveData()
     val weatherData: LiveData<List<WeatherShort>> get() = _weatherData
+
+    private val _mediatorLiveData: MutableLiveData<List<WeatherShort>> = MutableLiveData()
+    val mediatorLiveData: LiveData<List<WeatherShort>> get() = _mediatorLiveData
 
     // 검색 결과를 지우는 메소드
     fun clearSearchResult() {
@@ -289,6 +294,16 @@ class HomeViewModel(
         }
     }
 
+    suspend fun checkWeatherFromDB(region: String): List<WeatherShort>? = weatherDBRepository.getWeather(region)
+    suspend fun setWeatherToDB(list: List<WeatherShort>) {
+        weatherDBRepository.setWeather(regionPrefRepository.loadSelectedRegion(), list)
+    }
+    suspend fun getWeatherUpdateTimeFromDB(region: String): Long? = weatherDBRepository.getUpdateTime(region)
+
+    fun setMediatorLiveData(list: List<WeatherShort>) {
+        _mediatorLiveData.postValue(list)
+    }
+
     // 날씨 단기 예보 가져오기
     fun weatherShortData(lat_x: Int, lng_y: Int) {
         if (lat_x != Int.MAX_VALUE && lng_y != Int.MAX_VALUE) {
@@ -467,7 +482,8 @@ class HomeViewModel(
                     recentPrefRepository = container.recentPrefRepository,
                     kmaRepository = container.kmaRepository,
                     weatherShortRepository = container.weatherShortRepository,
-                    tempRepository = container.tempRepository
+                    tempRepository = container.tempRepository,
+                    weatherDBRepository = container.weatherDBRepository
                 )
             }
         }

@@ -48,6 +48,9 @@ import com.wannabeinseoul.seoulpublicservice.weather.WeatherAdapter
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherData
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherSeoulArea
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class HomeFragment : Fragment() {
@@ -67,9 +70,6 @@ class HomeFragment : Fragment() {
             homeViewModel.setupRegions()
         }
     }
-
-    val mediatorLiveData = MutableLiveData <List<WeatherShort>>()
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -237,7 +237,7 @@ class HomeFragment : Fragment() {
                     val weatherDataList = weatherData.value
                     if (!it.isNullOrEmpty() && !weatherDataList.isNullOrEmpty()) {
                         val combinedData = it + weatherDataList
-                        mediatorLiveData.value = combinedData
+                        setMediatorLiveData(combinedData)
                     }
                 }
             }
@@ -246,18 +246,21 @@ class HomeFragment : Fragment() {
                     val shortWeatherList = shortWeather.value
                     if (!weatherData.isNullOrEmpty() && !shortWeatherList.isNullOrEmpty()) {
                         val combinedData = shortWeatherList + weatherData
-                        mediatorLiveData.value = combinedData
+                        setMediatorLiveData(combinedData)
                     }
                 }
             }
             mediatorLiveData.observe(viewLifecycleOwner) {
                 if(it.isNotEmpty()) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        homeViewModel.setWeatherToDB(it)
+                    }
+                    Log.d("dkj3", "${it}")
                     weatherAdapter(it)
                     binding.tvHomeWeatherForecast.isVisible = true
                     binding.tvHomeWeatherForecastDescription.isVisible = true
                 }
             }
-            fetchWeatherData()
         }
     }
 
@@ -575,22 +578,33 @@ class HomeFragment : Fragment() {
 
     // 단기예보 지역 정보를 기상청 좌표로 변환한 후 API 요청
     private fun weatherDataSend(area: String) { // 단기예보
-        val seoul = WeatherSeoulArea().weatherSeoulArea
-        if(WeatherData.getArea() == null || WeatherData.getArea()!! != area || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
-            if (seoul.keys.contains(area)) {
-                WeatherData.saveAreaDate(area, LocalDate.now().dayOfMonth)
-                val seoulWeather = seoul[area]
-                Log.i(
-                    "This is HomeFragment",
-                    "seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first ?: "null"}\nsecond : ${seoulWeather?.second ?: "null"}"
-                )
-                homeViewModel.weatherShortData(
-                    seoulWeather?.first ?: 60,
-                    seoulWeather?.second ?: 127
-                )    // null일 경우 = 서울시청
+        CoroutineScope(Dispatchers.IO).launch {
+            val weatherList = homeViewModel.checkWeatherFromDB(area)
+            val updateTime = homeViewModel.getWeatherUpdateTimeFromDB(area)
+            if (weatherList == null || updateTime == null || System.currentTimeMillis() - updateTime >= 3600000) {
+                homeViewModel.fetchWeatherData()
+                val seoul = WeatherSeoulArea().weatherSeoulArea
+                if(WeatherData.getArea() == null || WeatherData.getArea()!! != area || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                    if (seoul.keys.contains(area)) {
+                        WeatherData.saveAreaDate(area, LocalDate.now().dayOfMonth)
+                        val seoulWeather = seoul[area]
+                        Log.i(
+                            "This is HomeFragment",
+                            "seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first ?: "null"}\nsecond : ${seoulWeather?.second ?: "null"}"
+                        )
+                        homeViewModel.weatherShortData(
+                            seoulWeather?.first ?: 60,
+                            seoulWeather?.second ?: 127
+                        )    // null일 경우 = 서울시청
+                    }
+                } else {
+                    homeViewModel.weatherShortData(Int.MAX_VALUE, Int.MAX_VALUE)
+                }
+                Log.d("dkj2", "API 통신 실행")
+            } else {
+                homeViewModel.setMediatorLiveData(weatherList)
+                Log.d("dkj1", "서버에서 데이터 가져옴")
             }
-        } else {
-            homeViewModel.weatherShortData(Int.MAX_VALUE, Int.MAX_VALUE)
         }
     }
     private fun weatherAdapter(short: List<WeatherShort>) { // 날씨 어댑터
