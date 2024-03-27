@@ -165,8 +165,10 @@ class RecommendationViewModel(
                         )
                     }
 
-                dataList = recommendationHorizontalDataList
-                _horizontalDataList.postValue(horizontalDataList.value.orEmpty().toMutableList().subList(0, 4) + recommendationHorizontalDataList)
+                val updateDate = horizontalDataList.value.orEmpty().toMutableList()
+                    .subList(0, 4) + recommendationHorizontalDataList
+                dataList = updateDate
+                _horizontalDataList.postValue(updateDate)
                 isLoading.postValue(false)
             }
         }

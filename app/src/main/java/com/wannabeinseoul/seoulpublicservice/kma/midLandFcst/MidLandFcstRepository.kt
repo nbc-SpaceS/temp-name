@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
 import android.util.Log
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherData
 
 private const val TAG = "KmaRepository"
 
@@ -41,8 +42,22 @@ class KmaRepositoryImpl(
             )
             return null
         }
-        val body = response.body() ?: return null
-            .apply { Log.w(TAG, "getMidLandFcst body() == null, response: $response") }
-        return body.response?.body?.items?.itemList?.firstOrNull()
+//        val body = response.body() ?: return null.apply { Log.w(TAG, "getMidLandFcst body() == null, response: $response") }
+//        val item = body.response?.body?.items?.itemList?.firstOrNull()
+//        return item
+        val body = response.body()
+            ?: return if (WeatherData.getMid() == null) {
+                null.apply {
+                    Log.w(
+                        TAG,
+                        "getMidLandFcst return if(WeatherData.getMid() == null), response: $response"
+                    )
+                }
+            } else {
+                WeatherData.getMid()
+            }
+        val item = body.response?.body?.items?.itemList?.firstOrNull()
+        if (item != null) WeatherData.saveMid(item)
+        return item
     }
 }
