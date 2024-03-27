@@ -93,8 +93,9 @@ class ReviewFragment: BottomSheetDialogFragment() {
         checkWritableUser(svcId)
 
         uiState.observe(viewLifecycleOwner) {
-            adapter.submitList(it.toList())
-            binding.rvReviewList.smoothScrollToPosition(0)
+            adapter.submitList(it.toList()) {
+                binding.rvReviewList.smoothScrollToPosition(0)
+            }
             binding.tvReviewCount.text = it.size.toString()
             if (it.isNotEmpty()) {
                 binding.tvReviewCount.isVisible = true
