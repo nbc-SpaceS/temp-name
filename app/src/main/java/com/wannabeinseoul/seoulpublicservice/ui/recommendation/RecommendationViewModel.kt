@@ -1,5 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,7 @@ import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 
 
@@ -37,6 +39,9 @@ class RecommendationViewModel(
             return emptyList()
         }
     }
+
+    private var isFirst: Boolean = true
+    private var dataList = listOf<RecommendationHorizontalData>()
 
     private val _horizontalDataList = MutableLiveData<List<RecommendationHorizontalData>>()
     val horizontalDataList: LiveData<List<RecommendationHorizontalData>> get() = _horizontalDataList
@@ -79,32 +84,16 @@ class RecommendationViewModel(
                     )
                 }
 
+            dataList = recommendationHorizontalDataList
             _horizontalDataList.postValue(recommendationHorizontalDataList)
             isLoading.postValue(false)
+            isFirst = false
         }
     }
 
-//    fun loadMoreItems(query: String) {
-//        // 추가 아이템을 가져오는 비동기 작업을 수행
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val newItems =
-//                reservationRepository.searchText(query).shuffled().take(5) // 20개의 새로운 아이템을 가져옴
-//
-//            // 가져온 아이템을 기존 아이템 리스트에 추가
-//            val currentItems = adapter.currentList.toMutableList()
-//            currentItems.addAll(newItems)
-//
-//            // UI 업데이트를 메인 스레드에서 수행
-//            withContext(Dispatchers.Main) {
-//                adapter.submitList(currentItems)
-//                isLoading.postValue(false)
-//            }
-//        }
-//    }
-
     private suspend fun getQuery(query: String): List<RecommendationData> {
         val reservationEntities =
-            reservationRepository.searchText(query).take(20).shuffled().take(5)
+            reservationRepository.searchText(query).take(5)
         val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
         return List(reservationEntities.size) {
             RecommendationData(
@@ -121,10 +110,93 @@ class RecommendationViewModel(
         }
     }
 
+    suspend fun getAdditionalQuery(query: String, num: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val searchText = reservationRepository.searchText(query)
+
+            if (searchText.size >= num) {
+                val reservationEntities =
+                    searchText.slice(num - 5 until num)
+                val counts =
+                    serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
+
+                val list = dataList.find { it.keyword == query }?.list ?: emptyList()
+
+                multiViews.value?.map { view ->
+                    if (view is RecommendationAdapter.MultiView.Horizontal) {
+                        if (view.keyword == query) {
+                            view.apply {
+                                val list2 = List(reservationEntities.size) {
+                                    RecommendationData(
+                                        payType = reservationEntities[it].PAYATNM,
+                                        areaName = reservationEntities[it].AREANM,
+                                        placeName = reservationEntities[it].PLACENM,
+                                        svcstatnm = reservationEntities[it].SVCSTATNM,
+                                        imageUrl = reservationEntities[it].IMGURL,
+                                        svcid = reservationEntities[it].SVCID,
+                                        usetgtinfo = reservationEntities[it].USETGTINFO,
+                                        reviewCount = counts[it],
+                                        serviceName = reservationEntities[it].SVCNM,
+                                    )
+                                }
+                                adapter.submitList(list + list2)
+
+                                dataList = dataList.map { data ->
+                                    if (data.keyword == query) {
+                                        data.copy(list = data.list + list2)
+                                    } else {
+                                        data
+                                    }
+                                }
+                            }
+                        } else {
+                            view
+                        }
+                    } else {
+                        view
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun fetchRegionList() {
+        if (!isFirst) {
+            isLoading.postValue(true) // 로딩 상태로 초기화
+
+            viewModelScope.launch(Dispatchers.IO) {
+                val selectedRegions = regionPrefRepository.load() // 선택한 모든 지역을 가져옴
+
+                val regionItems = mutableListOf<Pair<String, String>>()
+
+                // 두 번째 초기화 로직: 다중 선택한 지역에 대한 로직
+                selectedRegions.forEach { region ->
+                    val regionInfo = region + "에 관한 서비스"
+                    regionItems.add(Pair(region, regionInfo))
+                }
+
+                val queryResults = regionItems.map { async { getQuery(it.first) } }.awaitAll()
+                val recommendationHorizontalDataList =
+                    queryResults.mapIndexed { index, recommendationDataList ->
+                        RecommendationHorizontalData(
+                            regionItems[index].first,
+                            regionItems[index].second,
+                            recommendationDataList
+                        )
+                    }
+
+                dataList = recommendationHorizontalDataList
+                _horizontalDataList.postValue(horizontalDataList.value.orEmpty().toMutableList().subList(0, 4) + recommendationHorizontalDataList)
+                isLoading.postValue(false)
+            }
+        }
+    }
+
     companion object {
         val factory = viewModelFactory {
             initializer {
-                val container = (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
+                val container =
+                    (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
                 RecommendationViewModel(
                     recommendPrefRepository = container.recommendPrefRepository,
                     seoulPublicRepository = container.seoulPublicRepository,
