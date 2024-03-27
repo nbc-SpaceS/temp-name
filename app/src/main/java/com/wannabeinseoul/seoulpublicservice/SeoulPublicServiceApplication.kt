@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import coil.imageLoader
 import coil.request.ImageRequest
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.util.FusedLocationSource
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.di.AppContainer
@@ -27,6 +28,7 @@ class SeoulPublicServiceApplication : Application() {
     val initialLoadingFinished: LiveData<Boolean> get() = _initialLoadingFinished
 
     var fusedLocationSource: FusedLocationSource? = null
+    fun getLastLatLng() = fusedLocationSource?.lastLocation?.let { LatLng(it) }
 
     // TODO: 일단 그냥 public으로 씀
     var userName: MutableLiveData<String?> = MutableLiveData()
