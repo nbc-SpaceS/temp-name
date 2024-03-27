@@ -1,11 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
@@ -20,10 +16,7 @@ import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
-import com.wannabeinseoul.seoulpublicservice.weather.ShortMidMapper
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherMid
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
+import com.wannabeinseoul.seoulpublicservice.weather.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
