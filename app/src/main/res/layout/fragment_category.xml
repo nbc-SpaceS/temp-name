@@ -107,7 +107,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/md_category"
         android:layout_width="0dp"
@@ -145,7 +144,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/md_category"
         tools:listitem="@layout/item_category" />
-
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_recent_floating"

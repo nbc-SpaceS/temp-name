@@ -2,7 +2,6 @@ package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +9,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 class RecommendationFragment : Fragment() {
 
@@ -28,7 +23,6 @@ class RecommendationFragment : Fragment() {
 
     private val showDetailFragment: (RecommendationData) -> Unit =
         { recommendationData: RecommendationData ->
-            // RecommendationData에서 svcid를 추출하여 사용
             DetailFragment.newInstance(recommendationData.svcid)
                 .show(requireActivity().supportFragmentManager, "Detail")
         }
@@ -48,13 +42,17 @@ class RecommendationFragment : Fragment() {
         initViewModel()
     }
 
-
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() = binding.let { b ->
-        b.reScroll.adapter = recommendationAdapter
-        b.reScroll.itemAnimator = null
-        b.reScroll.layoutManager = LinearLayoutManager(requireContext())
+        b.rvScroll.adapter = recommendationAdapter
+        b.rvScroll.itemAnimator = null
+        b.rvScroll.layoutManager = LinearLayoutManager(requireContext())
         b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
+        b.ivRefreshButton.setOnClickListener {
+            binding.clRecommendationLoadingLayer.isVisible = true
+            onRefreshButtonClick(it)
+        }
+
     }
 
     private val tipsMap = mapOf(
@@ -141,6 +139,10 @@ class RecommendationFragment : Fragment() {
                 binding.clRecommendationLoadingLayer.isVisible = false
             }
         }
+    }
+
+    private fun onRefreshButtonClick(view: View) {
+        viewModel.refreshData()
     }
 
     override fun onResume() {
