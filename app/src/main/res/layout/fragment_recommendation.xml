@@ -47,10 +47,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/iv_recommendation_logo"
             app:layout_constraintTop_toBottomOf="@id/iv_recommendation_logo" />
+
+        <ImageView
+            android:id="@+id/iv_refresh_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="25dp"
+            android:src="@drawable/ic_revise"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_scroll"
+        android:id="@+id/rv_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="0dp"
@@ -74,6 +85,4 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
