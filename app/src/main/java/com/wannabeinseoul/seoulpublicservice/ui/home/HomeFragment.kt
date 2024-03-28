@@ -28,7 +28,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -83,9 +82,9 @@ class HomeFragment : Fragment() {
         setupUIComponents()
     }
 
-    override fun onStop() {
-        homeViewModel.clearSearchResult()
-        super.onStop()
+    override fun onPause() {
+
+        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -160,11 +159,6 @@ class HomeFragment : Fragment() {
 
                         // 검색을 수행할 때 cl_home_region_list를 숨김
                         clHomeRegionList.isVisible = false
-
-                        // tv_service_list, tab_layout, view_pager를 숨김
-                        tvServiceList.visibility = View.GONE
-                        tabLayout.visibility = View.GONE
-                        viewPager.visibility = View.GONE
 
                         // 검색 결과를 표시하는 RecyclerView를 보이게 함
                         rvSearchResults.visibility = View.VISIBLE
@@ -618,6 +612,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         homeViewModel.loadRecentData()
-        setupRecentData()
+        binding.etSearch.setText("")
+        binding.rvSearchResults.isVisible = false
     }
 }

@@ -393,7 +393,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onPause() {
         super.onPause()
         binding.etMapSearch.setText("")
-        viewModel.offStart()
         mapView.onPause()
     }
 
