@@ -55,7 +55,7 @@ class RecommendationViewModel(
 
             // 랜덤으로 두 개의 서비스 항목 선택
             val randomSelectedItems = listOf(
-                Pair("교육", "교육강좌와 관련된 서비스"),
+                Pair("댄스", "댄스와 관련된 서비스"),
                 Pair("체육시설", "체육시설에 관한 서비스"),
                 Pair("문화체험", "문화체험에 관한 서비스"),
                 Pair("시설대관", "공간시설과 관한 서비스"),
@@ -88,6 +88,7 @@ class RecommendationViewModel(
             isFirst = false
         }
     }
+
     private suspend fun getQuery(query: String): List<RecommendationData> {
         val reservationEntities = reservationRepository.searchText(query).take(5)
         val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })

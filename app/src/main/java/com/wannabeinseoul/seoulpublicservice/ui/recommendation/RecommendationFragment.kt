@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
@@ -34,13 +35,15 @@ class RecommendationFragment : Fragment() {
     ): View {
         binding = FragmentRecommendationBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initViewModel()
+        binding.ivRefreshButton.setOnClickListener {
+            onRefreshButtonClick(it)
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -49,6 +52,7 @@ class RecommendationFragment : Fragment() {
         b.rvScroll.itemAnimator = null
         b.rvScroll.layoutManager = LinearLayoutManager(requireContext())
         b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
+
     }
 
     private val tipsMap = mapOf(
@@ -136,9 +140,11 @@ class RecommendationFragment : Fragment() {
             }
         }
     }
-    fun onRefreshButtonClick(view: View) {
+
+    private fun onRefreshButtonClick(view: View) {
         viewModel.refreshData()
     }
+
     override fun onResume() {
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.fetchRegionList()
