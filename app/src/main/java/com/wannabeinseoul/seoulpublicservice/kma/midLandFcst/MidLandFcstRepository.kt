@@ -1,12 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
 import android.util.Log
-import retrofit2.HttpException
-import retrofit2.Response
-import java.io.IOException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
-import javax.net.ssl.SSLHandshakeException
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherData
+
+private const val TAG = "KmaRepository"
 
 interface KmaRepository {
     suspend fun getMidLandFcst(
@@ -15,7 +12,7 @@ interface KmaRepository {
         dataType: String,
         regId: String,
         tmFc: String
-    ): Response<KmaMidLandFcstDto>?
+    ): Item?
 }
 
 class KmaRepositoryImpl(
@@ -27,8 +24,8 @@ class KmaRepositoryImpl(
         dataType: String,
         regId: String,
         tmFc: String
-    ): Response<KmaMidLandFcstDto>? {
-        return try {
+    ): Item? {
+        val response = try {
             midLandFcstApiService.getMidLandFcst(
                 numOfRows = numOfRows,
                 pageNo = pageNo,
@@ -36,26 +33,31 @@ class KmaRepositoryImpl(
                 regId = regId,
                 tmFc = tmFc
             )
-        } catch (e: IOException) {
-            Log.e("This is MidLandFcstRepository", "Network error! : KmaRepositoryImpl", e)
-            throw NetworkException("Network error!", e)
-        } catch (e: HttpException) {
-            Log.e("This is MidLandFcstRepository", "HTTP request error! : KmaRepositoryImpl", e)
-            throw NetworkException("HTTP request error!", e)
-        } catch (e: SocketTimeoutException) {
-            Log.e("This is MidLandFcstRepository", "Network timeout! : KmaRepositoryImpl", e)
-            throw NetworkException("Network timeout!", e)
-        } catch (e: UnknownHostException) {
-            Log.e("This is MidLandFcstRepository", "Unknown host! : KmaRepositoryImpl", e)
-            throw NetworkException("Unknown host!", e)
-        } catch (e: SSLHandshakeException) {
-            Log.e("This is MidLandFcstRepository", "SSL error! : KmaRepositoryImpl", e)
-            throw NetworkException("SSL error!", e)
-        } catch (e: Exception) {
-            Log.e("This is MidLandFcstRepository", "Unexpected error! : KmaRepositoryImpl", e)
-            throw NetworkException("Unexpected error!", e)
+        } catch (e: Throwable) {
+            Log.e(
+                TAG,
+                "getMidLandFcst error. numOfRows:$numOfRows, pageNo:$pageNo" +
+                        ", dataType:$dataType, regId:$regId, tmFc:$tmFc",
+                e
+            )
+            return null
         }
+//        val body = response.body() ?: return null.apply { Log.w(TAG, "getMidLandFcst body() == null, response: $response") }
+//        val item = body.response?.body?.items?.itemList?.firstOrNull()
+//        return item
+        val body = response.body()
+            ?: return if (WeatherData.getMid() == null) {
+                null.apply {
+                    Log.w(
+                        TAG,
+                        "getMidLandFcst return if(WeatherData.getMid() == null), response: $response"
+                    )
+                }
+            } else {
+                WeatherData.getMid()
+            }
+        val item = body.response?.body?.items?.itemList?.firstOrNull()
+        if (item != null) WeatherData.saveMid(item)
+        return item
     }
 }
-
-class NetworkException(message: String, cause: Throwable) : Exception(message, cause)

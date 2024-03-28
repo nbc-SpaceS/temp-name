@@ -1,9 +1,9 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
-data class MidTemp(
-    val response: Response? = null
+data class MidTempDTO(
+    val response: MidTempDTOResponse? = null
 )
-data class Response(
+data class MidTempDTOResponse(
     val body: Body? = null,
     val header: Header? = null
 )

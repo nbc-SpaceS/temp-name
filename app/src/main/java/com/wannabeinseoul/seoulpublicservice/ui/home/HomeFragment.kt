@@ -28,10 +28,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -47,8 +44,13 @@ import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.HomeSearchAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.main.adapter.SearchHistoryAdapter
 import com.wannabeinseoul.seoulpublicservice.ui.notifications.NotificationsFragment
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherAdapter
+import com.wannabeinseoul.seoulpublicservice.weather.WeatherData
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherSeoulArea
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class HomeFragment : Fragment() {
 
@@ -60,16 +62,12 @@ class HomeFragment : Fragment() {
 
     private var backPressedOnce = false
 
-    private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
+    private var resultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             homeViewModel.setupRegions()
         }
     }
-
-    val mediatorLiveData = MutableLiveData <List<WeatherShort>>()
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -81,11 +79,6 @@ class HomeFragment : Fragment() {
 
         initViewModel()
         setupUIComponents()
-    }
-
-    override fun onStop() {
-        homeViewModel.clearSearchResult()
-        super.onStop()
     }
 
     override fun onDestroyView() {
@@ -161,11 +154,6 @@ class HomeFragment : Fragment() {
                         // 검색을 수행할 때 cl_home_region_list를 숨김
                         clHomeRegionList.isVisible = false
 
-                        // tv_service_list, tab_layout, view_pager를 숨김
-                        tvServiceList.visibility = View.GONE
-                        tabLayout.visibility = View.GONE
-                        viewPager.visibility = View.GONE
-
                         // 검색 결과를 표시하는 RecyclerView를 보이게 함
                         rvSearchResults.visibility = View.VISIBLE
 
@@ -185,10 +173,7 @@ class HomeFragment : Fragment() {
                 with(binding) {
                     if (searchHistory.first.isNotEmpty()) {
                         // 검색어를 SearchHistoryAdapter에 전달하여 RecyclerView에 표시
-                        val adapter = SearchHistoryAdapter(
-                            searchHistory.first.toMutableList(),
-                            searchHistory.second
-                        ).apply {
+                        val adapter = SearchHistoryAdapter(searchHistory.first.toMutableList(), searchHistory.second).apply {
                             onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
                                 override fun onItemClick(item: String) {
                                     etSearch.setText(item)
@@ -233,31 +218,34 @@ class HomeFragment : Fragment() {
                 recentViewPager(it)
             }
             shortWeather.observe(viewLifecycleOwner) {      // 단기예보
-                if(!weatherData.value.isNullOrEmpty()) {
+                if (!weatherData.value.isNullOrEmpty()) {
                     val weatherDataList = weatherData.value
                     if (!it.isNullOrEmpty() && !weatherDataList.isNullOrEmpty()) {
                         val combinedData = it + weatherDataList
-                        mediatorLiveData.value = combinedData
+                        setMediatorLiveData(combinedData)
                     }
                 }
             }
             weatherData.observe(viewLifecycleOwner) { weatherData ->        // 중기예보(기온 포함됨)
-                if(!shortWeather.value.isNullOrEmpty()) {
+                if (!shortWeather.value.isNullOrEmpty()) {
                     val shortWeatherList = shortWeather.value
                     if (!weatherData.isNullOrEmpty() && !shortWeatherList.isNullOrEmpty()) {
                         val combinedData = shortWeatherList + weatherData
-                        mediatorLiveData.value = combinedData
+                        setMediatorLiveData(combinedData)
                     }
                 }
             }
             mediatorLiveData.observe(viewLifecycleOwner) {
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        homeViewModel.setWeatherToDB(it)
+                    }
+                    Log.d("dkj3", "${it}")
                     weatherAdapter(it)
                     binding.tvHomeWeatherForecast.isVisible = true
                     binding.tvHomeWeatherForecastDescription.isVisible = true
                 }
             }
-            fetchWeatherData()
         }
     }
 
@@ -328,8 +316,7 @@ class HomeFragment : Fragment() {
                         requireActivity().finish()
                     } else {
                         backPressedOnce = true
-                        Toast.makeText(requireContext(), "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
 
                         Handler(Looper.getMainLooper()).postDelayed({
                             backPressedOnce = false
@@ -383,8 +370,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
             toggleRegionListVisibility()
@@ -411,14 +396,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // 공지사항 클릭 시 공지사항 화면으로 이동
+    // 알림 버튼 클릭 시 알림 화면으로 이동
     private fun setupNotificationClick() {
         binding.ivNotification.setOnClickListener {
-            // 공지사항 화면으로 이동하는 코드를 여기에 작성하세요.
             val notificationFragment = NotificationsFragment.newInstance()
-            notificationFragment.show(
-                requireActivity().supportFragmentManager, "NotificationFragment"
-            )
+            notificationFragment.show(requireActivity().supportFragmentManager, "NotificationFragment")
             homeViewModel.hideNotificationSign()
         }
     }
@@ -506,42 +488,18 @@ class HomeFragment : Fragment() {
         val spannableString = SpannableString(binding.tvHomeDescription.text)
 
         if (mainViewModel.selectRegion.value?.length!! > 3) {
-            spannableString.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.total_text_color
-                    )
-                ),
-                start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            spannableString.setSpan(
-                StyleSpan(Typeface.BOLD),
-                start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.total_text_color)), start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD), start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
-            spannableString.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.total_text_color
-                    )
-                ),
-                start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            spannableString.setSpan(
-                StyleSpan(Typeface.BOLD),
-                start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.total_text_color)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         return spannableString
     }
 
     private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
-        if(homeViewModel.recentData.value.isNullOrEmpty()) {
+        if (homeViewModel.recentData.value.isNullOrEmpty()) {
             binding.vpHomeRecent.visibility = View.GONE
             binding.tvHomeRecentDescription.visibility = View.GONE
             binding.tvHomeRecentTitle.visibility = View.GONE
@@ -576,13 +534,30 @@ class HomeFragment : Fragment() {
 
     // 단기예보 지역 정보를 기상청 좌표로 변환한 후 API 요청
     private fun weatherDataSend(area: String) { // 단기예보
-        val seoul = WeatherSeoulArea().weatherSeoulArea
-        if(seoul.keys.contains(area)) {
-            val seoulWeather = seoul[area]
-            Log.i("This is HomeFragment","seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first?:"null"}\nsecond : ${seoulWeather?.second?:"null"}")
-            homeViewModel.weatherShortData(seoulWeather?.first?:60, seoulWeather?.second?:127)    // null일 경우 = 서울시청
+        CoroutineScope(Dispatchers.IO).launch {
+            val weatherList = homeViewModel.checkWeatherFromDB(area)
+            val updateTime = homeViewModel.getWeatherUpdateTimeFromDB(area)
+            if (weatherList == null || updateTime == null || System.currentTimeMillis() - updateTime >= 3600000) {
+                homeViewModel.fetchWeatherData()
+                val seoul = WeatherSeoulArea().weatherSeoulArea
+                if (WeatherData.getArea() == null || WeatherData.getArea()!! != area || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                    if (seoul.keys.contains(area)) {
+                        WeatherData.saveAreaDate(area, LocalDate.now().dayOfMonth)
+                        val seoulWeather = seoul[area]
+                        Log.i("This is HomeFragment", "seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first ?: "null"}\nsecond : ${seoulWeather?.second ?: "null"}")
+                        homeViewModel.weatherShortData(seoulWeather?.first ?: 60, seoulWeather?.second ?: 127)    // null일 경우 = 서울시청
+                    }
+                } else {
+                    homeViewModel.weatherShortData(Int.MAX_VALUE, Int.MAX_VALUE)
+                }
+                Log.d("dkj2", "API 통신 실행")
+            } else {
+                homeViewModel.setMediatorLiveData(weatherList)
+                Log.d("dkj1", "서버에서 데이터 가져옴")
+            }
         }
     }
+
     private fun weatherAdapter(short: List<WeatherShort>) { // 날씨 어댑터
         val adapter = WeatherAdapter()
         binding.rvHomeWeatherWeek.adapter = adapter
@@ -594,6 +569,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         homeViewModel.loadRecentData()
-        setupRecentData()
+        binding.etSearch.setText("")
+        binding.rvSearchResults.isVisible = false
     }
 }
