@@ -72,7 +72,7 @@ class RecommendationViewModel(
                 Pair("족구", "족구에 관한 서비스"),
                 Pair("청소년", "청소년을 위한 서비스"),
                 Pair("장애인", "장애인을 위한 서비스"),
-            ).shuffled().take(3)
+            ).shuffled().take(4)
 
             items.addAll(randomSelectedItems)
 
