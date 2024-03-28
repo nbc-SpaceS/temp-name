@@ -122,11 +122,11 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         it.ivDetailFavorite.setOnClickListener { viewModel.changeFavorite(param1!!) }
         it.btnDetailCall.setOnClickListener { call ->
             val pattern = """(\d{2,3}-\d{3,4}-\d{4})""".toRegex()
-            val matchResult = viewModel.serviceData.value?.TELNO?.let { tel -> pattern.find(tel) }?.value
-            if(matchResult.isNullOrBlank()){
+            val matchResult =
+                viewModel.serviceData.value?.TELNO?.let { tel -> pattern.find(tel) }?.value
+            if (matchResult.isNullOrBlank()) {
                 call.isEnabled = false
-            }
-            else {
+            } else {
                 call.isEnabled = true
                 startActivity(
                     Intent(
@@ -136,29 +136,6 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
                 )
             }
         }
-        /*
-        fun extractPhoneNumber(input: String): String? {
-    // 정규식 패턴
-    val pattern = """(\d{2,3}-\d{3,4}-\d{4})""".toRegex()
-
-    // 입력 문자열에서 패턴과 일치하는 부분을 찾기
-    val matchResult = pattern.find(input)
-
-    // 첫 번째 일치하는 부분이 있다면 전화번호 반환, 없으면 null 반환
-    return matchResult?.value
-}
-
-fun main() {
-    val input1 = "한양도성 유적전시관(02-779-9870), 혜화동 전시안내센터(02-766-8520)"
-    val input2 = "평일주간(02-2181-1180) / 평일야간,주말주야(02-2181-1114)"
-
-    val phoneNumber1 = extractPhoneNumber(input1)
-    val phoneNumber2 = extractPhoneNumber(input2)
-
-    println("전화번호 1: $phoneNumber1")
-    println("전화번호 2: $phoneNumber2")
-}
-         */
         it.btnDetailReservation.setOnClickListener {
             startActivity(
                 Intent(
