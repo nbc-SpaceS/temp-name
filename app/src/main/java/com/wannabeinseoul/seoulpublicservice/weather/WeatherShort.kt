@@ -3,9 +3,9 @@ package com.wannabeinseoul.seoulpublicservice.weather
 import android.util.Log
 
 data class WeatherShort(
-    val sky: Int,
-    val tmp: Int,
-    val pop: Int
+    val sky: Int = 0,
+    val tmp: Int = 0,
+    val pop: Int = 0
 )
 
 data class WeatherMid(
