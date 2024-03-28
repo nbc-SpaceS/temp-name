@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
 import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationViewModel.Companion.factory
@@ -42,6 +43,7 @@ class RecommendationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         initView()
         initViewModel()
         binding.slRefresh.setOnRefreshListener(this)
+        refreshColor()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -161,10 +163,16 @@ class RecommendationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         binding.slRefresh.isRefreshing = false
     }
 
+    private fun refreshColor() {
+        binding.slRefresh.setOnRefreshListener(this)
+        val colors = resources.getIntArray(R.array.google_colors)
+        binding.slRefresh.setColorSchemeColors(*colors)
+    }
+
     override fun onRefresh() {
         binding.clRecommendationInvisibleLayer.isVisible = true
         // SwipeRefreshLayout로부터의 새로고침 요청 처리
-            viewModel.refreshData()
+        viewModel.refreshData()
     }
 
     override fun onResume() {
