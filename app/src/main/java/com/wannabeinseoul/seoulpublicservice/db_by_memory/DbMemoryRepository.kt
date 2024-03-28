@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.db_by_memory
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity

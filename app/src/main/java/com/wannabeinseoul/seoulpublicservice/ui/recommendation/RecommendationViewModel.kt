@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,6 @@ import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.invoke
 import kotlinx.coroutines.launch
 
 

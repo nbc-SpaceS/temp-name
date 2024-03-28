@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.detail
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -24,7 +25,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.*
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
 import com.wannabeinseoul.seoulpublicservice.R
@@ -187,6 +192,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
         vm.distanceText.observe(viewLifecycleOwner) { binding.tvDetailDistanceFromHere.text = it }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun bind(data: ReservationEntity) {
         buttonDesign(data)
         binding.let {

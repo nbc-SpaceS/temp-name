@@ -1,10 +1,10 @@
 package com.wannabeinseoul.seoulpublicservice.ui.home
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.graphics.toColor
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +25,7 @@ class RecentAdapter: ListAdapter<RecentEntity, RecentAdapter.Holder>(object : Di
     }
 }) {
     inner class Holder(val binding: ItemHomeRecentBinding): RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(data: RecentEntity) {
             binding.ivHomeRecentImg.loadWithHolder(data.IMGURL)
             binding.tvHomeRecentServiceName.text = Html.fromHtml(data.SVCNM, Html.FROM_HTML_MODE_LEGACY)

@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firestore
 
-import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.wannabeinseoul.seoulpublicservice.databases.entity.ComplaintEntity

@@ -7,13 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentNotificationsBinding
-import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailCloseInterface
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
-import com.wannabeinseoul.seoulpublicservice.ui.main.MainViewModel
 
 class NotificationsFragment : DialogFragment() {
 

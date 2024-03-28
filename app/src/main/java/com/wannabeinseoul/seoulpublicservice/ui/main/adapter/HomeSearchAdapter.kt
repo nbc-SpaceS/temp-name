@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ItemCategoryBinding
@@ -16,7 +15,7 @@ import com.wannabeinseoul.seoulpublicservice.util.loadWithHolder
 
 class HomeSearchAdapter(val items: List<ReservationEntity>) : RecyclerView.Adapter<HomeSearchAdapter.ViewHolder>() {
 
-    inner class ViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
         val ivImage: ImageView = binding.ivCtImage
         val tvServiceName: TextView = binding.tvCtServiceName
         val tvPlaceName: TextView = binding.tvCategoryItemPlace

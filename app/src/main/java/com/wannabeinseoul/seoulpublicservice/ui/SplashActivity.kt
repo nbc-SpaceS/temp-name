@@ -5,12 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.AlphaAnimation
-import android.view.animation.AnimationUtils
-import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding

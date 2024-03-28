@@ -62,9 +62,8 @@ class HomeFragment : Fragment() {
 
     private var backPressedOnce = false
 
-    private var resultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
+    private var resultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             homeViewModel.setupRegions()
         }
@@ -80,11 +79,6 @@ class HomeFragment : Fragment() {
 
         initViewModel()
         setupUIComponents()
-    }
-
-    override fun onPause() {
-
-        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -179,10 +173,7 @@ class HomeFragment : Fragment() {
                 with(binding) {
                     if (searchHistory.first.isNotEmpty()) {
                         // 검색어를 SearchHistoryAdapter에 전달하여 RecyclerView에 표시
-                        val adapter = SearchHistoryAdapter(
-                            searchHistory.first.toMutableList(),
-                            searchHistory.second
-                        ).apply {
+                        val adapter = SearchHistoryAdapter(searchHistory.first.toMutableList(), searchHistory.second).apply {
                             onItemClickListener = object : SearchHistoryAdapter.OnItemClickedListener {
                                 override fun onItemClick(item: String) {
                                     etSearch.setText(item)
@@ -227,7 +218,7 @@ class HomeFragment : Fragment() {
                 recentViewPager(it)
             }
             shortWeather.observe(viewLifecycleOwner) {      // 단기예보
-                if(!weatherData.value.isNullOrEmpty()) {
+                if (!weatherData.value.isNullOrEmpty()) {
                     val weatherDataList = weatherData.value
                     if (!it.isNullOrEmpty() && !weatherDataList.isNullOrEmpty()) {
                         val combinedData = it + weatherDataList
@@ -236,7 +227,7 @@ class HomeFragment : Fragment() {
                 }
             }
             weatherData.observe(viewLifecycleOwner) { weatherData ->        // 중기예보(기온 포함됨)
-                if(!shortWeather.value.isNullOrEmpty()) {
+                if (!shortWeather.value.isNullOrEmpty()) {
                     val shortWeatherList = shortWeather.value
                     if (!weatherData.isNullOrEmpty() && !shortWeatherList.isNullOrEmpty()) {
                         val combinedData = shortWeatherList + weatherData
@@ -245,7 +236,7 @@ class HomeFragment : Fragment() {
                 }
             }
             mediatorLiveData.observe(viewLifecycleOwner) {
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
                     CoroutineScope(Dispatchers.IO).launch {
                         homeViewModel.setWeatherToDB(it)
                     }
@@ -325,8 +316,7 @@ class HomeFragment : Fragment() {
                         requireActivity().finish()
                     } else {
                         backPressedOnce = true
-                        Toast.makeText(requireContext(), "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(requireContext(), "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
 
                         Handler(Looper.getMainLooper()).postDelayed({
                             backPressedOnce = false
@@ -412,9 +402,7 @@ class HomeFragment : Fragment() {
     private fun setupNotificationClick() {
         binding.ivNotification.setOnClickListener {
             val notificationFragment = NotificationsFragment.newInstance()
-            notificationFragment.show(
-                requireActivity().supportFragmentManager, "NotificationFragment"
-            )
+            notificationFragment.show(requireActivity().supportFragmentManager, "NotificationFragment")
             homeViewModel.hideNotificationSign()
         }
     }
@@ -502,42 +490,18 @@ class HomeFragment : Fragment() {
         val spannableString = SpannableString(binding.tvHomeDescription.text)
 
         if (mainViewModel.selectRegion.value?.length!! > 3) {
-            spannableString.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.total_text_color
-                    )
-                ),
-                start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            spannableString.setSpan(
-                StyleSpan(Typeface.BOLD),
-                start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.total_text_color)), start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD), start + 1, end + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         } else {
-            spannableString.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.total_text_color
-                    )
-                ),
-                start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            spannableString.setSpan(
-                StyleSpan(Typeface.BOLD),
-                start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.total_text_color)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         return spannableString
     }
 
     private fun setupRecentData() { // 최근 검색어 존재할 때 viewPager를 띄우는 부분
-        if(homeViewModel.recentData.value.isNullOrEmpty()) {
+        if (homeViewModel.recentData.value.isNullOrEmpty()) {
             binding.vpHomeRecent.visibility = View.GONE
             binding.tvHomeRecentDescription.visibility = View.GONE
             binding.tvHomeRecentTitle.visibility = View.GONE
@@ -578,18 +542,12 @@ class HomeFragment : Fragment() {
             if (weatherList == null || updateTime == null || System.currentTimeMillis() - updateTime >= 3600000) {
                 homeViewModel.fetchWeatherData()
                 val seoul = WeatherSeoulArea().weatherSeoulArea
-                if(WeatherData.getArea() == null || WeatherData.getArea()!! != area || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
+                if (WeatherData.getArea() == null || WeatherData.getArea()!! != area || WeatherData.getDate() != LocalDate.now().dayOfMonth) {
                     if (seoul.keys.contains(area)) {
                         WeatherData.saveAreaDate(area, LocalDate.now().dayOfMonth)
                         val seoulWeather = seoul[area]
-                        Log.i(
-                            "This is HomeFragment",
-                            "seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first ?: "null"}\nsecond : ${seoulWeather?.second ?: "null"}"
-                        )
-                        homeViewModel.weatherShortData(
-                            seoulWeather?.first ?: 60,
-                            seoulWeather?.second ?: 127
-                        )    // null일 경우 = 서울시청
+                        Log.i("This is HomeFragment", "seoulWeather : $seoulWeather\narea : $area\nfirst : ${seoulWeather?.first ?: "null"}\nsecond : ${seoulWeather?.second ?: "null"}")
+                        homeViewModel.weatherShortData(seoulWeather?.first ?: 60, seoulWeather?.second ?: 127)    // null일 경우 = 서울시청
                     }
                 } else {
                     homeViewModel.weatherShortData(Int.MAX_VALUE, Int.MAX_VALUE)
@@ -601,6 +559,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
     private fun weatherAdapter(short: List<WeatherShort>) { // 날씨 어댑터
         val adapter = WeatherAdapter()
         binding.rvHomeWeatherWeek.adapter = adapter

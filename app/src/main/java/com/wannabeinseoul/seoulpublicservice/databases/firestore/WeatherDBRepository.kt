@@ -1,7 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.databases.firestore
 
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.toObjects
 import com.google.firebase.ktx.Firebase
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherShort
 import kotlinx.coroutines.tasks.await

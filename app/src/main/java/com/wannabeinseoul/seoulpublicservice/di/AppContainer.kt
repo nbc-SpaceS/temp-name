@@ -21,9 +21,9 @@ import com.wannabeinseoul.seoulpublicservice.databases.firestore.WeatherDBReposi
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.WeatherDBRepositoryImpl
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepositoryImpl
-import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.MidLandFcstApiService
 import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepository
 import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.KmaRepositoryImpl
+import com.wannabeinseoul.seoulpublicservice.kma.midLandFcst.MidLandFcstApiService
 import com.wannabeinseoul.seoulpublicservice.kma.midTemp.MidTempApiService
 import com.wannabeinseoul.seoulpublicservice.kma.midTemp.TempRepository
 import com.wannabeinseoul.seoulpublicservice.kma.midTemp.TempRepositoryImpl

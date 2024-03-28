@@ -1,21 +1,19 @@
 package com.wannabeinseoul.seoulpublicservice.ui.category
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentCategoryBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
@@ -78,6 +76,7 @@ class CategoryFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         binding.reCategory.adapter = adapter
 
