@@ -370,8 +370,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-
     private fun setupRegionSelection() {
         binding.clHomeSetRegion.setOnClickListener {
             toggleRegionListVisibility()
