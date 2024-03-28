@@ -23,7 +23,7 @@ import com.wannabeinseoul.seoulpublicservice.R
 fun ImageView.loadWithHolder(
     data: Any?,
     @DrawableRes placeholderResId: Int = R.drawable.ic_loading,
-    @DrawableRes errorResId: Int = R.drawable.place_holder_1,
+    @DrawableRes errorResId: Int = R.drawable.place_holder_3,
 ) =
     this.load(data) {
         val JJTAG = "jj-ImageView.loadWithHolder"
