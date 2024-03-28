@@ -1,6 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.weather
 
-import android.util.Log
+import com.wannabeinseoul.seoulpublicservice.util.DLog
 
 private const val JJTAG = "jj-WeatherShortRepository"
 
@@ -45,7 +45,7 @@ class WeatherShortRepositoryImpl(
                 y = y
             )
         } catch (e: Throwable) {
-            Log.e(
+            DLog.e(
                 JJTAG,
                 "getShortWeather page:$page, row:$row, date:$date, time:$time, x:$x, y:$y",
                 e
@@ -58,7 +58,7 @@ class WeatherShortRepositoryImpl(
         val body = response.body()
             ?: return if (WeatherData.getShort().isNullOrEmpty()) {
                 emptyList<Item>().apply {
-                    Log.w(
+                    DLog.w(
                         JJTAG,
                         "getShortWeather body() == null, response: $response"
                     )

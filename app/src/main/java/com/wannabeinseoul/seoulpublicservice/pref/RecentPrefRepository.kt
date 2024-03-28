@@ -1,10 +1,10 @@
 package com.wannabeinseoul.seoulpublicservice.pref
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wannabeinseoul.seoulpublicservice.databases.RecentEntity
+import com.wannabeinseoul.seoulpublicservice.util.DLog
 
 interface RecentPrefRepository {
     fun setRecent(value: RecentEntity)
@@ -26,14 +26,14 @@ class RecentPrefRepositoryImpl(context: Context) : RecentPrefRepository {
         }
 
         val index = recent.find { it.SVCID == value.SVCID } // 없으면 널인듯
-        Log.i("This is RecentPrefRepository", "recent : $recent\nindex : $index")
+        DLog.i("This is RecentPrefRepository", "recent : $recent\nindex : $index")
 
         if (index != null) {
             recent.remove(index)
         } else {
             if (recent.size >= 10) {
                 val oldItem = recent.minByOrNull { it.DATETIME }
-                Log.i(
+                DLog.i(
                     "This is RecentPrefRepository",
                     "oldItem : $oldItem\nrecent size : ${recent.size}\noldDateTime : ${oldItem?.DATETIME}"
                 )
@@ -49,7 +49,7 @@ class RecentPrefRepositoryImpl(context: Context) : RecentPrefRepository {
     override fun getRecent(): List<RecentEntity> {
         val recent = mutableListOf<RecentEntity>()
         pref.all.forEach { (_, value) ->
-            Log.i(
+            DLog.i(
                 "This is RecentPrefRepository",
                 "value : ${value}\nall value size : ${pref.all.values.size}"
             )

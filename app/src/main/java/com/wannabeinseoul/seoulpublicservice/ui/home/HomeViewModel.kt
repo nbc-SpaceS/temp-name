@@ -17,6 +17,7 @@ import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SearchPrefRepository
+import com.wannabeinseoul.seoulpublicservice.util.DLog
 import com.wannabeinseoul.seoulpublicservice.weather.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -276,7 +277,7 @@ class HomeViewModel(
                         WeatherData.getTmp()
                     }
                 if (response != null && responseTemp != null) {
-                    Log.i(
+                    DLog.i(
                         "This is HomeViewModel",
                         "kma : ${response}\ntemp : $responseTemp"
                     )
@@ -288,7 +289,7 @@ class HomeViewModel(
                     throw Exception("else) response != null && responseTemp != null")
                 }
             } catch (e: Throwable) {
-                Log.e("HomeViewModel", "fetchWeatherData error", e)
+                DLog.e("HomeViewModel", "fetchWeatherData error", e)
                 _weatherData.postValue(emptyList())
             }
         }
@@ -315,7 +316,7 @@ class HomeViewModel(
                     var m = String.format("%02d", local.monthValue)
                     var d = local.dayOfMonth
                     var h = local.hour
-                    Log.i("This is HomeViewModel", "m : $m\nd : $d\nh : $h")
+                    DLog.i("This is HomeViewModel", "m : $m\nd : $d\nh : $h")
                     if (h < 5) {
                         val yesterday = local.minusDays(1)
                         d = yesterday.dayOfMonth
@@ -335,10 +336,10 @@ class HomeViewModel(
                     } else {
                         h = 5
                     }
-                    Log.i("This is HomeViewModel", "m : $m\nh : $h")
+                    DLog.i("This is HomeViewModel", "m : $m\nh : $h")
                     val localDate = "$y$m$d"
                     val localTime = "${String.format("%02d", h)}10"
-                    Log.i(
+                    DLog.i(
                         "This is HomeViewModel",
                         "localDate : $localDate\nlocalTime : $localTime\nlat_x : $lat_x\nlng_y : $lng_y"
                     )
@@ -364,7 +365,7 @@ class HomeViewModel(
                         if (item.category == "SKY") skyValue =
                             item.fcstValue?.toIntOrNull() ?: 4  // null 이면 흐림을 기본값으로
                         if (item.category == "TMP") tmpValue = item.fcstValue?.toIntOrNull() ?: 99
-                        Log.i(
+                        DLog.i(
                             "This is HomeViewModel",
                             "skyValue : $skyValue\ntmpValue : $tmpValue\npopValue : $popValue"
                         )
@@ -376,7 +377,7 @@ class HomeViewModel(
                         }
                     }
                     WeatherData.saveMix(itemList)
-                    Log.i("This is HomeViewModel", "itemList count : ${itemList.count()}")
+                    DLog.i("This is HomeViewModel", "itemList count : ${itemList.count()}")
                     _shortWeather.postValue(itemList)
                 }
             }
