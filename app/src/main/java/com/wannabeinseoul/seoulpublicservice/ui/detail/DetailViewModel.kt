@@ -171,8 +171,8 @@ class DetailViewModel(
     // 반환값은 이제 사용 안할 겁니다. _distanceText에 넣어주고 옵저빙해서 텍스트뷰에 반영.
     fun distanceCheckResponse(distance : Double): String {
         return when {
-            distance/1000 < 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
-            distance/1000 >= 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+            distance/1000 < 1 -> "현위치로부터 ${String.format("%.0f", distance)}m"
+            distance/1000 >= 1 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
             else -> {
                 DLog.w("jj-상세페이지 뷰모델", "distanceCheckResponse distance error: $distance")
                 "현위치로부터 ?km"

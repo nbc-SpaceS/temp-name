@@ -225,7 +225,7 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
                     x.toDouble()
                 )   // latitude - 위도(-90 ~ 90) / longitude(-180 ~ 180) - 경도 : 검색할 때 위경도 순으로 검색해야 함
             } else {
-                LatLng(100.0, 100.0)
+                LatLng(0.0, 0.0)
             }
 
             distanceCheck()  // 어디에 둬야 할지 모르겠어서 여기에 둠
@@ -233,14 +233,14 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             itemLocation
         } catch (npe: NullPointerException) {
             Log.e("DetailFragment", "Error! : checkLatLng", npe)
-            LatLng(100.0, 100.0)
+            LatLng(0.0, 0.0)
         }
     }
 
     private fun distanceCheck() {
         val location = app.fusedLocationSource?.lastLocation
         val latLng = if (location == null) {
-            LatLng(100.0, 100.0)
+            LatLng(0.0, 0.0)
         } else {
             LatLng(location.latitude, location.longitude)
         }
