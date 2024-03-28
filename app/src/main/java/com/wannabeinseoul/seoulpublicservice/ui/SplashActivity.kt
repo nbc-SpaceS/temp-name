@@ -3,22 +3,21 @@ package com.wannabeinseoul.seoulpublicservice.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.AlphaAnimation
-import android.view.animation.AnimationUtils
-import android.view.animation.ScaleAnimation
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.wannabeinseoul.seoulpublicservice.R
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.entity.UserEntity
 import com.wannabeinseoul.seoulpublicservice.databinding.ActivitySplashBinding
 import com.wannabeinseoul.seoulpublicservice.ui.main.MainActivity
+import com.wannabeinseoul.seoulpublicservice.util.DLog
+import com.wannabeinseoul.seoulpublicservice.util.toastLong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
+
+private const val JJTAG = "jj-SplashActivity"
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -46,10 +45,16 @@ class SplashActivity : AppCompatActivity() {
 
         app.initialLoadingFinished.let { livedata ->
             livedata.observe(this) {
-                Log.d("jj-스플래시", "옵저버:initialLoadingFinished - $it")
+                DLog.d("jj-스플래시", "옵저버:initialLoadingFinished - $it")
                 if (it != true) return@observe
+                if (container.dbMemoryRepository.getAll().isEmpty()) {
+                    DLog.w(JJTAG, "obs:app.initialLoadingFinished dbMemoryRepository.getAll empty")
+                    toastLong(this, "네트워크 통신이 불가능하여 표시할 데이터가 없습니다. 앱을 종료합니다.")
+                    finishAffinity()
+                    return@observe
+                }
                 if (createFinished) {
-                    Log.d("jj-스플래시", "옵저버에서 이동 (스플래시 create가 먼저 끝남, 일반적)")
+                    DLog.d("jj-스플래시", "옵저버에서 이동 (스플래시 create가 먼저 끝남, 일반적)")
                     moveToNextActivity()
                     return@observe
                 }
@@ -77,7 +82,7 @@ class SplashActivity : AppCompatActivity() {
                     container.userRepository.getUser(loadedId)?.let { app.setUser(it) }
                 }
             } catch (e: Throwable) {
-                Log.e("jj-스플래시", "userRepository.getUser 과정에서 에러. loadedId: $loadedId, e: $e")
+                DLog.e("jj-스플래시", "userRepository.getUser 과정에서 에러. loadedId: $loadedId, e: $e")
             }
         }
 
@@ -90,7 +95,7 @@ class SplashActivity : AppCompatActivity() {
 //        }, 500)
 
         if (initialLoadingFinished) {
-            Log.d("jj-스플래시", "onCreate에서 이동 (메인 리스트 로딩이 먼저 끝남, 특이 케이스)")
+            DLog.d("jj-스플래시", "onCreate에서 이동 (메인 리스트 로딩이 먼저 끝남, 특이 케이스)")
             moveToNextActivity()
         } else createFinished = true
     }

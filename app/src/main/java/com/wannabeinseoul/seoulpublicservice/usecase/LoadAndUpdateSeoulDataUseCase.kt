@@ -9,6 +9,7 @@ import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.PrefRepository
 import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
+import com.wannabeinseoul.seoulpublicservice.util.DLog
 import com.wannabeinseoul.seoulpublicservice.util.toastLong
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,7 @@ class LoadAndUpdateSeoulDataUseCase(
                 toastLong(context, "네트워크 연결이 불가능하므로 저장된 데이터로 표시됩니다.")
             }
             loadFromRoomToDbMemory()
-            return@launch
+            return@launch callback()
         }
 
         var isOld = true
@@ -56,7 +57,7 @@ class LoadAndUpdateSeoulDataUseCase(
                 .apply { Log.w(JJTAG, "toLong failed: ${it.take(255)}") }
             val timeDiff = System.currentTimeMillis() - savedTime
             isOld = timeDiff > 180_000L
-            Log.d(JJTAG, "timeDiff: $timeDiff")
+            DLog.d(JJTAG, "timeDiff: $timeDiff")
         }
 
         if (isOld) {
@@ -77,7 +78,7 @@ class LoadAndUpdateSeoulDataUseCase(
                 val total = seoulPublicRepository.getTotalNum()
                 val reservationEntities =
                     seoulPublicRepository.getAllParallelAsReservationEntities(total)
-                Log.v(
+                DLog.v(
                     JJTAG,
                     "getAndUpdateAll ${reservationEntities.size}/$total: ${(System.currentTimeMillis() - startTime).toFloat() / 1000}"
                 )
