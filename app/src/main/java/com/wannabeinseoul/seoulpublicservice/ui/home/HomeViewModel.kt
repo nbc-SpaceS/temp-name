@@ -334,6 +334,7 @@ class HomeViewModel(
         _weatherData.postValue(itemList)
     }
 
+    // ViewModel 팩토리
     companion object {
         val factory = viewModelFactory {
             initializer {

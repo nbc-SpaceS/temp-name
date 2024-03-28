@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,23 +30,19 @@ class CategoryFragment : Fragment() {
     private var serviceState: List<String> = listOf() // 서비스 상태가 가능인지 아니면 불가능인지
     private var search = "" // 검색어
 
-    private var isFabVisible = false// 숨기거나 표시
-
-    // 스크롤 이벤트를 처리하는 메서드
     private val scrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
 
-            // 스크롤 방향에 따라 FAB의 가시성을 조절
-            // 스크롤 방향에 따라 FAB의 가시성을 조절
-            if (dy < 0 && isFabVisible) { // 스크롤을 위로 올릴 때
-                isFabVisible = true
-                binding.fabRecentFloating.show()
-                binding.fabRecentFloating.isInvisible// 플로팅 버튼 숨기기
-            } else if (dy > 0 && !isFabVisible) { // 스크롤을 아래로 내릴 때
-                isFabVisible = true
-                binding.fabRecentFloating.show() // 플로팅 버튼 표시
-                binding.fabRecentFloating.isInvisible
+            if (!recyclerView.canScrollVertically(-1)) {
+                // 리스트가 최상단에 도달했을 때
+                binding.fabRecentFloating.visibility = View.GONE
+            } else if (!recyclerView.canScrollVertically(1)) {
+                // 리스트가 최하단에 도달했을 때
+                binding.fabRecentFloating.visibility = View.VISIBLE
+            } else {
+                // 리스트가 중간에 있을 때
+                binding.fabRecentFloating.visibility = View.VISIBLE
             }
         }
     }

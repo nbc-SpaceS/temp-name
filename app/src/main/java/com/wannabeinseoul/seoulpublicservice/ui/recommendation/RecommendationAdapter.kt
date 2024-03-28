@@ -49,10 +49,10 @@ class RecommendationAdapter :
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MultiView.Horizontal) {
-            binding.reShared.adapter = item.adapter
-            binding.reShared.itemAnimator = null
+            binding.rvShared.adapter = item.adapter
+            binding.rvShared.itemAnimator = null
             binding.tvSharedText.text = item.headerTitle
-            binding.reShared.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            binding.rvShared.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     val lastVisiblePosition = (recyclerView.layoutManager as LinearLayoutManager)
                         .findLastCompletelyVisibleItemPosition()
@@ -79,7 +79,6 @@ class RecommendationAdapter :
     }
 
     /* 뷰홀더 끝 */
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {

@@ -23,7 +23,6 @@ class RecommendationFragment : Fragment() {
 
     private val showDetailFragment: (RecommendationData) -> Unit =
         { recommendationData: RecommendationData ->
-            // RecommendationData에서 svcid를 추출하여 사용
             DetailFragment.newInstance(recommendationData.svcid)
                 .show(requireActivity().supportFragmentManager, "Detail")
         }
@@ -41,15 +40,18 @@ class RecommendationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initViewModel()
+        binding.ivRefreshButton.setOnClickListener {
+            onRefreshButtonClick()
+        }
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() = binding.let { b ->
-        b.reScroll.adapter = recommendationAdapter
-        b.reScroll.itemAnimator = null
-        b.reScroll.layoutManager = LinearLayoutManager(requireContext())
+        b.rvScroll.adapter = recommendationAdapter
+        b.rvScroll.itemAnimator = null
+        b.rvScroll.layoutManager = LinearLayoutManager(requireContext())
         b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
+
     }
 
     private val tipsMap = mapOf(
@@ -136,6 +138,10 @@ class RecommendationFragment : Fragment() {
                 binding.clRecommendationLoadingLayer.isVisible = false
             }
         }
+    }
+
+    private fun onRefreshButtonClick() {
+        viewModel.refreshData()
     }
 
     override fun onResume() {

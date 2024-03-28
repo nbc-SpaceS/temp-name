@@ -8,12 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
 import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
-import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -21,22 +18,10 @@ import kotlinx.coroutines.launch
 
 
 class RecommendationViewModel(
-    private val recommendPrefRepository: RecommendPrefRepository,
-    private val seoulPublicRepository: SeoulPublicRepository,
     private val reservationRepository: ReservationRepository,
     private val serviceRepository: ServiceRepository,
-    private val regionPrefRepository: RegionPrefRepository
+    private val regionPrefRepository: RegionPrefRepository,
 ) : ViewModel() {
-    private inner class RandomQueryUseCase {
-        private val entitiesMap = mapOf<String, List<ReservationEntity>>()
-
-        operator fun invoke(query: String, num: Int): List<ReservationEntity> {
-            // TODO: -ing
-
-
-            return emptyList()
-        }
-    }
 
     private var isFirst: Boolean = true
     private var dataList = listOf<RecommendationHorizontalData>()
@@ -54,19 +39,43 @@ class RecommendationViewModel(
 
     init {
         isLoading.value = true // 로딩 상태로 초기화
+        loadData()
+    }
 
+    fun refreshData() {
+        loadData()
+    }
+
+    private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val selectedRegions = regionPrefRepository.load() // 선택한 모든 지역을 가져옴
+            val selectedRegions = regionPrefRepository.load()
             val items = mutableListOf<Pair<String, String>>()
             val regionItems = mutableListOf<Pair<String, String>>()
 
-            // 첫 번째 초기화 로직: 지역 외 로직
-            items.add(Pair("교육", "교육과 관련된 서비스"))
-            items.add(Pair("청소년", "청소년을 위한 서비스"))
-            items.add(Pair("장애인", "장애인을 위한 서비스"))
-            items.add(Pair("풋살", "풋살에 관한 서비스"))
+            val randomSelectedItems = listOf(
+                Pair("댄스", "댄스와 관련된 서비스"),
+                Pair("풋살", "풋살에 관한 서비스"),
+                Pair("실내", "실내에서 즐길 수 있는 서비스"),
+                Pair("진료", "병원에 관한 서비스"),
+                Pair("탁구", "탁구에 관한 서비스"),
+                Pair("산림", "봄 계절에 맞는 서비스"),
+                Pair("어린이", "어린이에 관한 서비스"),
+                Pair("농장", "농장체험에 관한 서비스"),
+                Pair("자격증", "올해엔 자격증 공부 서비스가 많습니다."),
+                Pair("드론", "드론에 관한 서비스"),
+                Pair("스튜디오", "녹화장소에 관한 서비스"),
+                Pair("배드민턴", "배드민턴에 관한 서비스"),
+                Pair("캠핑장", "이번 주말엔 캠핑 어떠세요?"),
+                Pair("취미", "이런 취미생활은 어떠세요?"),
+                Pair("회의", "회의실 대여가 필요하세요?"),
+                Pair("활쏘기", "활쏘기 체험에 관한 서비스"),
+                Pair("족구", "족구에 관한 서비스"),
+                Pair("청소년", "청소년을 위한 서비스"),
+                Pair("장애인", "장애인을 위한 서비스"),
+            ).shuffled().take(3)
 
-            // 두 번째 초기화 로직: 다중 선택한 지역에 대한 로직
+            items.addAll(randomSelectedItems)
+
             selectedRegions.forEach { region ->
                 val regionInfo = region + "에 관한 서비스"
                 regionItems.add(Pair(region, regionInfo))
@@ -90,8 +99,7 @@ class RecommendationViewModel(
     }
 
     private suspend fun getQuery(query: String): List<RecommendationData> {
-        val reservationEntities =
-            reservationRepository.searchText(query).take(5)
+        val reservationEntities = reservationRepository.searchText(query).take(5)
         val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
         return List(reservationEntities.size) {
             RecommendationData(
@@ -113,8 +121,7 @@ class RecommendationViewModel(
             val searchText = reservationRepository.searchText(query)
 
             if (searchText.size >= num) {
-                val reservationEntities =
-                    searchText.slice(num - 5 until num)
+                val reservationEntities = searchText.slice(num - 5 until num)
                 val counts =
                     serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
 
@@ -160,14 +167,13 @@ class RecommendationViewModel(
 
     suspend fun fetchRegionList() {
         if (!isFirst) {
-            isLoading.postValue(true) // 로딩 상태로 초기화
+            isLoading.postValue(true)
 
             viewModelScope.launch(Dispatchers.IO) {
-                val selectedRegions = regionPrefRepository.load() // 선택한 모든 지역을 가져옴
+                val selectedRegions = regionPrefRepository.load()
 
                 val regionItems = mutableListOf<Pair<String, String>>()
 
-                // 두 번째 초기화 로직: 다중 선택한 지역에 대한 로직
                 selectedRegions.forEach { region ->
                     val regionInfo = region + "에 관한 서비스"
                     regionItems.add(Pair(region, regionInfo))
@@ -195,11 +201,8 @@ class RecommendationViewModel(
     companion object {
         val factory = viewModelFactory {
             initializer {
-                val container =
-                    (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
+                val container = (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
                 RecommendationViewModel(
-                    recommendPrefRepository = container.recommendPrefRepository,
-                    seoulPublicRepository = container.seoulPublicRepository,
                     reservationRepository = container.reservationRepository,
                     serviceRepository = container.serviceRepository,
                     regionPrefRepository = container.regionPrefRepository
@@ -208,36 +211,3 @@ class RecommendationViewModel(
         }
     }
 }
-
-//    private fun isReservationAvailableAbsence(row: Row): Boolean {
-//        val currentTimeMillis = System.currentTimeMillis()
-//        val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
-//        val rcptenddtMillis = row.rcptenddt.toLongOrNull() ?: return false
-//
-//        return currentTimeMillis >= rcptbgndtMillis && currentTimeMillis <= rcptenddtMillis
-//    }
-//}
-
-//    private suspend fun convertToSealedMulti(reservations: List<ReservationEntity>): List<SealedMulti> {
-//        // 현재 시간을 가져옴
-//        val currentTimeMillis = System.currentTimeMillis()
-//        // 현재 시간 기준으로 7일 후의 시간을 계산
-//        val oneWeekLaterTimeMillis = currentTimeMillis + 7 * 24 * 60 * 60 * 1000
-//
-//        return withContext(Dispatchers.IO) {
-//            // 예약 시작 일자가 현재 날짜 이후이고 7일 이내인 데이터 필터링하여 SealedMulti로 변환
-//            reservations.filter { reservation ->
-//                val startDateMillis = reservation.SVCOPNBGNDT.toLong()
-//                startDateMillis >= currentTimeMillis && startDateMillis < oneWeekLaterTimeMillis
-//            }.map { reservation ->
-//                SealedMulti.Recommendation(
-//                    payType = reservation.PAYATNM,
-//                    areaName = reservation.AREANM,
-//                    placeName = reservation.PLACENM,
-//                    isReservationAvailable = reservation.SVCNM,
-//                    imageUrl = reservation.IMGURL,
-//                    serviceList = reservation.SVCSTATNM
-//                )
-//            }
-//        }
-//    }

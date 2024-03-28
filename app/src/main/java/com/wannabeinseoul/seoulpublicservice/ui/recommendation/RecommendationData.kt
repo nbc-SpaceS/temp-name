@@ -29,24 +29,6 @@ fun ReservationEntity.convertToRecommendationData() = RecommendationData(
     reviewCount = 0,
     serviceName = this.SVCNM,
 )
-//플레이스네임을 서비스스텟으로
 
 fun List<ReservationEntity>.convertToRecommendationDataList() =
     this.map { it.convertToRecommendationData() }
-
-
-//fun Row.convertToRecommendationData() = RecommendationData(
-//    payType = this.payatnm,
-//    areaName = this.areanm,
-//    placeName = this.placenm,
-//    svcstatnm = this.svcstatnm,
-//    imageUrl = this.imgurl,
-//    svcid = this.svcid,
-//    usetgtinfo = this.usetgtinfo,
-//    reviewCount = 0,
-//    serviceName = this.svcnm,
-//)
-////플레이스네임을 서비스스텟으로
-//
-//fun List<Row>.convertToRecommendationDataList() =
-//    this.map { it.convertToRecommendationData() }
