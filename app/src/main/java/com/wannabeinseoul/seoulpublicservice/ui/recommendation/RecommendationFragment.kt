@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.wannabeinseoul.seoulpublicservice.databinding.FragmentRecommendationBinding
 import com.wannabeinseoul.seoulpublicservice.ui.detail.DetailFragment
@@ -31,7 +30,6 @@ class RecommendationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
 
     private val recommendationAdapter = RecommendationAdapter()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -44,11 +42,7 @@ class RecommendationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         initView()
         initViewModel()
         binding.slRefresh.setOnRefreshListener(this)
-        binding.ivRefreshButton.setOnClickListener {
-            onRefreshButtonClick(it)
-        }
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initView() = binding.let { b ->
@@ -56,8 +50,7 @@ class RecommendationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         b.rvScroll.itemAnimator = null
         b.rvScroll.layoutManager = LinearLayoutManager(requireContext())
         b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
-
-
+        b.clRecommendationInvisibleLayer.setOnTouchListener { _, _ -> true }
     }
 
     private val tipsMap = mapOf(
@@ -142,17 +135,13 @@ class RecommendationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
         vm.multiViews.observe(viewLifecycleOwner) {
             recommendationAdapter.submitList(it) {
                 binding.clRecommendationLoadingLayer.isVisible = false
+                binding.clRecommendationInvisibleLayer.isVisible = false
             }
         }
 
-        binding.slRefresh.setOnRefreshListener {
-            // SwipeRefreshLayout로부터의 새로고침 요청 처리
-            viewModel.refreshData()
-        }
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+        viewModel.refreshLoading.observe(viewLifecycleOwner) { refreshLoading ->
             // 새로고침 로딩 상태에 따라 애니메이션 표시 여부 설정
-            if (isLoading) {
+            if (refreshLoading) {
                 // 로딩 중일 때 로딩 인디케이터를 보여줌
                 showLoadingIndicator()
             } else {
@@ -164,23 +153,18 @@ class RecommendationFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener 
 
     private fun showLoadingIndicator() {
         // 로딩 인디케이터를 보여줌
-//            binding.pbRefreshLoading.visibility = View.VISIBLE
         binding.slRefresh.isRefreshing = true
     }
 
     private fun hideLoadingIndicator() {
         // 로딩 인디케이터를 감춤
-//            binding.pbRefreshLoading.visibility = View.GONE
         binding.slRefresh.isRefreshing = false
     }
 
-    private fun onRefreshButtonClick(view: View) {
-        viewModel.refreshData()
-    }
-
     override fun onRefresh() {
+        binding.clRecommendationInvisibleLayer.isVisible = true
         // SwipeRefreshLayout로부터의 새로고침 요청 처리
-        viewModel.refreshData()
+            viewModel.refreshData()
     }
 
     override fun onResume() {
