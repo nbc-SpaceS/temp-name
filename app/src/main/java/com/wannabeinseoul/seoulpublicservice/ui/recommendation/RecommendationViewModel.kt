@@ -39,16 +39,33 @@ class RecommendationViewModel(
 
     init {
         isLoading.value = true // 로딩 상태로 초기화
+        loadData()
+    }
 
+    fun refreshData() {
+        loadData()
+    }
+
+    private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             val selectedRegions = regionPrefRepository.load()
             val items = mutableListOf<Pair<String, String>>()
             val regionItems = mutableListOf<Pair<String, String>>()
+            val randomItems = mutableListOf<Pair<String, String>>()
 
-            items.add(Pair("교육", "교육과 관련된 서비스"))
+            // 랜덤으로 두 개의 서비스 항목 선택
+            val randomSelectedItems = listOf(
+                Pair("교육", "교육강좌와 관련된 서비스"),
+                Pair("체육시설", "체육시설에 관한 서비스"),
+                Pair("문화체험", "문화체험에 관한 서비스"),
+                Pair("시설대관", "공간시설과 관한 서비스"),
+            ).shuffled().take(2)
+
+            // 선택된 서비스 항목을 추가
+            items.addAll(randomSelectedItems)
+
             items.add(Pair("청소년", "청소년을 위한 서비스"))
             items.add(Pair("장애인", "장애인을 위한 서비스"))
-            items.add(Pair("풋살", "풋살에 관한 서비스"))
 
             selectedRegions.forEach { region ->
                 val regionInfo = region + "에 관한 서비스"
@@ -71,10 +88,8 @@ class RecommendationViewModel(
             isFirst = false
         }
     }
-
     private suspend fun getQuery(query: String): List<RecommendationData> {
-        val reservationEntities =
-            reservationRepository.searchText(query).take(5)
+        val reservationEntities = reservationRepository.searchText(query).take(5)
         val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
         return List(reservationEntities.size) {
             RecommendationData(
@@ -96,8 +111,7 @@ class RecommendationViewModel(
             val searchText = reservationRepository.searchText(query)
 
             if (searchText.size >= num) {
-                val reservationEntities =
-                    searchText.slice(num - 5 until num)
+                val reservationEntities = searchText.slice(num - 5 until num)
                 val counts =
                     serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
 
@@ -177,8 +191,7 @@ class RecommendationViewModel(
     companion object {
         val factory = viewModelFactory {
             initializer {
-                val container =
-                    (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
+                val container = (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
                 RecommendationViewModel(
                     reservationRepository = container.reservationRepository,
                     serviceRepository = container.serviceRepository,

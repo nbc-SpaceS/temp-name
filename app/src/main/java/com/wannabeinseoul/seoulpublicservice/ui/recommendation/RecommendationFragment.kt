@@ -34,6 +34,7 @@ class RecommendationFragment : Fragment() {
     ): View {
         binding = FragmentRecommendationBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -135,7 +136,9 @@ class RecommendationFragment : Fragment() {
             }
         }
     }
-
+    fun onRefreshButtonClick(view: View) {
+        viewModel.refreshData()
+    }
     override fun onResume() {
         CoroutineScope(Dispatchers.IO).launch {
             viewModel.fetchRegionList()
