@@ -48,7 +48,7 @@ class LoadAndUpdateSeoulDataUseCase(
                 toastLong(context, "네트워크 연결이 불가능하므로 저장된 데이터로 표시됩니다.")
             }
             loadFromRoomToDbMemory()
-            return@launch
+            return@launch callback()
         }
 
         var isOld = true
