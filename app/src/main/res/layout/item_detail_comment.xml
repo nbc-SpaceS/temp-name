@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
-        android:background="@color/gray"
+        android:background="@color/white"
         android:src="@drawable/ic_profile_image"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1:1"

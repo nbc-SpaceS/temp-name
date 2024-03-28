@@ -100,10 +100,6 @@ class MapViewModel(
 
     fun getSavedPrefRepository() = getSavedServiceUseCase()
 
-    fun offStart() {
-        _canStart.value = false
-    }
-
     companion object {
         /** 뷰모델팩토리에서 의존성주입을 해준다 */
         val factory = viewModelFactory {
