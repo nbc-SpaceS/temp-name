@@ -34,8 +34,7 @@ class RecommendationViewModel(
     fun setMultiViews(list: List<RecommendationAdapter.MultiView>) {
         _multiViews.value = list
     }
-
-    private val isLoading = MutableLiveData<Boolean>()
+    val isLoading = MutableLiveData<Boolean>()
 
     init {
         isLoading.value = true // 로딩 상태로 초기화
