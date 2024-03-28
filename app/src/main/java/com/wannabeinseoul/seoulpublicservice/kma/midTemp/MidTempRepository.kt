@@ -1,31 +1,34 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midTemp
 
 import android.util.Log
-import com.wannabeinseoul.seoulpublicservice.weather.WeatherData
+import retrofit2.HttpException
+import retrofit2.Response
+import java.io.IOException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import javax.net.ssl.SSLHandshakeException
 
-private const val TAG = "TempRepository"
-
-interface TempRepository {
+interface MidTempRepository {
     suspend fun getTemp(
         numOfRows: Int,
         pageNo: Int,
         dataType: String,
         regId: String,
         tmFc: String
-    ): Item?
+    ): Response<MidTemp>?
 }
 
-class TempRepositoryImpl(
+class MidTempRepositoryImpl(
     private val midTempApiService: MidTempApiService
-) : TempRepository {
+) : MidTempRepository {
     override suspend fun getTemp(
         numOfRows: Int,
         pageNo: Int,
         dataType: String,
         regId: String,
         tmFc: String
-    ): Item? {
-        val response = try {
+    ): Response<MidTemp>? {
+        return try {
             midTempApiService.getTemp(
                 numOfRows = numOfRows,
                 pageNo = pageNo,
@@ -33,31 +36,26 @@ class TempRepositoryImpl(
                 regId = regId,
                 tmFc = tmFc
             )
-        } catch (e: Throwable) {
-            Log.e(
-                TAG,
-                "getTemp error. numOfRows:$numOfRows, pageNo:$pageNo" +
-                        ", dataType:$dataType, regId:$regId, tmFc:$tmFc",
-                e
-            )
-            return null
+        } catch (e: IOException) {
+            Log.e("This is MidTempRepository", "Network error! : TempRepositoryImpl", e)
+            throw NetworkException("Network error!", e)
+        } catch (e: HttpException) {
+            Log.e("This is MidTempRepository", "HTTP request error! : TempRepositoryImpl", e)
+            throw NetworkException("HTTP request error!", e)
+        } catch (e: SocketTimeoutException) {
+            Log.e("This is MidTempRepository", "Network timeout! : TempRepositoryImpl", e)
+            throw NetworkException("Network timeout!", e)
+        } catch (e: UnknownHostException) {
+            Log.e("This is MidTempRepository", "Unknown host! : TempRepositoryImpl", e)
+            throw NetworkException("Unknown host!", e)
+        } catch (e: SSLHandshakeException) {
+            Log.e("This is MidTempRepository", "SSL error! : TempRepositoryImpl", e)
+            throw NetworkException("SSL error!", e)
+        } catch (e: Exception) {
+            Log.e("This is MidTempRepository", "Unexpected error! : TempRepositoryImpl", e)
+            throw NetworkException("Unexpected error!", e)
         }
-//        val body = response.body() ?: return null
-//            .apply { Log.w(TAG, "getMidLandFcst body() == null, response: $response") }
-//        return body.response?.body?.items?.item?.firstOrNull()
-        val body = response.body()
-            ?: return if (WeatherData.getTmp() == null) {
-                null.apply {
-                    Log.w(
-                        TAG,
-                        "getMidLandFcst return if(WeatherData.getMid() == null), response: $response"
-                    )
-                }
-            } else {
-                WeatherData.getTmp()
-            }
-        val item = body.response?.body?.items?.item?.firstOrNull()
-        if (item != null) WeatherData.saveTmp(item)
-        return item
     }
 }
+
+class NetworkException(message: String, cause: Throwable) : Exception(message, cause)
