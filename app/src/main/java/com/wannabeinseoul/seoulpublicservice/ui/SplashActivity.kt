@@ -3,7 +3,6 @@ package com.wannabeinseoul.seoulpublicservice.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.animation.AlphaAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -46,7 +45,7 @@ class SplashActivity : AppCompatActivity() {
 
         app.initialLoadingFinished.let { livedata ->
             livedata.observe(this) {
-                Log.d("jj-스플래시", "옵저버:initialLoadingFinished - $it")
+                DLog.d("jj-스플래시", "옵저버:initialLoadingFinished - $it")
                 if (it != true) return@observe
                 if (container.dbMemoryRepository.getAll().isEmpty()) {
                     DLog.w(JJTAG, "obs:app.initialLoadingFinished dbMemoryRepository.getAll empty")
@@ -55,7 +54,7 @@ class SplashActivity : AppCompatActivity() {
                     return@observe
                 }
                 if (createFinished) {
-                    Log.d("jj-스플래시", "옵저버에서 이동 (스플래시 create가 먼저 끝남, 일반적)")
+                    DLog.d("jj-스플래시", "옵저버에서 이동 (스플래시 create가 먼저 끝남, 일반적)")
                     moveToNextActivity()
                     return@observe
                 }
@@ -83,7 +82,7 @@ class SplashActivity : AppCompatActivity() {
                     container.userRepository.getUser(loadedId)?.let { app.setUser(it) }
                 }
             } catch (e: Throwable) {
-                Log.e("jj-스플래시", "userRepository.getUser 과정에서 에러. loadedId: $loadedId, e: $e")
+                DLog.e("jj-스플래시", "userRepository.getUser 과정에서 에러. loadedId: $loadedId, e: $e")
             }
         }
 
@@ -96,7 +95,7 @@ class SplashActivity : AppCompatActivity() {
 //        }, 500)
 
         if (initialLoadingFinished) {
-            Log.d("jj-스플래시", "onCreate에서 이동 (메인 리스트 로딩이 먼저 끝남, 특이 케이스)")
+            DLog.d("jj-스플래시", "onCreate에서 이동 (메인 리스트 로딩이 먼저 끝남, 특이 케이스)")
             moveToNextActivity()
         } else createFinished = true
     }
