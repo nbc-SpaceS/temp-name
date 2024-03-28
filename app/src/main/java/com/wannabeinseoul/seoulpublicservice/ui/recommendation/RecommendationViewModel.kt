@@ -51,21 +51,30 @@ class RecommendationViewModel(
             val selectedRegions = regionPrefRepository.load()
             val items = mutableListOf<Pair<String, String>>()
             val regionItems = mutableListOf<Pair<String, String>>()
-            val randomItems = mutableListOf<Pair<String, String>>()
 
-            // 랜덤으로 두 개의 서비스 항목 선택
             val randomSelectedItems = listOf(
                 Pair("댄스", "댄스와 관련된 서비스"),
-                Pair("체육시설", "체육시설에 관한 서비스"),
-                Pair("문화체험", "문화체험에 관한 서비스"),
-                Pair("시설대관", "공간시설과 관한 서비스"),
-            ).shuffled().take(2)
+                Pair("풋살", "풋살에 관한 서비스"),
+                Pair("실내", "실내에서 즐길 수 있는 서비스"),
+                Pair("진료", "병원에 관한 서비스"),
+                Pair("탁구", "탁구에 관한 서비스"),
+                Pair("산림", "봄 계절에 맞는 서비스"),
+                Pair("어린이", "어린이에 관한 서비스"),
+                Pair("농장", "농장체험에 관한 서비스"),
+                Pair("자격증", "올해엔 자격증 공부 서비스가 많습니다."),
+                Pair("드론", "드론에 관한 서비스"),
+                Pair("스튜디오", "녹화장소에 관한 서비스"),
+                Pair("배드민턴", "배드민턴에 관한 서비스"),
+                Pair("캠핑장", "이번 주말엔 캠핑 어떠세요?"),
+                Pair("취미", "이런 취미생활은 어떠세요?"),
+                Pair("회의", "회의실 대여가 필요하세요?"),
+                Pair("활쏘기", "활쏘기 체험에 관한 서비스"),
+                Pair("족구", "족구에 관한 서비스"),
+                Pair("청소년", "청소년을 위한 서비스"),
+                Pair("장애인", "장애인을 위한 서비스"),
+            ).shuffled().take(3)
 
-            // 선택된 서비스 항목을 추가
             items.addAll(randomSelectedItems)
-
-            items.add(Pair("청소년", "청소년을 위한 서비스"))
-            items.add(Pair("장애인", "장애인을 위한 서비스"))
 
             selectedRegions.forEach { region ->
                 val regionInfo = region + "에 관한 서비스"
