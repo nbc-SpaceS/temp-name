@@ -120,13 +120,21 @@ class DetailFragment : DialogFragment(), OnMapReadyCallback {
             showMore(textOpen)
         }
         it.ivDetailFavorite.setOnClickListener { viewModel.changeFavorite(param1!!) }
-        it.btnDetailCall.setOnClickListener {
-            startActivity(
-                Intent(
-                    Intent.ACTION_DIAL,
-                    Uri.parse("tel:${viewModel.serviceData.value?.TELNO}")
+        it.btnDetailCall.setOnClickListener { call ->
+            val pattern = """(\d{2,3}-\d{3,4}-\d{4})""".toRegex()
+            val matchResult =
+                viewModel.serviceData.value?.TELNO?.let { tel -> pattern.find(tel) }?.value
+            if (matchResult.isNullOrBlank()) {
+                call.isEnabled = false
+            } else {
+                call.isEnabled = true
+                startActivity(
+                    Intent(
+                        Intent.ACTION_DIAL,
+                        Uri.parse("tel:${matchResult}")
+                    )
                 )
-            )
+            }
         }
         it.btnDetailReservation.setOnClickListener {
             startActivity(

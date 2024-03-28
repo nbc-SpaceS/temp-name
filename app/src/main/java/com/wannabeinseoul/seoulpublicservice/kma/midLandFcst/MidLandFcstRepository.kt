@@ -1,6 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.kma.midLandFcst
 
-import android.util.Log
+import com.wannabeinseoul.seoulpublicservice.util.DLog
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherData
 
 private const val TAG = "KmaRepository"
@@ -34,7 +34,7 @@ class KmaRepositoryImpl(
                 tmFc = tmFc
             )
         } catch (e: Throwable) {
-            Log.e(
+            DLog.e(
                 TAG,
                 "getMidLandFcst error. numOfRows:$numOfRows, pageNo:$pageNo" +
                         ", dataType:$dataType, regId:$regId, tmFc:$tmFc",
@@ -48,7 +48,7 @@ class KmaRepositoryImpl(
         val body = response.body()
             ?: return if (WeatherData.getMid() == null) {
                 null.apply {
-                    Log.w(
+                    DLog.w(
                         TAG,
                         "getMidLandFcst return if(WeatherData.getMid() == null), response: $response"
                     )
