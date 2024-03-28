@@ -99,6 +99,7 @@ dependencies {
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+    //새로고침 관련 라이브러리
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 //    //hilt
