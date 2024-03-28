@@ -98,6 +98,10 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //새로고침 관련 라이브러리
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
 //    ksp("com.google.dagger:hilt-android-compiler:2.50")
