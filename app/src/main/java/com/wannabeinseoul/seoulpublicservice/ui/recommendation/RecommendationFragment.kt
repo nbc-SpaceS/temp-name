@@ -40,9 +40,6 @@ class RecommendationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initViewModel()
-        binding.ivRefreshButton.setOnClickListener {
-            onRefreshButtonClick()
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -51,6 +48,10 @@ class RecommendationFragment : Fragment() {
         b.rvScroll.itemAnimator = null
         b.rvScroll.layoutManager = LinearLayoutManager(requireContext())
         b.clRecommendationLoadingLayer.setOnTouchListener { _, _ -> true }
+        b.ivRefreshButton.setOnClickListener {
+            binding.clRecommendationLoadingLayer.isVisible = true
+            onRefreshButtonClick(it)
+        }
 
     }
 
@@ -140,7 +141,7 @@ class RecommendationFragment : Fragment() {
         }
     }
 
-    private fun onRefreshButtonClick() {
+    private fun onRefreshButtonClick(view: View) {
         viewModel.refreshData()
     }
 
