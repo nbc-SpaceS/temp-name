@@ -1,8 +1,8 @@
 package com.wannabeinseoul.seoulpublicservice.pref
 
 import android.content.Context
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
 import com.google.gson.Gson
+import com.wannabeinseoul.seoulpublicservice.seoul.Row
 
 interface RowPrefRepository {
     fun saveRows(rowList: List<Row>)

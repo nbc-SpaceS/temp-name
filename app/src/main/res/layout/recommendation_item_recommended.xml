@@ -2,36 +2,34 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_page_item_recommended"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="8dp"
-    android:id="@+id/my_page_item_recommended">
+    android:paddingVertical="8dp">
 
     <TextView
         android:id="@+id/tvSharedText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="SharedText"
-        android:visibility="visible"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/recommendation_item_recommended_shared_text"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/re_Shared"
+        android:id="@+id/rv_Shared"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:paddingHorizontal="16dp"
         android:clipToPadding="false"
-        android:visibility="visible"
         android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/tvSharedText"
         tools:listitem="@layout/recommendation_item" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

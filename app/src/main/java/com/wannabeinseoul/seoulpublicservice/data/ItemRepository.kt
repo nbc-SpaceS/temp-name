@@ -6,8 +6,4 @@ object ItemRepository {
     fun setItems(category: String, items: List<Item>) {
         this.items[category] = items
     }
-
-    fun getItems(category: String): List<Item> {
-        return items[category] ?: emptyList()
-    }
 }

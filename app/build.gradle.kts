@@ -18,14 +18,17 @@ android {
 
     defaultConfig {
         applicationId = "com.wannabeinseoul.seoulpublicservice"
-        minSdk = 31
+        minSdk = 28
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 6
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "SEOUL_KEY", properties.getProperty("SEOUL_KEY"))
+        buildConfigField("String", "WEATHER_SHORT_KEY", properties.getProperty("WEATHER_SHORT_KEY"))
+        buildConfigField("String", "KMA_API_KEY", properties.getProperty("KMA_API_KEY"))
+        buildConfigField("String", "TEMP_API_KEY", properties.getProperty("TEMP_API_KEY"))
     }
 
     buildTypes {
@@ -91,7 +94,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
 //    //hilt
 //    implementation("com.google.dagger:hilt-android:2.50")
 //    ksp("com.google.dagger:hilt-android-compiler:2.50")

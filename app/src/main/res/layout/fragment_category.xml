@@ -6,39 +6,63 @@
     android:layout_height="match_parent"
     tools:context=".ui.category.CategoryFragment">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/activity_category"
-        app:layout_constraintBottom_toTopOf="@+id/tv_ctTitle"
+    <EditText
+        android:id="@+id/et_category_search"
+        android:layout_width="0dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/background_radius_12dp_edittext"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="5dp"
+        android:enabled="true"
+        android:hint="@string/fragment_category_et_category_search"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:paddingStart="8dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_category_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_category_back"
+        app:layout_constraintTop_toTopOf="@+id/iv_category_back" />
+
+    <ImageView
+        android:id="@+id/iv_category_back"
+        android:layout_width="28sp"
+        android:layout_height="28sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_ctTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
         android:clipToOutline="true"
-        android:text="Title"
-        android:textSize="20dp"
+        android:text="@string/fragment_category_tv_ct_title"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@+id/et_category_search" />
 
     <TextView
         android:id="@+id/tv_ctFree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="290dp"
-        android:layout_marginTop="110dp"
+        android:layout_marginEnd="12dp"
         android:gravity="center"
-        android:text="무료"
+        android:text="@string/fragment_category_tv_ct_free"
         android:textColor="#8E8E8E"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ctIsReservationAvailable"
+        app:layout_constraintEnd_toStartOf="@+id/tv_ctIsReservationAvailable"
+        app:layout_constraintTop_toTopOf="@+id/tv_ctIsReservationAvailable" />
 
     <TextView
         android:id="@+id/tv_ctClickFree"
@@ -47,9 +71,9 @@
         android:layout_marginStart="290dp"
         android:layout_marginTop="110dp"
         android:gravity="center"
-        android:text="무료"
+        android:text="@string/fragment_category_tv_ct_click_free"
         android:textColor="#F8496C"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,15 +83,14 @@
         android:id="@+id/tv_ctIsReservationAvailable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="334dp"
-        android:layout_marginTop="110dp"
+        android:layout_marginEnd="20dp"
         android:gravity="center"
-        android:text="예약가능"
+        android:text="@string/fragment_category_tv_ct_is_reservation_available"
         android:textColor="#8E8E8E"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ctTitle" />
 
     <TextView
         android:id="@+id/tv_ctClickIsReservationAvailable"
@@ -76,38 +99,65 @@
         android:layout_marginStart="334dp"
         android:layout_marginTop="110dp"
         android:gravity="center"
-        android:text="예약가능"
+        android:text="@string/fragment_category_tv_ct_click_is_reservation_available"
         android:textColor="#F8496C"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <TextView
-        android:id="@+id/line"
-        android:layout_width="360dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="150dp"
-        android:background="@drawable/edittext_background"
-        android:clipToOutline="true"
-        android:maxLines="1"
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/md_category"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_ctIsReservationAvailable" />
+
+    <TextView
+        android:id="@+id/tv_category_empty_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="@string/fragment_category_tv_reservation_empty"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/md_category" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/re_category"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
         android:orientation="vertical"
+        android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line"
-        tools:listitem="@layout/category_item" />
+        app:layout_constraintTop_toBottomOf="@+id/md_category"
+        tools:listitem="@layout/item_category" />
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_recent_floating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/fab_current_position_button_solid"
+        android:contentDescription="@string/fragment_map_current_location"
+        android:src="@drawable/ic_arrow_up"
+        android:visibility="gone"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="47dp"
+        app:tint="@color/fab_current_position_icon_solid" />
 </androidx.constraintlayout.widget.ConstraintLayout>

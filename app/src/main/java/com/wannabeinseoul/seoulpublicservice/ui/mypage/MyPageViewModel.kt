@@ -9,15 +9,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ReviewRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.UserRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ReviewRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.UserRepository
 import com.wannabeinseoul.seoulpublicservice.db_by_memory.DbMemoryRepository
 import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.RecommendationData
+import com.wannabeinseoul.seoulpublicservice.ui.recommendation.convertToRecommendationData
 import com.wannabeinseoul.seoulpublicservice.usecase.GetDetailSeoulUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+private const val JJTAG = "jj-마이페이지 뷰모델"
 
 class MyPageViewModel(
     private val savedPrefRepository: SavedPrefRepository,
@@ -26,12 +30,15 @@ class MyPageViewModel(
     private val idPrefRepository: IdPrefRepository,
     private val userRepository: UserRepository,
     private val reviewRepository: ReviewRepository,
+    private val serviceRepository: ServiceRepository,
 ) : ViewModel() {
 
-    private var _savedList: MutableLiveData<List<Row?>> = MutableLiveData(emptyList())
-    val savedList: LiveData<List<Row?>> get() = _savedList
+    private var _savedList: MutableLiveData<List<RecommendationData?>> = MutableLiveData()
+    val savedList: LiveData<List<RecommendationData?>> get() = _savedList
 
-    private var _reviewedList: MutableLiveData<List<ReviewedData>> = MutableLiveData(emptyList())
+    // TODO: _reviewedList에 초기값 emptylist 지우니까 마이페이지 로딩이 느려짐?? 다른 사람도 그런지 확인 후 결정
+//    private var _reviewedList: MutableLiveData<List<ReviewedData>> = MutableLiveData(emptyList())
+    private var _reviewedList: MutableLiveData<List<ReviewedData>> = MutableLiveData()
     val reviewedList: LiveData<List<ReviewedData>> get() = _reviewedList
 
     init {
@@ -46,14 +53,22 @@ class MyPageViewModel(
 //    }
 
     fun loadSavedList(svcidList: List<String>) {
-        _savedList.value = svcidList.map { dbMemoryRepository.findBySvcid(it) }
+        viewModelScope.launch(Dispatchers.IO) {
+            val counts = serviceRepository.getServiceReviewsCount(svcidList)
+            _savedList.postValue(
+                svcidList.mapIndexedNotNull { index, svcId ->
+                    dbMemoryRepository.findBySvcid(svcId)?.convertToRecommendationData()
+                        .also { it?.reviewCount = counts[index] }
+                }
+            )
+        }
     }
 
     fun clearSavedList() {
         savedPrefRepository.clear()
     }
 
-    private suspend fun loadReviewedList() {
+    suspend fun loadReviewedList() {
         // 서버에서 내 UUID로 내 후기 목록 가져오기
 
         // 서비스 아이디 없는거면 안띄움.
@@ -70,19 +85,19 @@ class MyPageViewModel(
         _reviewedList.postValue(reviewEntities.mapNotNull { reviewEntity ->
             if (reviewEntity.svcId == null) {
                 Log.e(
-                    "jj-마이페이지 뷰모델",
+                    JJTAG,
                     "loadReviewedList - reviewEntity.svcId == null. uuid: $id"
                 )
                 return@mapNotNull null
             }
-            val row = dbMemoryRepository.findBySvcid(reviewEntity.svcId)
+            val entity = dbMemoryRepository.findBySvcid(reviewEntity.svcId)
                 ?: return@mapNotNull null.apply {
                     Log.e(
-                        "jj-마이페이지 뷰모델",
+                        JJTAG,
                         "loadReviewedList - dbMemoryRepository.findBySvcid == null. svcId: ${reviewEntity.svcId}"
                     )
                 }
-            ReviewedData(row, reviewEntity.content ?: "", reviewEntity.uploadTime ?: "")
+            ReviewedData(entity, reviewEntity.content ?: "", reviewEntity.uploadTime ?: "")
         })
     }
 
@@ -97,6 +112,7 @@ class MyPageViewModel(
                     idPrefRepository = container.idPrefRepository,
                     userRepository = container.userRepository,
                     reviewRepository = container.reviewRepository,
+                    serviceRepository = container.serviceRepository,
                 )
             }
         }

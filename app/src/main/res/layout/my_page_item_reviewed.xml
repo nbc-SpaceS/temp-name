@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="4dp"
-        android:background="@drawable/background_radius_10dp"
+        android:background="@drawable/background_item_reviewed_layout"
         android:elevation="4dp"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
@@ -22,47 +22,55 @@
             android:layout_width="88dp"
             android:layout_height="66dp"
             android:scaleType="centerCrop"
+            android:background="@drawable/background_service_item_layout"
+            android:clipToOutline="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/place_holder_1" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_reviewed_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="지역구"
-            android:textSize="11sp"
+            android:text="@string/my_page_item_reviewed_area"
+            android:textSize="12sp"
+            android:textColor="@color/gray"
             app:layout_constraintStart_toEndOf="@id/iv_reviewed_thumbnail"
             app:layout_constraintTop_toTopOf="@id/iv_reviewed_thumbnail" />
 
         <TextView
             android:id="@+id/tv_reviewed_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="공공서비스 제목이 들어가는 공간"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/my_page_item_reviewed_title"
             android:textSize="13sp"
-            app:layout_constraintBottom_toTopOf="@id/tv_reviewed_review_content"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_reviewed_thumbnail"
             app:layout_constraintTop_toBottomOf="@id/tv_reviewed_area" />
 
         <TextView
             android:id="@+id/tv_reviewed_review_content"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="내 닉네임 : 댓글 내용이 들어가는 공간"
-            android:textSize="11sp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/my_page_item_reviewed_content"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_reviewed_thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_reviewed_thumbnail" />
 
         <TextView
             android:id="@+id/tv_reviewed_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="99.99.99"
+            android:text="@string/my_page_item_reviewed_date"
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_reviewed_thumbnail" />

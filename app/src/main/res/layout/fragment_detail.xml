@@ -5,7 +5,7 @@
     android:id="@+id/cl_detail_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".detail.DetailFragment">
+    tools:context=".ui.detail.DetailFragment">
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -14,15 +14,13 @@
         android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_detail_back"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_detail_inner"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_detail_img"
@@ -30,7 +28,7 @@
                 android:layout_height="256dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/place_holder_1"
+                android:background="@color/unClicked_button_solid"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +51,8 @@
                     android:layout_marginBottom="32dp"
                     android:background="#00FFFFFF"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/icon_arrow_left"
+                    android:src="@drawable/ic_arrow_back"
+                    android:tint="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -64,10 +63,11 @@
                     android:layout_height="30dp"
                     android:layout_marginEnd="20dp"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/icon_share"
+                    android:src="@drawable/ic_share"
                     app:layout_constraintBottom_toBottomOf="@+id/btn_detail_back"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/btn_detail_back" />
+                    app:layout_constraintTop_toTopOf="@+id/btn_detail_back"
+                    app:tint="@color/white" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -75,12 +75,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="1dp"
                 android:background="@drawable/background_white_with_rounded_stroke"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:paddingBottom="1dp"
-                android:text="유료"
-                android:textColor="@color/black_gray"
+                android:text="@string/fragment_detail_price_pay"
+                android:textColor="@color/gray"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_detail_type_small"
@@ -93,8 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:text="소분류"
-                android:textColor="#000000"
+                android:text="@string/fragment_detail_subcategory"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_detail_img" />
 
@@ -106,8 +106,7 @@
                 android:layout_marginEnd="16dp"
                 android:ellipsize="marquee"
                 android:maxLines="1"
-                android:text="제목"
-                android:textColor="#000000"
+                android:text="@string/fragment_detail_title"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/iv_detail_favorite"
@@ -121,20 +120,23 @@
                 android:layout_marginStart="20dp"
                 android:ellipsize="marquee"
                 android:maxLines="1"
-                android:text="장소"
+                android:text="@string/fragment_detail_location"
+                android:textColor="@color/gray"
                 android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/tv_detail_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_name" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_distance_from_here" />
 
             <TextView
                 android:id="@+id/tv_detail_distance_from_here"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="현위치로부터 ?km"
+                android:text="@string/fragment_detail_distance"
+                android:textColor="#A5A5A5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_location" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_name" />
 
             <ImageView
                 android:id="@+id/iv_detail_favorite"
@@ -156,14 +158,14 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="4dp"
-                android:background="@drawable/background_radius_20dp_f8496c"
-                android:text="전화하기"
-                android:textColor="#FFFFFF"
+                android:background="@drawable/background_detail_button"
+                android:text="@string/fragment_detail_call"
+                android:textColor="@color/selector_okay_button_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/btn_detail_reservation"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_distance_from_here" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_location" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_detail_reservation"
@@ -172,8 +174,8 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="20dp"
                 android:background="@drawable/background_detail_button"
-                android:text="예약하기"
-                android:textColor="@color/selector_detail_button_text"
+                android:text="@string/fragment_detail_reserve"
+                android:textColor="@color/selector_okay_button_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/btn_detail_call"
@@ -187,31 +189,154 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
-                android:text="예약 관련 정보"
-                android:textColor="@color/black"
+                android:text="@string/fragment_detail_reservation_info"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_detail_call" />
 
-            <TextView
-                android:id="@+id/tv_detail_info"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_detail_info"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/background_white_with_rounded_stroke"
-                android:elevation="15dp"
-                android:paddingStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
-                android:text="예약 관련 정보"
-                android:textColor="#000000"
-                android:textSize="16sp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/background_white_with_rounded_16dp_stroke"
+                android:clipToOutline="true"
+                android:elevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_info" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_info">
+
+                <TextView
+                    android:id="@+id/tv_detail_usetgt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/fragment_detail_target"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_detail_usetgtinfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="8dp"
+                    android:text="@string/fragment_detail_target_content"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_detail_usetgt_title"
+                    app:layout_constraintStart_toStartOf="@+id/tv_detail_usetgt_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_usetgt_title" />
+
+                <TextView
+                    android:id="@+id/tv_detail_svcopndt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/fragment_detail_service_open"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_usetgtinfo" />
+
+                <TextView
+                    android:id="@+id/tv_detail_svcopndt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="4dp"
+                    android:text="@string/fragment_detail_service_content"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_detail_svcopndt_title"
+                    app:layout_constraintStart_toStartOf="@+id/tv_detail_svcopndt_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_svcopndt_title" />
+
+                <TextView
+                    android:id="@+id/tv_detail_rcptdt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/fragment_detail_reservation_available_date"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_svcopndt" />
+
+                <TextView
+                    android:id="@+id/tv_detail_rcptdt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="4dp"
+                    android:text="@string/fragment_detail_reservation_available_content"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_detail_rcptdt_title"
+                    app:layout_constraintStart_toStartOf="@+id/tv_detail_rcptdt_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_rcptdt_title" />
+
+                <TextView
+                    android:id="@+id/tv_detail_v_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/fragment_detail_usage_time"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_rcptdt" />
+
+                <TextView
+                    android:id="@+id/tv_detail_v"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="4dp"
+                    android:text="@string/fragment_detail_usage_content"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_detail_v_title"
+                    app:layout_constraintStart_toStartOf="@+id/tv_detail_v_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_v_title" />
+
+                <TextView
+                    android:id="@+id/tv_detail_revstdday_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/fragment_detail_cancel"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_v" />
+
+                <TextView
+                    android:id="@+id/tv_detail_revstdday"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:paddingEnd="4dp"
+                    android:text="@string/fragment_detail_cancel_content"
+                    android:textSize="13sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_detail_revstdday_title"
+                    app:layout_constraintStart_toStartOf="@+id/tv_detail_revstdday_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_detail_revstdday_title" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_detail_title_maps"
@@ -219,21 +344,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
-                android:text="지도"
-                android:textColor="@color/black"
+                android:text="@string/fragment_detail_map"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_info" />
+                app:layout_constraintTop_toBottomOf="@id/cl_detail_info" />
 
             <com.naver.maps.map.MapView
                 android:id="@+id/mv_detail_maps"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
-                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps" />
 
@@ -243,19 +366,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
-                android:text="설명"
-                android:textColor="@color/black"
+                android:text="@string/fragment_detail_description"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mv_detail_maps" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_detail_maps_snapshot"/>
 
             <TextView
                 android:id="@+id/tv_detail_show_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:text="더보기..."
+                android:text="@string/fragment_detail_more"
                 android:textColor="@color/enable_move_text_color"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -280,16 +402,13 @@
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/background_white_with_rounded_stroke"
+                    android:background="@drawable/background_white_with_rounded_16dp_stroke"
+                    android:clipToOutline="true"
                     android:ellipsize="end"
                     android:maxLines="6"
-                    android:paddingStart="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="8dp"
-                    android:text="설명"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:padding="16dp"
+                    android:text="@string/fragment_detail_description"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <TextView
@@ -298,8 +417,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
-                android:text="후기"
-                android:textColor="@color/black"
+                android:text="@string/fragment_detail_review"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -332,6 +450,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_review" />
+
+            <TextView
+                android:id="@+id/tv_detail_empty_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:paddingBottom="20dp"
+                android:gravity="center"
+                android:text="@string/fragment_detail_empty_review"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_review" />
+
+            <ImageView
+                android:id="@+id/iv_detail_maps_snapshot"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="12dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/place_holder_1"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_title_maps" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

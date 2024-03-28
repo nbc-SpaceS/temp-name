@@ -1,7 +1,6 @@
 package com.wannabeinseoul.seoulpublicservice.pref
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
@@ -12,28 +11,23 @@ interface RegionPrefRepository {
     fun load(): List<String>
     fun loadSelectedRegion(): String
     fun saveSelectedRegion(num: Int)
+    val selectedRegion: LiveData<String>
 }
 
 class RegionPrefRepositoryImpl(context: Context) : RegionPrefRepository {
 
     private val pref = context.getSharedPreferences("RegionPrefRepository", Context.MODE_PRIVATE)
-    private var selectedRegion: Int = -1
+    private var selectedRegionIndex: Int = -1
     private val gson = Gson()
 
-    init {
-//        _selectedRegion.value = load().firstOrNull() ?: ""
-    }
+    private val _selectedRegion = MutableLiveData<String>()
+    override val selectedRegion: LiveData<String> get() = _selectedRegion
+
 
     override fun save(value: List<String>) {
-//        clearData()
-
+        clearData()
         val json = gson.toJson(value)
         pref.edit().putString("selectedRegion", json).apply()
-//        value.forEach {
-//            pref.edit().putString(it, it).apply()
-//        }
-
-//        _selectedRegion.value = value.firstOrNull() ?: ""
     }
 
     override fun load(): List<String> {
@@ -41,10 +35,11 @@ class RegionPrefRepositoryImpl(context: Context) : RegionPrefRepository {
         return gson.fromJson(json, Array<String>::class.java).toList()
     }
 
-    override fun loadSelectedRegion(): String = if (selectedRegion == -1) "지역선택" else load()[selectedRegion]
+    override fun loadSelectedRegion(): String =
+        if (selectedRegionIndex == -1) "지역선택" else load()[selectedRegionIndex]
 
     override fun saveSelectedRegion(num: Int) {
-        selectedRegion = num - 1
+        selectedRegionIndex = num - 1
     }
 
     private fun clearData() {

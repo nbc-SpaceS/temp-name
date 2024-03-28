@@ -9,77 +9,191 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.wannabeinseoul.seoulpublicservice.SeoulPublicServiceApplication
 import com.wannabeinseoul.seoulpublicservice.databases.ReservationRepository
-import com.wannabeinseoul.seoulpublicservice.databases.firebase.ServiceRepository
-import com.wannabeinseoul.seoulpublicservice.pref.RecommendPrefRepository
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
-import com.wannabeinseoul.seoulpublicservice.seoul.SeoulPublicRepository
-import com.wannabeinseoul.seoulpublicservice.usecase.GetAll2000UseCase
+import com.wannabeinseoul.seoulpublicservice.databases.firestore.ServiceRepository
+import com.wannabeinseoul.seoulpublicservice.pref.RegionPrefRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 class RecommendationViewModel(
-    private val recommendPrefRepository: RecommendPrefRepository,
-    private val getAll2000UseCase: GetAll2000UseCase,
-    private val seoulPublicRepository: SeoulPublicRepository,
     private val reservationRepository: ReservationRepository,
-    private val serviceRepository: ServiceRepository
+    private val serviceRepository: ServiceRepository,
+    private val regionPrefRepository: RegionPrefRepository,
 ) : ViewModel() {
 
-    private val _recommendations = MutableLiveData<List<RecommendationAdapter.MultiView>>()
-    val recommendations: LiveData<List<RecommendationAdapter.MultiView>> get() = _recommendations
+    private var isFirst: Boolean = true
+    private var dataList = listOf<RecommendationHorizontalData>()
 
-    private val _firstRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val firstRecommendation: LiveData<List<RecommendationData>> get() = _firstRecommendation
+    private val _horizontalDataList = MutableLiveData<List<RecommendationHorizontalData>>()
+    val horizontalDataList: LiveData<List<RecommendationHorizontalData>> get() = _horizontalDataList
 
-    private val _secondRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val secondRecommendation: LiveData<List<RecommendationData>> get() = _secondRecommendation
+    private val _multiViews = MutableLiveData<List<RecommendationAdapter.MultiView>>()
+    val multiViews: LiveData<List<RecommendationAdapter.MultiView>> get() = _multiViews
+    fun setMultiViews(list: List<RecommendationAdapter.MultiView>) {
+        _multiViews.value = list
+    }
 
-    private val _thirdRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val thirdRecommendation: LiveData<List<RecommendationData>> get() = _thirdRecommendation
+    private val isLoading = MutableLiveData<Boolean>()
 
-    private val _forthRecommendation: MutableLiveData<List<RecommendationData>> = MutableLiveData()
-    val forthRecommendation: LiveData<List<RecommendationData>> get() = _forthRecommendation
+    init {
+        isLoading.value = true // 로딩 상태로 초기화
+        loadData()
+    }
 
-    private val recommendationList = listOf(
-        _firstRecommendation,
-        _secondRecommendation,
-        _thirdRecommendation,
-        _forthRecommendation
-    )
+    fun refreshData() {
+        loadData()
+    }
 
-    fun getList(query: String, position: Int) {
+    private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val entity = reservationRepository.getFilter(emptyList(), listOf(query), emptyList(), emptyList())
-            val count = serviceRepository.getServiceReviewsCount(entity.take(5).map { it.SVCID })
+            val selectedRegions = regionPrefRepository.load()
+            val items = mutableListOf<Pair<String, String>>()
+            val regionItems = mutableListOf<Pair<String, String>>()
 
-            val itemList = mutableListOf<RecommendationData>()
-            for (i in 0 until 5) {
-                itemList.add(RecommendationData(
-                    payType = entity[0].PAYATNM,
-                    areaName = entity[0].AREANM,
-                    placeName = entity[0].PLACENM,
-                    svcstatnm = entity[0].SVCSTATNM,
-                    imageUrl = entity[0].IMGURL,
-                    svcid = entity[0].SVCID,
-                    reviewCount = count[i]
-                ))
+            val randomSelectedItems = listOf(
+                Pair("댄스", "댄스와 관련된 서비스"),
+                Pair("풋살", "풋살에 관한 서비스"),
+                Pair("실내", "실내에서 즐길 수 있는 서비스"),
+                Pair("진료", "병원에 관한 서비스"),
+                Pair("탁구", "탁구에 관한 서비스"),
+                Pair("산림", "봄 계절에 맞는 서비스"),
+                Pair("어린이", "어린이에 관한 서비스"),
+                Pair("농장", "농장체험에 관한 서비스"),
+                Pair("자격증", "올해엔 자격증 공부 서비스가 많습니다."),
+                Pair("드론", "드론에 관한 서비스"),
+                Pair("스튜디오", "녹화장소에 관한 서비스"),
+                Pair("배드민턴", "배드민턴에 관한 서비스"),
+                Pair("캠핑장", "이번 주말엔 캠핑 어떠세요?"),
+                Pair("취미", "이런 취미생활은 어떠세요?"),
+                Pair("회의", "회의실 대여가 필요하세요?"),
+                Pair("활쏘기", "활쏘기 체험에 관한 서비스"),
+                Pair("족구", "족구에 관한 서비스"),
+                Pair("청소년", "청소년을 위한 서비스"),
+                Pair("장애인", "장애인을 위한 서비스"),
+            ).shuffled().take(4)
+
+            items.addAll(randomSelectedItems)
+
+            selectedRegions.forEach { region ->
+                val regionInfo = region + "에 관한 서비스"
+                regionItems.add(Pair(region, regionInfo))
             }
 
-            recommendationList[position].postValue(itemList)
+            val queryResults = (items + regionItems).map { async { getQuery(it.first) } }.awaitAll()
+            val recommendationHorizontalDataList =
+                queryResults.mapIndexed { index, recommendationDataList ->
+                    RecommendationHorizontalData(
+                        (items + regionItems)[index].first,
+                        (items + regionItems)[index].second,
+                        recommendationDataList
+                    )
+                }
+
+            dataList = recommendationHorizontalDataList
+            _horizontalDataList.postValue(recommendationHorizontalDataList)
+            isLoading.postValue(false)
+            isFirst = false
         }
     }
 
-    fun fetchRecommendations() {
+    private suspend fun getQuery(query: String): List<RecommendationData> {
+        val reservationEntities = reservationRepository.searchText(query).take(5)
+        val counts = serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
+        return List(reservationEntities.size) {
+            RecommendationData(
+                payType = reservationEntities[it].PAYATNM,
+                areaName = reservationEntities[it].AREANM,
+                placeName = reservationEntities[it].PLACENM,
+                svcstatnm = reservationEntities[it].SVCSTATNM,
+                imageUrl = reservationEntities[it].IMGURL,
+                svcid = reservationEntities[it].SVCID,
+                usetgtinfo = reservationEntities[it].USETGTINFO,
+                reviewCount = counts[it],
+                serviceName = reservationEntities[it].SVCNM,
+            )
+        }
+    }
+
+    suspend fun getAdditionalQuery(query: String, num: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val rowList = getAll2000UseCase()
-                val recommendations = rowList.convertToRecommendationDataList()
-//                _recommendations.postValue(recommendations)
-            } catch (e: Exception) {
-                // Handle error
+            val searchText = reservationRepository.searchText(query)
+
+            if (searchText.size >= num) {
+                val reservationEntities = searchText.slice(num - 5 until num)
+                val counts =
+                    serviceRepository.getServiceReviewsCount(reservationEntities.map { it.SVCID })
+
+                val list = dataList.find { it.keyword == query }?.list ?: emptyList()
+
+                multiViews.value?.map { view ->
+                    if (view is RecommendationAdapter.MultiView.Horizontal) {
+                        if (view.keyword == query) {
+                            view.apply {
+                                val list2 = List(reservationEntities.size) {
+                                    RecommendationData(
+                                        payType = reservationEntities[it].PAYATNM,
+                                        areaName = reservationEntities[it].AREANM,
+                                        placeName = reservationEntities[it].PLACENM,
+                                        svcstatnm = reservationEntities[it].SVCSTATNM,
+                                        imageUrl = reservationEntities[it].IMGURL,
+                                        svcid = reservationEntities[it].SVCID,
+                                        usetgtinfo = reservationEntities[it].USETGTINFO,
+                                        reviewCount = counts[it],
+                                        serviceName = reservationEntities[it].SVCNM,
+                                    )
+                                }
+                                adapter.submitList(list + list2)
+
+                                dataList = dataList.map { data ->
+                                    if (data.keyword == query) {
+                                        data.copy(list = data.list + list2)
+                                    } else {
+                                        data
+                                    }
+                                }
+                            }
+                        } else {
+                            view
+                        }
+                    } else {
+                        view
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun fetchRegionList() {
+        if (!isFirst) {
+            isLoading.postValue(true)
+
+            viewModelScope.launch(Dispatchers.IO) {
+                val selectedRegions = regionPrefRepository.load()
+
+                val regionItems = mutableListOf<Pair<String, String>>()
+
+                selectedRegions.forEach { region ->
+                    val regionInfo = region + "에 관한 서비스"
+                    regionItems.add(Pair(region, regionInfo))
+                }
+
+                val queryResults = regionItems.map { async { getQuery(it.first) } }.awaitAll()
+                val recommendationHorizontalDataList =
+                    queryResults.mapIndexed { index, recommendationDataList ->
+                        RecommendationHorizontalData(
+                            regionItems[index].first,
+                            regionItems[index].second,
+                            recommendationDataList
+                        )
+                    }
+
+                val updateDate = horizontalDataList.value.orEmpty().toMutableList()
+                    .take(4) + recommendationHorizontalDataList
+                dataList = updateDate
+                _horizontalDataList.postValue(updateDate)
+                isLoading.postValue(false)
             }
         }
     }
@@ -89,45 +203,11 @@ class RecommendationViewModel(
             initializer {
                 val container = (this[APPLICATION_KEY] as SeoulPublicServiceApplication).container
                 RecommendationViewModel(
-                    seoulPublicRepository = container.seoulPublicRepository,
-                    recommendPrefRepository = container.recommendPrefRepository,
-                    getAll2000UseCase = container.getAll2000UseCase,
                     reservationRepository = container.reservationRepository,
-                    serviceRepository = container.serviceRepository
+                    serviceRepository = container.serviceRepository,
+                    regionPrefRepository = container.regionPrefRepository
                 )
             }
         }
     }
-
-    private fun isReservationAvailableAbsence(row: Row): Boolean {
-        val currentTimeMillis = System.currentTimeMillis()
-        val rcptbgndtMillis = row.rcptbgndt.toLongOrNull() ?: return false
-        val rcptenddtMillis = row.rcptenddt.toLongOrNull() ?: return false
-
-        return currentTimeMillis >= rcptbgndtMillis && currentTimeMillis <= rcptenddtMillis
-    }
 }
-
-//    private suspend fun convertToSealedMulti(reservations: List<ReservationEntity>): List<SealedMulti> {
-//        // 현재 시간을 가져옴
-//        val currentTimeMillis = System.currentTimeMillis()
-//        // 현재 시간 기준으로 7일 후의 시간을 계산
-//        val oneWeekLaterTimeMillis = currentTimeMillis + 7 * 24 * 60 * 60 * 1000
-//
-//        return withContext(Dispatchers.IO) {
-//            // 예약 시작 일자가 현재 날짜 이후이고 7일 이내인 데이터 필터링하여 SealedMulti로 변환
-//            reservations.filter { reservation ->
-//                val startDateMillis = reservation.SVCOPNBGNDT.toLong()
-//                startDateMillis >= currentTimeMillis && startDateMillis < oneWeekLaterTimeMillis
-//            }.map { reservation ->
-//                SealedMulti.Recommendation(
-//                    payType = reservation.PAYATNM,
-//                    areaName = reservation.AREANM,
-//                    placeName = reservation.PLACENM,
-//                    isReservationAvailable = reservation.SVCNM,
-//                    imageUrl = reservation.IMGURL,
-//                    serviceList = reservation.SVCSTATNM
-//                )
-//            }
-//        }
-//    }

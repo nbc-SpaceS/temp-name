@@ -34,7 +34,7 @@ interface ReservationDAO {
     /**
      * @property getItemsWithBigType 대분류명을 type에 받아 해당하는 아이템만 블러올 수 있는 함수
      * @param type 대분류명
-     * (체육시설 = 체육, 시설대관 = 공간, 교육 = 교육, 문화행사 = 문화, 진료 = 진료)
+     * (체육시설 = 체육, 공간시설 = 공간, 교육강좌 = 교육, 문화행사 = 문화, 진료복지 = 진료)
      */
     @Query("SELECT * FROM ReservationEntity WHERE :type IN (MAXCLASSNM)")
     fun getItemsWithBigType(type: String) : List<ReservationEntity>
@@ -78,7 +78,7 @@ interface ReservationDAO {
     fun getPayList() : List<String>
 
     @RawQuery
-    suspend fun putQueries(query: SupportSQLiteQuery): List<ReservationEntity>
+    suspend fun rawQuery(query: SupportSQLiteQuery): List<ReservationEntity>
 
     @Query("SELECT * FROM ReservationEntity WHERE SVCID IS (:svcID)")
     fun getService(svcID: String) : ReservationEntity
@@ -96,6 +96,6 @@ interface ReservationDAO {
             "AND SVCID NOT LIKE 'XML%'")
     fun getNOTBlankInMaps() : List<ReservationEntity>
 
-    @RawQuery
-    suspend fun putSearchText(query: SupportSQLiteQuery): List<ReservationEntity>
+    @Query("SELECT * FROM ReservationEntity WHERE X != '' AND Y != ''")
+    fun getNOTEmptyXY() : List<ReservationEntity>
 }

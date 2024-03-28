@@ -1,6 +1,7 @@
 package com.wannabeinseoul.seoulpublicservice.ui.recommendation
 
-import com.wannabeinseoul.seoulpublicservice.seoul.Row
+import androidx.core.text.HtmlCompat
+import com.wannabeinseoul.seoulpublicservice.databases.ReservationEntity
 
 data class RecommendationData(
     val payType: String,
@@ -9,31 +10,25 @@ data class RecommendationData(
     val svcstatnm: String,
     val imageUrl: String,
     val svcid: String,
-    var reviewCount: Int
+    val usetgtinfo: String,
+    var reviewCount: Int,
+    val serviceName: String,
+) {
+    val decodedServiceName: String =
+        HtmlCompat.fromHtml(serviceName, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+}
+
+fun ReservationEntity.convertToRecommendationData() = RecommendationData(
+    payType = this.PAYATNM,
+    areaName = this.AREANM,
+    placeName = this.PLACENM,
+    svcstatnm = this.SVCSTATNM,
+    imageUrl = this.IMGURL,
+    svcid = this.SVCID,
+    usetgtinfo = this.USETGTINFO,
+    reviewCount = 0,
+    serviceName = this.SVCNM,
 )
 
-fun Row.convertToRecommendationData() = RecommendationData(
-    payType = this.payatnm,
-    areaName = this.areanm,
-    placeName = this.placenm,
-    svcstatnm = this.svcstatnm,
-    imageUrl = this.imgurl,
-    svcid = this.svcid,
-    reviewCount = 0
-)
-
-fun List<Row>.convertToRecommendationDataList() =
+fun List<ReservationEntity>.convertToRecommendationDataList() =
     this.map { it.convertToRecommendationData() }
-
-
-//    private fun convertRowToRecommendation(row: Row): RecommendationData = RecommendationData(
-//        payType = row.payatnm,
-//        areaName = row.areanm,
-//        placeName = row.placenm,
-//        svcstatnm = row.svcstatnm,
-//        imageUrl = row.imgurl,
-//    )
-//
-//    private fun convertRowsToRecommendations(rows: List<Row>): List<RecommendationData> =
-//        rows.map { convertRowToRecommendation(it) }
-

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_radius_10dp"
-    android:elevation="5dp"
-    android:clipToOutline="true">
+    android:background="@drawable/background_edit_profile_layout"
+    android:clipToOutline="true"
+    android:elevation="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -21,8 +20,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="프로필 편집"
+            android:layout_marginStart="20dp"
+            android:text="@string/dialog_edit_profile_edit_profile"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -42,31 +41,31 @@
         android:src="@drawable/place_holder_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout2" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="이름"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/et_edit_profile_name"
-        app:layout_constraintTop_toBottomOf="@+id/iv_edit_profile_image" />
+        android:text="@string/dialog_edit_profile_name"
+        app:layout_constraintStart_toStartOf="@id/et_edit_profile_name"
+        app:layout_constraintTop_toBottomOf="@id/iv_edit_profile_image" />
 
     <EditText
         android:id="@+id/et_edit_profile_name"
         android:layout_width="0dp"
         android:layout_height="35dp"
-        android:layout_marginHorizontal="25dp"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/background_radius_10dp_dfdfdd"
-        android:hint="이름을 입력해주세요."
+        android:hint="@string/dialog_edit_profile_et_profile_name_hint"
         android:paddingStart="8dp"
+        android:singleLine="true"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@id/textView3" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_edit_profile_cancel"
@@ -76,29 +75,50 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/background_radius_10dp_828282"
-        android:text="취소"
+        android:text="@string/dialog_edit_profile_btn_cancel"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_edit_profile_okay"
+        app:layout_constraintEnd_toStartOf="@id/btn_edit_profile_okay"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/et_edit_profile_name"
-        app:layout_constraintTop_toBottomOf="@+id/et_edit_profile_name" />
+        app:layout_constraintStart_toStartOf="@id/et_edit_profile_name"
+        app:layout_constraintTop_toBottomOf="@id/et_edit_profile_name" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_edit_profile_okay"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        android:background="@drawable/background_radius_10dp_ff6685"
-        android:text="확인"
+        android:background="@drawable/selector_edit_profile_okay_background"
+        android:text="@string/dialog_edit_profile_btn_confirm"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_edit_profile_cancel"
-        app:layout_constraintEnd_toEndOf="@+id/et_edit_profile_name"
+        app:layout_constraintBottom_toBottomOf="@id/btn_edit_profile_cancel"
+        app:layout_constraintEnd_toEndOf="@id/et_edit_profile_name"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_edit_profile_cancel"
-        app:layout_constraintTop_toTopOf="@+id/btn_edit_profile_cancel" />
+        app:layout_constraintStart_toEndOf="@id/btn_edit_profile_cancel"
+        app:layout_constraintTop_toTopOf="@id/btn_edit_profile_cancel" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_edit_profile_cam_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/corners_round"
+        android:backgroundTint="@color/white"
+        android:hapticFeedbackEnabled="true"
+        app:layout_constraintBottom_toBottomOf="@id/iv_edit_profile_image"
+        app:layout_constraintEnd_toEndOf="@id/iv_edit_profile_image">
+
+        <ImageView
+            android:id="@+id/iv_edit_profile_cam"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_edit_image" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
