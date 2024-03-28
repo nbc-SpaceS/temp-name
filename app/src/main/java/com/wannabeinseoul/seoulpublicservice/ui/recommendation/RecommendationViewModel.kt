@@ -190,7 +190,7 @@ class RecommendationViewModel(
                     }
 
                 val updateDate = horizontalDataList.value.orEmpty().toMutableList()
-                    .subList(0, 4) + recommendationHorizontalDataList
+                    .take(4) + recommendationHorizontalDataList
                 dataList = updateDate
                 _horizontalDataList.postValue(updateDate)
                 isLoading.postValue(false)
