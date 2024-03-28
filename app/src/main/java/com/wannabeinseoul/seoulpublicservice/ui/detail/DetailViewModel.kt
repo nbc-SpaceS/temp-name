@@ -1,6 +1,5 @@
 package com.wannabeinseoul.seoulpublicservice.ui.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +20,7 @@ import com.wannabeinseoul.seoulpublicservice.pref.IdPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.RecentPrefRepository
 import com.wannabeinseoul.seoulpublicservice.pref.SavedPrefRepository
 import com.wannabeinseoul.seoulpublicservice.ui.dialog.review.ReviewItem
+import com.wannabeinseoul.seoulpublicservice.util.DLog
 import com.wannabeinseoul.seoulpublicservice.weather.WeatherShortRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -151,7 +151,7 @@ class DetailViewModel(
             val dateTime = LocalDateTime.parse(date, formatter)
             datePattern.format(dateTime)
         } catch (dtpe: DateTimeParseException) {
-            Log.e("DetailViewModel","Error! dateFormat", dtpe)
+            DLog.e("DetailViewModel","Error! dateFormat", dtpe)
             date
         }
     }
@@ -171,10 +171,10 @@ class DetailViewModel(
     // 반환값은 이제 사용 안할 겁니다. _distanceText에 넣어주고 옵저빙해서 텍스트뷰에 반영.
     fun distanceCheckResponse(distance : Double): String {
         return when {
-            distance/1000 < 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.0f", distance)}m"
-            distance/1000 >= 1 && distance <= 150000 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
+            distance/1000 < 1 -> "현위치로부터 ${String.format("%.0f", distance)}m"
+            distance/1000 >= 1 -> "현위치로부터 ${String.format("%.1f", distance/1000)}km"
             else -> {
-                Log.w("jj-상세페이지 뷰모델", "distanceCheckResponse distance error: $distance")
+                DLog.w("jj-상세페이지 뷰모델", "distanceCheckResponse distance error: $distance")
                 "현위치로부터 ?km"
             }
         }

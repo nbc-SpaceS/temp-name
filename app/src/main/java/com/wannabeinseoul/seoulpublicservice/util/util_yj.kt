@@ -3,7 +3,6 @@ package com.wannabeinseoul.seoulpublicservice.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import java.io.ByteArrayOutputStream
@@ -14,7 +13,7 @@ fun String.fromHtml(flags: Int = HtmlCompat.FROM_HTML_MODE_LEGACY) =
 fun String.parseColor() = try {
     Color.parseColor(this)
 } catch (e: Throwable) {
-    Log.e("jj-String.parseColor", "parseColor failed: $this", e)
+    DLog.e("jj-String.parseColor", "parseColor failed: $this", e)
     0
 }
 
